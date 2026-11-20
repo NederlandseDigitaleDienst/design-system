@@ -158,7 +158,8 @@ function builtInFindings(root, context) {
 	const { tags } = context;
 	const findings = [];
 	walk(root, (node) => {
-		if (!node.name.startsWith('nldd-')) return;
+		// `<nldd-*>` in running text names a family of tags and is none itself.
+		if (!/^nldd-[a-z0-9-]+$/.test(node.name)) return;
 		const report = (rule, message, attribute, severity = BUILT_IN_RULES[rule].severity) =>
 			findings.push({ rule, severity, message, node, attribute });
 		const contract = tags[node.name];
@@ -526,9 +527,9 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 	}
 
 	/** @returns {Promise<{ findings: object[], counts: object }>} */
-	async function lintSource(source, filename, { only } = {}) {
+	async function lintSource(source, filename, { only, rendered } = {}) {
 		if (only === 'events') return lintEvents(source, filename);
-		const parsed = applyWrappers(await parseSource(source, filename), wrappers);
+		const parsed = applyWrappers(await parseSource(source, filename, { rendered }), wrappers);
 		const isPlainHtml = /\.(html?|j2|jinja2?|tmpl|gohtml)$/.test(filename);
 		const roots = readPropertyNames(parsed, data.tags, isPlainHtml);
 		readLinkedStylesheets(roots, filename);

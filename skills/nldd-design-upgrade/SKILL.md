@@ -38,7 +38,7 @@ Hij doet vier dingen, in het hele project:
 
 - **De versie ophogen op elke plek die hij kent**: een `package.json`, ook in een submap of een monorepo, een adres of opdracht met `@nldd/design-system@<versie>` erin, en een eigen JSON-bestand dat de versie vastlegt, met de hash van het pakket als die erbij staat. Het bereik dat je koos (`^`, `~` of exact) blijft.
 - **De lockfile herschrijven**, met npm, pnpm, yarn of bun. Alleen de lockfile: `node_modules` installeer je zelf.
-- **Elke fix toepassen die zeker is**: een naam of waarde die anders heet en hetzelfde betekent. Ook in Markdown en in Python.
+- **Elke fix toepassen die zeker is**: een naam of waarde die anders heet en hetzelfde betekent. Ook in strings van Python en JavaScript, en in Markdown waar een pagina de markup rendert.
 - **Opschrijven wat overblijft**, in `upgrade.md`.
 
 `--format json` geeft hetzelfde als gegevens, voor een script. Draai de opdracht gerust nog een keer: wat al gedaan is, laat hij staan.
@@ -84,10 +84,10 @@ Zet de versie en de aanpassingen in één commit als een hook of de CI de site b
 
 ## Waar de linter niet komt
 
-De linter leest sjablonen, componenten en Python. Dit ziet hij niet of maar half:
+De linter leest sjablonen, componenten en strings in Python en JavaScript. Dit ziet hij niet of maar half:
 
-- **Markdown in een gewone scan.** `nldd lint` leest een Markdown-bestand alleen als je het noemt, omdat documentatie vol staat met voorbeelden die bewust fout zijn. `nldd upgrade` leest ze wel allemaal.
-- **Markup in een string van een taal zonder lezer**, zoals PHP, Ruby of Go. Python leest hij: elke string met een component erin, met `{naam}` en `%s` als ingevulde waarde. Een string met een quote achter een backslash slaat hij over, en dat meldt hij als `file-not-read`.
+- **Voorbeelden in Markdown.** `nldd upgrade` leest in elk Markdown-bestand de markup die een pagina rendert. Een codeblok is documentatie en slaat hij over, omdat daar ook voorbeelden staan die bewust fout zijn. Noem het bestand om ook die te lezen: `nldd lint docs/index.md`. Een gewone `nldd lint` leest Markdown alleen als je het noemt.
+- **Markup in een string van een taal zonder lezer**, zoals PHP, Ruby of Go. Python en JavaScript leest hij: elke string met een component erin, met `{naam}`, `${naam}` en `%s` als ingevulde waarde. Een string met een quote achter een backslash slaat hij over, en dat meldt hij als `file-not-read`.
 - **Wat over meer strings of bestanden verdeeld is.** Van een element dat in de ene string opent en in de andere sluit, beoordeelt hij alleen de attributen.
 - **Wat pas bij het bouwen ontstaat.** Lint daarom ook de gebouwde site: `nldd lint <buildmap>`. Daar staat alle markup bij elkaar, waar hij ook vandaan kwam.
 

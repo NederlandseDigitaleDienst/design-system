@@ -888,8 +888,10 @@ function markMentions(node, source) {
 /**
  * A Markdown or MDX file: every code block is a tree of its own, an inline tag a
  * mention, and the markup in the prose one tree, which is what the page renders.
+ * With `rendered`, only that last one: a code block and a mention are documentation
+ * about markup, and a scan of a project is about the markup it has.
  */
-export function parseMarkdown(source, filename = '') {
+export function parseMarkdown(source, filename = '', { rendered = false } = {}) {
 	const mdx = filename.endsWith('.mdx');
 	const roots = [];
 	const read = (text, offset, given = {}) => {
@@ -902,11 +904,11 @@ export function parseMarkdown(source, filename = '') {
 	};
 	const fences = /^( *)(```|~~~)[^\n]*\n([\s\S]*?)^ *\2/gm;
 	for (const match of source.matchAll(fences)) {
-		if (match[3].includes('<nldd-')) read(match[3], match.index + match[0].indexOf('\n') + 1);
+		if (!rendered && match[3].includes('<nldd-')) read(match[3], match.index + match[0].indexOf('\n') + 1);
 	}
 	let prose = source.replace(fences, blank).replace(/^---\r?\n[\s\S]*?\r?\n---(?=\r?\n|$)/, blank);
 	// A bare `<nldd-button>` in a sentence names the tag and says nothing about its attributes.
-	for (const match of prose.matchAll(/`(<nldd-[^`\n]*)`/g)) {
+	for (const match of rendered ? [] : prose.matchAll(/`(<nldd-[^`\n]*)`/g)) {
 		read(match[1].replace(/^<([a-z-]+)\s*\/?>$/, '<$1 v-bind="x"><Mention /></$1>'), match.index + 1);
 		markMentions(roots.at(-1), source);
 	}
@@ -917,11 +919,11 @@ export function parseMarkdown(source, filename = '') {
 }
 
 /**
- * Finds every html`` template, also inside the holes of another. A small scanner,
- * so that a story needs no TypeScript parser: it only tells strings, comments and
- * templates apart.
+ * Finds every string literal of a script, also inside the holes of a template:
+ * `html` says it is an html`` template. A small scanner, so that a story needs
+ * no TypeScript parser: it only tells strings, comments and templates apart.
  */
-function litTemplates(source) {
+function scriptLiterals(source) {
 	const templates = [];
 	const readTemplate = (start, isHtml) => {
 		const holes = [];
@@ -934,7 +936,7 @@ function litTemplates(source) {
 				at = end + 1;
 			} else at += 1;
 		}
-		if (isHtml) templates.push({ start, end: at, holes });
+		templates.push({ start, end: at, holes, html: isHtml });
 		return at;
 	};
 	function readCode(start, inHole) {
@@ -942,8 +944,11 @@ function litTemplates(source) {
 		let at = start;
 		while (at < source.length) {
 			const char = source[at];
-			if (char === "'" || char === '"') at = endOfString(source, at);
-			else if (source.startsWith('//', at)) at = source.indexOf('\n', at) >>> 0;
+			if (char === "'" || char === '"') {
+				const end = endOfString(source, at);
+				templates.push({ start: at + 1, end, holes: [], html: false, escapedQuote: /\\['"]/.test(source.slice(at, end)) });
+				at = end;
+			} else if (source.startsWith('//', at)) at = source.indexOf('\n', at) >>> 0;
 			else if (source.startsWith('/*', at)) at = source.indexOf('*/', at) >>> 0;
 			else if (char === '`') at = readTemplate(at + 1, source.slice(at - 4, at) === 'html');
 			else if (char === '{') depth += 1;
@@ -964,7 +969,7 @@ function litTemplates(source) {
  * positions stay right, an unquoted value stays one value, and it reads as bound.
  */
 export function parseLit(source) {
-	return litTemplates(source).flatMap(({ start, end, holes }) => {
+	return scriptLiterals(source).filter(({ html }) => html).flatMap(({ start, end, holes }) => {
 		let text = source.slice(start, end);
 		if (!text.includes('<nldd-')) return [];
 		for (const [from, to] of holes) {
@@ -980,8 +985,8 @@ export function parseLit(source) {
 
 /**
  * Where the string literals of a Python file stand, each with the holes of an
- * f-string. A small scanner: it only tells strings, comments and brackets apart.
- * `statement` says the literal is a line of its own, so a docstring and not markup.
+ * f-string or of `.format()`. A small scanner: it only tells strings, comments
+ * and brackets apart. A docstring is left out.
  */
 function pythonStrings(source) {
 	const strings = [];
@@ -1026,7 +1031,10 @@ function pythonStrings(source) {
 			const lineStart = source.lastIndexOf('\n', at) + 1;
 			const lineEnd = source.indexOf('\n', end + delimiter.length) >>> 0;
 			const alone = source.slice(lineStart, at - prefix.length).trim() === '' && /^\s*(#.*)?$/.test(source.slice(end + delimiter.length, lineEnd));
-			strings.push({ start, end, holes, escapedQuote, formatted, statement: depth === 0 && alone });
+			// Without an `f`, a `{name}` is still a hole once `.format()` fills it.
+			const filled = formatted ? holes : [...source.slice(start, end).matchAll(/\{[^{}\n]*\}/g)].map((match) => [start + match.index, start + match.index + match[0].length]);
+			// A literal that is a line of its own is a docstring: it names markup and renders none.
+			if (!(depth === 0 && alone)) strings.push({ start, end, holes: filled, escapedQuote });
 			at = end + delimiter.length - 1;
 		}
 		at += 1;
@@ -1038,28 +1046,29 @@ function pythonStrings(source) {
 const PERCENT_FORMAT = /%(\([^)]*\))?[-#0 +]*\d*(\.\d+)?[sdrifgx]/;
 
 /**
- * Markup in the string literals of a Python file, as a server-side app or a site
- * generator puts it together. Each literal is a tree of its own, and holds only
- * part of what is rendered: a hole (`{name}` in an f-string or for `.format()`,
- * `%s`) is a bound value, and an element the literal does not close has children
- * nobody can see here. A docstring names markup and renders none, so it is left out.
+ * Markup in string literals, as a server-side app, a site generator or a script
+ * puts it together. Each literal is a tree of its own, and holds only part of
+ * what is rendered: a hole (`{name}`, `${name}`, `%s`) is a bound value, and an
+ * element the literal does not close has children nobody can see here. A pattern
+ * that looks for markup, as a test has, is no markup and is left out.
  *
  * `unread` on the result is where markup stands that this could not read, or -1:
  * a literal with an escaped quote, where an attribute's value is not what it seems.
+ * @param {string} source
+ * @param {{ start: number, end: number, holes: [number, number][], escapedQuote?: boolean }[]} literals
  */
-export function parsePython(source) {
+function readLiterals(source, literals) {
 	const roots = [];
 	roots.unread = -1;
 	roots.strings = true;
-	for (const { start, end, holes, escapedQuote, formatted, statement } of pythonStrings(source)) {
+	for (const { start, end, holes, escapedQuote } of literals) {
 		let text = source.slice(start, end);
-		if (statement || !/<nldd-[a-z]/.test(text)) continue;
+		if (!/<nldd-[a-z]/.test(text)) continue;
 		if (escapedQuote) {
 			if (roots.unread < 0) roots.unread = start + text.search(/<nldd-[a-z]/);
 			continue;
 		}
-		const spans = formatted ? holes : [...text.matchAll(/\{[^{}\n]*\}/g)].map((match) => [start + match.index, start + match.index + match[0].length]);
-		for (const [from, to] of spans) {
+		for (const [from, to] of holes) {
 			// Right after a name, as in `<nldd-x{attrs}>`, the hole is not part of that name.
 			const afterName = /[\w-]/.test(text[from - start - 1] ?? '');
 			const room = to - from - (afterName ? 1 : 0);
@@ -1068,6 +1077,8 @@ export function parsePython(source) {
 		}
 		// A start tag the next literal finishes: nothing certain about it here.
 		text = text.replace(/<[a-zA-Z][^<>]*$/, blank);
+		// `<nldd-card[^>]*>` and `<nldd-menu-(item|divider)`: a pattern, and no markup.
+		if ([...text.matchAll(/<nldd-[a-z0-9-]*/g)].some((match) => /[^\s>/]/.test(text[match.index + match[0].length] ?? ' '))) continue;
 		const root = createRoot();
 		const padded = ' '.repeat(start) + text;
 		readHtmlChildren(parseMarkup(padded, { selfClosing: false }).children, root, { lit: true });
@@ -1089,10 +1100,16 @@ export function parsePython(source) {
 	return roots;
 }
 
+/** Markup in the string literals of a Python file. */
+export function parsePython(source) {
+	return readLiterals(source, pythonStrings(source));
+}
+
 /**
- * A script holds `html` templates, or JSX, as a React app writes in a `.js` file.
+ * A script holds `html` templates, or JSX, as a React app writes in a `.js` file,
+ * or markup in plain strings, as a script without a framework puts it together.
  * JSX is read only where no template holds our markup and the file parses as
- * JSX: anything else stays unread, and says so.
+ * JSX with an element in it. What is left is read as string literals.
  */
 export async function parseScript(source, filename) {
 	const templates = parseLit(source);
@@ -1100,12 +1117,14 @@ export async function parseScript(source, filename) {
 	await loadOxc(filename);
 	try {
 		const roots = await parseJsx(source, filename);
-		if (roots.syntaxError) return [];
-		roots.jsx = true;
-		return roots;
+		if (!roots.syntaxError && roots.length > 0) {
+			roots.jsx = true;
+			return roots;
+		}
 	} catch {
-		return [];
+		// Not JSX: its strings are still there to read.
 	}
+	return readLiterals(source, scriptLiterals(source).filter(({ html }) => !html));
 }
 
 function jsxName(node) {
@@ -1482,8 +1501,8 @@ export function readerOf(filename) {
 }
 
 /** @returns {Promise<import('./tree.js').TreeNode[]>} */
-export async function parseSource(source, filename) {
+export async function parseSource(source, filename, options) {
 	const extension = filename.slice(filename.lastIndexOf('.'));
 	const parser = PARSERS[extension];
-	return parser ? parser(source, filename) : [];
+	return parser ? parser(source, filename, options) : [];
 }

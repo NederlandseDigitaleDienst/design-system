@@ -101,7 +101,7 @@ function fixReferences(renamedTags, paths, root, exclude) {
  * @param {{ filename: string, source: string }} [options.input] - one snippet instead of files
  * @param {boolean} [options.fix] - write the fixes that are certain
  * @param {(filename: string) => boolean} [options.keep] - read this file even without a component
- * @param {boolean} [options.markdown] - a scan also reads Markdown and MDX
+ * @param {boolean} [options.markdown] - a scan also reads Markdown and MDX, for the markup they render
  * @returns {Promise<{ results: object[], files: number, unread: number, fixed: number, fixedFiles: number,
  *   notUtf8: string[], symlinks: string[], unstable: string[], partialExcludes: { entry: string, file: string }[], references?: { fixed: number, files: number, remaining: string[] } }>}
  */
@@ -109,6 +109,8 @@ export async function lintProject(data, { root, paths = [], config = {}, severit
 	const everything = readsEverything(data, severities);
 	const scanned = [...DEFAULT_EXTENSIONS, ...STYLESHEET_EXTENSIONS, ...UNREAD_EXTENSIONS, ...SCRIPT_EXTENSIONS, ...STRING_EXTENSIONS, ...(markdown ? MARKDOWN_EXTENSIONS : [])];
 	const inStrings = (filename) => STRING_EXTENSIONS.includes(extname(filename));
+	// Markdown a scan found is read for what it renders. One that is named is read in full, examples too.
+	const scannedMarkdown = (filename) => MARKDOWN_EXTENSIONS.includes(extname(filename)) && !named.has(resolve(filename));
 	// A script named on the command line is read, also in `dist`: only a scan skips it.
 	const named = new Set(paths.map((path) => resolve(root, path)).filter((path) => statSync(path, { throwIfNoEntry: false })?.isFile()));
 	const inputs = input
@@ -147,7 +149,7 @@ export async function lintProject(data, { root, paths = [], config = {}, severit
 		const { createLinter } = await import('./linter.js');
 		const linter = createLinter(data, { wrappers: config.wrappers, severities, projectTokens: projectTokens(inputs) });
 		for (const { filename, source } of relevant) {
-			const options = eventsOnly(filename) ? { only: 'events' } : undefined;
+			const options = eventsOnly(filename) ? { only: 'events' } : scannedMarkdown(filename) ? { rendered: true } : undefined;
 			const linked = fix && isSymlink(filename);
 			const canWrite = fix && !linked && isUtf8(filename);
 			if (linked) symlinks.push(filename);

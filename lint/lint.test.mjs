@@ -1769,15 +1769,15 @@ describe('nldd command', () => {
 		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
 		mkdirSync(join(root, 'dist/_astro'), { recursive: true });
 		mkdirSync(join(root, 'src'));
-		const chunk = 'var b = r`\n:host {\n\t--_button-gap: 4px;\n}\n`;\nconst t = "<nldd-icon>";\n';
+		const chunk = 'var b = r`\n:host {\n\t--_button-gap: 4px;\n}\n`;\nconst t = \'<nldd-icon name="info" foo="b"></nldd-icon>\';\n';
 		writeFileSync(join(root, 'dist/_astro/button.pAKU2ucd.js'), chunk);
 		writeFileSync(join(root, 'dist/index.html'), '<html><body><nldd-gone></nldd-gone></body></html>\n');
 		writeFileSync(join(root, 'src/own.js'), chunk);
 		const built = run(root, 'lint', 'dist');
 		assert.match(built.stdout, /dist\/index\.html:1:13 {2}error {2}unknown-element/);
 		assert.match(built.stdout, /1 error, 0 warnings in 1 file/);
-		assert.match(run(root, 'lint', 'src').stdout, /local-variable-no-override[^]*file-not-read/);
-		assert.match(run(root, 'lint', 'dist/_astro/button.pAKU2ucd.js').stdout, /local-variable-no-override[^]*file-not-read/);
+		assert.match(run(root, 'lint', 'src').stdout, /local-variable-no-override[^]*unknown-attribute/);
+		assert.match(run(root, 'lint', 'dist/_astro/button.pAKU2ucd.js').stdout, /local-variable-no-override[^]*unknown-attribute/);
 	});
 
 	it('reports only what is new after accepting a baseline', () => {
@@ -2062,10 +2062,21 @@ describe('markup the linter cannot read', () => {
 	const linter = createLinter(loadData());
 	const rulesIn = async (source, file) => (await linter.lintSource(source, file)).findings.map(({ rule }) => rule);
 
-	it('says so for a file type without a parser, and for a script without an html template', async () => {
+	it('says so for a file type without a parser', async () => {
 		assert.deepEqual(await rulesIn('<script>let a;</script>\n<nldd-button text="a" foo="b"></nldd-button>', 'a.svelte'), ['file-not-read']);
-		assert.deepEqual(await rulesIn('export const t = `<nldd-button text="a" foo="b"></nldd-button>`;', 'b.mjs'), ['file-not-read']);
 		assert.deepEqual(await rulesIn('// <nldd-button>\nexport const a = 1;', 'c.js'), []);
+	});
+
+	it('reads markup in the plain strings of a script, with a hole as a bound value', async () => {
+		assert.deepEqual(await rulesIn('export const t = `<nldd-button text="a" foo="b"></nldd-button>`;', 'b.mjs'), ['unknown-attribute']);
+		assert.deepEqual(await rulesIn("const a = '<nldd-button text=\"a\" foo=\"b\"></nldd-button>';\nconst b = (c: number) => c;", 'b.js'), ['unknown-attribute']);
+		assert.deepEqual(await rulesIn('const t = (size) => `<nldd-title size="${size}" heading-level="2" text="a"></nldd-title>`;', 'c.js'), []);
+		assert.deepEqual(await rulesIn("const open = '<nldd-list>';\nconst close = '</nldd-list>';", 'd.js'), []);
+		assert.deepEqual(await rulesIn("expect(html).toMatch('<nldd-buton[^>]*>');", 'e.js'), []);
+	});
+
+	it('says so for a string with an escaped quote, where a value is not what it seems', async () => {
+		assert.deepEqual(await rulesIn('const a = "<nldd-button text=\\"a\\" foo=\\"b\\"></nldd-button>";', 'a.js'), ['file-not-read']);
 	});
 
 	it('has no parser for a type it lists as not read', () => {
@@ -2090,9 +2101,8 @@ describe('markup the linter cannot read', () => {
 		assert.deepEqual(await rulesIn('html`<nldd-button text="a" foo="b"></nldd-button>`;', 'a.js'), ['unknown-attribute']);
 	});
 
-	it('reads JSX in a JavaScript file, and says so where it does not parse', async () => {
+	it('reads JSX in a JavaScript file', async () => {
 		assert.deepEqual(await rulesIn('export const A = () => <nldd-button text="a" foo="b" />;', 'a.js'), ['unknown-attribute']);
-		assert.deepEqual(await rulesIn('const a = "<nldd-button>";\nconst b = (c: number) => c;', 'b.js'), ['file-not-read']);
 	});
 
 	it('does not count what a markup parser skips on purpose', async () => {

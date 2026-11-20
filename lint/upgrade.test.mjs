@@ -207,6 +207,11 @@ describe('markup in Python strings', () => {
 		assert.deepEqual((await lint(source)).map(({ rule, line }) => [rule, line]), [['title-size-renamed', 4]]);
 	});
 
+	it('leaves a pattern that looks for markup alone, as a test has', async () => {
+		const source = "import re\na = re.search(r'<nldd-buton[^>]*>', html)\nb = re.compile(r'<nldd-menu-(item|divider)[ >]')\nc = '<nldd-text-feld\\b[^>]*>'\n";
+		assert.deepEqual(await rulesOf(source), []);
+	});
+
 	it('says a literal with an escaped quote was not read', async () => {
 		assert.deepEqual(await rulesOf('a = "<nldd-title size=\\"3\\" text=\\"x\\"></nldd-title>"\n'), ['file-not-read']);
 	});
@@ -223,5 +228,13 @@ describe('Markdown in a scan', () => {
 		const root = project({ 'docs/a.md': '<nldd-title size="4" heading-level="2" text="x"></nldd-title>\n' });
 		assert.equal((await lintProject(DATA, { root, severities })).results.length, 0);
 		assert.equal((await lintProject(DATA, { root, severities, markdown: true })).results.length, 1);
+	});
+
+	it('is read for what it renders: an example in a code block or a mention is documentation', async () => {
+		const page = '# Start\n\nUse `<nldd-buton>` or any `<nldd-*>`, and all <nldd-*> tags.\n\n```html\n<nldd-title size="4"></nldd-title>\n```\n';
+		const root = project({ 'docs/a.md': page });
+		const rulesIn = (session) => session.results.flatMap(({ findings }) => findings.map(({ rule }) => rule)).filter((rule) => rule !== 'title-needs-heading-level');
+		assert.deepEqual(rulesIn(await lintProject(DATA, { root, severities, markdown: true })), []);
+		assert.ok(rulesIn(await lintProject(DATA, { root, severities, paths: ['docs/a.md'] })).includes('title-size-renamed'));
 	});
 });
