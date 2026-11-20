@@ -2,6 +2,7 @@ severity: warn
 context: 'nldd-menu-item:is([text="English"], [text="Deutsch"], [text="Français"], [text="Español"], [text="Frysk"])'
 assert: '[lang]'
 message: 'Set `lang`, so a screen reader pronounces the name in that language.'
+wcag: ['3.1.2']
 see: patronen/page-structure
 examples:
   passed: ['<nldd-menu-item text="English" lang="en" type="radio"></nldd-menu-item>']

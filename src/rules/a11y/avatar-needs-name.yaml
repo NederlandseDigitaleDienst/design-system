@@ -2,6 +2,7 @@ severity: error
 context: 'nldd-avatar:is([href], [button])'
 assert: '[accessible-label], [name]'
 message: 'An avatar with `href` or `button` needs `accessible-label` or `name`, or the control has no accessible name.'
+wcag: ['4.1.2']
 examples:
   passed: ['<nldd-avatar href="/profiel" name="Team Uitvoering"></nldd-avatar>', '<nldd-avatar button accessible-label="Profiel"></nldd-avatar>']
   failed: ['<nldd-avatar href="/profiel"></nldd-avatar>', '<nldd-avatar button></nldd-avatar>']

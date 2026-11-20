@@ -2,6 +2,7 @@ severity: error
 context: 'nldd-switch'
 assert: '[accessible-label], :named-by-field'
 message: 'nldd-switch needs `accessible-label` or a labeled nldd-form-field around it, or use nldd-switch-field. Without one it has no accessible name.'
+wcag: ['4.1.2']
 see: patronen/form
 examples:
   passed: ['<nldd-switch accessible-label="Meldingen"></nldd-switch>', '<nldd-form-field label="Meldingen"><nldd-switch></nldd-switch></nldd-form-field>']

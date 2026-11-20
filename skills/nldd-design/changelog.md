@@ -15,6 +15,16 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Added
+
+- **`nldd explain` names the WCAG success criterion a rule guards.** 62 rules carry one, and they come from four groups: a vague link text is a rule of `copy`, a control inside a control one of `structure`. `nldd rules --json` has it as `wcag`.
+- **Every lint rule has a page in the documentation**, at `/linter/<rule>/`: its level, where it runs, markup that passes and markup that fails, and the selector it is. The lists of rules on a component, a pattern and the linter page link to it.
+- **The accessibility page says who does what for every WCAG 2.2 success criterion at level A and AA**, and lists the lint rules per criterion. New in what is yours to check: a title per page, the focus order of the whole page, and zoom to 200% next to components from elsewhere.
+
+### Fixed
+
+- **The accessibility page said a small control is 32 pixels high.** A small button or field is 34. No control is smaller than 24.
+
 ## [0.27.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.27.0...v0.27.1) (2026-11-20)
 
 ### Added

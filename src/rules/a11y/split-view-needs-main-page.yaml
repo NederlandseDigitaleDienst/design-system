@@ -2,6 +2,7 @@ severity: warn
 context: 'nldd-navigation-split-view:has(nldd-page)'
 assert: ':has(nldd-page[landmarks="page"])'
 message: 'Set landmarks="page" on the page in the pane with the main content, or the screen offers no main landmark or two.'
+wcag: ['1.3.1']
 see: patronen/application
 examples:
   passed: ['<nldd-navigation-split-view><nldd-split-view-pane slot="main"><nldd-page landmarks="page"></nldd-page></nldd-split-view-pane></nldd-navigation-split-view>']
