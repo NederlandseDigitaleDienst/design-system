@@ -2282,3 +2282,27 @@ describe('renamed events', () => {
 		assert.equal(real.removedEvents.tabchange?.use, 'tab-change');
 	});
 });
+
+describe('the commands that open a browser, before they open one', () => {
+	const cli = fileURLToPath(new URL('./cli.js', import.meta.url));
+	const run = (...args) => spawnSync(process.execPath, [cli, ...args], { encoding: 'utf8' });
+
+	it('takes no flag with --url that writes a file or accepts a finding', () => {
+		for (const flag of ['--fix', '--update-baseline', '--tighten-baseline', '--stdin']) {
+			const result = run('lint', '--url', 'http://localhost:1', flag);
+			assert.equal(result.status, 2, flag);
+			assert.match(result.stderr, new RegExp(`--url reads a running page, so it takes no ${flag}\\.`), flag);
+		}
+	});
+
+	it('asks for an address with --url, and a whole number with --max', () => {
+		assert.match(run('lint', '--url', 'localhost:5173').stderr, /--url takes an address that starts with http:\/\/ or https:\/\//);
+		assert.match(run('lint', '--url', 'http://localhost:1', '--max', '0').stderr, /--max takes a whole number above 0/);
+	});
+
+	it('asks compare for two versions and a place for the images', () => {
+		assert.match(run('compare', 'dist').stderr, /nldd compare takes two versions/);
+		assert.match(run('compare', 'old', 'new').stderr, /it takes --out <directory>/);
+		assert.equal(run('compare', 'old', 'new').status, 2);
+	});
+});

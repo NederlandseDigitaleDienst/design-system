@@ -206,13 +206,18 @@ Wat compositie is hoort in een patroon; wat een ontwerpkeuze is hoort in `src/do
 
 `nldd lint` (`lint/`, de `bin` van het pakket) controleert consumentencode: onbekende tags, attributen, slots, waarden en iconen, en fouten in het samenspel van componenten. Gebruik `/rule` om een regel toe te voegen.
 
-Dezelfde regels draaien op drie plekken:
+Dezelfde regels draaien op vier plekken:
 
 | Waar | Wat het ziet |
 |------|--------------|
 | Bron (`.vue`, `.tsx`, `.jsx`, `.js`, `.astro`, `.html`, `.j2`, ook Angular, Django en htmx; `.mdx` en `.md` als je ze noemt) | Vóór de commit, per bestand, alleen wat zeker fout is |
 | Gebouwde HTML (`nldd lint dist`) | Hele pagina's, voor elk framework dat naar HTML bouwt. Scripts in een buildmap (`IGNORED_DIRECTORIES`) slaat hij over: in die chunks staat de CSS van de componenten zelf. Dat gaat op het pad vanaf de projectroot, dus `cd dist && nldd lint` leest ze wel |
+| Een draaiende pagina (`nldd lint --url http://localhost:5173`) | Wat een expressie of een variabele invult, en markup die een ander bestand of een andere taal samenstelt. De linter opent de pagina in een browser, schrijft het document op dat hij daar vindt en leest dat als gebouwde HTML. Met de linter van een nieuwere versie is dit de werklijst van een upgrade voor alles wat de bron onbeslist liet. Vraagt Playwright in het project |
 | Browser, in DEV (`src/utilities/dev-checks.ts`) | Echte waarden en wat componenten samen renderen. Alleen met een bundler die `import.meta.env.DEV` zet, zoals Vite; Angular en server-rendered apps hebben de eerste twee rijen |
+
+Een draaiende pagina is voor de linter HTML die de browser heeft gebouwd. `lint/rendered.js` schrijft het document op met één tag per regel, zodat een bevinding een regel heeft om naar te wijzen, en geeft het aan dezelfde `lintProject` als een bestand. Er is dus één set regels en één soort bevinding. Drie dingen wijken af, en elk heeft een reden. Een hint draait er niet, want op een levende pagina schrijven componenten zelf `style` en `id`. Stylesheets en scripts blijven buiten het document, want een dev-server zet de stijlen van het designsysteem zelf in de pagina. Een property telt alleen waar een regel naar een attribuut vraagt en alleen als ze afwijkt van wat een vers element heeft, zoals in de dev-checks. In een dev-build van React of Vue staat bij een bevinding welk onderdeel van de app het element tekende.
+
+`nldd compare` fotografeert twee versies van een site en omlijnt wat veranderde. Wat als verandering telt staat in `lint/compare-core.js`, zonder browser: pixels en kaders erin, markeringen eruit. Dat bestand draait op twee plekken, in Node voor de tests en als tekst in de pagina waar een canvas de pixels heeft, dus het importeert niets. De tests van beide opdrachten die een browser openen staan in `lint/e2e/` en draaien met `npm run test:lint-browser`, in de job die Chromium heeft.
 
 Wat een template in een tag schrijft (`{% if %}`, `{{ attrs }}`, `*ngIf`) maakt het element onzeker, nooit fout. Wijzig je de parser, draai dan `npm run lint:corpus` op elk soort consument uit de README: Vue, TSX, Astro, Angular, Jinja en gewone HTML.
 

@@ -11,18 +11,18 @@ here; consult the commit history if you need that level of detail.
 
 ### Highlights
 
-- **The upgrade skill shows what an upgrade changes on screen.** `nldd-design-upgrade` now comes with a script that screenshots a site before and after and outlines each component that changed. See Added.
+- **`nldd lint` reads a page as it runs.** `nldd lint --url http://localhost:5173` opens the app in a browser and checks what stands there, with the same rules and the same output as on the source. It finds what an expression or a variable fills in, which the source does not show. See Added.
+- **`nldd compare` shows what an upgrade changes on screen.** It photographs two versions of a site and outlines every component that changed. See Added.
 
 ### Added
 
-- **`compare-builds.mjs` in the `nldd-design-upgrade` skill.** It opens every page of two builds of a static site, at 1280 and at 390 pixels wide, and writes one image per page that differs: before and after side by side, with an outline around each `nldd-*` element that changed size, is no longer drawn, or kept its size and looks different. Content that only moved down the page does not count. It needs Playwright with Chromium.
-
+- **`nldd lint --url <url> [paths...]`.** A running page is HTML that the browser built. The linter opens the page, writes down the document it finds, and reads that as it reads a file from `dist`. So a finding has the rule, the message and the format you know, and points at the element as the browser has it. In a dev build of React or Vue it also names the component of your app that rendered the element. Text that `{name}` puts in an `nldd-text`, a value that comes from a variable, and markup put together in another language are all in it. `--crawl` follows the links to pages of the same site, `--storage-state` takes a saved session for an app behind a login. No hints, no `--fix` and no baseline: a hint is advice for the source, and a rendered page is not a file. It needs Playwright with Chromium in your project.
+- **`nldd compare <before> <after> --out <directory>`.** A version is a directory with a built site, or the address of a running one, so two dev servers compare as two builds do. It opens every page of both at 1280 and at 390 pixels wide, and writes one image per page that differs: before and after side by side, with an outline around each `nldd-*` element that changed size, is no longer drawn, or kept its size and looks different. An element that only moved down the page does not count, and neither do lines of text that each shifted a pixel or two. It needs Playwright with Chromium too.
 - **`nldd lint` finds a listener on a renamed event in a function of your own.** A hook such as `useEvent(ref, 'tabchange', show)` took the old name as an argument, where the linter did not look, so the listener went quiet without a finding. It now reports the name in a function whose own name is about events (`event` or `listen` in it), and leaves out one whose name says it sends, logs or builds, such as `emitEvent` or `trackEvent`. There is no fix: the name of a function does not say which way the event goes, and renaming one end of a bus of your own would break the other.
-- **`collect-dev-findings.mjs` in the `nldd-design-upgrade` skill.** It opens the pages of a running dev build and collects what the components report in the console there: the rules of `nldd lint`, on the elements as they are rendered. That gives what the source cannot, such as text that an expression puts in an `nldd-text`. In a React or Vue dev build it names the component of the app that rendered each element, which is where to look in the source. With `--crawl` it follows links of the same origin.
 
 ### Changed
 
-- **The `nldd-design-upgrade` skill covers what the linter cannot read.** It says where a version can be pinned besides `package.json`, that markup in Markdown and in strings of another language needs a search on the old names, that the built site is worth linting too, and what an upgrade brings to a project that runs `nldd lint` in its own CI. It ends with a list of when an upgrade is done.
+- **The `nldd-design-upgrade` skill covers what the linter cannot read in the source.** It says where a version can be pinned besides `package.json`, that markup in Markdown and in strings of another language needs a search on the old names, that the built site and the running page are worth linting too, that the typed elements of the package turn a value that is gone into a type error, and what an upgrade brings to a project that runs `nldd lint` in its own CI. It ends with a list of when an upgrade is done.
 
 ## [0.27.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.27.0...v0.27.1) (2026-11-20)
 

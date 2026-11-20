@@ -62,13 +62,15 @@ In een app met React, Vue of een ander framework komt er een vierde plek bij: **
 
 **De compiler.** Het pakket levert getypeerde elementen: `import '@nldd/design-system/react'` of `'@nldd/design-system/vue'`. Een waarde die niet meer bestaat is dan een typefout, ook als ze uit een variabele komt. Draai je typecontrole direct na het ophogen van de versie.
 
-**De dev-build.** Daar controleren de componenten de pagina zelf, met de regels van de linter, op de elementen zoals ze getekend zijn. [`collect-dev-findings.mjs`](collect-dev-findings.mjs) uit deze skill opent de pagina's van je draaiende dev-server en verzamelt wat ze in de console melden:
+**De draaiende pagina.** `nldd lint --url` opent je app in een browser en leest de pagina zoals ze daar staat, met dezelfde regels en dezelfde uitvoer als op de bron:
 
 ```sh
-node <pad naar deze skill>/collect-dev-findings.mjs http://localhost:5173 / /aanvragen /instellingen --out bevindingen.json
+npx @nldd/design-system@<doelversie> lint --url http://localhost:5173 / /aanvragen /instellingen
 ```
 
-Met `--crawl` volgt het ook de links naar pagina's van dezelfde herkomst. Per regel krijg je het aantal, de pagina's en een paar elementen met hun tekst. In een dev-build van React of Vue staat erbij welk onderdeel van je app het element tekende, en daar zoek je in de bron. Het aantal telt wat er getekend is: één regel in een rij van een lijst telt voor elke rij mee. Staat je app achter een inlog, geef dan een opgeslagen sessie mee met `--storage-state`. Dit werkt alleen op een dev-build van een bundler die `import.meta.env.DEV` zet, zoals Vite. In een productiebuild zitten de controles niet.
+Met `--crawl` volgt hij ook de links naar pagina's van dezelfde site. Een bevinding wijst naar een regel in wat de browser heeft gebouwd, met het element erbij. In een dev-build van React of Vue staat er ook welk onderdeel van je app het tekende, en daar zoek je in de bron. `--statistics` geeft een telling per regel. Die telt wat er getekend is: één regel in een rij van een lijst telt voor elke rij mee. Staat je app achter een inlog, geef dan een opgeslagen sessie mee met `--storage-state`. De opdracht heeft Playwright met Chromium nodig, in je project of met `--playwright <module>`.
+
+Draai dit op de oude stand met de linter van de doelversie, net als de scan van de bron. Dan heb je de werklijst voordat je de versie ophoogt.
 
 Een eventnaam die via een eigen functie loopt, zoals een hook `useEvent(ref, naam, toon)` met de naam als tekst, vindt de linter als de naam van die functie over events gaat. Hij meldt het en herstelt het niet, want hij kan niet zien of je functie luistert of verstuurt. Heet je functie anders, zoek dan zelf op de oude namen.
 
@@ -80,17 +82,15 @@ Lint je in de buildmap zelf, of heet die map anders dan `dist` of `build`, dan l
 
 ## Voor en na vergelijken
 
-Wat breekt, zie je alleen door te kijken. Doe dat met twee builds naast elkaar:
-
-1. Bouw de site op de oude stand en bewaar de uitvoer.
-2. Bouw hem op de nieuwe stand.
-3. Draai [`compare-builds.mjs`](compare-builds.mjs) uit deze skill, vanuit je project:
+Wat breekt, zie je alleen door te kijken. `nldd compare` doet dat voor je, met twee versies naast elkaar:
 
 ```sh
-node <pad naar deze skill>/compare-builds.mjs <oude build> <nieuwe build> <map voor de beelden> --label-before 0.22.0 --label-after 0.27.1
+npx @nldd/design-system@<doelversie> compare <oude versie> <nieuwe versie> --out beelden --label-before 0.22.0 --label-after 0.27.1
 ```
 
-Het script opent elke pagina van beide builds op 1280 en op 390 pixels breed. Per pagina die verschilt schrijft het één beeld, met voor en na naast elkaar en een omlijning om elk element van het designsysteem dat veranderde:
+Een versie is een map met een gebouwde site, of het adres van een draaiende. Bouw een statische site twee keer, op de oude en op de nieuwe stand, en geef de twee mappen. Draai van een app met een server twee dev-servers naast elkaar, elk op een eigen poort, en geef de twee adressen met de paden die je wilt zien.
+
+De opdracht opent elke pagina van beide versies op 1280 en op 390 pixels breed. Per pagina die verschilt schrijft hij één beeld, met voor en na naast elkaar en een omlijning om elk element van het designsysteem dat veranderde:
 
 | Kleur | Betekenis |
 |---|---|
@@ -100,11 +100,9 @@ Het script opent elke pagina van beide builds op 1280 en op 390 pixels breed. Pe
 | Groen | het element is er nieuw |
 | Grijs | andere pixels buiten een element, op een pagina die even hoog bleef |
 
-Inhoud die alleen lager op de pagina kwam te staan, telt niet. Een pagina is pas gelijk als de twee schermafdrukken pixel voor pixel gelijk zijn. Het script heeft Playwright met Chromium nodig, in je project of met `--playwright <module>`.
+Inhoud die alleen lager op de pagina kwam te staan, telt niet. Een pagina is pas gelijk als de twee schermafdrukken pixel voor pixel gelijk zijn. Ook deze opdracht heeft Playwright met Chromium nodig.
 
 Rood en blauw zijn bijna altijd een fout uit de upgrade. Roze is vaak een bewuste wijziging in het designsysteem, en dan staat ze in de changelog. Zet de beelden in de pull request, met wat je erop ziet.
-
-Het script werkt op een site die naar statische HTML bouwt. Heeft je app een server of een inlog nodig, dan bekijk je de schermen met de hand, op de oude en op de nieuwe stand.
 
 ## Klaar
 
@@ -113,7 +111,7 @@ Een upgrade is klaar als dit allemaal waar is:
 - de `Breaking`-secties tussen de twee versies zijn gelezen, en elk punt dat de app raakt is verwerkt;
 - de versie is op elke plek gelijk;
 - `nldd lint` van de doelversie vindt niets nieuws in de bron en in de gebouwde site;
-- de typecontrole slaagt, en de dev-build meldt niets nieuws in de console;
+- de typecontrole slaagt, en `nldd lint --url` vindt niets nieuws op de draaiende pagina's;
 - de beelden van voor en na zijn bekeken, en wat verschilt is verklaard;
 - de eigen controles van het project slagen: de build, de tests en wat er in de CI draait;
 - een keuze die niet uit de changelog volgt, staat apart in de pull request.

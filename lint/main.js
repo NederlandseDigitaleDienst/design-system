@@ -23,6 +23,19 @@ const USAGE = `Usage:
     --ignore <groups or rules>      all but these
     --statistics                    count per rule instead of listing every finding
     --stdin --filename <name>       check a snippet instead of files
+    --url <url> [paths...]          check pages as they run, in a browser: what an expression or a
+                                    variable fills in, which the source does not show. Needs Playwright
+      --crawl                       also the pages of the same site they link to
+      --max <n>                     at most this many pages (default 40)
+      --storage-state <file>        a Playwright storage state, for a site behind a login
+      --playwright <module>         a playwright module, when the project has none
+  nldd compare <before> <after> [paths...] --out <directory>
+                                    photograph two versions of a site and outline every component that
+                                    changed. A version is a built site in a directory, or the address of
+                                    a running one. Needs Playwright
+    --label-before <text>           what stands above the left half (default: Voor)
+    --label-after <text>            and above the right half (default: Na)
+    --storage-state, --playwright   as with lint --url
   nldd explain <rule>               what a rule checks, and why
   nldd rules [--for <tag>] [--group <group>] [--json]
                                     list the rules, or those about one component or group
@@ -85,6 +98,56 @@ function noteOtherVersion(root) {
 	}
 }
 
+/**
+ * A running page instead of files. Nothing is written and nothing is accepted:
+ * what the browser shows is not a file to fix, and a baseline holds files.
+ */
+async function lintPages(data, paths, options, { root, config, severities }) {
+	for (const flag of ['fix', 'stdin', 'update-baseline', 'tighten-baseline']) {
+		if (options[flag]) throw new Error(`--url reads a running page, so it takes no --${flag}.`);
+	}
+	if (!/^https?:\/\//.test(options.url)) throw new Error('--url takes an address that starts with http:// or https://.');
+	if (options.max !== undefined && !/^[1-9]\d*$/.test(options.max)) throw new Error('--max takes a whole number above 0.');
+	const { lintRendered } = await import('./rendered.js');
+	const session = await lintRendered(data, {
+		root,
+		url: options.url,
+		paths,
+		crawl: options.crawl,
+		max: options.max ? Number(options.max) : undefined,
+		storageState: options['storage-state'],
+		playwright: options.playwright,
+		config,
+		severities,
+	});
+	for (const { url, error } of session.failed) console.error(`Could not open ${url}: ${error}`);
+	if (session.left > 0) console.error(`${session.left} more pages were found and not opened. Raise --max to open them.`);
+	return session;
+}
+
+/** Two versions of a site, side by side. A report to look at, so it never fails a run. */
+async function runCompare([before, after, ...paths], options) {
+	if (!before || !after) throw new Error('nldd compare takes two versions: a directory with a built site, or an address, for each.');
+	if (!options.out) throw new Error('nldd compare writes images, so it takes --out <directory>.');
+	const { compareSites } = await import('./compare.js');
+	const results = await compareSites({
+		root: process.cwd(),
+		before,
+		after,
+		paths,
+		out: options.out,
+		labels: { before: options['label-before'] ?? 'Voor', after: options['label-after'] ?? 'Na' },
+		storageState: options['storage-state'],
+		playwright: options.playwright,
+		onPage: (line) => console.log(line),
+	});
+	const failed = results.filter((result) => result.error).length;
+	const identical = results.filter((result) => result.identical).length;
+	const images = results.filter((result) => result.file).length;
+	console.log(`\n${results.length} comparisons, ${identical} identical, ${images} with an image in ${options.out}${failed ? `, ${failed} that could not be made` : ''}`);
+	return 0;
+}
+
 async function runLint(data, paths, options) {
 	if (!/^\d+$/.test(options['max-warnings'] ?? '0')) throw new Error('--max-warnings takes a whole number, 0 or more.');
 	const formatName = options.format ?? 'text';
@@ -117,7 +180,7 @@ async function runLint(data, paths, options) {
 
 	// Tightening has to see every file the baseline names, also one without a component left.
 	const inBaseline = options['tighten-baseline'] ? new Set(Object.keys(readBaseline(root, canonical))) : new Set();
-	const session = await lintProject(data, {
+	const session = options.url ? await lintPages(data, paths, options, { root, config, severities }) : await lintProject(data, {
 		root,
 		paths,
 		config,
@@ -197,6 +260,14 @@ async function main() {
 			'max-warnings': { type: 'string' },
 			stdin: { type: 'boolean' },
 			filename: { type: 'string' },
+			url: { type: 'string' },
+			crawl: { type: 'boolean' },
+			max: { type: 'string' },
+			'storage-state': { type: 'string' },
+			playwright: { type: 'string' },
+			out: { type: 'string' },
+			'label-before': { type: 'string' },
+			'label-after': { type: 'string' },
 			for: { type: 'string' },
 			group: { type: 'string' },
 			select: { type: 'string' },
@@ -218,6 +289,7 @@ async function main() {
 		console.log(USAGE);
 		return command || values.help ? 0 : 2;
 	}
+	if (command === 'compare') return runCompare(rest, values);
 	const data = loadData();
 	if (command === 'lint') return runLint(data, rest, values);
 	if (command === 'explain' && rest[0]) return explain(data, rest[0]);

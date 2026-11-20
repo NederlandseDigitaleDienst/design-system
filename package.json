@@ -646,6 +646,7 @@
     "pretest:a11y": "npm run build:icons",
     "test:a11y": "node scripts/check-site-a11y.js",
     "test:scripts": "node --test scripts/*.test.mjs scripts/lib/*.test.mjs lint/*.test.mjs www/build/*.test.mjs",
+    "test:lint-browser": "node --test lint/e2e/*.test.mjs",
     "pretypecheck": "npm run build:icons",
     "typecheck": "tsc --noEmit",
     "test:vue-types": "vue-tsc --noEmit -p type-tests/vue/tsconfig.json",

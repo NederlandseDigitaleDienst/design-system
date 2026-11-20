@@ -59,6 +59,8 @@ export function formatText(results, { root, files, unread, ms, skipped, loose, e
 			const label = severity === 'error' ? red('error') : yellow('warn');
 			lines.push(`${bold(location)}  ${label}  ${rule}`, `  ${message}`);
 			if (tag) lines.push(codeFrame(sourceLines[line - 1] ?? '', line, column, tag));
+			// On a running page the line is in what the browser built. This says where it came from.
+			if (finding.renderedBy) lines.push(dim(`  rendered by ${finding.renderedBy}`));
 			lines.push(dim(`  → nldd explain ${rule}`), '');
 		}
 	}
@@ -112,6 +114,7 @@ export function formatJson(results, { root, explainRule, skipped = 0, loose = 0 
 				url: detail?.url,
 				fixable: Boolean(finding.fix),
 				example: detail?.examples?.passed?.[0],
+				...(finding.renderedBy ? { renderedBy: finding.renderedBy } : {}),
 			};
 		}),
 	);
