@@ -60369,16 +60369,6 @@
                   "text": "ScrollMode"
                 }
               }
-            },
-            {
-              "kind": "method",
-              "name": "read",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "description": "Re-read the inherited `--context-scroll-mode` (used on connect + resize)."
             }
           ]
         }

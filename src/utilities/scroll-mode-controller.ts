@@ -203,9 +203,4 @@ export class ScrollModeController implements ReactiveController, StandaloneScrol
 		const raw = getComputedStyle(this._host).getPropertyValue('--context-scroll-mode').trim();
 		return raw === 'root' ? 'root' : 'nested';
 	}
-
-	/** Re-read the inherited `--context-scroll-mode` (used on connect + resize). */
-	read(): void {
-		this.readScrollMode();
-	}
 }

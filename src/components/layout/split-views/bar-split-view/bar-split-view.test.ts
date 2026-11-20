@@ -281,7 +281,7 @@ describe('nldd-bar-split-view – root-scroll sticky insets', () => {
 	// (_updateInsets). In root mode the bars become stacked sticky bars.
 	async function setRootScroll(host: NLDDBarSplitView, on: boolean) {
 		host.style.setProperty('--context-scroll-mode', on ? 'root' : 'nested');
-		(host as unknown as { _scrollMode: { read(): void } })._scrollMode.read();
+		(host as unknown as { _scrollMode: { readScrollMode(): void } })._scrollMode.readScrollMode();
 		await waitForUpdate(host);
 	}
 
