@@ -339,12 +339,14 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 		if (names.length === 0) return [];
 		const name = `(${names.join('|')})`;
 		return [
-			// addEventListener('tabchange'), and an emitter's on('tabchange') or once(…).
-			new RegExp(`(?:\\b(?:add|remove)EventListener|(?<![\\w$])(?:on|once|off))\\(\\s*(['"\`])${name}\\1`, 'dg'),
+			// addEventListener('tabchange').
+			{ pattern: new RegExp(`\\b(?:add|remove)EventListener\\(\\s*(['"\`])${name}\\1`, 'dg'), fixable: true },
+			// An emitter's on('tabchange'), once(…) or off(…): the same name may belong to another library, so no fix.
+			{ pattern: new RegExp(`(?<![\\w$])(?:on|once|off)\\(\\s*(['"\`])${name}\\1`, 'dg'), fixable: false },
 			// @tabchange and v-on: in Vue, Lit and Alpine, hx-on in htmx.
-			new RegExp(`(?<![\\w-])(?:@|v-on:|x-on:|(?:data-)?hx-on(?::|::|-|--))${name}(?![\\w-])`, 'dg'),
+			{ pattern: new RegExp(`(?<![\\w-])(?:@|v-on:|x-on:|(?:data-)?hx-on(?::|::|-|--))${name}(?![\\w-])`, 'dg'), fixable: true },
 			// (tabchange)="…" in Angular.
-			new RegExp(`\\(${name}\\)\\s*=`, 'dg'),
+			{ pattern: new RegExp(`\\(${name}\\)\\s*=`, 'dg'), fixable: true },
 		];
 	})();
 
@@ -353,8 +355,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 		if (eventPatterns.length === 0) return [];
 		const { plain } = codeRegions(source, filename);
 		const findings = [];
-		for (const pattern of eventPatterns) {
-			pattern.lastIndex = 0;
+		for (const { pattern, fixable } of eventPatterns) {
 			for (const match of plain.matchAll(pattern)) {
 				const group = match.length - 1;
 				const name = match[group];
@@ -363,7 +364,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 				const message = use
 					? `\`${name}\` was renamed to \`${use}\` after ${last}, so a listener on the old name is never called.`
 					: `\`${name}\` is no longer fired after ${last}, so this listener is never called.`;
-				findings.push({ rule: 'event-renamed', severity: BUILT_IN_RULES['event-renamed'].severity, message, tag: name, offset, endOffset, ...(use ? { fix: { event: use } } : {}) });
+				findings.push({ rule: 'event-renamed', severity: BUILT_IN_RULES['event-renamed'].severity, message, tag: name, offset, endOffset, ...(use && fixable ? { fix: { event: use } } : {}) });
 			}
 		}
 		return findings;

@@ -641,6 +641,14 @@ describe('--fix', () => {
 			field(` translations='{"components.password-field.hide-action": "Weg", "components.password-field.show-action": "Toon"}'`),
 		);
 		assert.equal(
+			fixed('a.html', field(' show-button-text="Toon &quot;x&quot;"')).text,
+			field(' show-button-text="Toon &quot;x&quot;"'),
+		);
+		assert.equal(
+			fixed('a.vue', '<template><nldd-password-field accessible-label="W" show-button-text=\'Toon "x"\' /></template>').text,
+			`<template><nldd-password-field accessible-label="W" translations='{"components.password-field.show-action": "Toon \\"x\\""}' /></template>`,
+		);
+		assert.equal(
 			fixed('a.html', field(' show-button-text="Toon >"')).text,
 			field(` translations='{"components.password-field.show-action": "Toon >"}'`),
 		);
@@ -2178,6 +2186,12 @@ describe('renamed events', () => {
 		]) {
 			assert.deepEqual(await messagesIn(source, file), [renamed], `${file}: ${source}`);
 		}
+	});
+
+	it('reports an emitter listener on an old name without a fix, since the name may be of another library', async () => {
+		const [finding] = (await linter.lintSource('bus.on("tabchange", show);', 'a.js')).findings.filter(({ rule }) => rule === 'event-renamed');
+		assert.equal(finding.message, renamed);
+		assert.equal(finding.fix, undefined);
 	});
 
 	it('finds the old name with nldd-, and leaves the plain name it became alone', async () => {
