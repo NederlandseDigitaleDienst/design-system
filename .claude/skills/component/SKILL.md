@@ -309,8 +309,10 @@ De website (`npm run www`) maakt de controls onder het eerste voorbeeld zelf, ui
 Wat de website met een `argType` doet, gemeten op de componentpagina's:
 
 - **Volgorde:** de controls staan in de volgorde van de `@property`-declaraties in de class. De volgorde van `argTypes` verandert daar niets aan. Een control zonder attribuut staat onder de attributen, en volgt daar wel `argTypes`.
-- **Soort control:** komt uit het TypeScript-type van het attribuut. `control: 'select'` of `control: 'text'` op een attribuut doet niets, en `control: false` verbergt het niet. Bij een arg zonder attribuut bepaalt `control` wel het soort, en haalt `control: false` hem weg.
-- **Opties:** zonder `options` toont de keuzelijst de waarden uit het type, met `(standaard)` achter de default uit het manifest. Heeft het attribuut geen default, dan staat er een losse optie `(standaard)` bovenaan. Met `options` toont de lijst die van de story, in de volgorde waarin ze er staan.
+- **Soort control:**
+  - Bij een attribuut komt hij uit het TypeScript-type. `control: 'select'` of `control: 'text'` doet daar niets, en `control: false` verbergt hem niet.
+  - Bij een arg zonder attribuut bepaalt `control` het soort, en haalt `control: false` hem weg.
+- **Opties:** zonder `options` toont de keuzelijst de waarden uit het type, met `(standaard)` achter de default. Met `options` toont de lijst die van de story, in de volgorde waarin ze er staan. De default is die uit het manifest, of anders de `table.defaultValue.summary`; staat hij in de lijst, dan krijgt die optie `(standaard)` erachter. Alleen zonder `options` en zonder default in de lijst komt er een losse optie `(standaard)` bovenaan.
 - **Toelichting:** `description` vervangt de Engelse beschrijving uit de JSDoc.
 
 De tabel met attributen op de tab API komt uit het manifest, niet uit `argTypes`.
