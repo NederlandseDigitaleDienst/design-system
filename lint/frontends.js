@@ -263,19 +263,25 @@ function endOfBranch(text, from) {
 	return text.length;
 }
 
+/** Elements whose end tag HTML may leave out: the next one of the kind closes them. */
+const OPTIONAL_END = new Set(['li', 'p', 'dt', 'dd', 'option', 'optgroup', 'tr', 'td', 'th', 'thead', 'tbody', 'tfoot', 'rt', 'rp', 'colgroup', 'caption']);
+
 /**
  * True when every element the markup opens, it also closes, and it closes none it did not open.
- * In doubt it says false: that blanks a branch, which can miss a finding but never make one up.
+ * An element whose end tag HTML may leave out (`<li>`) needs none. In doubt it says false: that
+ * blanks a branch, which can miss a finding but never make one up.
  */
 function isBalanced(markup) {
 	const open = [];
-	for (const [tag, slash, name] of markup.matchAll(/<(\/?)([a-zA-Z][\w-]*)(?:"[^"]*"|'[^']*'|[^'">])*>/g)) {
+	const tags = markup.replace(/<!--[\s\S]*?-->|<(script|style)\b[\s\S]*?<\/\1\s*>/gi, '');
+	for (const [tag, slash, name] of tags.matchAll(/<(\/?)([a-zA-Z][\w-]*)(?:"[^"]*"|'[^']*'|[^'">])*>/g)) {
 		const lower = name.toLowerCase();
 		if (slash) {
+			while (open.length > 0 && open.at(-1) !== lower && OPTIONAL_END.has(open.at(-1))) open.pop();
 			if (open.pop() !== lower) return false;
 		} else if (!VOID.has(lower) && !tag.endsWith('/>')) open.push(lower);
 	}
-	return open.length === 0;
+	return open.every((name) => OPTIONAL_END.has(name));
 }
 
 /** Same length, so positions stay right. */
