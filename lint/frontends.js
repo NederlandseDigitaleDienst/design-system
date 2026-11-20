@@ -249,7 +249,7 @@ const OPENS_MUSTACHE = /^\{\{[-~]?\s*(#|\^\s*[^\s}~-]|(if|range|with|block|defin
 const CLOSES_MUSTACHE = /^\{\{[-~]?\s*(\/|end\b)/;
 
 /** Another branch of a block: `{% elif %}`, `{% else %}`, `{% empty %}`, `{{else}}`, `{{^}}`. */
-const ALTERNATIVE = /^\{%-?\s*(elif|else|empty)\b|^\{\{[-~]?\s*(else\b|\^\s*[-~]?\}\})/;
+const ALTERNATIVE = /^\{%-?\s*(elif|else|empty)\b|^\{\{[-~]?\s*(else(?![\w.-])|\^\s*[-~]?\}\})/;
 
 /** Where the branch ends that starts at `from`: the next `{% else %}` of its block, or the end of the block. */
 function endOfBranch(text, from) {
