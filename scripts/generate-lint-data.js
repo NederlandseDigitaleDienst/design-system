@@ -87,8 +87,11 @@ function updateLedger(path, before, now) {
 	const file = resolve(repoRoot, path);
 	const ledger = existsSync(file) ? read(path) : {};
 	const current = new Set(now);
-	for (const name of before) if (!current.has(name) && !ledger[name]) ledger[name] = { last: pkg.version };
+	const added = before.filter((name) => !current.has(name) && !ledger[name]);
+	for (const name of added) ledger[name] = { last: pkg.version };
 	for (const name of current) delete ledger[name];
+	// Only a person knows whether a name that left got another one, and `--fix` renames on it.
+	if (added.length > 0) console.log(`${path}: added ${added.join(', ')}. Add "use" to each that got another name with the same meaning.`);
 	const lines = Object.keys(ledger).sort().map((name) => `\t${JSON.stringify(name)}: ${JSON.stringify(ledger[name])}`);
 	writeFileSync(file, `{\n${lines.join(',\n')}\n}\n`);
 	return ledger;

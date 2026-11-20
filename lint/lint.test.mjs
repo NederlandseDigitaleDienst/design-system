@@ -235,6 +235,18 @@ describe('built-in rules', () => {
 		assert.deepEqual(await rulesIn('<nldd-button :appearance="a" />'), []);
 	});
 
+	it('lets a rule about a value or a name that is gone speak for the generic finding', async () => {
+		const linter = createLinter(loadData());
+		const rules = async (source) => (await linter.lintSource(`<template>${source}</template>`, 'a.vue')).findings.map(({ rule }) => rule);
+		assert.deepEqual(await rules('<nldd-text text="a" color="inherit" />'), ['text-color-inherit-no-effect']);
+		assert.deepEqual(await rules('<nldd-text text="a" color="blue" />'), ['invalid-value']);
+		assert.deepEqual(await rules('<nldd-text text="a" :color="b" />'), []);
+		assert.deepEqual(await rules('<nldd-password-field accessible-label="a" show-button-text="b" :hide-button-text="c" />'), [
+			'password-field-hide-button-text-no-effect',
+			'password-field-show-button-text-no-effect',
+		]);
+	});
+
 	it('flags an unknown icon', async () => {
 		assert.deepEqual(await rulesIn('<nldd-button icon="plus" />'), []);
 		assert.deepEqual(await rulesIn('<nldd-button icon="nope" />'), ['unknown-icon']);
@@ -654,6 +666,30 @@ describe('--fix', () => {
 		assert.equal(rename('{list.map((b) => <nldd-title text={b} size="3" />)}'), '{list.map((b) => <nldd-title text={b} size="display-3" />)}');
 		assert.equal(rename('<nldd-app-view>{b && <nldd-app-view></nldd-app-view>}</nldd-app-view>'), '<nldd-shell>{b && <nldd-shell></nldd-shell>}</nldd-shell>');
 		assert.equal(rename('<nldd-button text="a" {variant} />'), '<nldd-button text="a" {variant} />');
+	});
+
+	it('renames a value that JSX writes as a literal in braces, and leaves an expression alone', () => {
+		const rename = (attribute) => /<nldd-title [^/]*\/>/.exec(fixed('a.tsx', `export const A = ({ n }) => <nldd-title text="a" ${attribute} />;`).text)[0];
+		assert.equal(rename('size={5}'), '<nldd-title text="a" size="display-5" />');
+		assert.equal(rename('size={"3"}'), '<nldd-title text="a" size="display-3" />');
+		assert.equal(rename("size={ '2' }"), '<nldd-title text="a" size="display-2" />');
+		assert.equal(rename('size={`1`}'), '<nldd-title text="a" size="display-1" />');
+		for (const attribute of ['size={n}', 'size={5 + n}', 'size={`${n}`}', 'size={n ? 5 : 4}', 'size={7}']) {
+			assert.equal(rename(attribute), `<nldd-title text="a" ${attribute} />`);
+		}
+	});
+
+	it('renames a token that got another name, wherever the file reads it', () => {
+		const old = '--context-parent-background-color';
+		assert.equal(fixed('a.css', `.a { background: var(${old}); color: var( ${old}, red ); }`).text, '.a { background: var(--context-background-color); color: var( --context-background-color, red ); }');
+		assert.equal(fixed('a.tsx', `export const A = () => <div style={{ color: "var(${old})" }} />;`).text, 'export const A = () => <div style={{ color: "var(--context-background-color)" }} />;');
+		assert.equal(fixed('a.html', `<nldd-text text="a" style="color: var(${old})"></nldd-text>`).text, '<nldd-text text="a" style="color: var(--context-background-color)"></nldd-text>');
+	});
+
+	it('leaves a token alone that is gone without a successor, or that the file sets itself', () => {
+		for (const source of ['.a { color: var(--components-avatar-background-color); }', '.a { --context-parent-background-color: red; color: var(--context-parent-background-color); }', '/* var(--context-parent-background-color) */ .a {}']) {
+			assert.equal(fixed('a.css', source).text, source);
+		}
 	});
 
 	it('reads MDX and Markdown only when named, and renames a tag in the prose and in a mention', () => {
@@ -1800,6 +1836,28 @@ describe('CSS', () => {
 		assert.deepEqual(await findingsIn('.a { color: var(--semantics-old-color); }', 'a.css', createLinter(data)), [
 			['token-not-found', '`--semantics-old-color` was removed after 0.1.0. Use `--semantics-content-color`.'],
 		]);
+	});
+
+	it('names a successor only while it exists, and every successor in the history does', async () => {
+		const data = { ...real, removedTokens: { '--semantics-old-color': { last: '0.1.0', use: '--semantics-older-color' } } };
+		const { findings } = await createLinter(data).lintSource('.a { color: var(--semantics-old-color); }', 'a.css');
+		assert.deepEqual(findings.map(({ message, fix }) => [message, fix]), [['`--semantics-old-color` was removed after 0.1.0.', undefined]]);
+		const stale = Object.entries(real.removedTokens).filter(([, { use }]) => use && !real.tokens.includes(use));
+		assert.deepEqual(stale, []);
+	});
+
+	it('knows a token from before the history was kept, with the name it has now', async () => {
+		assert.deepEqual(await findingsIn('.a { color: var(--semantics-surfaces-background-color); }', 'a.css'), [
+			['token-not-found', '`--semantics-surfaces-background-color` was removed after 0.8.53. Use `--semantics-surfaces-base-background-color`.'],
+		]);
+	});
+
+	it('names the endings of a token whose name stops short', async () => {
+		assert.deepEqual(await findingsIn('.a { font: var(--primitives-font-body-sm-regular); }', 'a.css'), [
+			['token-not-found', 'There is no token `--primitives-font-body-sm-regular` in this version. The tokens with this name end in `-flat`, `-loose`, `-snug` or `-tight`.'],
+		]);
+		assert.deepEqual(await findingsIn('.a { color: var(--semantics); }', 'a.css'), []);
+		assert.match((await findingsIn('.a { color: var(--semantics-buttons); }', 'a.css'))[0][1], /in this version\.$/);
 	});
 
 	it('accepts a real token, also with a fallback, and leaves a name built at runtime alone', async () => {

@@ -22,11 +22,20 @@ function renameEdits(source, startTag, from, to) {
 	return [{ from: nameStart, to: nameEnd, text: isProperty || name !== from ? toCamelCase(to) : to }];
 }
 
+/** `{5}`, `{"5"}` and `` {`5`} ``: braces around one number or one string without an escape or a hole. */
+const BRACED_LITERAL = /^\{\s*(?:(\d+(?:\.\d+)?)|"([^"\\\n]*)"|'([^'\\\n]*)'|`([^`\\$\n]*)`)\s*\}$/;
+
 /** Only a value written out in the markup: a bound one can hold anything. */
 function valueEdits(source, startTag, name, values) {
 	const found = findAttribute(startTag, name);
 	const value = found?.value;
-	if (!value || found.prefix || value.quote === '{') return [];
+	if (!value || found.prefix) return [];
+	if (value.quote === '{') {
+		// A literal in braces is as certain as a quoted value, and becomes one: the new value is a string.
+		const literal = BRACED_LITERAL.exec(source.slice(value.start, value.end));
+		const written = literal?.slice(1).find((group) => group !== undefined);
+		return written !== undefined && Object.hasOwn(values, written) ? [{ from: value.start, to: value.end, text: `"${values[written]}"` }] : [];
+	}
 	const at = value.quote ? value.start + 1 : value.start;
 	const end = value.quote ? value.end - 1 : value.end;
 	return Object.entries(values).flatMap(([from, to]) =>
@@ -120,6 +129,8 @@ function editsOf(source, finding) {
 		...(fix.tag && mention ? [{ from: offset + 1, to: offset + 1 + tag.length, text: fix.tag }] : []),
 		...(fix.tag && !mention ? tagEdits(source, finding, fix.tag) : []),
 		...(fix.wrap ? wrapEdits(source, finding, fix.wrap) : []),
+		// A token that got another name: the finding spans the old name in a `var()`.
+		...(fix.token && source.startsWith(tag, offset) ? [{ from: offset, to: finding.endOffset, text: fix.token }] : []),
 	];
 }
 

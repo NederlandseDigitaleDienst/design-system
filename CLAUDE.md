@@ -76,7 +76,7 @@ Geen fallbacks. CI faalt als variabelen ontbreken.
 
 ### Een token weghalen
 
-Een token dat uit `variables.css` verdwijnt, breekt elke stylesheet van een app die hem noemt, en de browser zegt niets: de declaratie valt weg. `npm run generate:lint-data` (onderdeel van `generate:cem`) zet elk verdwenen token in `src/assets/styles/removed-tokens.json`, met de laatste versie die hem had. Heeft hij een opvolger, voeg dan `"use"` toe; `nldd lint` noemt die dan in zijn melding. `validate:changelog` faalt zolang de komende release een verdwenen token niet noemt; zet hem onder `### Breaking`.
+Een token dat uit `variables.css` verdwijnt, breekt elke stylesheet van een app die hem noemt, en de browser zegt niets: de declaratie valt weg. `npm run generate:lint-data` (onderdeel van `generate:cem`) zet elk verdwenen token in `src/assets/styles/removed-tokens.json`, met de laatste versie die hem had. Heeft hij een opvolger, voeg dan `"use"` toe; `nldd lint` noemt die dan in zijn melding en `--fix` hernoemt hem. Een `use` is dus alleen een token met dezelfde betekenis, en hij moet zelf nog bestaan (een test in `lint/lint.test.mjs` bewaakt dat). `validate:changelog` faalt zolang de komende release een verdwenen token niet noemt; zet hem onder `### Breaking`.
 
 Een vertaalkey gaat net zo: verdwijnt hij uit een `.i18n.ts`, dan zet `generate:lint-data` hem in `src/translations/removed-keys.json`. Voeg `"use"` toe als hij een nieuwe naam heeft, dan noemt `nldd lint` die bij een `translations`-attribuut met de oude key.
 

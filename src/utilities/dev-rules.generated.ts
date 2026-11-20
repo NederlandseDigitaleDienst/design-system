@@ -719,6 +719,26 @@ export const devRules: DevRule[] = [
 		"context": "nldd-page:state(second-main)"
 	},
 	{
+		"id": "password-field-hide-button-accessible-label-no-effect",
+		"message": "`hide-button-accessible-label` is gone. The accessible name of the button that hides the password is the translation key `components.password-field.hide-accessible-label` now. Set it in `translations` or with `setTranslations()`.",
+		"context": "nldd-password-field[hide-button-accessible-label]"
+	},
+	{
+		"id": "password-field-hide-button-text-no-effect",
+		"message": "`hide-button-text` is gone. The text of the button that hides the password is the translation key `components.password-field.hide-action` now. Set it in `translations` or with `setTranslations()`.",
+		"context": "nldd-password-field[hide-button-text]"
+	},
+	{
+		"id": "password-field-show-button-accessible-label-no-effect",
+		"message": "`show-button-accessible-label` is gone. The accessible name of the button that shows the password is the translation key `components.password-field.show-accessible-label` now. Set it in `translations` or with `setTranslations()`.",
+		"context": "nldd-password-field[show-button-accessible-label]"
+	},
+	{
+		"id": "password-field-show-button-text-no-effect",
+		"message": "`show-button-text` is gone. The text of the button that shows the password is the translation key `components.password-field.show-action` now. Set it in `translations` or with `setTranslations()`.",
+		"context": "nldd-password-field[show-button-text]"
+	},
+	{
 		"id": "popover-anchor-not-found",
 		"message": "Anchor element not found. Set `anchor` or `anchorElement` before calling show().",
 		"context": "nldd-popover:state(no-anchor)"
@@ -1071,6 +1091,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-term[popovertarget]:not([popovertarget=\"\"])",
 		"assert": ":not([source]:not([source=\"\"])):not([source-href]:not([source-href=\"\"]))",
 		"properties": []
+	},
+	{
+		"id": "text-color-inherit-no-effect",
+		"message": "`color=\"inherit\"` is gone: the text takes the colors its surface passes on. Remove it, and where your own CSS sets `color` around it, set `--context-content-color` too.",
+		"context": "nldd-text[color=\"inherit\"]"
 	},
 	{
 		"id": "text-custom-size-invalid",

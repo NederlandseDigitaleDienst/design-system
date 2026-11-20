@@ -976,6 +976,7 @@ One run of body text at a size from the type scale. It is what you reach for whe
 
 **Rules** (`nldd lint`)
 
+- `text-color-inherit-no-effect`: `color="inherit"` is gone: the text takes the colors its surface passes on. Remove it, and where your own CSS sets `color` around it, set `--context-content-color` too.
 - `text-custom-size-invalid`: This is not a size the text can use, so it keeps its size from `size` at this breakpoint. Use a length such as "96px" or "6rem", not a keyword.
 - `text-custom-size-no-effect`: This custom size is smaller than `display-1` at this breakpoint and shows as `display-1`. Use `size` for text up to `display-1`.
 - `text-line-height-no-effect`: `line-height` belongs to the body sizes; a display size has its own line height. Remove it.
@@ -1820,6 +1821,13 @@ A password input field with visibility toggle and validation states.
 **Keywords:** wachtwoord.
 
 **Related:** `<nldd-one-time-code-field>`, `<nldd-text-field>`.
+
+**Rules** (`nldd lint`)
+
+- `password-field-hide-button-accessible-label-no-effect`: `hide-button-accessible-label` is gone. The accessible name of the button that hides the password is the translation key `components.password-field.hide-accessible-label` now. Set it in `translations` or with `setTranslations()`.
+- `password-field-hide-button-text-no-effect`: `hide-button-text` is gone. The text of the button that hides the password is the translation key `components.password-field.hide-action` now. Set it in `translations` or with `setTranslations()`.
+- `password-field-show-button-accessible-label-no-effect`: `show-button-accessible-label` is gone. The accessible name of the button that shows the password is the translation key `components.password-field.show-accessible-label` now. Set it in `translations` or with `setTranslations()`.
+- `password-field-show-button-text-no-effect`: `show-button-text` is gone. The text of the button that shows the password is the translation key `components.password-field.show-action` now. Set it in `translations` or with `setTranslations()`.
 
 **Attributes**
 

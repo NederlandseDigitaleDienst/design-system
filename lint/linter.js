@@ -271,6 +271,16 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 		return (offset) => ranges.some(([start, end]) => offset >= start && offset < end);
 	}
 
+	/**
+	 * The tokens that are this name with one more word, such as the line height a font
+	 * token ends in: the name stops short, and these are what it can be.
+	 */
+	function longerNames(name) {
+		const longer = [...tokens].filter((token) => token.startsWith(`${name}-`) && !token.slice(name.length + 1).includes('-'));
+		if (longer.length < 2 || longer.length > 6) return '';
+		return ` The tokens with this name end in ${longer.map((token) => `\`${token.slice(name.length)}\``).join(', ').replace(/, ([^,]*)$/, ' or $1')}.`;
+	}
+
 	const LINK_CONTEXT = ['--context-link-color', '--context-link-is-hovered-color', '--context-link-is-active-color'];
 
 	/**
@@ -284,17 +294,19 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 		const declared = declarations(source, lineComments).filter((each) => !inDesignSystemCss(each.offset));
 		const ownTokens = new Set(declared.map(({ name }) => name).filter((name) => TOKEN_PREFIX.test(name)));
 		const findings = [];
-		const report = (rule, message, { name, offset }) =>
-			findings.push({ rule, severity: BUILT_IN_RULES[rule].severity, message, tag: name, offset, endOffset: offset + name.length });
+		const report = (rule, message, { name, offset }, fix) =>
+			findings.push({ rule, severity: BUILT_IN_RULES[rule].severity, message, tag: name, offset, endOffset: offset + name.length, fix });
 		for (const reference of tokenReferences(source, lineComments)) {
 			const { name, offset } = reference;
 			if (tokens.has(name) || ownTokens.has(name) || inDesignSystemCss(offset)) continue;
 			const removed = removedTokens[name];
-			const instead = removed?.use ? ` Use \`${removed.use}\`.` : '';
+			// A successor that left in a later release is no advice, and no fix.
+			const use = removed?.use && tokens.has(removed.use) ? removed.use : undefined;
+			const instead = use ? ` Use \`${use}\`.` : longerNames(name);
 			const message = removed
 				? `\`${name}\` was removed after ${removed.last}.${instead}`
-				: `There is no token \`${name}\` in this version.`;
-			report('token-not-found', message, reference);
+				: `There is no token \`${name}\` in this version.${instead}`;
+			report('token-not-found', message, reference, use ? { token: use } : undefined);
 		}
 		for (const declaration of declared) {
 			if (!declaration.name.startsWith('--_')) continue;
@@ -355,6 +367,10 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 	const testsRemovedValue = (rule) =>
 		rule.removed?.some((name) => new RegExp(`\\[${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*[~|^$*]?=`).test(rule.context));
 
+	/** The attributes whose value, as written here, a rule in `api` names: that value is what the rule is about. */
+	const goneValues = (rule, node) =>
+		rule.group === 'api' ? [...node.attrs].filter(([name, value]) => typeof value === 'string' && rule.context.includes(`[${name}="${value}"]`)).map(([name]) => name) : [];
+
 	function lintRoots(roots, isPlainHtml) {
 		const findings = [];
 		const counts = { failed: 0, passed: 0, cantTell: 0 };
@@ -371,7 +387,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 						severity: rule.severity,
 						message: rule.message,
 						node,
-						covers: [...(rule.removed ?? []), ...Object.keys(rule.fix?.value ?? {})],
+						covers: [...(rule.removed ?? []), ...Object.keys(rule.fix?.value ?? {}), ...goneValues(rule, node)],
 						fix: isOurs(node, rule, isPlainHtml) && !(outcome === 'cantTell' && testsRemovedValue(rule)) ? rule.fix : undefined,
 					});
 				}
