@@ -359,7 +359,8 @@ De tabel met attributen op de tab API komt uit het manifest, niet uit `argTypes`
   Verzin geen vierde woord: `(default)`, `(standaard)` en `(afgeleid)` hebben allemaal bestaan en zijn allemaal teruggebracht naar deze drie.
 
   **Staat het woord al als echte waarde in dezelfde dropdown, dan is het label bezet.** Dat is de `0` bij `nldd-container` hierboven, en het gebeurt ook zonder dat de woorden gelijk zijn: `(auto)` naast een echte `inherit` leest als twee manieren om te zeggen "haal het ergens anders vandaan", ook al betekenen ze iets anders. Kies dan geen ander label maar geef de default een naam, dan staan er twee echte waardes en heb je er helemaal geen nodig. Zo werd `color` op `nldd-title` en `nldd-rich-text` `content` naast `inherit`.
-- **Volgorde consistent**: `args`, `argTypes`, template-destructuring en HTML-attributen in de template gebruiken dezelfde volgorde, volgens de canon hieronder.
+- **Volgorde consistent**: `args`, `argTypes`, template-destructuring en HTML-attributen in de template gebruiken dezelfde volgorde, volgens de canon hieronder. Dat is voor wie de code leest; de website neemt de volgorde van de `@property`-declaraties.
+
 ### Canonieke volgorde in de rest van het component
 
 Dezelfde canon geldt buiten de stories, zodat je een component in elk bestand in dezelfde volgorde leest:
