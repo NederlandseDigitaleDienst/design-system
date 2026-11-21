@@ -85,12 +85,6 @@ function clippingBoundary(trigger: Element): Element[] | 'clippingAncestors' {
 	return 'clippingAncestors';
 }
 
-
-type Placement = 'top' | 'bottom' | 'left' | 'right';
-type Timing = 'instant' | 'delay' | 'never';
-
-let tooltipCounter = 0;
-// On a server there is no matchMedia; a tooltip only shows in a browser anyway.
 /** Whether a trigger is on the screen. One with `display: contents` has no
  *  box of its own, so what is in it counts. */
 function shown(trigger: Element): boolean {
@@ -99,6 +93,12 @@ function shown(trigger: Element): boolean {
 	return [...trigger.children].some(shown);
 }
 
+
+type Placement = 'top' | 'bottom' | 'left' | 'right';
+type Timing = 'instant' | 'delay' | 'never';
+
+let tooltipCounter = 0;
+// On a server there is no matchMedia; a tooltip only shows in a browser anyway.
 const coarsePointerQuery = typeof matchMedia === 'function' ? matchMedia('(pointer: coarse)') : null;
 
 // Defaults mirror the values in tooltip.styles.ts. Used as fallback when the
