@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 # Posts what the comparison found under the pull request, with the pictures that show most.
 # In: REPOSITORY, NUMBER, ALL (the artifact), GH_TOKEN, TOOLS, PROJECT.
+#
+# A step with the token after a build ran: commands from the system only, and no hook in git.
 set -euo pipefail
+export PATH=/usr/bin:/bin
+source "$ACTION/confine.sh"
+reset_git
+git() { command git -c core.hooksPath=/dev/null "$@"; }
 
 cd "$TOOLS/compare"
 {
@@ -41,7 +47,7 @@ if [ "$attached" != true ]; then
 	done
 	tree="$(git -C "$PROJECT" write-tree)"
 	commit="$(git -C "$PROJECT" commit-tree "$tree" -m "Beelden van de designsysteem-upgrade")"
-	if git -C "$PROJECT" push --force origin "$commit:refs/nldd/pictures"; then
+	if git -C "$PROJECT" push --no-verify --force origin "$commit:refs/nldd/pictures"; then
 		sed --regexp-extended "s#^(!\[[^]]*\]\()\./([^)]*)\)\$#\1https://github.com/$REPOSITORY/raw/$commit/\2)#" comment.md > hosted.md
 	else
 		echo "::warning::The pictures could not be pushed either. The comment names them, and they are in the artifact."

@@ -94,7 +94,8 @@ runs:
       run: |
         {
           echo "TOOLS=$RUNNER_TEMP/nldd"
-          echo "PROJECT=$RUNNER_TEMP/nldd/project"
+          echo "WORK=$RUNNER_TEMP/nldd-work"
+          echo "PROJECT=$RUNNER_TEMP/nldd-project"
           echo "REPOSITORY=$REPOSITORY"
           echo "ACTION=$GITHUB_ACTION_PATH"
         } >> "$GITHUB_ENV"

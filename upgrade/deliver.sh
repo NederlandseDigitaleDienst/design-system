@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
 # Commits what changed on one branch and opens the pull request, or updates the one that is open.
 # A project that is at the version already has that pull request closed.
-# In: REPOSITORY, BASE, VERSION, CHANGED, APP, GH_TOKEN, TOOLS, PROJECT. Out: number.
+# In: REPOSITORY, BASE, VERSION, CHANGED, APP, GH_TOKEN, TOOLS, WORK, PROJECT. Out: number.
+#
+# This step holds the token, after an agent and the project's own code have run. So it takes its
+# commands from the system only, puts the git configuration back as it was cloned, and runs no hook.
 set -euo pipefail
+export PATH=/usr/bin:/bin
+source "$ACTION/confine.sh"
 
 BRANCH=nldd/design-system-upgrade
 cd "$PROJECT"
@@ -13,6 +18,9 @@ if [ "$CHANGED" != true ]; then
 	fi
 	exit 0
 fi
+
+reset_git
+git() { command git -c core.hooksPath=/dev/null "$@"; }
 
 # The commit is by whoever opens the pull request.
 if [ -n "$APP" ]; then
@@ -31,14 +39,14 @@ git config user.email "$id+$name@users.noreply.github.com"
 title="chore: designsysteem naar $VERSION"
 git switch --force-create "$BRANCH"
 git add --update
-git ls-files --others --exclude-standard | sort | comm -13 "$TOOLS/untracked" - | xargs --no-run-if-empty --delimiter '\n' git add --
-git commit --quiet --message "$title"
-git push --force origin "$BRANCH"
+git ls-files --others --exclude-standard | sort | comm -13 "$TOOLS/untracked" - | xargs --no-run-if-empty --delimiter '\n' git -c core.hooksPath=/dev/null add --
+git commit --quiet --no-verify --message "$title"
+git push --no-verify --force origin "$BRANCH"
 
 if [ -n "$number" ]; then
-	gh pr edit "$number" --repo "$REPOSITORY" --title "$title" --body-file "$TOOLS/upgrade.md"
+	gh pr edit "$number" --repo "$REPOSITORY" --title "$title" --body-file "$WORK/upgrade.md"
 else
-	gh pr create --repo "$REPOSITORY" --base "$BASE" --head "$BRANCH" --title "$title" --body-file "$TOOLS/upgrade.md"
+	gh pr create --repo "$REPOSITORY" --base "$BASE" --head "$BRANCH" --title "$title" --body-file "$WORK/upgrade.md"
 	number="$(gh pr view "$BRANCH" --repo "$REPOSITORY" --json number --jq .number)"
 fi
 echo "number=$number" >> "$GITHUB_OUTPUT"
@@ -46,7 +54,7 @@ echo "number=$number" >> "$GITHUB_OUTPUT"
 # A report too long for one text continues in comments. Those of an earlier run go first.
 gh api --paginate "repos/$REPOSITORY/issues/$number/comments" --jq '.[] | select(.body | startswith("<!-- nldd-upgrade")) | .id' |
 	while read -r comment; do gh api --method DELETE "repos/$REPOSITORY/issues/comments/$comment"; done
-find "$TOOLS" -maxdepth 1 -name 'upgrade.*.md' | sort --version-sort | while read -r part; do
+find "$WORK" -maxdepth 1 -name 'upgrade.*.md' | sort --version-sort | while read -r part; do
 	{ echo '<!-- nldd-upgrade -->'; cat "$part"; } | gh pr comment "$number" --repo "$REPOSITORY" --body-file -
 done
 echo "$REPOSITORY naar $VERSION: $(gh pr view "$number" --repo "$REPOSITORY" --json url --jq .url)" >> "$GITHUB_STEP_SUMMARY"
