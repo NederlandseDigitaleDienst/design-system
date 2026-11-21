@@ -5,16 +5,16 @@
  *
  * @element nldd-stepper
  * @related nldd-number-field
+ * @attr {'xs'|'sm'|'md'} size - Size: 'xs' | 'sm' | 'md' (default: 'md')
+ * @attr {string} accessible-label - Accessible name for the spinbutton; falls back to a generic label
+ * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
+ * @attr {string} name - Name for form submission; the value is submitted under this name
  * @attr {number} value - Current value
  * @attr {number} min - Minimum value (default: 0)
  * @attr {number} max - Maximum value (default: Infinity)
  * @attr {number} step - Step size (default: 1)
  * @attr {boolean} disabled - Disabled state
- * @attr {'xs'|'sm'|'md'} size - Size: 'xs' | 'sm' | 'md' (default: 'md')
- * @attr {string} name - Name for form submission; the value is submitted under this name
- * @attr {string} accessible-label - Accessible name for the spinbutton; falls back to a generic label
  * @attr {object} translations - Translations; unspecified keys fall back to Dutch
- * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
  *
  * @fires change - When the value changes; detail: { value: number }
  */
@@ -48,6 +48,32 @@ export class NLDDStepper extends DescribedBy(FormAssociated(LitElement)) {
 
 
 
+	@property({ reflect: true, converter: reflectNonDefault<StepperSize>('md') })
+	size: StepperSize = 'md';
+
+	/**
+	 * Accessible name for the spinbutton. Without one it falls back to a generic
+	 * "adjust the value", which says what the control does but not which value,
+	 * so give it the name of the field whenever there is one.
+	 */
+	@property({ type: String, attribute: 'accessible-label' })
+	accessibleLabel = '';
+
+	/**
+	 * Marks the control as invalid.
+	 *
+	 * Announced and not drawn. What is wrong belongs in an
+	 * nldd-validation-list, in words: a red ring around a single
+	 * checkbox or radio would say the option is wrong, while it is the question
+	 * that is unanswered. `aria-invalid` still goes on the control, because
+	 * choosing not to show something is not a reason to keep quiet about it.
+	 */
+	@property({ type: Boolean, reflect: true })
+	invalid = false;
+
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	name = '';
+
 	@property({ type: Number })
 	value = 0;
 
@@ -63,37 +89,9 @@ export class NLDDStepper extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-	@property({ reflect: true, converter: reflectNonDefault<StepperSize>('md') })
-	size: StepperSize = 'md';
-
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	name = '';
-
-	/**
-	 * Accessible name for the spinbutton. Without one it falls back to a generic
-	 * "adjust the value", which says what the control does but not which value,
-	 * so give it the name of the field whenever there is one.
-	 */
-	@property({ type: String, attribute: 'accessible-label' })
-	accessibleLabel = '';
-
 	/** Override one or more translation keys. Unspecified keys fall back to Dutch. */
 	@property({ type: Object })
 	translations: Partial<NLDDStepperTranslations> = {};
-
-
-	/**
-	 * Marks the control as invalid.
-	 *
-	 * Announced and not drawn. What is wrong belongs in an
-	 * nldd-validation-list, in words: a red ring around a single
-	 * checkbox or radio would say the option is wrong, while it is the question
-	 * that is unanswered. `aria-invalid` still goes on the control, because
-	 * choosing not to show something is not a reason to keep quiet about it.
-	 */
-	@property({ type: Boolean, reflect: true })
-	invalid = false;
-
 
 	override formValue(): FormValue {
 		return String(this.value);

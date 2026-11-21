@@ -37,20 +37,20 @@ export default {
 		controls: { disable: true },
 	},
 	args: {
-		accessibleLabel: 'Aanvragen',
 		height: '',
+		accessibleLabel: 'Aanvragen',
 		readonly: false,
 	},
 	argTypes: {
+		height: {
+			control: 'text',
+			description: 'Vaste hoogte als CSS-lengte; elke kolom vult die en scrollt daarbinnen',
+		},
 		accessibleLabel: {
 			name: 'accessible-label',
 			control: 'text',
 			description: 'Toegankelijke naam van het bord',
 			table: { defaultValue: { summary: 'Bord' } },
-		},
-		height: {
-			control: 'text',
-			description: 'Vaste hoogte als CSS-lengte; elke kolom vult die en scrollt daarbinnen',
 		},
 		readonly: {
 			control: 'boolean',
@@ -92,8 +92,8 @@ const card = (title: string, text: string, tag?: string) => html`
 export const Standaard = {
 	render: (args: Record<string, any>) => html`
 		<nldd-kanban
-			accessible-label=${args.accessibleLabel || nothing}
 			height=${args.height || nothing}
+			accessible-label=${args.accessibleLabel || nothing}
 			?readonly=${args.readonly}
 			@move=${onMove}
 		>

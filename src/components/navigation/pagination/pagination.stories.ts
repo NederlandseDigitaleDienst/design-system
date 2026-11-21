@@ -61,10 +61,10 @@ export default {
 
 const Template = ({ centered, current, total, disabled}: Record<string, any>) => html`
 	<nldd-pagination
+		?centered=${centered}
 		current=${current}
 		total=${total}
 		?disabled=${disabled}
-		?centered=${centered}
 	></nldd-pagination>
 `;
 

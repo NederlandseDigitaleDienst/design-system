@@ -10,7 +10,7 @@
  *
  * Render the sheet at the document root (teleport/portal it to `document.body`),
  * never inside a split view's content flow: as a slotted flex child it would steal
- * pane height (see `nldd-split-view-pane`).
+ * the height of the pane it lands in.
  *
  * A sheet holds a whole nldd-page: an nldd-top-title-bar in its header slot,
  * the content, and a footer when there are actions. The page behaves as it does

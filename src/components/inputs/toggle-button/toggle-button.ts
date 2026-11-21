@@ -17,27 +17,27 @@
  * @keywords toggle, aan-uitknop
  * @related nldd-switch, nldd-button
  *
- * @attr {'button' | 'checkbox' | 'radio'} type - What the button is: a button with aria-pressed, a native checkbox, or a radio (default: 'button')
+ * @attr {'text' | 'icon' | 'icon-and-text'} variant - What renders: text, icon, or both. Unset → auto-detect from text/icon attributes.
  * @attr {'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'accent-transparent'} appearance - Visual style, color included (default: 'neutral-tinted'). Selected is filled in each of them; the transparent ones are for a toggle among transparent buttons, and with a selected-icon they stay quiet when on.
  * @attr {'xs' | 'sm' | 'md' | 'lg'} size - Button size (default: 'md')
- * @attr {boolean} selected - Selected state
- * @attr {boolean} disabled - Disabled state
- * @attr {boolean} no-tab - Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable.
- * @attr {string} value - Value for form submission (checkbox/radio)
- * @attr {string} name - Name for form submission (checkbox/radio)
  * @attr {string} text - Button text
  * @attr {string} icon - Icon name for nldd-icon
  * @attr {string} selected-icon - Icon shown instead of `icon` while selected, such as `check-mark` for `plus` or `heart-filled` for `heart`. The appearances with a surface fill it when on, as without one. The transparent appearances have no surface to fill: with a selected-icon they stay quiet when on and the change of shape says it is on; without one, or with `variant="text"` where the icon does not render, they fill, so the state always shows.
- * @attr {'text' | 'icon' | 'icon-and-text'} variant - What renders: text, icon, or both. Unset → auto-detect from text/icon attributes.
+ * @attr {string} interestfor - ID of an nldd-popover that describes this button and opens on interest, as the `interest` slot does, for a popover that stands elsewhere: one shared by several buttons, such as who reacted in a row of reactions. Looked up in the tree of this button. A popover in the `interest` slot wins. Keep `accessible-label` on that popover: it names the popover where it stands, and is left out while it describes this button.
  * @attr {string} accessible-label - Accessible label; required for icon-only usage
  * @attr {string} shortcut - Keyboard shortcut hint shown in the tooltip, e.g. 'Cmd+B'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up the handling in your app. Part of the accessible name ("Vet Cmd B"), as in nldd-menu-item. Hidden on touch-only devices, where it isn't invokable.
  * @attr {string} shortcut-mac - Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`).
  * @attr {string} shortcut-windows - Override of `shortcut` on Windows (falls back to `shortcut`).
  * @attr {string} shortcut-linux - Override of `shortcut` on Linux (falls back to `shortcut`).
- * @attr {boolean} required - Required state. Set by nldd-toggle-button-group.
+ * @attr {boolean} no-tab - Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable.
+ * @attr {boolean} selected - Selected state
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
+ * @attr {string} name - Name for form submission (checkbox/radio)
+ * @attr {string} value - Value for form submission (checkbox/radio)
+ * @attr {'button' | 'checkbox' | 'radio'} type - What the button is: a button with aria-pressed, a native checkbox, or a radio (default: 'button')
+ * @attr {boolean} required - Required state. Set by nldd-toggle-button-group.
+ * @attr {boolean} disabled - Disabled state
  *
- * @attr {string} interestfor - ID of an nldd-popover that describes this button and opens on interest, as the `interest` slot does, for a popover that stands elsewhere: one shared by several buttons, such as who reacted in a row of reactions. Looked up in the tree of this button. A popover in the `interest` slot wins. Keep `accessible-label` on that popover: it names the popover where it stands, and is left out while it describes this button.
  *
  * @slot icon - Slot for a custom icon (e.g. custom SVG). Wins over `icon` and `selected-icon`.
  * @slot interest - A single `nldd-popover` that describes this button and opens on interest instead of on a click: when the pointer rests on the button, when it gets keyboard focus, and on a long press on touch. It takes the place of the tooltip of an icon-only button, so let it say what the button does where the icon does not. The button keeps its own click, such as a reaction that you toggle and that shows who reacted. Focus stays on the button, the popover's content is read as the button's description, and Escape closes it. Information only: put no link or button in it. The popover needs no `accessible-label` here.
@@ -71,9 +71,6 @@ export type ToggleButtonVariant = 'text' | 'icon' | 'icon-and-text';
 @customElement('nldd-toggle-button')
 export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 
-
-	@property({ type: Boolean, reflect: true })
-	required = false;
 	static override styles = toggleButtonStyles;
 
 	static formProperties = ['selected'];
@@ -84,33 +81,14 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 
 
 
-	@property({ reflect: true, converter: reflectNonDefault<ToggleButtonType>('button') })
-	type: ToggleButtonType = 'button';
+	@property({ reflect: true, converter: reflectNonDefault<ToggleButtonVariant | ''>('') })
+	variant: ToggleButtonVariant | '' = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<ToggleButtonAppearance>('neutral-tinted') })
 	appearance: ToggleButtonAppearance = 'neutral-tinted';
 
 	@property({ reflect: true, converter: reflectNonDefault<ToggleButtonSize>('md') })
 	size: ToggleButtonSize = 'md';
-
-	@property({ type: Boolean, reflect: true })
-	selected = false;
-
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-	/** Take the control out of the tab order (`tabindex="-1"`), for a control
-	 *  owned by a roving container (an `nldd-list` sets it on the rows that are
-	 *  not the current one) that manages focus itself. Still mouse- and
-	 *  script-focusable. */
-	@property({ type: Boolean, reflect: true, attribute: 'no-tab' })
-	noTab = false;
-
-
-	@property({ type: String })
-	value = 'on';
-
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	name = '';
 
 	/** Button text. */
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
@@ -126,19 +104,11 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ reflect: true, attribute: 'selected-icon', converter: reflectNonDefault<string>('') })
 	selectedIcon = '';
 
-	@property({ reflect: true, converter: reflectNonDefault<ToggleButtonVariant | ''>('') })
-	variant: ToggleButtonVariant | '' = '';
-
-	@property({ type: String, attribute: 'accessible-label' })
-	accessibleLabel = '';
-
 	@property({ type: String, reflect: true })
 	interestfor: string | undefined = undefined;
 
-	/** Wiring for a popover slotted into `interest`: opens it on hover, focus
-	 * and a long press, in place of the tooltip. Not private: the template
-	 * module reads it. */
-	_interest = new InterestInvoker(this);
+	@property({ type: String, attribute: 'accessible-label' })
+	accessibleLabel = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	shortcut = '';
@@ -152,18 +122,15 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ reflect: true, attribute: 'shortcut-linux', converter: reflectNonDefault<string>('') })
 	shortcutLinux = '';
 
-	/** Whether an icon is present via attribute or slot. */
-	get _hasIcon(): boolean {
-		if (this.icon) return true;
-		const slot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="icon"]');
-		if (slot && slot.assignedElements().length > 0) return true;
-		/* On the first render the shadow slot doesn't exist yet, so fall
-		 * back to a light-DOM check so the initial render can see slotted
-		 * content. The slotchange handler triggers re-renders for later
-		 * changes. */
-		return this.querySelector(':scope > [slot="icon"]') !== null;
-	}
+	/** Take the control out of the tab order (`tabindex="-1"`), for a control
+	 *  owned by a roving container (an `nldd-list` sets it on the rows that are
+	 *  not the current one) that manages focus itself. Still mouse- and
+	 *  script-focusable. */
+	@property({ type: Boolean, reflect: true, attribute: 'no-tab' })
+	noTab = false;
 
+	@property({ type: Boolean, reflect: true })
+	selected = false;
 
 	/**
 	 * Marks the control as invalid.
@@ -176,6 +143,39 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 	 */
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
+
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	name = '';
+
+	@property({ type: String })
+	value = 'on';
+
+	@property({ reflect: true, converter: reflectNonDefault<ToggleButtonType>('button') })
+	type: ToggleButtonType = 'button';
+
+	@property({ type: Boolean, reflect: true })
+	required = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
+
+	/** Wiring for a popover slotted into `interest`: opens it on hover, focus
+	 * and a long press, in place of the tooltip. Not private: the template
+	 * module reads it. */
+	_interest = new InterestInvoker(this);
+
+	/** Whether an icon is present via attribute or slot. */
+	get _hasIcon(): boolean {
+		if (this.icon) return true;
+		const slot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="icon"]');
+		if (slot && slot.assignedElements().length > 0) return true;
+		/* On the first render the shadow slot doesn't exist yet, so fall
+		 * back to a light-DOM check so the initial render can see slotted
+		 * content. The slotchange handler triggers re-renders for later
+		 * changes. */
+		return this.querySelector(':scope > [slot="icon"]') !== null;
+	}
+
 
 	/** Set by nldd-toggle-button-group in radio mode: this button's place in the
 	 *  group, which it cannot count by itself. */

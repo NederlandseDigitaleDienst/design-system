@@ -19,6 +19,7 @@ import { loadData } from '../../lint/linter.js';
 import { collectComponents, collectPatterns, parseStoryFile, repoRoot } from './sources.js';
 import { codeViewer, escapeHtml, renderMarkdown } from './markdown.js';
 import { controlFor } from './attribute-values.js';
+import { sortByCanon } from '../../scripts/check-control-order.js';
 import { MARKDOWN_INSERTS } from './skills.js';
 import { DEFAULT_THEME, themesByHue } from '../../scripts/lib/themes.js';
 
@@ -208,14 +209,12 @@ const aboutLinks = `<nldd-container
  * A pane with a page in it: a title bar that takes over the title of the
  * section once it scrolls away, the content below it, and a footer if any.
  */
-function pane({ slot, id, title, back, hasContent = true, landmarks = false, body, footer = '' }) {
+function pane({ slot, id, title, back, landmarks = false, body, footer = '' }) {
 	const backAttributes = back
 		? `\n\t\t\t\tback-text="${escapeHtml(back.text)}"${back.href ? `\n\t\t\t\tback-href="${back.href}"` : ''}`
 		: '';
-	return `<nldd-split-view-pane
-		slot="${slot}"${hasContent ? '\n\t\thas-content' : ''}
-	>
-		<nldd-page
+	return `<nldd-page
+			slot="${slot}"
 			${landmarks ? 'landmarks="page"' : `accessible-label="${escapeHtml(title)}"`}
 			sticky-header
 		>
@@ -224,8 +223,7 @@ function pane({ slot, id, title, back, hasContent = true, landmarks = false, bod
 				text="${escapeHtml(title)}"${landmarks ? '' : '\n\t\t\t\theading-level="2"'}${backAttributes}${id ? `\n\t\t\t\tcollapse-anchor="${id}"` : ''}
 			></nldd-top-title-bar>
 ${body}${footer ? `\n\t\t\t${footer}` : ''}
-		</nldd-page>
-	</nldd-split-view-pane>`;
+		</nldd-page>`;
 }
 
 /** A sidebar pane: its title as the header of the section, and the lists under it. */
@@ -257,86 +255,113 @@ const themeName = (theme) => `${theme.charAt(0).toUpperCase()}${theme.slice(1)}`
  * scheme as its icon and the theme as its text; the script sets both to what
  * the visitor chose.
  */
-function themePicker() {
-	return `<nldd-button
+function themePicker({ compact = false } = {}) {
+	const id = compact ? '-compact' : '';
+	return `${
+		compact
+			? `<nldd-icon-button
+						appearance="secondary"
+						icon="themes"
+						text="Weergave"
+						expandable
+						tooltip-timing="never"
+						data-site-theme-button
+					>`
+			: `<nldd-button
 						appearance="secondary"
 						start-icon="themes"
 						text="${themeName(DEFAULT_THEME)}"
 						expandable
 						data-site-theme-button
-					>
+					>`
+	}
 						<nldd-popover
 							slot="popup"
 							placement="bottom-end"
 							width="360px"
-							accessible-label="Thema en kleurmodus"
+							accessible-label="Weergave"
 						>
-							<nldd-container padding="16">
-								<nldd-title
-									id="site-thema-titel"
-									size="display-5"
-								>
-									<h2>Thema</h2>
-								</nldd-title>
-								<nldd-spacer size="8"></nldd-spacer>
-								<nldd-swatch-picker
-									accessible-label="Thema"
-									value="${DEFAULT_THEME}"
-									data-site-theme-picker
-								>
-									${THEMES.map(
-										(theme) => `<nldd-swatch-picker-item
-										custom-color="var(--primitives-color-reference-${theme})"
-										text="${themeName(theme)}"
-										value="${theme}"
-									></nldd-swatch-picker-item>`,
-									).join('\n\t\t\t\t\t\t\t\t\t')}
-								</nldd-swatch-picker>
-								<nldd-spacer size="16"></nldd-spacer>
-								<nldd-title
-									id="site-kleurmodus-titel"
-									size="display-5"
-								>
-									<h2>Kleurmodus</h2>
-								</nldd-title>
-								<nldd-spacer size="8"></nldd-spacer>
-								<nldd-toggle-button-group
-									type="radio"
-									accessible-labeled-by="site-kleurmodus-titel"
-									data-site-scheme
-								>
-									<nldd-toggle-button
-										text="Systeem"
-										icon="display"
-										value="system"
-										selected
-									></nldd-toggle-button>
-									<nldd-toggle-button
-										text="Donker"
-										icon="moon"
-										value="dark"
-									></nldd-toggle-button>
-									<nldd-toggle-button
-										text="Licht"
-										icon="sun"
-										value="light"
-									></nldd-toggle-button>
-								</nldd-toggle-button-group>
-							</nldd-container>
+							<nldd-page>
+								<nldd-top-title-bar
+									slot="header"
+									text="Weergave"
+									dismiss-text="Sluit"
+								></nldd-top-title-bar>
+								<nldd-container padding="16">
+									<nldd-title
+										id="site-thema-titel${id}"
+										size="display-5"
+									>
+										<h2>Thema</h2>
+									</nldd-title>
+									<nldd-spacer size="8"></nldd-spacer>
+									<nldd-swatch-picker
+										accessible-label="Thema"
+										value="${DEFAULT_THEME}"
+										data-site-theme-picker
+									>
+										${THEMES.map(
+											(theme) => `<nldd-swatch-picker-item
+											custom-color="var(--primitives-color-reference-${theme})"
+											text="${themeName(theme)}"
+											value="${theme}"
+										></nldd-swatch-picker-item>`,
+										).join('\n\t\t\t\t\t\t\t\t\t')}
+									</nldd-swatch-picker>
+									<nldd-spacer size="16"></nldd-spacer>
+									<nldd-title
+										id="site-kleurmodus-titel${id}"
+										size="display-5"
+									>
+										<h2>Kleurmodus</h2>
+									</nldd-title>
+									<nldd-spacer size="8"></nldd-spacer>
+									<nldd-toggle-button-group
+										type="radio"
+										accessible-labeled-by="site-kleurmodus-titel${id}"
+										data-site-scheme
+									>
+										<nldd-toggle-button
+											text="Systeem"
+											icon="display"
+											value="system"
+											selected
+										></nldd-toggle-button>
+										<nldd-toggle-button
+											text="Donker"
+											icon="moon"
+											value="dark"
+										></nldd-toggle-button>
+										<nldd-toggle-button
+											text="Licht"
+											icon="sun"
+											value="light"
+										></nldd-toggle-button>
+									</nldd-toggle-button-group>
+								</nldd-container>
+							</nldd-page>
 						</nldd-popover>
-					</nldd-button>`;
+					</${compact ? 'nldd-icon-button' : 'nldd-button'}>`;
 }
 
 /**
  * The main toolbar, around the panes: back to the landing page and the name
- * of the site at the start, the theme at the end.
+ * of the site at the start, the theme at the end. The way back shows once both
+ * sidebars are on the screen; until then it is in the title bar of the
+ * sections, as on a phone (main.ts switches between the two). Up to md the
+ * theme is an icon button, so the name has room.
  */
-function toolbar() {
-	return `<nldd-container padding="8">
+function toolbar({ compact = false } = {}) {
+	return `<nldd-container
+			slot="${compact ? 'toolbar-compact' : 'toolbar'}"
+			${compact ? 'below="md"' : 'above="lg"'}
+			padding="8"
+		>
 			<nldd-toolbar accessible-label="${SITE_NAME}">
 				<nldd-toolbar-item
 					slot="start"
 					priority="3"
+					data-site-home
 				>
 					<nldd-icon-button
 						icon="chevron-left"
@@ -359,7 +384,7 @@ function toolbar() {
 					slot="end"
 					priority="2"
 				>
-					${themePicker()}
+					${themePicker({ compact })}
 					<nldd-menu-group
 						slot="overflow"
 						text="Thema"
@@ -387,7 +412,7 @@ function toolbar() {
  * @param {object} input
  * @param {string} input.path - where the page lives, `/componenten/button/`
  * @param {string} [input.main] - the content of the page; without it main is empty and says what to pick
- * @param {{ title: string, path: string, nav: string, empty: string }} [input.secondary] - the pages of the section
+ * @param {{ title: string, path: string, nav: string, empty: string, opensFirst?: boolean }} [input.secondary] - the pages of the section
  * @param {string} [input.empty] - what main says to pick when there is neither content nor a section
  */
 function layout({ title, description, path, main, secondary, empty }) {
@@ -403,18 +428,21 @@ function layout({ title, description, path, main, secondary, empty }) {
 				body: main,
 			})
 		: // Nothing chosen yet: no title bar, only what to pick.
-			`<nldd-split-view-pane slot="main">
-		<nldd-page landmarks="page">
+			`<nldd-page
+			slot="main"
+			empty${secondary?.opensFirst ? '\n\t\t\tdata-site-opens-first' : ''}
+			landmarks="page"
+		>
 			<nldd-simple-section grow>
 				<nldd-inline-dialog text="${escapeHtml(secondary?.empty ?? empty)}"></nldd-inline-dialog>
 			</nldd-simple-section>
-		</nldd-page>
-	</nldd-split-view-pane>`;
+		</nldd-page>`;
 	const panes = [
 		sidebarPane({
 			slot: 'primary-sidebar',
 			id: 'secties-titel',
 			title: DOCS,
+			back: { text: 'Home', href: '/' },
 			nav: primaryNavigation(path),
 			footer: aboutLinks,
 		}),
@@ -435,14 +463,11 @@ ${head({ title: secondary && secondary.title !== title ? `${title} · ${secondar
 <body class="site">
 <nldd-shell>
 	<nldd-bar-split-view>
-		<nldd-split-view-pane slot="toolbar">
 		${toolbar()}
-		</nldd-split-view-pane>
-		<nldd-split-view-pane slot="main">
-			<nldd-navigation-split-view>
+		${toolbar({ compact: true })}
+		<nldd-navigation-split-view slot="main">
 	${panes.join('\n\t')}
-			</nldd-navigation-split-view>
-		</nldd-split-view-pane>
+		</nldd-navigation-split-view>
 	</nldd-bar-split-view>
 </nldd-shell>
 </body>
@@ -476,7 +501,9 @@ function controlsOf(component) {
 	const known = loadData().tags[element.tagName]?.attrs ?? {};
 	return {
 		tag: element.tagName,
-		attributes: (element.attributes ?? []).map((a) => controlFor(file, a, known[a.name]?.values)).filter(Boolean),
+		attributes: sortByCanon(element.attributes ?? [], (a) => a.name, element.tagName.replace(/^nldd-/, ''))
+			.map((a) => controlFor(file, a, known[a.name]?.values))
+			.filter(Boolean),
 	};
 }
 
@@ -646,7 +673,7 @@ function describe(text = '') {
 }
 
 function elementApi(element) {
-	const attributes = (element.attributes ?? []).map((a) => ({
+	const attributes = sortByCanon(element.attributes ?? [], (a) => a.name, element.tagName.replace(/^nldd-/, '')).map((a) => ({
 		name: inlineCode(a.name),
 		text: describe(a.description),
 		facts: [
@@ -742,6 +769,7 @@ function siblingNav(groups, current, hrefOf, { label, search } = {}) {
 	return `<nldd-search-field
 					data-site-filter
 					placeholder="${escapeHtml(search.placeholder)}"
+					shortcut="/"
 				></nldd-search-field>
 				<nldd-spacer size="24"></nldd-spacer>
 				${groupList}
@@ -980,7 +1008,7 @@ function changelogEntries(markdown) {
 	return entries;
 }
 
-const changelogPath = (entry, entries) => (entry === entries[0] ? '/changelog/' : `/changelog/${entry.slug}/`);
+const changelogPath = (entry) => `/changelog/${entry.slug || 'komende-versie'}/`;
 
 function changelogPage(entry) {
 	const rendered = renderProse(absoluteLinks(entry.body || 'Geen beschrijving bij deze versie.', 'CHANGELOG.md'));
@@ -1198,21 +1226,22 @@ export function buildPages({ base = '/' } = {}) {
 
 	let stories = 0;
 	const versions = changelogEntries(read('CHANGELOG.md'));
-	// The newest version opens /changelog/, and keeps a link of its own that
-	// stays right once the next version takes its place.
-	const changelogPages = versions.map((entry) => [entry, changelogPath(entry, versions)]);
-	if (versions[0]?.slug) changelogPages.push([versions[0], `/changelog/${versions[0].slug}/`]);
-	for (const [entry, path] of changelogPages) {
+	const changelogList = (current) => ({
+		title: 'Changelog',
+		path: '/changelog/',
+		empty: 'Kies een versie',
+		// Where main is in view beside the list, /changelog/ shows the newest version.
+		opensFirst: true,
+		nav: siblingNav([['', versions]], current, changelogPath, { label: 'Changelog' }),
+	});
+	page('/changelog/', 'Changelog', 'Wat er per versie is veranderd.', undefined, changelogList());
+	for (const entry of versions) {
 		page(
-			path,
+			changelogPath(entry),
 			`Changelog ${entry.slug ? entry.name : entry.name.toLowerCase()}`,
-			path === '/changelog/' ? 'Wat er per versie is veranderd.' : `Wat er in versie ${entry.name} is veranderd.`,
+			`Wat er in ${entry.slug ? `versie ${entry.name}` : 'de komende versie'} is veranderd.`,
 			changelogPage(entry),
-			{
-				title: 'Changelog',
-				path: '/changelog/',
-				nav: siblingNav([['', versions]], entry, (other) => changelogPath(other, versions), { label: 'Changelog' }),
-			},
+			changelogList(entry),
 		);
 	}
 

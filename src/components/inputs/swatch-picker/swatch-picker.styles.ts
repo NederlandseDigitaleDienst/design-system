@@ -64,12 +64,12 @@ export const swatchPickerItemStyles = css`
 		-webkit-tap-highlight-color: transparent;
 	}
 
-	:host([size="xs"]) {
+	:host(:state(size-xs)) {
 		--_swatch-picker-item-size: var(--semantics-controls-xs-min-size);
 		--_swatch-picker-item-indicator-icon-size: 100%;
 	}
 
-	:host([size="sm"]) {
+	:host(:state(size-sm)) {
 		--_swatch-picker-item-size: var(--semantics-controls-sm-min-size);
 		--_swatch-picker-item-indicator-icon-size: 94%;
 	}

@@ -43,11 +43,27 @@ export default {
 			description: 'Semantische variant. Dwingt een icoon en kleur af',
 			table: { defaultValue: { summary: '(geen)' } },
 		},
+		iconColor: {
+			name: 'icon-color',
+			control: 'select',
+			options: ['(geen)', 'secondary', 'accent', 'critical', 'warning', 'success'],
+			mapping: { '(geen)': '' },
+			description: 'Overschrijft de standaard icoonkleur (en die van een variant).',
+			table: { defaultValue: { summary: '(geen)' } },
+		},
 		size: {
 			control: 'select',
 			options: ['md', 'lg'],
 			description: 'Typografische maat: md (default) of lg voor een grotere kop + ondersteuning',
 			table: { defaultValue: { summary: 'md' } },
+		},
+		horizontalAlignment: {
+			name: 'horizontal-alignment',
+			control: 'select',
+			options: ['(auto)', 'left', 'center'],
+			mapping: { '(auto)': '' },
+			description: 'Overschrijft de uitlijning. Bij "(auto)" bepaalt het component het zelf: inhoud in de default slot lijnt links uit, een kale melding blijft gecentreerd.',
+			table: { defaultValue: { summary: '(auto)' } },
 		},
 		text: {
 			control: 'text',
@@ -65,43 +81,27 @@ export default {
 			description: 'Naam van het nldd-icon icoon; afwezig wanneer niet ingesteld. Overschrijft het variant-icoon.',
 			table: { defaultValue: { summary: '(geen)' } },
 		},
-		iconColor: {
-			name: 'icon-color',
-			control: 'select',
-			options: ['(geen)', 'secondary', 'accent', 'critical', 'warning', 'success'],
-			mapping: { '(geen)': '' },
-			description: 'Overschrijft de standaard icoonkleur (en die van een variant).',
-			table: { defaultValue: { summary: '(geen)' } },
-		},
-		horizontalAlignment: {
-			name: 'horizontal-alignment',
-			control: 'select',
-			options: ['(auto)', 'left', 'center'],
-			mapping: { '(auto)': '' },
-			description: 'Overschrijft de uitlijning. Bij "(auto)" bepaalt het component het zelf: inhoud in de default slot lijnt links uit, een kale melding blijft gecentreerd.',
-			table: { defaultValue: { summary: '(auto)' } },
-		},
 	},
 	args: {
 		variant: '',
+		iconColor: '',
 		size: 'md',
+		horizontalAlignment: '',
 		text: "Verwijder 'Dossier D-318'?",
 		supportingText: 'Dit dossier en alle documenten erin worden verwijderd. Dit kan niet ongedaan worden gemaakt.',
 		icon: '',
-		iconColor: '',
-		horizontalAlignment: '',
 	},
 };
 
 export const Standaard = (args: Record<string, any>) => html`
 	<nldd-inline-dialog
 		variant=${args.variant || nothing}
+		icon-color=${args.iconColor || nothing}
 		size=${args.size}
+		horizontal-alignment=${args.horizontalAlignment || nothing}
 		text=${args.text}
 		supporting-text=${args.supportingText}
 		icon=${args.icon || nothing}
-		icon-color=${args.iconColor || nothing}
-		horizontal-alignment=${args.horizontalAlignment || nothing}
 	>
 		<nldd-button
 			slot="actions"

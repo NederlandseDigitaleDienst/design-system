@@ -6,7 +6,9 @@ export function stepBarTemplate(component: NLDDStepBar): TemplateResult {
 	const current = component.resolvedCurrent;
 	const total = component.total;
 	const currentTitle = component.currentItem?.text ?? '';
-	const compactText = component._t('components.step-bar.compact-text', { current, total });
+	const compactText = current
+		? component._t('components.step-bar.compact-text', { current, total })
+		: component._t('components.step-bar.compact-overview-text', { total });
 
 	return html`
 		<nav class="step-bar"

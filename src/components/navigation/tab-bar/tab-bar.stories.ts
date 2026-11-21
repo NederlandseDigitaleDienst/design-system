@@ -41,16 +41,16 @@ export default {
 			description: 'Een nav met links naar andere pagina\'s in plaats van een tablist; de huidige tab volgt de route en krijgt aria-current="page"',
 			table: { defaultValue: { summary: false } },
 		},
-		disabled: {
-			control: 'boolean',
-			description: 'Schakelt de hele balk uit: dimt hem, blokkeert muisinteractie en haalt de tabs uit de tab-volgorde',
-			table: { defaultValue: { summary: false } },
-		},
 		accessibleLabel: {
 			name: 'accessible-label',
 			control: 'text',
 			description: 'Toegankelijk label voor screen readers',
 			table: { defaultValue: { summary: 'Tabs' } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Schakelt de hele balk uit: dimt hem, blokkeert muisinteractie en haalt de tabs uit de tab-volgorde',
+			table: { defaultValue: { summary: false } },
 		},
 	},
 	args: {
@@ -58,8 +58,8 @@ export default {
 		size: 'md',
 		centered: false,
 		navigation: false,
-		disabled: false,
 		accessibleLabel: '',
+		disabled: false,
 	},
 };
 
@@ -81,14 +81,14 @@ const tabBarItems = html`
 	></nldd-tab-bar-item>
 `;
 
-const Template = ({ variant, size, centered, navigation, disabled, accessibleLabel }: Record<string, any>) => html`
+const Template = ({ variant, size, centered, navigation, accessibleLabel, disabled }: Record<string, any>) => html`
 	<nldd-tab-bar
 		variant=${variant || nothing}
 		size=${size || nothing}
 		?centered=${centered}
 		?navigation=${navigation}
-		?disabled=${disabled}
 		accessible-label=${accessibleLabel || nothing}
+		?disabled=${disabled}
 	>
 		${tabBarItems}
 	</nldd-tab-bar>

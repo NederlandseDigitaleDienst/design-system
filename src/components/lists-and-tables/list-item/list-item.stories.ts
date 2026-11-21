@@ -19,16 +19,16 @@ export default {
 	tags: ['autodocs'],
 	args: {
 		size: 'md',
-		href: '',
 		button: false,
 		checkbox: false,
 		radio: false,
 		accessibleLabel: '',
+		currentType: 'page',
 		selected: false,
 		checked: false,
 		expanded: false,
 		current: false,
-		currentType: 'page',
+		href: '',
 		disabled: false,
 	},
 	argTypes: {
@@ -37,10 +37,6 @@ export default {
 			options: ['sm', 'md'],
 			description: 'Grootte van de rij. Gaat door naar de cellen waar `size` hetzelfde betekent, dus je zet hem één keer per rij.',
 			table: { defaultValue: { summary: 'md' } },
-		},
-		href: {
-			control: 'text',
-			description: 'Maakt het hele item een link. Wint van `checkbox`, `radio` en `button`.',
 		},
 		button: {
 			control: 'boolean',
@@ -62,6 +58,13 @@ export default {
 			control: 'text',
 			description: 'Toegankelijke naam van de control van de rij, voor een rij waarvan de tekst op zichzelf niet genoeg zegt. Vervangt voor een schermlezer de hele inhoud van de rij, ook de ondertekst en een status. Zet hem dus alleen op een rij zonder eigen tekst, of zet alles wat ertoe doet erin. De hint voor een andere website of een nieuw tabblad komt erachter.',
 		},
+		currentType: {
+			name: 'current-type',
+			control: 'select',
+			options: ['page', 'step', 'location', 'date', 'time', 'true'],
+			description: 'De waarde van `aria-current` die een `current`- of `selected`-rij in een `navigation`-lijst op zijn link zet. `location` voor een inhoudsopgave, waarvan de rijen naar stukken van deze pagina wijzen.',
+			table: { defaultValue: { summary: 'page' } },
+		},
 		selected: {
 			control: 'boolean',
 			description: 'Een rij die je koos. Blijft grijs, ook met de focus erin; er mogen er meerdere zijn. Voor de rij waar je bent is `current` de juiste.',
@@ -81,12 +84,9 @@ export default {
 			description: 'De rij waar je bent: de pagina waar een menu-item heen wijst, het record dat de lijst open heeft staan. In rust net zo grijs als `selected`, en zodra de focus in de rij staat kleurt hij accent. Eén rij per lijst draagt het, waar `selected` er meerdere mag hebben.',
 			table: { defaultValue: { summary: false } },
 		},
-		currentType: {
-			name: 'current-type',
-			control: 'select',
-			options: ['page', 'step', 'location', 'date', 'time', 'true'],
-			description: 'De waarde van `aria-current` die een `current`- of `selected`-rij in een `navigation`-lijst op zijn link zet. `location` voor een inhoudsopgave, waarvan de rijen naar stukken van deze pagina wijzen.',
-			table: { defaultValue: { summary: 'page' } },
+		href: {
+			control: 'text',
+			description: 'Maakt het hele item een link. Wint van `checkbox`, `radio` en `button`.',
 		},
 		disabled: {
 			control: 'boolean',
@@ -101,16 +101,16 @@ export const Standaard = {
 		<nldd-list appearance="simple">
 			<nldd-list-item
 				size=${args.size}
-				href=${args.href || nothing}
 				?button=${args.button}
 				?checkbox=${args.checkbox}
 				?radio=${args.radio}
 				accessible-label=${args.accessibleLabel || nothing}
+				current-type=${args.currentType === 'page' ? nothing : args.currentType}
 				?selected=${args.selected}
 				?checked=${args.checked}
 				?expanded=${args.expanded}
 				?current=${args.current}
-				current-type=${args.currentType === 'page' ? nothing : args.currentType}
+				href=${args.href || nothing}
 				?disabled=${args.disabled}
 			>
 				<nldd-text-cell

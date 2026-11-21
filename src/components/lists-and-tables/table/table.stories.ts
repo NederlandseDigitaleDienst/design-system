@@ -32,8 +32,8 @@ export default {
 		smColumns: '',
 		mdColumns: '',
 		lgColumns: '',
-		accessibleLabel: 'Gebruikers',
 		selectable: false,
+		accessibleLabel: 'Gebruikers',
 	},
 	argTypes: {
 		background: {
@@ -61,29 +61,29 @@ export default {
 			control: 'text',
 			description: 'Track list als de tabel lg-breed is (≥1008px); valt terug op columns.',
 		},
+		selectable: {
+			control: 'boolean',
+			description: 'Rijen kunnen geselecteerd worden: elke rij krijgt dan `aria-selected`. Zonder `selectable` meldt een schermlezer de tabel ook niet als selecteerbaar. De tint van een `selected` rij werkt in beide gevallen.',
+			table: { defaultValue: { summary: false } },
+		},
 		accessibleLabel: {
 			name: 'accessible-label',
 			control: 'text',
 			description: 'Toegankelijke naam voor de tabel.',
 			table: { defaultValue: { summary: 'Tabel' } },
 		},
-		selectable: {
-			control: 'boolean',
-			description: 'Rijen kunnen geselecteerd worden: elke rij krijgt dan `aria-selected`. Zonder `selectable` meldt een schermlezer de tabel ook niet als selecteerbaar. De tint van een `selected` rij werkt in beide gevallen.',
-			table: { defaultValue: { summary: false } },
-		},
 	},
 };
 
-const Template = ({ background, columns, smColumns, mdColumns, lgColumns, accessibleLabel, selectable }: Record<string, any>) => html`
+const Template = ({ background, columns, smColumns, mdColumns, lgColumns, selectable, accessibleLabel }: Record<string, any>) => html`
 	<nldd-table
 		background=${background}
 		columns=${columns}
 		sm-columns=${smColumns || nothing}
 		md-columns=${mdColumns || nothing}
 		lg-columns=${lgColumns || nothing}
-		accessible-label=${accessibleLabel}
 		?selectable=${selectable}
+		accessible-label=${accessibleLabel}
 	>
 		<nldd-table-row slot="header">
 			<nldd-text-cell text="**Naam**"></nldd-text-cell>

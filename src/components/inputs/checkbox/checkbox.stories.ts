@@ -28,25 +28,6 @@ export default {
 			description: 'Met content krijgt de control de tekstkleur eromheen, voor een gekleurd vlak zoals het paneel van een hero. Anders het accent.',
 			table: { defaultValue: { summary: '(auto)' } },
 		},
-		name: {
-			control: 'text',
-			description: 'Naam voor formulierverwerking',
-		},
-		value: {
-			control: 'text',
-			description: 'Waarde voor formulierverwerking',
-			table: { defaultValue: { summary: 'on' } },
-		},
-		checked: {
-			control: 'boolean',
-			description: 'Aangevinkte toestand',
-			table: { defaultValue: { summary: false } },
-		},
-		indeterminate: {
-			control: 'boolean',
-			description: 'Onbepaalde toestand (gedeeltelijk geselecteerd)',
-			table: { defaultValue: { summary: false } },
-		},
 		accessibleLabel: {
 			name: 'accessible-label',
 			control: 'text',
@@ -62,9 +43,38 @@ export default {
 			control: false,
 			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
 		},
+		decorative: {
+			control: 'boolean',
+			description: 'Tekent het vakje zonder input: geen focus, geen naam/waarde, niets aangekondigd. Voor een control die zijn staat elders heeft, zoals een lijstrij die zelf de checkbox is.',
+			table: { defaultValue: { summary: false } },
+		},
+		checked: {
+			control: 'boolean',
+			description: 'Aangevinkte toestand',
+			table: { defaultValue: { summary: false } },
+		},
+		indeterminate: {
+			control: 'boolean',
+			description: 'Onbepaalde toestand (gedeeltelijk geselecteerd)',
+			table: { defaultValue: { summary: false } },
+		},
 		invalid: {
 			control: 'boolean',
 			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
+			table: { defaultValue: { summary: false } },
+		},
+		name: {
+			control: 'text',
+			description: 'Naam voor formulierverwerking',
+		},
+		value: {
+			control: 'text',
+			description: 'Waarde voor formulierverwerking',
+			table: { defaultValue: { summary: 'on' } },
+		},
+		required: {
+			control: 'boolean',
+			description: 'Verplichte staat.',
 			table: { defaultValue: { summary: false } },
 		},
 		disabled: {
@@ -72,47 +82,37 @@ export default {
 			description: 'Uitgeschakelde toestand',
 			table: { defaultValue: { summary: false } },
 		},
-		required: {
-			control: 'boolean',
-			description: 'Verplichte staat.',
-			table: { defaultValue: { summary: false } },
-		},
-		decorative: {
-			control: 'boolean',
-			description: 'Tekent het vakje zonder input: geen focus, geen naam/waarde, niets aangekondigd. Voor een control die zijn staat elders heeft, zoals een lijstrij die zelf de checkbox is.',
-			table: { defaultValue: { summary: false } },
-		},
 
 	},
 	args: {
 		color: '',
-		name: '',
-		value: 'on',
-		checked: false,
-		indeterminate: false,
 		accessibleLabel: 'Checkbox',
 		accessibleDescription: '',
 		accessibleDescribedBy: '',
-		invalid: false,
-		disabled: false,
-		required: false,
 		decorative: false,
+		checked: false,
+		indeterminate: false,
+		invalid: false,
+		name: '',
+		value: 'on',
+		required: false,
+		disabled: false,
 	},
 };
 
-const Template = ({ color, name, value, checked, indeterminate, accessibleLabel, accessibleDescription, invalid, disabled, required, decorative }: Record<string, any>) => html`
+const Template = ({ color, accessibleLabel, accessibleDescription, decorative, checked, indeterminate, invalid, name, value, required, disabled }: Record<string, any>) => html`
 	<nldd-checkbox
 		color=${color || nothing}
+		accessible-label=${accessibleLabel || nothing}
+		accessible-description=${accessibleDescription || nothing}
+		?decorative=${decorative}
 		?checked=${checked}
 		?indeterminate=${indeterminate}
 		?invalid=${invalid}
+		name=${name}
+		value=${value}
 		?required=${required}
 		?disabled=${disabled}
-		?decorative=${decorative}
-		value=${value}
-		name=${name}
-		accessible-label=${accessibleLabel || nothing}
-		accessible-description=${accessibleDescription || nothing}
 	></nldd-checkbox>
 `;
 

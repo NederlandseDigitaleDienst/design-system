@@ -19,6 +19,16 @@
  *
  * @element nldd-keyboard-shortcut
  * @keywords kbd, hotkey, sneltoets
+ * @attr {string} appearance - 'keycap' (default) shows each key as a keycap with a fill and a
+ *   highlight edge, side by side without a '+'. 'text' shows the keys as plain text: lighter,
+ *   for inline use such as in a menu item. As text the keys are joined by '+' (Ctrl+K), except
+ *   on macOS.
+ * @attr {string} color - 'neutral' (default) uses the component colors of its own. 'content'
+ *   lets the keys and separators follow the content color of the context, with a
+ *   translucent contrast fill and highlight edge. Useful on a filled surface color or a
+ *   highlighted row.
+ * @attr {'sm'|'md'|'inherit'} size - Size: 'sm' | 'md' | 'inherit' (default: 'md'). 'inherit' takes the
+ *   font-size from the container; with keycaps they then scale along in em.
  * @attr {string} keys - Keys separated by '+' (e.g. 'Cmd+K' or 'Ctrl+Shift+P').
  *   End with '++' for a literal '+' key: 'Ctrl++' becomes 'Ctrl' + '+' ('Ctrl+++'
  *   works too). For more complex cases, such as a combo with several '+' keys,
@@ -26,17 +36,7 @@
  * @attr {string} mac-keys - Optional override for macOS (iPhone/iPad/iPod included).
  * @attr {string} windows-keys - Optional override for Windows.
  * @attr {string} linux-keys - Optional override for Linux/ChromeOS.
- * @attr {'sm'|'md'|'inherit'} size - Size: 'sm' | 'md' | 'inherit' (default: 'md'). 'inherit' takes the
- *   font-size from the container; with keycaps they then scale along in em.
- * @attr {string} appearance - 'keycap' (default) shows each key as a keycap with a fill and a
- *   highlight edge, side by side without a '+'. 'text' shows the keys as plain text: lighter,
- *   for inline use such as in a menu item. As text the keys are joined by '+' (Ctrl+K), except
- *   on macOS.
  * @attr {boolean} always-visible - Show on touch-only devices too, where shortcuts cannot be invoked.
- * @attr {string} color - 'neutral' (default) uses the component colors of its own. 'content'
- *   lets the keys and separators follow the content color of the context, with a
- *   translucent contrast fill and highlight edge. Useful on a filled surface color or a
- *   highlighted row.
  * @attr {'mac'|'windows'|'linux'|'other'} debug-os - Development aid: overrides the OS
  *   detection for this instance, so you can show several platform variants side by side in
  *   documentation. Not meant for production use; leave it empty (default) so
@@ -62,21 +62,6 @@ type Appearance = 'keycap' | 'text';
 export class NLDDKeyboardShortcut extends LitElement {
 	static override styles = keyboardShortcutStyles;
 
-	@property({ reflect: true, converter: reflectNonDefault<string>('') })
-	keys = '';
-
-	@property({ reflect: true, attribute: 'mac-keys', converter: reflectNonDefault<string>('') })
-	macKeys = '';
-
-	@property({ reflect: true, attribute: 'windows-keys', converter: reflectNonDefault<string>('') })
-	windowsKeys = '';
-
-	@property({ reflect: true, attribute: 'linux-keys', converter: reflectNonDefault<string>('') })
-	linuxKeys = '';
-
-	@property({ reflect: true, converter: reflectNonDefault<Size>('md') })
-	size: Size = 'md';
-
 	/**
 	 * 'keycap' (default) renders each key as a keycap with a fill and highlight
 	 * border. 'text' renders the keys as plain text: lighter, for inline use
@@ -93,6 +78,21 @@ export class NLDDKeyboardShortcut extends LitElement {
 	 */
 	@property({ reflect: true, converter: reflectNonDefault<Color>('neutral') })
 	color: Color = 'neutral';
+
+	@property({ reflect: true, converter: reflectNonDefault<Size>('md') })
+	size: Size = 'md';
+
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	keys = '';
+
+	@property({ reflect: true, attribute: 'mac-keys', converter: reflectNonDefault<string>('') })
+	macKeys = '';
+
+	@property({ reflect: true, attribute: 'windows-keys', converter: reflectNonDefault<string>('') })
+	windowsKeys = '';
+
+	@property({ reflect: true, attribute: 'linux-keys', converter: reflectNonDefault<string>('') })
+	linuxKeys = '';
 
 	@property({ type: Boolean, reflect: true, attribute: 'always-visible' })
 	alwaysVisible = false;

@@ -27,8 +27,8 @@
  * attribute path; slotted content is rendered as-is.
  *
  * @element nldd-text-cell
- * @attr {'sm'|'md'} size - Cell size: 'sm' | 'md' (default: 'md')
  * @attr {'content'|'secondary'|'accent'|'success'|'warning'|'critical'} color - Text color variant: 'content' (the default) | 'secondary' | 'accent' | 'success' | 'warning' | 'critical'. All variants other than those two apply to all three text fields so the cell reads as a coherent state.
+ * @attr {'sm'|'md'} size - Cell size: 'sm' | 'md' (default: 'md')
  * @attr {string} width - 'full' | 'fit-content' | CSS length (e.g. '200px', '20rem'). Default: 'full'
  * @attr {string} min-width - Minimum width as CSS length (e.g. '80px', '5rem')
  * @attr {string} max-width - Maximum width as CSS length (e.g. '200px', '20rem')
@@ -82,11 +82,11 @@ type VerticalAlignment = 'top' | 'center' | 'bottom';
 export class NLDDTextCell extends ReorderHandleMixin(RowHeaderMixin(VisibilityMixin(LitElement, 'cells-container'))) {
 	static override styles = [textCellStyles];
 
-	@property({ reflect: true, converter: reflectNonDefault<Size>('md') })
-	size: Size = 'md';
-
 	@property({ reflect: true, converter: reflectNonDefault<Color>('content') })
 	color: Color = 'content';
+
+	@property({ reflect: true, converter: reflectNonDefault<Size>('md') })
+	size: Size = 'md';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('full') })
 	width: string = 'full';

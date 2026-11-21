@@ -45,10 +45,10 @@
  *
  * @attr {'neutral'|'accent'|'success'|'warning'|'critical'} variant - Color of the bar (default: 'neutral')
  * @attr {string} text - The status text (one line; truncated with an ellipsis)
+ * @attr {boolean} button - Makes the whole bar a button; ignored when href is set
  * @attr {string} href - Makes the whole bar a link (renders an <a>)
  * @attr {string} target - Link target (e.g. '_blank'); only used with href
  * @attr {string} rel - Link rel, used with href; with target '_blank', 'noopener noreferrer' is added to whatever you set
- * @attr {boolean} button - Makes the whole bar a button; ignored when href is set
  */
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
@@ -97,6 +97,9 @@ export class NLDDStatusBar extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	text = '';
 
+	@property({ type: Boolean, reflect: true })
+	button = false;
+
 	@property({ type: String })
 	href = '';
 
@@ -107,9 +110,6 @@ export class NLDDStatusBar extends LitElement {
 	/** Link rel attribute. Only used when href is set. */
 	@property({ type: String })
 	rel = '';
-
-	@property({ type: Boolean, reflect: true })
-	button = false;
 
 	override connectedCallback(): void {
 		super.connectedCallback();

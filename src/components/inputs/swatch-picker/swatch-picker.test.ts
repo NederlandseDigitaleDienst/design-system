@@ -1,6 +1,7 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import './swatch-picker.js';
+import '../../../assets/styles/variables.css';
 import type { NLDDSwatchPicker, NLDDSwatchPickerItem } from './swatch-picker.js';
 
 describe('nldd-swatch-picker', () => {
@@ -135,7 +136,23 @@ describe('nldd-swatch-picker', () => {
 		el = await fixture(picker('size="sm"'));
 		await settle();
 		expect(items().map((item) => item.size)).toEqual(['sm', 'sm', 'sm']);
-		expect(items().map((item) => item.getAttribute('size'))).toEqual(['sm', 'sm', 'sm']);
+		expect(items().some((item) => item.hasAttribute('size'))).toBe(false);
+		expect(items().every((item) => item.matches(':state(size-sm)'))).toBe(true);
+		expect(items().some((item) => item.matches(':state(size-md)'))).toBe(false);
+	});
+
+	it('tekent elk staaltje op de size die de picker doorgeeft', async () => {
+		const token = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+		const size = (item: HTMLElement) => getComputedStyle(item).getPropertyValue('--_swatch-picker-item-size').trim();
+		el = await fixture(picker());
+		await settle();
+		expect(items().every((item) => item.matches(':state(size-md)'))).toBe(true);
+		expect(size(items()[0])).toBe(token('--semantics-controls-md-min-size'));
+		for (const value of ['xs', 'sm'] as const) {
+			(el as NLDDSwatchPicker).size = value;
+			await settle();
+			expect(size(items()[0])).toBe(token(`--semantics-controls-${value}-min-size`));
+		}
 	});
 	it('houdt de naam na een klik met de muis tot de muis eraf gaat', async () => {
 		el = await fixture(picker());

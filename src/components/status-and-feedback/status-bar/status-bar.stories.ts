@@ -30,9 +30,9 @@ export default {
 	args: {
 		variant: 'neutral',
 		text: 'Gepland onderhoud zaterdagavond, 22:00–00:00',
+		button: false,
 		href: '',
 		target: '',
-		button: false,
 	},
 	argTypes: {
 		variant: {
@@ -45,6 +45,11 @@ export default {
 			control: 'text',
 			description: 'De statustekst (één regel; afgekapt met ellipsis)',
 		},
+		button: {
+			control: 'boolean',
+			description: 'Maakt de hele balk een button; genegeerd als href is gezet',
+			table: { defaultValue: { summary: false } },
+		},
 		href: {
 			control: 'text',
 			description: 'Maakt de hele balk een link',
@@ -56,11 +61,6 @@ export default {
 			description: 'Link target (alleen gebruikt als href is gezet)',
 			table: { defaultValue: { summary: '(geen)' } },
 		},
-		button: {
-			control: 'boolean',
-			description: 'Maakt de hele balk een button; genegeerd als href is gezet',
-			table: { defaultValue: { summary: false } },
-		},
 	},
 };
 
@@ -68,9 +68,9 @@ const Template = (args: Record<string, any>) => html`
 	<nldd-status-bar
 		variant=${args.variant}
 		text=${args.text}
+		?button=${args.button}
 		href=${args.href || nothing}
 		target=${args.target || nothing}
-		?button=${args.button}
 	></nldd-status-bar>
 `;
 

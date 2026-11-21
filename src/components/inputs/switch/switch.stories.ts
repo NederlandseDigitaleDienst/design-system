@@ -29,11 +29,6 @@ export default {
 			description: 'Grootte van de switch',
 			table: { defaultValue: { summary: 'sm' } },
 		},
-		checked: {
-			control: 'boolean',
-			description: 'Aangevinkte toestand',
-			table: { defaultValue: { summary: false } },
-		},
 		accessibleLabel: {
 			name: 'accessible-label',
 			control: 'text',
@@ -49,14 +44,14 @@ export default {
 			control: false,
 			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
 		},
+		checked: {
+			control: 'boolean',
+			description: 'Aangevinkte toestand',
+			table: { defaultValue: { summary: false } },
+		},
 		invalid: {
 			control: 'boolean',
 			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
-			table: { defaultValue: { summary: false } },
-		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde toestand',
 			table: { defaultValue: { summary: false } },
 		},
 		required: {
@@ -64,31 +59,36 @@ export default {
 			description: 'Verplichte staat.',
 			table: { defaultValue: { summary: false } },
 		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde toestand',
+			table: { defaultValue: { summary: false } },
+		},
 
 	},
 	args: {
 		color: '',
 		size: 'sm',
-		checked: false,
 		accessibleLabel: 'Switch',
 		accessibleDescription: '',
 		accessibleDescribedBy: '',
+		checked: false,
 		invalid: false,
-		disabled: false,
 		required: false,
+		disabled: false,
 	},
 };
 
-const Template = ({ color, size, checked, accessibleLabel, accessibleDescription, invalid, disabled, required }: Record<string, any>) => html`
+const Template = ({ color, size, accessibleLabel, accessibleDescription, checked, invalid, required, disabled }: Record<string, any>) => html`
 	<nldd-switch
 		color=${color || nothing}
+		size=${size}
+		accessible-label=${accessibleLabel || nothing}
+		accessible-description=${accessibleDescription || nothing}
 		?checked=${checked}
 		?invalid=${invalid}
 		?required=${required}
 		?disabled=${disabled}
-		size=${size}
-		accessible-label=${accessibleLabel || nothing}
-		accessible-description=${accessibleDescription || nothing}
 	></nldd-switch>
 `;
 

@@ -175,6 +175,7 @@ export const papCW: Record<TranslationKey, string> = {
 	'components.file-field.show-options-action': 'Mustra opshon',
 	'components.file-field.required-error-text': 'Un archivo ta obligatorio',
 	'components.file-field.accepted-types-text': 'Permití: {types}',
+	'components.form-field.optional-label': 'Opshonal',
 	'components.number-field.decrement-action': 'Baha',
 	'components.number-field.increment-action': 'Subi',
 	'components.number-field.to-adjust-value-action': 'Ahustá balor',
@@ -318,6 +319,7 @@ export const papCW: Record<TranslationKey, string> = {
 	'components.step-bar.status-current-label': 'Paso aktual',
 	'components.step-bar.status-future-label': 'Ainda pa hasi',
 	'components.step-bar.compact-text': 'Paso {current} di {total}',
+	'components.step-bar.compact-overview-text': '{total} pasonan',
 	'components.term.source-capitalize': 'Fuente',
 	'components.term.sheet-dismiss-action': 'Sera',
 };

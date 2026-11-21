@@ -129,7 +129,7 @@ export const segmentedControlItemStyles = css`
 		-webkit-tap-highlight-color: transparent;
 	}
 
-	:host([appearance="neutral-base"]) {
+	:host(:state(appearance-neutral-base)) {
 		--_segmented-control-item-content-color: var(--semantics-buttons-neutral-base-content-color);
 		--_segmented-control-item-is-hovered-background-color: var(--semantics-buttons-neutral-base-is-hovered-background-color);
 		--_segmented-control-item-is-hovered-content-color: var(--semantics-buttons-neutral-base-is-hovered-content-color);
@@ -150,7 +150,7 @@ export const segmentedControlItemStyles = css`
 		display: none;
 	}
 
-	:host([size="sm"]) {
+	:host(:state(size-sm)) {
 		--_segmented-control-item-corner-radius: var(--semantics-controls-sm-corner-radius);
 		--_segmented-control-item-min-size: var(--semantics-controls-sm-min-size);
 		--_segmented-control-item-block-padding: var(--semantics-controls-sm-block-padding);
@@ -160,7 +160,7 @@ export const segmentedControlItemStyles = css`
 		--_segmented-control-item-icon-size: var(--semantics-buttons-sm-icon-size);
 	}
 
-	:host([size="lg"]) {
+	:host(:state(size-lg)) {
 		--_segmented-control-item-corner-radius: var(--semantics-controls-lg-corner-radius);
 		--_segmented-control-item-min-size: var(--semantics-controls-lg-min-size);
 		--_segmented-control-item-block-padding: var(--semantics-controls-lg-block-padding);
@@ -170,25 +170,25 @@ export const segmentedControlItemStyles = css`
 		--_segmented-control-item-icon-size: var(--semantics-buttons-lg-icon-size);
 	}
 
-	:host([variant="icon"]) {
+	:host(:state(variant-icon)) {
 		--_segmented-control-item-block-padding: var(--semantics-buttons-md-is-icon-only-inline-padding);
 		--_segmented-control-item-inline-padding: var(--semantics-buttons-md-is-icon-only-inline-padding);
 		--_segmented-control-item-icon-size: var(--semantics-buttons-md-is-icon-only-icon-size);
 	}
 
-	:host([variant="icon"][size="sm"]) {
+	:host(:state(variant-icon):state(size-sm)) {
 		--_segmented-control-item-block-padding: var(--semantics-buttons-sm-is-icon-only-inline-padding);
 		--_segmented-control-item-inline-padding: var(--semantics-buttons-sm-is-icon-only-inline-padding);
 		--_segmented-control-item-icon-size: var(--semantics-buttons-sm-is-icon-only-icon-size);
 	}
 
-	:host([variant="icon"][size="lg"]) {
+	:host(:state(variant-icon):state(size-lg)) {
 		--_segmented-control-item-block-padding: var(--semantics-buttons-lg-is-icon-only-inline-padding);
 		--_segmented-control-item-inline-padding: var(--semantics-buttons-lg-is-icon-only-inline-padding);
 		--_segmented-control-item-icon-size: var(--semantics-buttons-lg-is-icon-only-icon-size);
 	}
 
-	:host([variant="icon-and-text"][size="lg"]) {
+	:host(:state(variant-icon-and-text):state(size-lg)) {
 		--_segmented-control-item-block-padding: var(--primitives-space-8);
 		--_segmented-control-item-inline-padding: var(--primitives-space-8);
 		--_segmented-control-item-gap: var(--primitives-space-2);
@@ -220,7 +220,7 @@ export const segmentedControlItemStyles = css`
 		font: var(--_segmented-control-item-font);
 	}
 
-	:host([size="lg"][variant="icon-and-text"]) .segmented-control__item {
+	:host(:state(size-lg):state(variant-icon-and-text)) .segmented-control__item {
 		flex-direction: column;
 	}
 
@@ -310,7 +310,7 @@ export const segmentedControlItemStyles = css`
 		text-overflow: ellipsis;
 	}
 
-	:host([variant="icon"]) .segmented-control__item-text {
+	:host(:state(variant-icon)) .segmented-control__item-text {
 		display: none;
 	}
 
@@ -324,11 +324,11 @@ export const segmentedControlItemStyles = css`
 		justify-content: center;
 	}
 
-	:host([variant="icon-and-text"]) .segmented-control__item-icon {
+	:host(:state(variant-icon-and-text)) .segmented-control__item-icon {
 		display: flex;
 	}
 
-	:host([variant="icon"]) .segmented-control__item-icon {
+	:host(:state(variant-icon)) .segmented-control__item-icon {
 		display: flex;
 	}
 

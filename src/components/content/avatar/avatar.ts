@@ -28,21 +28,21 @@
  * @keywords profile picture, profielfoto
  * @related nldd-identity, nldd-avatar-group, nldd-image
  *
- * @attr {string} type - `person` (circle, person icon) or `organization` (rounded, building icon); default `person`
- * @attr {string} size - `full` (the default) scales with the container, like nldd-icon; or a fixed size in px (spacer-aligned: 16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96). The initials and the icon scale along
  * @attr {string} color - `neutral` (the default, a neutral fill) or `content` (fill in the content color: the `--context-content-color` a surface, a button or a selected row sets; text in the contrast color, so the avatar can replace an icon in a button for instance)
+ * @attr {string} size - `full` (the default) scales with the container, like nldd-icon; or a fixed size in px (spacer-aligned: 16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96). The initials and the icon scale along
  * @attr {boolean} icon-aligned - Shrinks the visible shape to 5/6 of the host, centered, so the avatar aligns optically with an icon on the same grid (an icon glyph has built-in margin)
- * @attr {string} name - Name of the person or organization; supplies the derived initials and the accessible label
+ * @attr {string} icon - Overrides the type-dependent fallback icon
  * @attr {string} initials - Explicit initials, at most 4 characters, such as `KvK` or `LVVN` (overrides what is derived from `name`; also for organization acronyms). Four characters read well from 40px; below that use a shorter form
  * @attr {string} src - Image source; falls back to initials or icon when it fails to load
  * @attr {string} srcset - Responsive source set for the image (the component sets `sizes` itself)
- * @attr {string} icon - Overrides the type-dependent fallback icon
+ * @attr {boolean} button - Makes the avatar a button; ignored when `href` is set
  * @attr {string} accessible-label - Name of the link or button; without it `name` is used
  * @attr {boolean} decorative - Hides the avatar from assistive software (use when the name already stands beside it as text)
- * @attr {string} tooltip-timing - When the name appears as a tooltip on hover or focus: `delay` (the default, after 700ms), `instant`, or `never`. An avatar shows no text, so without a tooltip the name is readable by assistive software only. A `decorative` avatar shows none regardless: there the name already stands beside it as text
- * @attr {string} href - Makes the avatar a link to this URL; the shape itself becomes the link, so the hit area and the focus ring follow it. As a link or a button the avatar needs size 24 or larger (WCAG 2.5.8)
  * @attr {boolean} no-tab - Takes the control out of the tab order (tabindex="-1"), for an avatar that is a link or a button inside a roving container (a row of an nldd-list). Does nothing on a decorative avatar.
- * @attr {boolean} button - Makes the avatar a button; ignored when `href` is set
+ * @attr {string} tooltip-timing - When the name appears as a tooltip on hover or focus: `delay` (the default, after 700ms), `instant`, or `never`. An avatar shows no text, so without a tooltip the name is readable by assistive software only. A `decorative` avatar shows none regardless: there the name already stands beside it as text
+ * @attr {string} name - Name of the person or organization; supplies the derived initials and the accessible label
+ * @attr {string} type - `person` (circle, person icon) or `organization` (rounded, building icon); default `person`
+ * @attr {string} href - Makes the avatar a link to this URL; the shape itself becomes the link, so the hit area and the focus ring follow it. As a link or a button the avatar needs size 24 or larger (WCAG 2.5.8)
  * @attr {string} target - Link target for href (e.g. '_blank'); completes rel and announces "Opens in a new tab". An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.
  * @attr {string} rel - Link rel for href; with target '_blank', 'noopener noreferrer' is added to whatever you set
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
@@ -157,20 +157,17 @@ const shapeObserver = sharedResizeObserver<NLDDAvatar>(fitAvatars);
 export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslations) {
 	static override styles = avatarStyles;
 
-	@property({ reflect: true, converter: reflectNonDefault<AvatarType>('person') })
-	type: AvatarType = 'person';
+	@property({ reflect: true, converter: reflectNonDefault<AvatarColor>('neutral') })
+	color: AvatarColor = 'neutral';
 
 	@property({ reflect: true, converter: reflectNonDefault<AvatarSize>('full') })
 	size: AvatarSize = 'full';
-
-	@property({ reflect: true, converter: reflectNonDefault<AvatarColor>('neutral') })
-	color: AvatarColor = 'neutral';
 
 	@property({ type: Boolean, reflect: true, attribute: 'icon-aligned' })
 	iconAligned = false;
 
 	@property({ type: String })
-	name = '';
+	icon = '';
 
 	@property({ type: String })
 	initials = '';
@@ -181,8 +178,10 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 	@property({ type: String })
 	srcset = '';
 
-	@property({ type: String })
-	icon = '';
+	/** Makes the avatar a button. Ignored once `href` is set: one avatar is one
+	 *  action, and a link outranks a button (the same rule as nldd-card). */
+	@property({ type: Boolean, reflect: true })
+	button = false;
 
 	/** Accessible name of the link or button. Without it, it falls back to
 	 *  `name`. Only matters when the avatar is interactive. */
@@ -192,17 +191,6 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 	@property({ type: Boolean, reflect: true })
 	decorative = false;
 
-	/** Forwarded to the inner nldd-tooltip's `timing`, like nldd-icon-button.
-	 *  On by default: initials without a name are a riddle. An
-	 *  avatar that sits beside that name is `decorative` and shows none. */
-	@property({ reflect: true, attribute: 'tooltip-timing', converter: reflectNonDefault<'delay' | 'instant' | 'never'>('delay') })
-	tooltipTiming: 'delay' | 'instant' | 'never' = 'delay';
-
-	/** Makes the avatar one link: the shape itself becomes the <a>, so the click
-	 *  area and the focus ring follow its shape (an overlay would be square). */
-	@property({ reflect: true, converter: reflectNonDefault<string>('') })
-	href = '';
-
 	/** Take the control out of the tab order (`tabindex="-1"`), for an avatar
 	 *  that is a link or a button inside a roving container (an `nldd-list` sets
 	 *  it on the rows that are not the current one). Still mouse- and
@@ -210,10 +198,22 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 	@property({ type: Boolean, reflect: true, attribute: 'no-tab' })
 	noTab = false;
 
-	/** Makes the avatar a button. Ignored once `href` is set: one avatar is one
-	 *  action, and a link outranks a button (the same rule as nldd-card). */
-	@property({ type: Boolean, reflect: true })
-	button = false;
+	/** Forwarded to the inner nldd-tooltip's `timing`, like nldd-icon-button.
+	 *  On by default: initials without a name are a riddle. An
+	 *  avatar that sits beside that name is `decorative` and shows none. */
+	@property({ reflect: true, attribute: 'tooltip-timing', converter: reflectNonDefault<'delay' | 'instant' | 'never'>('delay') })
+	tooltipTiming: 'delay' | 'instant' | 'never' = 'delay';
+
+	@property({ type: String })
+	name = '';
+
+	@property({ reflect: true, converter: reflectNonDefault<AvatarType>('person') })
+	type: AvatarType = 'person';
+
+	/** Makes the avatar one link: the shape itself becomes the <a>, so the click
+	 *  area and the focus ring follow its shape (an overlay would be square). */
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	href = '';
 
 	@property({ type: String })
 	target = '';

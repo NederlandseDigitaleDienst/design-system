@@ -185,6 +185,48 @@ function wrapEdits(source, finding, wrapper) {
 	return [{ from: content.start, to: content.end, text: leading + wrapped + trailing }];
 }
 
+/**
+ * A wrapper that is gone: its one child takes its place, with the wrapper's
+ * attributes (its `slot`, say) and one level of indent less. `drop` names what
+ * does nothing on the child; `move` names what only some children take.
+ * Text, a second child or an attribute the child already has makes no edit.
+ */
+function unwrapEdits(source, finding, { drop = [], move = {} }) {
+	const { inner, startTag, offset, endOffset, tag } = finding;
+	if (!startTag || startTag.selfClosing || endOffset === undefined || !source.startsWith(`<${tag}`, offset)) return [];
+	if (!inner?.startTag || inner.endOffset === undefined) return [];
+	const closing = source.lastIndexOf('</', endOffset);
+	if (!new RegExp(`^</${tag}\\s*>$`).test(source.slice(closing, endOffset + 1))) return [];
+	// Only whitespace around the child: a comment or a hole could hold anything.
+	if (source.slice(startTag.end + 1, inner.offset).trim() || source.slice(inner.endOffset + 1, closing).trim()) return [];
+	const carried = [];
+	for (const attribute of finding.startTag.attributes) {
+		if (!attribute.name || attribute.templated) return [];
+		if (drop.includes(attribute.name)) continue;
+		if (move[attribute.name] && !move[attribute.name].includes(inner.tag)) return [];
+		if (findAttribute(inner.startTag, attribute.name)) return [];
+		carried.push(source.slice(attribute.start, attribute.end));
+	}
+	const lineStart = (offset) => source.lastIndexOf('\n', offset - 1) + 1;
+	const indent = source.slice(lineStart(finding.offset), finding.offset);
+	const innerIndent = source.slice(lineStart(inner.offset), inner.offset);
+	// One line, or after other markup on its line: nothing to take back.
+	const flat = lineStart(inner.offset) === lineStart(finding.offset) || /\S/.test(indent) || /\S/.test(innerIndent) || !innerIndent.startsWith(indent);
+	// Text whose white space counts (a template literal, an expression, <pre>,
+	// an attribute value over more lines) keeps its indent: the child is moved,
+	// not reformatted. Any `{` counts on purpose: a skipped de-indent costs
+	// nothing, a wrong one changes the text.
+	const verbatim = /[`{]|<(pre|textarea)\b|="[^"]*\n|='[^']*\n/i.test(source.slice(inner.offset, inner.endOffset + 1));
+	const unit = flat || verbatim ? '' : innerIndent.slice(indent.length);
+	const nameEnd = inner.offset + 1 + inner.tag.length;
+	const split = inner.startTag.attributes.length > 0 && /\n/.test(source.slice(nameEnd, inner.startTag.attributes[0].start));
+	const attributeIndent = split ? /\n([ \t]*)$/.exec(source.slice(nameEnd, inner.startTag.attributes[0].start))[1] : '';
+	const added = carried.map((text) => (split ? `\n${attributeIndent}${text}` : ` ${text}`)).join('');
+	let text = source.slice(inner.offset, nameEnd) + added + source.slice(nameEnd, inner.endOffset + 1);
+	if (unit) text = text.replaceAll(`\n${indent}${unit}`, `\n${indent}`);
+	return [{ from: finding.offset, to: finding.endOffset + 1, text }];
+}
+
 /** An edit is `{ from, to, text }` in the source. What is not certain makes none. */
 function editsOf(source, finding) {
 	const { fix, offset, tag, mention, startTag } = finding;
@@ -197,6 +239,7 @@ function editsOf(source, finding) {
 		...(fix.tag && mention ? [{ from: offset + 1, to: offset + 1 + tag.length, text: fix.tag }] : []),
 		...(fix.tag && !mention ? tagEdits(source, finding, fix.tag) : []),
 		...(fix.wrap ? wrapEdits(source, finding, fix.wrap) : []),
+		...(fix.unwrap ? unwrapEdits(source, finding, fix.unwrap) : []),
 		...(fix.translation ? translationEdits(source, finding, fix.translation) : []),
 		// A token that got another name: the finding spans the old name in a `var()`, and
 		// startsWith checks that the span still holds it.

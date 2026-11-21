@@ -27,12 +27,12 @@ export default {
 	},
 	args: {
 		size: 'md',
-		quote: 'Overheidsdienstverlening moet begrijpelijk, toegankelijk en inclusief zijn voor iedereen.',
-		attribution: 'Team Beleid, Dossier D-319',
-		cite: '',
 		smCustomSize: '',
 		mdCustomSize: '',
 		lgCustomSize: '',
+		cite: '',
+		quote: 'Overheidsdienstverlening moet begrijpelijk, toegankelijk en inclusief zijn voor iedereen.',
+		attribution: 'Team Beleid, Dossier D-319',
 	},
 	argTypes: {
 		size: {
@@ -40,18 +40,6 @@ export default {
 			options: ['md', 'lg'],
 			description: 'Grootte van het citaat. `lg` voor een citaat als blikvanger, zoals op een landingspagina. De bronvermelding en de rand blijven gelijk.',
 			table: { defaultValue: { summary: 'md' } },
-		},
-		quote: {
-			control: 'text',
-			description: 'Citaat (default slot)',
-		},
-		attribution: {
-			control: 'text',
-			description: 'Bronvermelding (slot="attribution")',
-		},
-		cite: {
-			control: 'text',
-			description: 'URL van de bron',
 		},
 		smCustomSize: {
 			name: 'sm-custom-size',
@@ -68,16 +56,28 @@ export default {
 			control: 'text',
 			description: 'Eigen grootte van het citaat bij lg',
 		},
+		cite: {
+			control: 'text',
+			description: 'URL van de bron',
+		},
+		quote: {
+			control: 'text',
+			description: 'Citaat (default slot)',
+		},
+		attribution: {
+			control: 'text',
+			description: 'Bronvermelding (slot="attribution")',
+		},
 	},
 };
 
-const Template = ({ size, quote, attribution, cite, smCustomSize, mdCustomSize, lgCustomSize }: Record<string, any>) => html`
+const Template = ({ size, smCustomSize, mdCustomSize, lgCustomSize, cite, quote, attribution }: Record<string, any>) => html`
 	<nldd-blockquote
 		size=${size === 'md' ? nothing : size}
-		cite=${cite || nothing}
 		sm-custom-size=${smCustomSize || nothing}
 		md-custom-size=${mdCustomSize || nothing}
 		lg-custom-size=${lgCustomSize || nothing}
+		cite=${cite || nothing}
 	>
 		<p>${quote}</p>
 		${attribution ? html`<p slot="attribution">${attribution}</p>` : ''}

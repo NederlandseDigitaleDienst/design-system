@@ -93,6 +93,8 @@ export const stackedSplitViewStyles = css`
 		flex-grow: 1;
 		flex-shrink: 1;
 		flex-basis: 0;
+		container-type: inline-size;
+		container-name: layout-container;
 	}
 
 	:host([data-scroll="root"]) ::slotted(*) {

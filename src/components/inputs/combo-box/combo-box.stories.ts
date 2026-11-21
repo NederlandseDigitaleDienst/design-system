@@ -37,6 +37,27 @@ export default {
 			control: 'text',
 			description: 'Placeholder tekst',
 		},
+		accessibleLabel: {
+			name: 'accessible-label',
+			control: 'text',
+			description: 'Toegankelijk label voor screen readers',
+		},
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		},
+		noFilter: {
+			name: 'no-filter',
+			control: 'boolean',
+			description: 'Laat de opties staan tijdens het typen, voor een lijst die de server al filterde',
+			table: { defaultValue: { summary: false } },
+		},
 		valid: {
 			control: 'boolean',
 			description: 'Markeert het veld als geldig',
@@ -45,28 +66,6 @@ export default {
 		invalid: {
 			control: 'boolean',
 			description: 'Markeert het veld als ongeldig',
-			table: { defaultValue: { summary: false } },
-		},
-		readonly: {
-			control: 'boolean',
-			description: 'Alleen-lezen toestand: de waarde blijft leesbaar en selecteerbaar, het menu opent niet',
-			table: { defaultValue: { summary: false } },
-		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde toestand',
-			table: { defaultValue: { summary: false } },
-		},
-		allowCustom: {
-			name: 'allow-custom',
-			control: 'boolean',
-			description: 'Sta vrij getypte waarden toe die geen menu-optie zijn (Enter/blur). Default false: alleen menu-opties.',
-			table: { defaultValue: { summary: false } },
-		},
-		noFilter: {
-			name: 'no-filter',
-			control: 'boolean',
-			description: 'Laat de opties staan tijdens het typen, voor een lijst die de server al filterde',
 			table: { defaultValue: { summary: false } },
 		},
 		name: {
@@ -91,6 +90,12 @@ export default {
 			control: 'text',
 			description: 'Reguliere expressie waar de waarde aan moet voldoen, als het native `pattern`.',
 		},
+		allowCustom: {
+			name: 'allow-custom',
+			control: 'boolean',
+			description: 'Sta vrij getypte waarden toe die geen menu-optie zijn (Enter/blur). Default false: alleen menu-opties.',
+			table: { defaultValue: { summary: false } },
+		},
 		required: {
 			control: 'boolean',
 			description: 'Verplichte staat.',
@@ -107,20 +112,15 @@ export default {
 			description: 'Disables browser spellchecking on the inner input',
 			table: { defaultValue: { summary: false } },
 		},
-		accessibleLabel: {
-			name: 'accessible-label',
-			control: 'text',
-			description: 'Toegankelijk label voor screen readers',
+		readonly: {
+			control: 'boolean',
+			description: 'Alleen-lezen toestand: de waarde blijft leesbaar en selecteerbaar, het menu opent niet',
+			table: { defaultValue: { summary: false } },
 		},
-		accessibleDescription: {
-			name: 'accessible-description',
-			control: 'text',
-			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
-		},
-		accessibleDescribedBy: {
-			name: 'accessible-described-by',
-			control: false,
-			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde toestand',
+			table: { defaultValue: { summary: false } },
 		},
 	},
 	args: {
@@ -128,23 +128,23 @@ export default {
 		width: '',
 		text: '',
 		placeholder: 'Zoek een land',
+		accessibleLabel: '',
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
+		noFilter: false,
 		valid: false,
 		invalid: false,
-		readonly: false,
-		disabled: false,
-		allowCustom: false,
-		noFilter: false,
 		name: '',
 		value: '',
 		minlength: null,
 		maxlength: null,
 		pattern: '',
+		allowCustom: false,
 		required: false,
 		autocomplete: 'off',
 		noSpellcheck: false,
-		accessibleLabel: '',
-		accessibleDescription: '',
-		accessibleDescribedBy: '',
+		readonly: false,
+		disabled: false,
 	},
 };
 
@@ -154,22 +154,22 @@ const Template = (args: Record<string, any>) => html`
 		width=${args.width}
 		text=${args.text}
 		placeholder=${args.placeholder}
-		?valid=${args.valid}
-		?readonly=${args.readonly}
-		?invalid=${args.invalid}
-		?disabled=${args.disabled}
-		?allow-custom=${args.allowCustom}
+		accessible-label=${args.accessibleLabel || nothing}
+		accessible-description=${args.accessibleDescription || nothing}
 		?no-filter=${args.noFilter}
+		?valid=${args.valid}
+		?invalid=${args.invalid}
 		name=${args.name}
 		value=${args.value}
 		minlength=${args.minlength ?? nothing}
 		maxlength=${args.maxlength ?? nothing}
 		pattern=${args.pattern || nothing}
+		?allow-custom=${args.allowCustom}
 		?required=${args.required}
 		autocomplete=${args.autocomplete}
-		accessible-label=${args.accessibleLabel || nothing}
-		accessible-description=${args.accessibleDescription || nothing}
 		?no-spellcheck=${args.noSpellcheck}
+		?readonly=${args.readonly}
+		?disabled=${args.disabled}
 	>
 		<nldd-menu empty-text="Geen resultaten">
 			<nldd-menu-item

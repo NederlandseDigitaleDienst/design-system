@@ -11,15 +11,15 @@
  * @element nldd-toggle-button-group
  * @related nldd-segmented-control, nldd-button-bar
  *
- * @attr {'button' | 'checkbox' | 'radio'} type - Selection mode (default: 'checkbox')
- * @attr {string} name - Forwarded to all buttons
  * @attr {'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'accent-transparent'} appearance - Forwarded to all buttons (default: 'neutral-tinted')
  * @attr {'xs' | 'sm' | 'md'} size - Forwarded to all buttons (default: 'md')
- * @attr {boolean} disabled - Disables all buttons
  * @attr {string} accessible-label - Accessible name for the group (aria-label)
  * @attr {string} accessible-labeled-by - ID of an external label element (aria-labelledby)
- * @attr {boolean} required - Marks the group as required. Enforced in radio mode; in checkbox mode only announced.
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
+ * @attr {string} name - Forwarded to all buttons
+ * @attr {'button' | 'checkbox' | 'radio'} type - Selection mode (default: 'checkbox')
+ * @attr {boolean} required - Marks the group as required. Enforced in radio mode; in checkbox mode only announced.
+ * @attr {boolean} disabled - Disables all buttons
  *
  * @slot - nldd-toggle-button elements
  *
@@ -41,6 +41,45 @@ type GroupType = 'button' | 'checkbox' | 'radio';
 
 @customElement('nldd-toggle-button-group')
 export class NLDDToggleButtonGroup extends LitElement {
+
+	static override styles = toggleButtonGroupStyles;
+
+	/** Says this is the control an nldd-form-field is about, so the field can
+	 *  find it, name it and move focus into it. See nldd-form-field. */
+	static isFormInput = true;
+
+	@property({ reflect: true, converter: reflectNonDefault<ToggleButtonAppearance>('neutral-tinted') })
+	appearance: ToggleButtonAppearance = 'neutral-tinted';
+
+	@property({ reflect: true, converter: reflectNonDefault<ToggleButtonSize>('md') })
+	size: ToggleButtonSize = 'md';
+
+	/** Accessible name forwarded as aria-label to the group host. */
+	@property({ type: String, attribute: 'accessible-label' })
+	accessibleLabel = '';
+
+	/** ID of an external label element forwarded as aria-labelledby to the group host. */
+	@property({ type: String, attribute: 'accessible-labeled-by' })
+	accessibleLabeledBy = '';
+
+	/**
+	 * Marks the control as invalid.
+	 *
+	 * Announced and not drawn. What is wrong belongs in an
+	 * nldd-validation-list, in words: a red ring around a single
+	 * checkbox or radio would say the option is wrong, while it is the question
+	 * that is unanswered. `aria-invalid` still goes on the control, because
+	 * choosing not to show something is not a reason to keep quiet about it.
+	 */
+	@property({ type: Boolean, reflect: true })
+	invalid = false;
+
+	@property({ type: String })
+	name = '';
+
+	@property({ reflect: true, converter: reflectNonDefault<GroupType>('checkbox') })
+	type: GroupType = 'checkbox';
+
 	/**
 	 * Marks the group as required: something has to be selected.
 	 *
@@ -57,51 +96,12 @@ export class NLDDToggleButtonGroup extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	required = false;
 
-
-	static override styles = toggleButtonGroupStyles;
-
-	/** Says this is the control an nldd-form-field is about, so the field can
-	 *  find it, name it and move focus into it. See nldd-form-field. */
-	static isFormInput = true;
-
-	@property({ reflect: true, converter: reflectNonDefault<GroupType>('checkbox') })
-	type: GroupType = 'checkbox';
-
-	@property({ type: String })
-	name = '';
-
-	@property({ reflect: true, converter: reflectNonDefault<ToggleButtonAppearance>('neutral-tinted') })
-	appearance: ToggleButtonAppearance = 'neutral-tinted';
-
-	@property({ reflect: true, converter: reflectNonDefault<ToggleButtonSize>('md') })
-	size: ToggleButtonSize = 'md';
-
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
-
-	/** Accessible name forwarded as aria-label to the group host. */
-	@property({ type: String, attribute: 'accessible-label' })
-	accessibleLabel = '';
-
-	/** ID of an external label element forwarded as aria-labelledby to the group host. */
-	@property({ type: String, attribute: 'accessible-labeled-by' })
-	accessibleLabeledBy = '';
 
 	/** The name this group wrote onto its host, so it only takes back its own. */
 	private _appliedLabel: string | null = null;
 
-
-	/**
-	 * Marks the control as invalid.
-	 *
-	 * Announced and not drawn. What is wrong belongs in an
-	 * nldd-validation-list, in words: a red ring around a single
-	 * checkbox or radio would say the option is wrong, while it is the question
-	 * that is unanswered. `aria-invalid` still goes on the control, because
-	 * choosing not to show something is not a reason to keep quiet about it.
-	 */
-	@property({ type: Boolean, reflect: true })
-	invalid = false;
 
 	private _choices = new ChoiceGroup<NLDDToggleButton>(this, {
 		options: () => this._getButtons(),

@@ -34,13 +34,29 @@ export function hasState(root: ParentNode, name: string): boolean {
  * only dashed names, throws here; a fact is not worth breaking a render for.
  */
 export function setState(element: HTMLElement, name: string, on: boolean): void {
-	if (!import.meta.env?.DEV) return;
+	if (import.meta.env?.DEV) styleState(element, name, on);
+}
+
+/**
+ * A state the component's own styles read, as `:state(name)`, in production
+ * too: for what one component tells another that is no attribute of either,
+ * such as the focus ring nldd-radio-button-field asks of its radio.
+ */
+export function styleState(element: HTMLElement, name: string, on: boolean): void {
 	if (!on && !internals.has(element)) return;
 	try {
 		const { states } = internalsOf(element);
 		if (on) states.add(name);
 		else states.delete(name);
 	} catch {
-		// See above.
+		// A browser without custom states draws no ring; the field still works.
 	}
+}
+
+/**
+ * One state per value, `${name}-${value}` such as `size-lg`, for a value a
+ * parent hands on: only the current value is on.
+ */
+export function styleValueState<T extends string>(element: HTMLElement, name: string, value: T | undefined, values: readonly T[]): void {
+	for (const each of values) styleState(element, `${name}-${each}`, each === value);
 }

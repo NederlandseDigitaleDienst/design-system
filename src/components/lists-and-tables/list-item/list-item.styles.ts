@@ -88,11 +88,11 @@ export const listItemStyles = css`
 		display: none;
 	}
 
-	:host(:not([reorderable])) ::slotted([reorder-handle]) {
+	:host(:not(:state(reorderable))) ::slotted([reorder-handle]) {
 		display: none;
 	}
 
-	:host([reorderable]) ::slotted([reorder-handle]) {
+	:host(:state(reorderable)) ::slotted([reorder-handle]) {
 		cursor: grab;
 		touch-action: none;
 	}

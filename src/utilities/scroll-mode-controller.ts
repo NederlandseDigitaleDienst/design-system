@@ -30,6 +30,18 @@ export interface ScrollModeProvider {
 
 const PROVIDER_SELECTOR = 'nldd-shell, nldd-sheet, nldd-modal-dialog';
 
+const OVERLAY_SELECTOR = 'nldd-sheet, nldd-modal-dialog, nldd-window, nldd-popover';
+
+/**
+ * Whether `host` sits in an overlay. An overlay is not the document, so what
+ * is in it never scrolls the document: its mode is nested, whatever the shell
+ * around it derives or the inherited variable says before the overlay has
+ * upgraded and reset it.
+ */
+export function inOverlay(host: Element): boolean {
+	return !!host.parentElement?.closest(OVERLAY_SELECTOR);
+}
+
 /** A layer without a provider: it reads the mode it inherits from the CSS. */
 export interface StandaloneScrollLayer extends ScrollModeConsumer {
 	/** The inherited `--context-scroll-mode`; a style read, no writes. */
@@ -141,6 +153,7 @@ export class ScrollModeController implements ReactiveController, StandaloneScrol
 	private _host: ReactiveControllerHost & HTMLElement;
 	private _onChange?: (mode: ScrollMode) => void;
 	private _provider: ScrollModeProvider | null = null;
+	private _inOverlay = false;
 
 	constructor(host: ReactiveControllerHost & HTMLElement, onChange?: (mode: ScrollMode) => void) {
 		this._host = host;
@@ -149,6 +162,7 @@ export class ScrollModeController implements ReactiveController, StandaloneScrol
 	}
 
 	hostConnected(): void {
+		this._inOverlay = inOverlay(this._host);
 		this._provider = findScrollModeProvider(this._host);
 		if (this._provider) {
 			// Push-driven: the shell pushes the authoritative mode on register
@@ -193,7 +207,7 @@ export class ScrollModeController implements ReactiveController, StandaloneScrol
 	 * var is re-read instead.
 	 */
 	readScrollMode(mode?: ScrollMode): void {
-		const next = mode ?? this.inheritedScrollMode();
+		const next = this._inOverlay ? 'nested' : mode ?? this.inheritedScrollMode();
 		if (next === this.mode) return;
 		this.mode = next;
 		this._host.dataset.scroll = next;

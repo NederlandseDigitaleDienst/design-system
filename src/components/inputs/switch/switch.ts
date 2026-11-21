@@ -6,18 +6,18 @@
  * Direct use of nldd-switch requires an accessible-label attribute for screen reader accessibility.
  *
  * @element nldd-switch
- * @keywords toggle, schakelaar
+ * @keywords toggle, toggles, schakelaar
  * @related nldd-checkbox, nldd-toggle-button
- * @attr {boolean} checked - Whether the switch is on/off
- * @attr {boolean} disabled - Disabled state
  * @attr {'content'} color - 'content' draws the control in the color of the text around it, with the mark in the surface color (`--context-background-color`). A colored surface of your own sets that variable. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.
- * @attr {boolean} no-tab - Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable.
  * @attr {'xs'|'sm'} size - Switch size: 'xs' | 'sm' (default: 'sm')
+ * @attr {string} accessible-label - Accessible label forwarded as aria-label to the native input. Required when using nldd-switch without nldd-switch-field.
+ * @attr {boolean} no-tab - Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable.
+ * @attr {boolean} checked - Whether the switch is on/off
+ * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
  * @attr {string} name - Name for form submission; nothing is submitted when the switch is off
  * @attr {string} value - Value submitted with the form when the switch is on (default: 'on')
- * @attr {string} accessible-label - Accessible label forwarded as aria-label to the native input. Required when using nldd-switch without nldd-switch-field.
  * @attr {boolean} required - Required state
- * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
+ * @attr {boolean} disabled - Disabled state
  *
  * @fires change - When the switch state changes; detail: { checked: boolean, value: string }
  */
@@ -45,14 +45,16 @@ export class NLDDSwitch extends DescribedBy(FormAssociated(LitElement)) {
 	static isFormInput = true;
 
 
+	/** 'content' draws the control in the surrounding text color. */
 	@property({ reflect: true, converter: reflectNonDefault('') })
-	name = '';
+	color: '' | 'content' = '';
 
-	@property({ type: Boolean, reflect: true })
-	checked = false;
+	@property({ reflect: true, converter: reflectNonDefault<SwitchSize>('sm') })
+	size: SwitchSize = 'sm';
 
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
+	@property({ type: String, attribute: 'accessible-label' })
+	accessibleLabel = '';
+
 	/** Take the control out of the tab order (`tabindex="-1"`), for a control
 	 *  owned by a roving container (an `nldd-list` sets it on the rows that are
 	 *  not the current one) that manages focus itself. Still mouse- and
@@ -60,25 +62,8 @@ export class NLDDSwitch extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true, attribute: 'no-tab' })
 	noTab = false;
 
-
-	@property({ reflect: true, converter: reflectNonDefault<SwitchSize>('sm') })
-	size: SwitchSize = 'sm';
-
-	/** 'content' draws the control in the surrounding text color. */
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	color: '' | 'content' = '';
-
-	@property({ type: String, attribute: 'accessible-label' })
-	accessibleLabel = '';
-
-	@property({ type: String })
-	value = 'on';
-
-
-
 	@property({ type: Boolean, reflect: true })
-	required = false;
-
+	checked = false;
 
 	/**
 	 * Marks the control as invalid.
@@ -92,6 +77,17 @@ export class NLDDSwitch extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	name = '';
+
+	@property({ type: String })
+	value = 'on';
+
+	@property({ type: Boolean, reflect: true })
+	required = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	override formValue(): FormValue {
 		return this.checked ? this.value : null;

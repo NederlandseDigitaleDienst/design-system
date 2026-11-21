@@ -53,11 +53,11 @@ export type IconColor =
  * @element nldd-icon
  * @keywords pictogram, icoon
  *
- * @attr {string} icon - The name of the icon to display. The same attribute every other component that renders an icon takes. Prefer an alias that names what the icon means here (`microphone-off`, `info`, `new-account`) over the name of the drawing; both show the same icon.
- * @attr {string} size - `full` (the default) fills the container. `inherit` sizes the icon to the surrounding text (1em) and drops it onto that text's own line, for an icon set in a line of running text. Or a fixed spacer-aligned size in px (16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96).
  * @attr {string} color - Functional (`content`, the default, `secondary`, `accent`, `critical`, `warning`, `success`, the colors the surface passes on as `--context-content-*`) or rijkskleur (`lintblauw`, `donkerblauw`, `hemelblauw`, `lichtblauw`, `paars`, `violet`, `robijnrood`, `roze`, `rood`, `oranje`, `donkergeel`, `geel`, `donkerbruin`, `bruin`, `donkergroen`, `groen`, `mosgroen`, `mintgroen`).
  * @attr {string} custom-color - A color of its own, as any CSS color value ('#a90061', 'oklch(0.6 0.2 20)', 'var(--brand-cable-blue)'). For a color the design system cannot know. It wins over `color`.
+ * @attr {string} size - `full` (the default) fills the container. `inherit` sizes the icon to the surrounding text (1em) and drops it onto that text's own line, for an icon set in a line of running text. Or a fixed spacer-aligned size in px (16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96).
  * @attr {boolean} tile - Draw the icon on a tile, a filled square. `color` and `custom-color` then paint the tile and the glyph takes the contrasting color, and `size` measures the tile: the glyph is four fifths of it. The corner is `--semantics-tiles-corner-radius`, a fifth of the tile, as on an organization `nldd-avatar`.
+ * @attr {string} icon - The name of the icon to display. The same attribute every other component that renders an icon takes. Prefer an alias that names what the icon means here (`microphone-off`, `info`, `new-account`) over the name of the drawing; both show the same icon.
  *
  * @example
  * ```html
@@ -83,12 +83,6 @@ export type IconColor =
 export class NLDDIcon extends LitElement {
 	static override styles = iconStyles;
 
-	@property({ type: String })
-	icon = 'circle-dashed';
-
-	@property({ reflect: true, converter: reflectNonDefault<IconSize>('full') })
-	size: IconSize = 'full';
-
 	@property({ reflect: true, converter: reflectNonDefault<IconColor>('content') })
 	color: IconColor = 'content';
 
@@ -97,6 +91,9 @@ export class NLDDIcon extends LitElement {
 	 *  and this keeps one code path. */
 	@property({ reflect: true, attribute: 'custom-color', converter: reflectNonDefault<string>('') })
 	customColor = '';
+
+	@property({ reflect: true, converter: reflectNonDefault<IconSize>('full') })
+	size: IconSize = 'full';
 
 	/**
 	 * Draw the icon on a tile, a filled square, instead of on its own.
@@ -111,6 +108,9 @@ export class NLDDIcon extends LitElement {
 	 */
 	@property({ type: Boolean, reflect: true })
 	tile = false;
+
+	@property({ type: String })
+	icon = 'circle-dashed';
 
 	@state()
 	private _iconSvg: string | null = null;

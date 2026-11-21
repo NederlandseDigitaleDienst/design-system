@@ -7,13 +7,15 @@ import {
 	type EditorView,
 	type ViewUpdate,
 } from '@codemirror/view';
-import { RangeSetBuilder, type EditorState } from '@codemirror/state';
+import { Facet, RangeSetBuilder, type EditorState } from '@codemirror/state';
 import { syntaxTree } from '@codemirror/language';
 import type { SyntaxNode } from '@lezer/common';
 import { isMentionHref } from './text-editor.mention.js';
 import { enclosingNode, treeAdvanced } from './text-editor.syntax.js';
 import { textCaretBox } from './text-editor.caret.js';
+import { touchesSelection } from './text-editor.hidden-syntax.js';
 import '../../content/icon/icon.js';
+import '../../content/tooltip/tooltip.js';
 
 /* Render a small "open in new tab" badge right after every real (non-mention)
  * link, so a link can be followed without leaving the editor — directly clickable,
@@ -23,16 +25,21 @@ import '../../content/icon/icon.js';
  *  host so the string is localizable; defaults to Dutch at the call site. */
 export type OpenInNewTabLabel = (url: string) => string;
 
+/** Whether the badge shows its destination in a tooltip. On while the syntax is
+ *  hidden, for a `[text](url)` link whose marks are hidden too: the URL is then
+ *  nowhere on screen, and the badge is how to see it. */
+export const linkBadgeTooltip = Facet.define<boolean, boolean>({ combine: (values) => values.some(Boolean) });
+
 class LinkOpenWidget extends WidgetType {
 	readonly ariaLabel: string;
 
-	constructor(readonly href: string, label: OpenInNewTabLabel) {
+	constructor(readonly href: string, label: OpenInNewTabLabel, readonly tooltip: boolean) {
 		super();
 		this.ariaLabel = label(href);
 	}
 
 	eq(other: LinkOpenWidget): boolean {
-		return other.href === this.href && other.ariaLabel === this.ariaLabel;
+		return other.href === this.href && other.ariaLabel === this.ariaLabel && other.tooltip === this.tooltip;
 	}
 
 	toDOM(): HTMLElement {
@@ -45,9 +52,18 @@ class LinkOpenWidget extends WidgetType {
 		const icon = document.createElement('nldd-icon');
 		icon.setAttribute('icon', 'external-link');
 		icon.setAttribute('aria-hidden', 'true');
-		anchor.append(icon);
 		// The editor steals mousedown to place the caret; keep the click ours.
 		anchor.addEventListener('mousedown', (event) => event.preventDefault());
+		if (!this.tooltip) {
+			anchor.append(icon);
+			return anchor;
+		}
+		// Around the icon, not the anchor: CodeMirror measures the widget's root,
+		// and the tooltip has no box of its own (display: contents).
+		const tooltip = document.createElement('nldd-tooltip');
+		tooltip.setAttribute('text', this.href);
+		tooltip.append(icon);
+		anchor.append(tooltip);
 		return anchor;
 	}
 
@@ -177,8 +193,9 @@ function buildBadges(view: EditorView, label: OpenInNewTabLabel): DecorationSet 
 	// side -1 draws the badge before the caret, so the caret at the link end sits
 	// to the RIGHT of the badge — text typed there lands after it, not wedged
 	// between the link and the badge.
-	const badge = (to: number, href: string): void =>
-		builder.add(to, to, Decoration.widget({ widget: new LinkOpenWidget(href, label), side: -1 }));
+	const tooltips = view.state.facet(linkBadgeTooltip);
+	const badge = (to: number, href: string, tooltip = false): void =>
+		builder.add(to, to, Decoration.widget({ widget: new LinkOpenWidget(href, label, tooltip), side: -1 }));
 	for (const { from, to } of view.visibleRanges) {
 		tree.iterate({
 			from,
@@ -186,7 +203,7 @@ function buildBadges(view: EditorView, label: OpenInNewTabLabel): DecorationSet 
 			enter: (node) => {
 				if (node.name === 'Link') {
 					const href = hrefOf(view.state, node.node, refs);
-					if (href) badge(node.to, href);
+					if (href) badge(node.to, href, tooltips && !touchesSelection(view.state, node.from, node.to));
 					return;
 				}
 				// Bare/autolinked URL: a standalone URL node (GFM turns a plainly
@@ -214,7 +231,7 @@ export function linkOpenBadge(label: OpenInNewTabLabel): ViewPlugin<{ decoration
 			}
 
 			update(update: ViewUpdate): void {
-				if (update.docChanged || update.viewportChanged || treeAdvanced(update.startState, update.state) || update.transactions.some((tr) => tr.effects.some((e) => e.is(relabel)))) {
+				if (update.docChanged || update.viewportChanged || treeAdvanced(update.startState, update.state) || update.transactions.some((tr) => tr.effects.some((e) => e.is(relabel))) || update.startState.facet(linkBadgeTooltip) !== update.state.facet(linkBadgeTooltip) || (update.selectionSet && update.state.facet(linkBadgeTooltip))) {
 					this.decorations = buildBadges(update.view, label);
 				}
 			}

@@ -44,8 +44,8 @@ export default {
 		accessibleLabel: '',
 		href: '',
 		target: '',
-		download: '(geen)',
 		rel: '',
+		download: '(geen)',
 	},
 	argTypes: {
 		background: {
@@ -70,15 +70,15 @@ export default {
 			description: 'Link target (alleen gebruikt als href is gezet)',
 			table: { defaultValue: { summary: '(geen)' } },
 		},
+		rel: {
+			control: 'text',
+			description: 'Link rel voor href (bijv. noopener)',
+		},
 		download: {
 			control: 'select',
 			options: ['(geen)', 'download', 'download="aanvraag-A-1042.pdf"'],
 			mapping: { '(geen)': null, download: '', 'download="aanvraag-A-1042.pdf"': 'aanvraag-A-1042.pdf' },
 			description: 'Slaat het bestand op in plaats van het te openen (alleen met href); een waarde wordt de bestandsnaam',
-		},
-		rel: {
-			control: 'text',
-			description: 'Link rel voor href (bijv. noopener)',
 		},
 	},
 };
@@ -211,11 +211,11 @@ export const MetAfbeelding = () => html`
  */
 export const KlikbareKaart = (args: Record<string, any>) => html`
 	<nldd-card
+		accessible-label=${args.accessibleLabel || nothing}
 		href=${args.href || nothing}
 		target=${args.target || nothing}
-		download=${args.download ?? nothing}
 		rel=${args.rel || nothing}
-		accessible-label=${args.accessibleLabel || nothing}
+		download=${args.download ?? nothing}
 		style="max-width: 360px;"
 	>
 		<nldd-container
@@ -250,8 +250,8 @@ export const KlikbareKaart = (args: Record<string, any>) => html`
 	</nldd-card>
 `;
 KlikbareKaart.args = {
-	href: '#',
 	accessibleLabel: 'Dossier D-318',
+	href: '#',
 };
 
 /**

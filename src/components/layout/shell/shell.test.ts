@@ -5,9 +5,9 @@ import './shell.js';
 import type { NLDDNavigationSplitView } from '../split-views/navigation-split-view/navigation-split-view.js';
 import '../split-views/navigation-split-view/navigation-split-view.js';
 import '../split-views/bar-split-view/bar-split-view.js';
-import '../split-views/split-view-pane/split-view-pane.js';
 import '../page/page.js';
 import '../sheet/sheet.js';
+import '../popover/popover.js';
 import '../../status-and-feedback/modal-dialog/modal-dialog.js';
 
 describe('nldd-shell', () => {
@@ -133,8 +133,8 @@ describe('nldd-shell', () => {
 		const NESTED_APP = `
 			<nldd-shell>
 				<nldd-navigation-split-view>
-					<nldd-split-view-pane slot="primary-sidebar" has-content></nldd-split-view-pane>
-					<nldd-split-view-pane slot="main" has-content></nldd-split-view-pane>
+					<div slot="primary-sidebar"></div>
+					<div slot="main"></div>
 				</nldd-navigation-split-view>
 			</nldd-shell>
 		`;
@@ -195,8 +195,8 @@ describe('nldd-shell – derived scroll mode', () => {
 		el = await fixture<NLDDShell>(`
 			<nldd-shell>
 				<nldd-navigation-split-view>
-					<nldd-split-view-pane slot="primary-sidebar" has-content></nldd-split-view-pane>
-					<nldd-split-view-pane slot="main" has-content></nldd-split-view-pane>
+					<div slot="primary-sidebar"></div>
+					<div slot="main"></div>
 				</nldd-navigation-split-view>
 			</nldd-shell>
 		`);
@@ -229,8 +229,8 @@ describe('nldd-shell – derived scroll mode', () => {
 
 		el.innerHTML = `
 			<nldd-navigation-split-view>
-				<nldd-split-view-pane slot="primary-sidebar" has-content></nldd-split-view-pane>
-				<nldd-split-view-pane slot="main" has-content></nldd-split-view-pane>
+				<div slot="primary-sidebar"></div>
+				<div slot="main"></div>
 			</nldd-navigation-split-view>
 		`;
 		const nav = el.querySelector('nldd-navigation-split-view') as NLDDNavigationSplitView;
@@ -243,8 +243,8 @@ describe('nldd-shell – derived scroll mode', () => {
 		el = await fixture<NLDDShell>(`
 			<nldd-shell>
 				<nldd-navigation-split-view>
-					<nldd-split-view-pane slot="primary-sidebar" has-content></nldd-split-view-pane>
-					<nldd-split-view-pane slot="main" has-content></nldd-split-view-pane>
+					<div slot="primary-sidebar"></div>
+					<div slot="main"></div>
 				</nldd-navigation-split-view>
 			</nldd-shell>
 		`);
@@ -262,9 +262,7 @@ describe('nldd-shell – derived scroll mode', () => {
 		el = await fixture<NLDDShell>(`
 			<nldd-shell>
 				<nldd-navigation-split-view>
-					<nldd-split-view-pane slot="main" has-content>
-						<nldd-page></nldd-page>
-					</nldd-split-view-pane>
+					<nldd-page slot="main"></nldd-page>
 				</nldd-navigation-split-view>
 			</nldd-shell>
 		`);
@@ -279,17 +277,11 @@ describe('nldd-shell – derived scroll mode', () => {
 		el = await fixture<NLDDShell>(`
 			<nldd-shell>
 				<nldd-bar-split-view>
-					<nldd-split-view-pane slot="main">
-						<nldd-navigation-split-view>
-							<nldd-split-view-pane slot="main" has-content>
-								<nldd-bar-split-view>
-									<nldd-split-view-pane slot="main">
-										<nldd-page></nldd-page>
-									</nldd-split-view-pane>
-								</nldd-bar-split-view>
-							</nldd-split-view-pane>
-						</nldd-navigation-split-view>
-					</nldd-split-view-pane>
+					<nldd-navigation-split-view slot="main">
+						<nldd-bar-split-view slot="main">
+							<nldd-page slot="main"></nldd-page>
+						</nldd-bar-split-view>
+					</nldd-navigation-split-view>
 				</nldd-bar-split-view>
 			</nldd-shell>
 		`);
@@ -311,7 +303,7 @@ describe('nldd-shell – derived scroll mode', () => {
 		el = await fixture<NLDDShell>(`
 			<nldd-shell>
 				<nldd-navigation-split-view>
-					<nldd-split-view-pane slot="main" has-content></nldd-split-view-pane>
+					<div slot="main"></div>
 				</nldd-navigation-split-view>
 			</nldd-shell>
 		`);
@@ -337,12 +329,12 @@ describe('nldd-shell – derived scroll mode', () => {
 		el = await fixture<NLDDShell>(`
 			<nldd-shell>
 				<nldd-navigation-split-view>
-					<nldd-split-view-pane slot="main" has-content style="--context-inset-top: 60px;">
+					<div slot="main" style="--context-inset-top: 60px;">
 						<nldd-page id="in-pane"></nldd-page>
 						<nldd-sheet accessible-label="Edit">
 							<nldd-page id="in-sheet" sticky-header></nldd-page>
 						</nldd-sheet>
-					</nldd-split-view-pane>
+					</div>
 				</nldd-navigation-split-view>
 			</nldd-shell>
 		`);
@@ -369,11 +361,9 @@ describe('nldd-shell – derived scroll mode', () => {
 		el = await fixture<NLDDShell>(`
 			<nldd-shell>
 				<nldd-navigation-split-view>
-					<nldd-split-view-pane slot="main" has-content>
-						<nldd-modal-dialog accessible-label="Confirm">
-							<nldd-page id="in-dialog" sticky-header></nldd-page>
-						</nldd-modal-dialog>
-					</nldd-split-view-pane>
+					<nldd-modal-dialog slot="main" accessible-label="Confirm">
+						<nldd-page id="in-dialog" sticky-header></nldd-page>
+					</nldd-modal-dialog>
 				</nldd-navigation-split-view>
 			</nldd-shell>
 		`);
@@ -384,6 +374,27 @@ describe('nldd-shell – derived scroll mode', () => {
 
 		expect(inDialog.dataset.scroll).not.toBe('root');
 		expect(getComputedStyle(inDialog).getPropertyValue('--context-scroll-mode').trim()).toBe('nested');
+	});
+
+	// A popover or a window is no scroll provider, so the shell above it pushed
+	// root straight through, and a page in it never scrolled.
+	it('keeps a page inside a popover out of root mode', async () => {
+		el = await fixture<NLDDShell>(`
+			<nldd-shell>
+				<nldd-page id="app">
+					<nldd-popover>
+						<nldd-page id="in-popover" sticky-header></nldd-page>
+					</nldd-popover>
+				</nldd-page>
+			</nldd-shell>
+		`);
+		await waitForUpdate(el);
+		expect(el.querySelector<HTMLElement>('#app')!.dataset.scroll).toBe('root');
+		const inPopover = el.querySelector('#in-popover') as HTMLElement;
+		await waitForUpdate(inPopover);
+		expect(inPopover.dataset.scroll).not.toBe('root');
+		expect((inPopover as unknown as { scrollTarget: HTMLElement }).scrollTarget)
+			.toBe(inPopover.shadowRoot!.querySelector('.page__scroll'));
 	});
 
 	// A bare-page app is a single column at every width, so the document scrolls:

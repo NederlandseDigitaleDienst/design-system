@@ -47,12 +47,12 @@
  * @related nldd-code-editor
  *
  * @attr {'box-tinted'|'box-base'|'simple'} appearance - Visual style. The two `box` values are a framed card with rounded corners, padding, fill, and a 1px border ring, and differ in which surface they fill with; `box-tinted` is the default. `simple` drops the entire frame. Use it when embedding inside a parent surface.
+ * @attr {string} max-height - Tallest the block may get, as a CSS length (e.g. '400px', '50vh'). Beyond it the content scrolls vertically. Unset means no cap.
  * @attr {string} language - Grammar to highlight with. Empty disables highlighting.
  * @attr {boolean} diff - The content is a unified diff: shown with line colors, old and new line numbers, and the changed words marked.
- * @attr {boolean} line-numbers - Shows a column with the number of each line, the same column a diff has. Screen readers skip it and a copy leaves it out. No effect with `diff`, which numbers its lines itself.
  * @attr {boolean} no-copy - Hide the copy-to-clipboard button (shown by default).
+ * @attr {boolean} line-numbers - Shows a column with the number of each line, the same column a diff has. Screen readers skip it and a copy leaves it out. No effect with `diff`, which numbers its lines itself.
  * @attr {boolean} wrap - Wrap long lines instead of horizontal scroll
- * @attr {string} max-height - Tallest the block may get, as a CSS length (e.g. '400px', '50vh'). Beyond it the content scrolls vertically. Unset means no cap.
  * @attr {object} translations - Override translation keys (e.g. the copy button
  *   labels and the scroll-region label); unset keys fall back to Dutch.
  *
@@ -121,6 +121,9 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 	@property({ reflect: true, converter: reflectNonDefault<CodeViewerAppearance>('box-tinted') })
 	appearance: CodeViewerAppearance = 'box-tinted';
 
+	@property({ reflect: true, attribute: 'max-height', converter: reflectNonDefault<string>('') })
+	maxHeight = '';
+
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	language = '';
 
@@ -128,19 +131,16 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 	@property({ type: Boolean, reflect: true })
 	diff = false;
 
-	/** Show the number of each line, outside `diff`. */
-	@property({ type: Boolean, reflect: true, attribute: 'line-numbers' })
-	lineNumbers = false;
-
 	/** Hide the copy-to-clipboard button (shown by default). */
 	@property({ type: Boolean, reflect: true, attribute: 'no-copy' })
 	noCopy = false;
 
+	/** Show the number of each line, outside `diff`. */
+	@property({ type: Boolean, reflect: true, attribute: 'line-numbers' })
+	lineNumbers = false;
+
 	@property({ type: Boolean, reflect: true })
 	wrap = false;
-
-	@property({ reflect: true, attribute: 'max-height', converter: reflectNonDefault<string>('') })
-	maxHeight = '';
 
 	/* Reflects when the copy button is suppressed because the Clipboard API is
 	 * unavailable (non-secure context), so the CSS can drop the reserved actions

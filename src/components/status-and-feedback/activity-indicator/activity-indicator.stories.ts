@@ -23,9 +23,9 @@ export default {
 	args: {
 		size: '32',
 		text: '',
+		noBackdrop: false,
 		showText: false,
 		timing: 'delay',
-		noBackdrop: false,
 		complete: false,
 	},
 	argTypes: {
@@ -40,6 +40,12 @@ export default {
 			description: 'Leeg → vertaalde fallback "Laden". Voedt altijd de accessible name.',
 			table: { defaultValue: { summary: 'Laden' } },
 		},
+		noBackdrop: {
+			name: 'no-backdrop',
+			control: 'boolean',
+			description: 'Overlay-modus dimt + blurt de geneste content standaard; zet dit aan om alleen het indicator-paneel te tonen zonder dimmen. Geen effect zonder content.',
+			table: { defaultValue: { summary: 'false' } },
+		},
 		showText: {
 			name: 'show-text',
 			control: 'boolean',
@@ -52,12 +58,6 @@ export default {
 			description: '`delay` wacht 1000ms (anti-flash). `instant` toont direct (fade-in speelt nog).',
 			table: { defaultValue: { summary: 'delay' } },
 		},
-		noBackdrop: {
-			name: 'no-backdrop',
-			control: 'boolean',
-			description: 'Overlay-modus dimt + blurt de geneste content standaard; zet dit aan om alleen het indicator-paneel te tonen zonder dimmen. Geen effect zonder content.',
-			table: { defaultValue: { summary: 'false' } },
-		},
 		complete: {
 			control: 'boolean',
 			description: 'Markeer als klaar: verbergt de indicator en heft de inert op de geneste content op. In overlay-modus bind je `?complete=${!isLoading}`.',
@@ -69,16 +69,16 @@ export default {
 // Het gewone geval: een leeg vlak dat nog moet vullen, met de indicator in het
 // midden. De min-height is de hoogte die de inhoud straks krijgt, zodat het vlak
 // niet verspringt als die binnenkomt.
-const Template = ({ size, text, showText, timing, noBackdrop, complete }: Record<string, unknown>) => html`
+const Template = ({ size, text, noBackdrop, showText, timing, complete }: Record<string, unknown>) => html`
 	<nldd-container width="360px">
 		<nldd-card accessible-label="Berichten">
 			<nldd-container min-height="240px">
 				<nldd-activity-indicator
 					size=${size as string}
 					text=${text as string}
+					?no-backdrop=${noBackdrop as boolean}
 					?show-text=${showText as boolean}
 					timing=${timing as string}
-					?no-backdrop=${noBackdrop as boolean}
 					?complete=${complete as boolean}
 				></nldd-activity-indicator>
 			</nldd-container>
@@ -92,7 +92,7 @@ export const Standaard = {
 
 export const MetLabel = {
 	render: Template,
-	args: { showText: true, text: 'Berichten laden' },
+	args: { text: 'Berichten laden', showText: true },
 };
 
 export const Grootten = {

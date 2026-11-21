@@ -1,4 +1,4 @@
-import { html, nothing } from 'lit';
+import { html } from 'lit';
 import './form-field.js';
 import '../validation-list/validation-list.js';
 import '../form/form.js';
@@ -21,7 +21,6 @@ export default {
 		label: 'Label',
 		supportingLabel: '',
 		optional: false,
-		optionalLabel: '',
 	},
 	argTypes: {
 		labelAlignment: {
@@ -45,22 +44,15 @@ export default {
 			description: 'Markeert het veld als optioneel. Markeer de optionele velden, niet de verplichte.',
 			table: { defaultValue: { summary: false } },
 		},
-		optionalLabel: {
-			name: 'optional-label',
-			control: 'text',
-			description: 'Tekst van het optioneel-label.',
-			table: { defaultValue: { summary: 'Optioneel' } },
-		},
 	},
 };
 
-const Template = ({ labelAlignment, label, supportingLabel, optional, optionalLabel }: Record<string, any>) => html`
+const Template = ({ labelAlignment, label, supportingLabel, optional }: Record<string, any>) => html`
 	<nldd-form-field
 		label-alignment=${labelAlignment}
 		label=${label}
 		supporting-label=${supportingLabel}
 		?optional=${optional}
-		optional-label=${optionalLabel || nothing}
 	>
 		<nldd-text-field></nldd-text-field>
 	</nldd-form-field>

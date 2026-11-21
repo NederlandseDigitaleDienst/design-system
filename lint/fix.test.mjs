@@ -50,6 +50,40 @@ describe('--fix', () => {
 		assert.equal((await fixed(source)).text, source);
 	});
 
+	it('takes a split view pane away, gives its child the slot and one indent less', async () => {
+		const { text } = await fixed(
+			'<nldd-navigation-split-view>\n\t<nldd-split-view-pane\n\t\tslot="main"\n\t\thas-content\n\t>\n\t\t<nldd-page\n\t\t\tlandmarks="page"\n\t\t>\n\t\t\t<nldd-simple-section></nldd-simple-section>\n\t\t</nldd-page>\n\t</nldd-split-view-pane>\n</nldd-navigation-split-view>\n',
+		);
+		assert.equal(
+			text,
+			'<nldd-navigation-split-view>\n\t<nldd-page\n\t\tslot="main"\n\t\tlandmarks="page"\n\t>\n\t\t<nldd-simple-section></nldd-simple-section>\n\t</nldd-page>\n</nldd-navigation-split-view>\n',
+		);
+	});
+
+	it('keeps the indent inside a template literal or <pre> when it takes a pane away', async () => {
+		const { text } = await fixed('<nldd-bar-split-view>\n\t<nldd-split-view-pane slot="main">\n\t\t<nldd-page>\n\t\t\t<pre>\n\t\t\tcode\n\t\t\t</pre>\n\t\t</nldd-page>\n\t</nldd-split-view-pane>\n</nldd-bar-split-view>\n');
+		assert.equal(text, '<nldd-bar-split-view>\n\t<nldd-page slot="main">\n\t\t\t<pre>\n\t\t\tcode\n\t\t\t</pre>\n\t\t</nldd-page>\n</nldd-bar-split-view>\n');
+	});
+
+	it('moves a child with an expression in it without changing its indent', async () => {
+		const { text } = await fixed('<nldd-bar-split-view>\n\t<nldd-split-view-pane slot="main">\n\t\t<nldd-page>\n\t\t\t<nldd-text>{{ name }}</nldd-text>\n\t\t</nldd-page>\n\t</nldd-split-view-pane>\n</nldd-bar-split-view>\n');
+		assert.equal(text, '<nldd-bar-split-view>\n\t<nldd-page slot="main">\n\t\t\t<nldd-text>{{ name }}</nldd-text>\n\t\t</nldd-page>\n</nldd-bar-split-view>\n');
+	});
+
+	it('moves a child with an attribute value over more lines without changing its indent', async () => {
+		const { text } = await fixed('<nldd-bar-split-view>\n\t<nldd-split-view-pane slot="main">\n\t\t<nldd-page>\n\t\t\t<nldd-text text="een\n\t\t\ttwee"></nldd-text>\n\t\t</nldd-page>\n\t</nldd-split-view-pane>\n</nldd-bar-split-view>\n');
+		assert.equal(text, '<nldd-bar-split-view>\n\t<nldd-page slot="main">\n\t\t\t<nldd-text text="een\n\t\t\ttwee"></nldd-text>\n\t\t</nldd-page>\n</nldd-bar-split-view>\n');
+	});
+
+	it('leaves a split view pane with more than one child, or a background its child cannot take', async () => {
+		for (const source of [
+			'<nldd-bar-split-view><nldd-split-view-pane slot="main"><nldd-page></nldd-page><nldd-page></nldd-page></nldd-split-view-pane></nldd-bar-split-view>',
+			'<nldd-bar-split-view><nldd-split-view-pane slot="main" background="tinted"><nldd-container></nldd-container></nldd-split-view-pane></nldd-bar-split-view>',
+		]) {
+			assert.equal((await fixed(source)).text, source);
+		}
+	});
+
 	it('leaves a bundle alone when it carries a renamed tag along', async () => {
 		const bundle = `document.querySelector("nldd-app-view");${' '.repeat(1000)}\n`;
 		const root = project({ 'a.html': '<nldd-app-view></nldd-app-view>', 'app.js': bundle });

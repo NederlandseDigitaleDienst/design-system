@@ -23,7 +23,7 @@ export function tabBarTemplate(component: NLDDTabBar): TemplateResult {
 			>
 				<nldd-icon-button
 					appearance="neutral-tinted"
-					no-highlight-border
+					.noHighlightBorder=${true}
 					icon="chevron-down-small"
 					text=${component._t('components.tab-bar.overflow-action')}
 					size=${component.size}

@@ -4,6 +4,7 @@ export const nlddStepBarTranslations = {
 	'components.step-bar.status-current-label': 'Huidige stap',
 	'components.step-bar.status-future-label': 'Nog te doen',
 	'components.step-bar.compact-text': 'Stap {current} van {total}',
+	'components.step-bar.compact-overview-text': '{total} stappen',
 };
 
 export type NLDDStepBarTranslations = typeof nlddStepBarTranslations;

@@ -4,5 +4,5 @@ assert: '[accessible-label]'
 message: 'Give this page an `accessible-label`, so it becomes a named region, or landmarks="page" if it holds the main content.'
 see: patronen/application
 examples:
-  passed: ['<nldd-navigation-split-view><nldd-split-view-pane slot="primary-sidebar"><nldd-page accessible-label="Mappen"></nldd-page></nldd-split-view-pane></nldd-navigation-split-view>', '<nldd-navigation-split-view><nldd-split-view-pane slot="main"><nldd-page landmarks="page"><nldd-sheet><nldd-page sticky-header><nldd-top-title-bar slot="header" text="api" dismiss-text="Sluit"></nldd-top-title-bar></nldd-page></nldd-sheet></nldd-page></nldd-split-view-pane></nldd-navigation-split-view>']
-  failed: ['<nldd-navigation-split-view><nldd-split-view-pane slot="primary-sidebar"><nldd-page></nldd-page></nldd-split-view-pane></nldd-navigation-split-view>']
+  passed: ['<nldd-navigation-split-view><nldd-page slot="primary-sidebar" accessible-label="Mappen"></nldd-page></nldd-navigation-split-view>', '<nldd-navigation-split-view><nldd-page slot="main" landmarks="page"><nldd-sheet><nldd-page sticky-header><nldd-top-title-bar slot="header" text="api" dismiss-text="Sluit"></nldd-top-title-bar></nldd-page></nldd-sheet></nldd-page></nldd-navigation-split-view>']
+  failed: ['<nldd-navigation-split-view><nldd-page slot="primary-sidebar"></nldd-page></nldd-navigation-split-view>']

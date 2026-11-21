@@ -34,11 +34,11 @@ export default {
 	tags: ['autodocs'],
 	args: {
 		appearance: 'simple',
-		type: 'list',
 		dividers: 'always',
 		height: '',
-		accessibleLabel: '',
 		reorderable: false,
+		accessibleLabel: '',
+		type: 'list',
 	},
 	argTypes: {
 		appearance: {
@@ -46,12 +46,6 @@ export default {
 			options: ['simple', 'box-tinted', 'box-base'],
 			description: 'Visuele stijl: `simple` = platte strip, `box-tinted` = framed card met afgeronde hoeken en border ring, `box-base` dezelfde kaart maar op een al getinte parent',
 			table: { defaultValue: { summary: 'simple' } },
-		},
-		type: {
-			control: 'select',
-			options: ['list', 'navigation', 'listbox', 'form'],
-			description: 'A11y-semantiek: `list` (role="list"), `navigation` (landmark met `aria-current` op het actieve item), `listbox` (filterbare listbox met eigen zoekveld, combobox-patroon) of `form` (rijen die zelf geen actie zijn, met de controls erin; geen pijltjesnavigatie)',
-			table: { defaultValue: { summary: 'list' } },
 		},
 		dividers: {
 			control: 'select',
@@ -65,16 +59,22 @@ export default {
 			table: { type: { summary: 'string' } },
 			if: { arg: 'type', eq: 'listbox' },
 		},
-		accessibleLabel: {
-			name: 'accessible-label',
-			control: 'text',
-			description: 'Toegankelijke naam van de lijst, bij `type="listbox"` van het zoekveld en bij `type="navigation"` van het navigatiegebied.',
-		},
 		reorderable: {
 			control: 'boolean',
 			description: 'Rijen verslepen om de volgorde te veranderen. Alleen bij `type="list"`: de pijltjes verplaatsen dan rijen in plaats van de focus.',
 			table: { defaultValue: { summary: false } },
 			if: { arg: 'type', eq: 'list' },
+		},
+		accessibleLabel: {
+			name: 'accessible-label',
+			control: 'text',
+			description: 'Toegankelijke naam van de lijst, bij `type="listbox"` van het zoekveld en bij `type="navigation"` van het navigatiegebied.',
+		},
+		type: {
+			control: 'select',
+			options: ['list', 'navigation', 'listbox', 'form'],
+			description: 'A11y-semantiek: `list` (role="list"), `navigation` (landmark met `aria-current` op het actieve item), `listbox` (filterbare listbox met eigen zoekveld, combobox-patroon) of `form` (rijen die zelf geen actie zijn, met de controls erin; geen pijltjesnavigatie)',
+			table: { defaultValue: { summary: 'list' } },
 		},
 	},
 	parameters: {
@@ -98,11 +98,11 @@ export const Standaard = {
 	render: (args: Record<string, any>) => html`
 		<nldd-list
 			appearance=${args.appearance}
-			type=${args.type}
 			dividers=${args.dividers}
 			height=${args.type === 'listbox' && args.height ? args.height : nothing}
-			accessible-label=${args.accessibleLabel || nothing}
 			?reorderable=${args.type === 'list' && args.reorderable}
+			accessible-label=${args.accessibleLabel || nothing}
+			type=${args.type}
 		>
 			<nldd-list-item>
 				<nldd-text-cell text="Item 1"></nldd-text-cell>

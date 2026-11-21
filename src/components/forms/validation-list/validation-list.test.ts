@@ -1,5 +1,6 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, onTestFinished } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import { loadTokens } from '../../../test-tokens.js';
 import './validation-list.js';
 import '../form-field/form-field.js';
 import '../form/form.js';
@@ -33,6 +34,41 @@ describe('nldd-validation-list', () => {
 		el = await fixture('<nldd-validation-list></nldd-validation-list>');
 		await waitForUpdate(el);
 		expect(el.shadowRoot).not.toBeNull();
+	});
+
+	it('passes unmet and visible on to the item as states, not attributes, and shows it by them', async () => {
+		onTestFinished(loadTokens());
+		el = await fixture(`
+			<nldd-form-field label="Wachtwoord">
+				<nldd-text-field></nldd-text-field>
+				<nldd-validation-list>
+					<nldd-validation-item id="password-hint" hint>Een hint</nldd-validation-item>
+					<nldd-validation-item id="password-breach">Staat in een datalek</nldd-validation-item>
+				</nldd-validation-list>
+			</nldd-form-field>
+		`);
+		await waitForUpdate(el);
+		const hint = item(el, 'password-hint');
+		const breach = item(el, 'password-breach');
+		expect(hint.matches(':state(visible)')).toBe(true);
+		expect(hint.matches(':state(unmet)')).toBe(false);
+		expect(getComputedStyle(hint).display).toBe('block');
+		expect(breach.matches(':state(visible)')).toBe(false);
+		expect(getComputedStyle(breach).display).toBe('none');
+		const calm = getComputedStyle(hint).color;
+
+		const control = el.querySelector('nldd-text-field')!;
+		control.setAttribute('unmet', 'password-breach');
+		control.setAttribute('invalid', '');
+		await waitForUpdate(el);
+		await breach.updateComplete;
+
+		expect(breach.matches(':state(visible)')).toBe(true);
+		expect(breach.matches(':state(unmet)')).toBe(true);
+		expect(breach.hasAttribute('visible')).toBe(false);
+		expect(breach.hasAttribute('unmet')).toBe(false);
+		expect(getComputedStyle(breach).display).toBe('block');
+		expect(getComputedStyle(breach).color).not.toBe(calm);
 	});
 
 	it('houdt een item zonder regel verborgen tot de app hem noemt', async () => {

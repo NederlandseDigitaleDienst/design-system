@@ -22,10 +22,10 @@
  * @attr {string} accessible-label - Accessible name for the group, set as aria-label. In an nldd-form-field the field names it.
  * @attr {string} accessible-labeled-by - Id of an external label element, set as aria-labelledby on the group
  * @attr {boolean} invalid - Marks the group as invalid. Announced with aria-invalid; nothing is drawn for it.
- * @attr {boolean} disabled - Disabled state for all swatches
  * @attr {string} name - Name for form submission
  * @attr {string} value - Value of the chosen swatch
  * @attr {boolean} required - Something has to be chosen
+ * @attr {boolean} disabled - Disabled state for all swatches
  *
  * @fires change - When the choice changes; detail: { value: string }
  *
@@ -36,13 +36,12 @@
  * @element nldd-swatch-picker-item
  * @attr {'lintblauw'|'donkerblauw'|'hemelblauw'|'lichtblauw'|'paars'|'violet'|'robijnrood'|'roze'|'rood'|'oranje'|'donkergeel'|'geel'|'donkerbruin'|'bruin'|'donkergroen'|'groen'|'mosgroen'|'mintgroen'} color - Category color: 'lintblauw' | 'donkerblauw' | 'hemelblauw' | 'lichtblauw' | 'paars' | 'violet' | 'robijnrood' | 'roze' | 'rood' | 'oranje' | 'donkergeel' | 'geel' | 'donkerbruin' | 'bruin' | 'donkergroen' | 'groen' | 'mosgroen' | 'mintgroen'. Brings its name along, so `text` is optional.
  * @attr {string} custom-color - Any CSS color of your own (e.g. '#7a1f3d' or 'var(--brand-color)'), for a color outside the categories. Needs `text`.
+ * @attr {string} text - Name of the swatch, for screen readers and the tooltip. Overrides the name of a category `color`.
  * @attr {string} image - URL of an image that fills the swatch, for a pattern or a material. Needs `text`.
  * @attr {string} image-srcset - Sources of the image at other pixel densities, with x descriptors (e.g. '/oak.jpg 1x, /oak@2x.jpg 2x'). The swatch has a fixed size, so there are no widths to choose from.
- * @attr {string} text - Name of the swatch, for screen readers and the tooltip. Overrides the name of a category `color`.
  * @attr {boolean} selected - Whether this swatch is chosen (set by the picker)
- * @attr {boolean} disabled - Disabled state
  * @attr {string} value - Value for this swatch
- * @attr {'xs'|'sm'|'md'} size - Swatch size: 'xs' | 'sm' | 'md' (set by the picker, default: 'md')
+ * @attr {boolean} disabled - Disabled state
  * @attr {object} translations - Override translation keys (the names of the category colors); unset keys fall back to Dutch.
  */
 import { LitElement } from 'lit';
@@ -55,6 +54,7 @@ import { radioPositions, type RadioPosition } from '../../../utilities/radio-pos
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
+import { styleValueState } from '../../../utilities/element-state.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import type { NLDDTooltip } from '../../content/tooltip/tooltip.js';
 import { swatchPickerStyles, swatchPickerItemStyles } from './swatch-picker.styles.js';
@@ -66,6 +66,7 @@ import '../../content/icon/icon.js';
 const NAME_AFTER_TAP_MS = 1500;
 
 export type SwatchPickerSize = 'xs' | 'sm' | 'md';
+const SIZES: readonly SwatchPickerSize[] = ['xs', 'sm', 'md'];
 export type SwatchColor = 'lintblauw' | 'donkerblauw' | 'hemelblauw' | 'lichtblauw' | 'paars' | 'violet' | 'robijnrood' | 'roze' | 'rood' | 'oranje' | 'donkergeel' | 'geel' | 'donkerbruin' | 'bruin' | 'donkergroen' | 'groen' | 'mosgroen' | 'mintgroen';
 
 
@@ -81,27 +82,28 @@ export class NLDDSwatchPickerItem extends withTranslations(LitElement, nlddSwatc
 	@property({ reflect: true, attribute: 'custom-color', converter: reflectNonDefault<string>('') })
 	customColor = '';
 
+	/** @internal Set by nldd-swatch-picker. The styles read it as `:state(size-xs)`
+	 *  and so on. */
+	@property({ attribute: false })
+	size: SwatchPickerSize = 'md';
+
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	text = '';
+
 	@property({ type: String })
 	image = '';
 
 	@property({ type: String, attribute: 'image-srcset' })
 	imageSrcset = '';
 
-	@property({ reflect: true, converter: reflectNonDefault<string>('') })
-	text = '';
-
 	@property({ type: Boolean, reflect: true })
 	selected = false;
-
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
 
 	@property({ type: String })
 	value = '';
 
-	/** Set by nldd-swatch-picker. Not part of the public API. */
-	@property({ reflect: true, converter: reflectNonDefault<SwatchPickerSize>('md') })
-	size: SwatchPickerSize = 'md';
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	/** Set by nldd-swatch-picker: this swatch's place in the group, which it
 	 *  cannot count by itself. */
@@ -143,6 +145,11 @@ export class NLDDSwatchPickerItem extends withTranslations(LitElement, nlddSwatc
 		this.removeEventListener('focus', this._onFocus);
 		this.removeEventListener('blur', this._onBlur);
 		this._hideName();
+	}
+
+	override willUpdate(changedProperties: Map<string, unknown>): void {
+		super.willUpdate(changedProperties);
+		if (changedProperties.has('size') || !this.hasUpdated) styleValueState(this, 'size', this.size, SIZES);
 	}
 
 	override updated(changedProperties: Map<string, unknown>): void {
@@ -309,9 +316,6 @@ export class NLDDSwatchPicker extends FormAssociated(LitElement) {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
 
@@ -322,6 +326,9 @@ export class NLDDSwatchPicker extends FormAssociated(LitElement) {
 	 *  checked as soon as anything is chosen, so the browser writes the message. */
 	@property({ type: Boolean, reflect: true })
 	required = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	/** The name this group wrote onto its host, so it only takes back its own. */
 	private _appliedLabel: string | null = null;

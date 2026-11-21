@@ -120,6 +120,22 @@ describe('nldd-time-picker – kiezen', () => {
 		expect(Math.abs(kolom.scrollTop - midden(opties[14]))).toBeLessThan(1);
 	});
 
+	// Safari sends the scroll events of a glide after the paint: the selection
+	// followed them and showed the old value again for a few frames.
+	it('toont tijdens het glijden de gekozen waarde, niet wat nog in het midden staat', async () => {
+		el = await fixture<NLDDTimePicker>('<nldd-time-picker value="10:00" style="--primitives-transition-duration-medium: 200ms; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 44px"></nldd-time-picker>');
+		await waitForUpdate(el);
+		const kolom = column(el, 'hours');
+		const vanaf = kolom.scrollTop;
+		el.shadowRoot!.querySelector<HTMLElement>('.time-picker__value')!.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, composed: true }));
+		await waitForUpdate(el);
+		expect(kolom.hasAttribute('data-gliding')).toBe(true);
+		kolom.scrollTop = vanaf;
+		kolom.dispatchEvent(new Event('scroll'));
+		await waitForUpdate(el);
+		expect(selection(el, 'hours').textContent!.trim()).toBe('11');
+	});
+
 	// A wheel or a touch during the glide is the user taking over: the glide
 	// must not drag the column back to where it was heading.
 	it('stopt beide kolommen als je er één zelf scrollt', async () => {

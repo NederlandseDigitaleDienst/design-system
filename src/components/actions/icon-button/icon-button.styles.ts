@@ -309,8 +309,8 @@ export const iconButtonStyles = css`
 		pointer-events: none;
 	}
 
-	:host([no-highlight-border]),
-	:host([no-highlight-border][expanded]) {
+	:host(:state(no-highlight-border)),
+	:host(:state(no-highlight-border)[expanded]) {
 		--_icon-button-highlight-border-color: transparent;
 		--_icon-button-is-hovered-highlight-border-color: transparent;
 		--_icon-button-is-active-highlight-border-color: transparent;

@@ -20,12 +20,11 @@
  * @element nldd-form-field
  * @keywords veld, label
  *
- * @attr {'top'|'right'|'left'} label-alignment - 'top' (default) | 'right' | 'left'. A value of its own always wins over the inherited form-label-alignment.
+ * @attr {'top'|'right'|'left'} label-alignment - 'top' (default) | 'right' | 'left'. A value of its own wins over the one of a wrapping nldd-form.
  * @attr {string} label - Field label text. Omit for no-label layout. Supports **bold** markdown syntax, for the word to type in a confirmation; the accessible name of the control takes the text without the markers.
  * @attr {string} supporting-label - Short supporting text below the label. Same typography as optional badge. Supports **bold** markdown syntax.
- * @attr {boolean} optional - Shows an optional badge next to the label.
- * @attr {string} optional-label - Text for the optional badge. Defaults to 'Optioneel'.
- * @attr {string} form-label-alignment - Set by a wrapping nldd-form as a fallback. Do not set it yourself in consumer code.
+ * @attr {boolean} optional - Shows an optional badge next to the label. Its text is the translation key `components.form-field.optional-label` ("Optioneel").
+ * @attr {object} translations - Override translation keys, such as the text of the optional badge; unset keys fall back to Dutch
  *
  * @slot - The slotted input (e.g. nldd-text-field), its nldd-validation-list and its nldd-form-field-help-text.
  *
@@ -64,7 +63,10 @@ import {
 	formFieldTemplate,
 	formFieldHelpTextTemplate,
 } from './form-field.template.js';
-import { setState } from '../../../utilities/element-state.js';
+import { setState, styleValueState } from '../../../utilities/element-state.js';
+import { translate } from '../../../utilities/translations.js';
+import { nlddFormFieldTranslations } from './form-field.i18n.js';
+import type { NLDDFormFieldTranslations } from './form-field.i18n.js';
 
 export type LabelAlignment = 'top' | 'left' | 'right';
 
@@ -116,6 +118,9 @@ function generateId(): string {
    nldd-form-field
    ============================================================ */
 
+/** A validation list as the field sees it: it says when one of its items shows or hides. */
+type ValidationListHost = HTMLElement & { onItemVisibilityChange: (() => void) | null };
+
 @customElement('nldd-form-field')
 export class NLDDFormField extends LitElement {
 	static override styles = formFieldStyles;
@@ -131,12 +136,18 @@ export class NLDDFormField extends LitElement {
 	 * Default is `undefined` (and not `'top'`) so Lit doesn't reflect the
 	 * default value to the attribute on first update. That keeps the
 	 * "no own value set" state visible to CSS as `:not([label-alignment])`,
-	 * which the form-label-alignment fallback selectors rely on. Visually
+	 * which the alignment inherited from nldd-form relies on. Visually
 	 * `undefined` and `'top'` render identically (no `[label-alignment]`
 	 * rules apply for either).
 	 */
 	@property({ type: String, attribute: 'label-alignment', reflect: true })
 	labelAlignment: LabelAlignment | undefined = undefined;
+
+	/** @internal Set by a wrapping nldd-form: its `label-alignment`. No attribute:
+	 *  the styles read it as `:state(form-label-left)` or `:state(form-label-right)`,
+	 *  and a `label-alignment` of its own wins. */
+	@property({ attribute: false })
+	formLabelAlignment: LabelAlignment | undefined = undefined;
 
 	/** Label text. When empty no label is rendered but side-alignment indent is preserved. */
 	@property({ type: String })
@@ -160,13 +171,21 @@ export class NLDDFormField extends LitElement {
 	@property({ type: Boolean })
 	optional = false;
 
-	/** Label text for the optional badge. Defaults to 'Optioneel'. Override for localisation. */
-	@property({ type: String, attribute: 'optional-label' })
-	optionalLabel = 'Optioneel';
+	/** Override one or more translation keys. Unset keys fall back to Dutch. */
+	@property({ type: Object })
+	translations: Partial<NLDDFormFieldTranslations> = {};
+
+	public _t(key: keyof NLDDFormFieldTranslations): string {
+		return translate(this.translations, nlddFormFieldTranslations, key);
+	}
 
 	private _childObserver: MutationObserver | null = null;
-	/** Watches the validation lists for items that come, go, show or hide. */
+	/** Watches the validation lists for items that come or go. */
 	private _listObserver: MutationObserver | null = null;
+	/** Handed to each validation list, which calls it when an item shows or hides. */
+	private _onItemVisibilityChange = () => this._syncDescription();
+	/** The lists that hold that callback now, to take it back from. */
+	private _watchedLists: ValidationListHost[] = [];
 
 	/** The last label this field wrote onto the control, so it only takes back its own. */
 	private _appliedLabel: string | null = null;
@@ -181,6 +200,11 @@ export class NLDDFormField extends LitElement {
 		if (changed.has('label')) {
 			this._onSlotChange();
 		}
+	}
+
+	override willUpdate(changed: Map<string, unknown>) {
+		super.willUpdate(changed);
+		if (changed.has('formLabelAlignment')) styleValueState(this, 'form-label', this.formLabelAlignment, ['left', 'right']);
 	}
 
 	override connectedCallback() {
@@ -200,6 +224,16 @@ export class NLDDFormField extends LitElement {
 		super.disconnectedCallback();
 		this._childObserver?.disconnect();
 		this._listObserver?.disconnect();
+		this._watchLists([]);
+	}
+
+	/** Hands the visibility callback to these lists, and takes it back from the others. */
+	private _watchLists(lists: ValidationListHost[]): void {
+		for (const list of this._watchedLists) {
+			if (!lists.includes(list) && list.onItemVisibilityChange === this._onItemVisibilityChange) list.onItemVisibilityChange = null;
+		}
+		for (const list of lists) list.onItemVisibilityChange = this._onItemVisibilityChange;
+		this._watchedLists = lists;
 	}
 
 	/**
@@ -374,11 +408,10 @@ export class NLDDFormField extends LitElement {
 		const lists = children.filter(el => tag(el) === 'nldd-validation-list');
 		this._listObserver ??= new MutationObserver(() => this._syncDescription());
 		this._listObserver.disconnect();
-		for (const list of lists) {
-			this._listObserver.observe(list, { childList: true, subtree: true, attributes: true, attributeFilter: ['visible'] });
-		}
+		for (const list of lists) this._listObserver.observe(list, { childList: true, subtree: true });
+		this._watchLists(lists as ValidationListHost[]);
 		const describedBy = [
-			...lists.flatMap(list => Array.from(list.children).filter(el => tag(el) === 'nldd-validation-item' && el.hasAttribute('visible'))),
+			...lists.flatMap(list => Array.from(list.children).filter(el => tag(el) === 'nldd-validation-item' && (el as HTMLElement & { visible?: boolean }).visible)),
 			...children.filter(el => tag(el) === 'nldd-form-field-help-text'),
 		];
 

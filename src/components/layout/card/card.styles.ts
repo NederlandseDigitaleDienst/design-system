@@ -67,9 +67,19 @@ export const cardStyles = css`
 		flex-direction: column;
 		flex-grow: 1;
 		isolation: isolate;
+		transition: background-color var(--primitives-transition-duration-fast) var(--primitives-transition-easing-default);
+	}
+
+	/* On top of what the card holds, so an image up to the edge does not cover it. */
+	.card::after {
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		border-radius: inherit;
 		outline: var(--_card-highlight-border-width) solid var(--_card-border-color);
 		outline-offset: calc(-1 * var(--_card-highlight-border-width));
-		transition: background-color var(--primitives-transition-duration-fast) var(--primitives-transition-easing-default);
+		pointer-events: none;
+		content: '';
 	}
 
 	@media (hover: hover) {

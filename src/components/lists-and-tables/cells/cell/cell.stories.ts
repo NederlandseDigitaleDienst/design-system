@@ -20,8 +20,8 @@ export default {
 		minHeight: '',
 		horizontalAlignment: 'left',
 		verticalAlignment: 'center',
-		hideBelow: '',
 		hideAbove: '',
+		hideBelow: '',
 	},
 	argTypes: {
 		width: {
@@ -58,15 +58,15 @@ export default {
 			description: 'Verticale uitlijning van slotted content',
 			table: { defaultValue: { summary: 'center' } },
 		},
-		hideBelow: {
-			name: 'hide-below',
-			control: 'text',
-			description: 'Verberg wanneer cells-container smaller is dan deze CSS-lengte (bv. "320px", "20rem")',
-		},
 		hideAbove: {
 			name: 'hide-above',
 			control: 'text',
 			description: 'Verberg wanneer cells-container breder is dan deze CSS-lengte (bv. "1200px")',
+		},
+		hideBelow: {
+			name: 'hide-below',
+			control: 'text',
+			description: 'Verberg wanneer cells-container smaller is dan deze CSS-lengte (bv. "320px", "20rem")',
 		},
 	},
 };
@@ -77,8 +77,8 @@ export const Standaard = {
 			width=${args.width || nothing}
 			horizontal-alignment=${args.horizontalAlignment}
 			vertical-alignment=${args.verticalAlignment}
-			hide-below=${args.hideBelow || nothing}
 			hide-above=${args.hideAbove || nothing}
+			hide-below=${args.hideBelow || nothing}
 			min-height="80px"
 			class="cell-bounds"
 		>

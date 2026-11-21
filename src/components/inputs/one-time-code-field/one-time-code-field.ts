@@ -31,18 +31,18 @@
  *
  * @attr {'sm'|'md'|'lg'} size - 'sm' | 'md' (default) | 'lg'. 'lg' has boxes 56px tall with larger characters, for a page where the code is the only thing to do, such as signing in. Where the boxes do not fit the width, the field steps down a size, to md and then sm: a code never wraps onto a second line. Where not even sm fits, the field shows the code in a text field of its own size.
  * @attr {boolean} centered - Puts the boxes in the middle of the row, as on a sign-in page where the code is the only field. The field keeps the full width of the row, so it still sees when the boxes no longer fit and steps down a size; centering it from outside, with the alignment of its parent, would shrink it to its boxes and take that away.
- * @attr {number} length - How many characters the code has (default: 6).
- * @attr {string} format - The shape of a code that is printed in groups, such as '###-###' or '#### ####': each `#` is a box, anything else a separator you see but a screen reader does not hear. The number of `#` is then the length, so `format` wins over `length`. The value never holds a separator: '123-234' is submitted as '123234'. Leave it out for a code without groups, as most codes from a text message are.
  * @attr {string} accessible-label - Accessible label forwarded to the inner input. Set automatically by nldd-form-field.
+ * @attr {boolean} uppercase - Turns letters into capitals as they are typed or pasted, in the boxes and in the value. Only with `type="alphanumeric"`, and only for a code where case does not matter, as with most activation codes. Leave it off for a code that tells "a" from "A", such as some recovery codes: a value turned into capitals would no longer match.
  * @attr {boolean} invalid - Marks the field as invalid
- * @attr {boolean} readonly - Readonly state
- * @attr {boolean} disabled - Disabled state
- * @attr {string} input-id - Sets the id on the native input. Set automatically by nldd-form-field.
  * @attr {string} name - Input name for form submission
+ * @attr {string} input-id - Sets the id on the native input. Set automatically by nldd-form-field.
  * @attr {string} value - The code
  * @attr {'numeric'|'alphanumeric'} type - What the code holds: 'numeric' (default, digits only, raises the number keyboard) | 'alphanumeric' (letters and digits)
- * @attr {boolean} uppercase - Turns letters into capitals as they are typed or pasted, in the boxes and in the value. Only with `type="alphanumeric"`, and only for a code where case does not matter, as with most activation codes. Leave it off for a code that tells "a" from "A", such as some recovery codes: a value turned into capitals would no longer match.
+ * @attr {number} length - How many characters the code has (default: 6).
+ * @attr {string} format - The shape of a code that is printed in groups, such as '###-###' or '#### ####': each `#` is a box, anything else a separator you see but a screen reader does not hear. The number of `#` is then the length, so `format` wins over `length`. The value never holds a separator: '123-234' is submitted as '123234'. Leave it out for a code without groups, as most codes from a text message are.
  * @attr {boolean} required - Required state. A code that is not complete counts as invalid too.
+ * @attr {boolean} readonly - Readonly state
+ * @attr {boolean} disabled - Disabled state
  *
  * @fires input - When the code changes; detail: { value: string }
  * @fires change - When the code is committed; detail: { value: string }
@@ -177,30 +177,21 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 	@property({ type: Boolean, reflect: true })
 	centered = false;
 
-	@property({ reflect: true, converter: reflectNonDefault<number>(DEFAULT_LENGTH) })
-	length = DEFAULT_LENGTH;
-
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	format = '';
-
 	/** Accessible label forwarded to the inner <input>. Set automatically by nldd-form-field. */
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
 	@property({ type: Boolean, reflect: true })
+	uppercase = false;
+
+	@property({ type: Boolean, reflect: true })
 	invalid = false;
-
-	@property({ type: Boolean, reflect: true })
-	readonly = false;
-
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
-	@property({ type: String, attribute: 'input-id' })
-	inputId = '';
 
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
+
+	@property({ type: String, attribute: 'input-id' })
+	inputId = '';
 
 	@property({ type: String })
 	value = '';
@@ -208,11 +199,20 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 	@property({ reflect: true, converter: reflectNonDefault<OneTimeCodeType>('numeric') })
 	type: OneTimeCodeType = 'numeric';
 
-	@property({ type: Boolean, reflect: true })
-	uppercase = false;
+	@property({ reflect: true, converter: reflectNonDefault<number>(DEFAULT_LENGTH) })
+	length = DEFAULT_LENGTH;
+
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	format = '';
 
 	@property({ type: Boolean, reflect: true })
 	required = false;
+
+	@property({ type: Boolean, reflect: true })
+	readonly = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	/** Whether the inner input has focus, to show where the next character goes. */
 	@state()

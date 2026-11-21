@@ -38,11 +38,6 @@ export default {
 			description: 'Semantiek voor ARIA en visualisatie',
 			table: { defaultValue: { summary: 'progress' } },
 		},
-		indeterminate: {
-			control: 'boolean',
-			description: 'Toont een draaiende indicator-animatie',
-			table: { defaultValue: { summary: false } },
-		},
 		color: {
 			control: 'select',
 			options: ALL_COLORS,
@@ -59,14 +54,15 @@ export default {
 			control: 'text',
 			description: 'Label onder de cirkel',
 		},
-		max: {
-			control: { type: 'number', min: 1 },
-			description: 'Totaalwaarde',
-			table: { defaultValue: { summary: 100 } },
+		accessibleLabel: {
+			name: 'accessible-label',
+			control: 'text',
+			description: 'Volledige override van aria-valuetext',
 		},
-		value: {
-			control: { type: 'number', min: 0 },
-			description: 'Single-segment shorthand',
+		valueText: {
+			name: 'value-text',
+			control: 'text',
+			description: 'Volledige override van de getoonde waarde',
 		},
 		valueFormat: {
 			name: 'value-format',
@@ -75,11 +71,6 @@ export default {
 			description: 'Format van de getoonde waarde',
 			table: { defaultValue: { summary: 'percentage' } },
 		},
-		valueText: {
-			name: 'value-text',
-			control: 'text',
-			description: 'Volledige override van de getoonde waarde',
-		},
 		valueDisplay: {
 			name: 'value-display',
 			control: 'select',
@@ -87,40 +78,49 @@ export default {
 			description: 'Waar de waarde verschijnt: inline, tooltip of verborgen',
 			table: { defaultValue: { summary: 'tooltip' } },
 		},
-		accessibleLabel: {
-			name: 'accessible-label',
-			control: 'text',
-			description: 'Volledige override van aria-valuetext',
+		indeterminate: {
+			control: 'boolean',
+			description: 'Toont een draaiende indicator-animatie',
+			table: { defaultValue: { summary: false } },
+		},
+		value: {
+			control: { type: 'number', min: 0 },
+			description: 'Single-segment shorthand',
+		},
+		max: {
+			control: { type: 'number', min: 1 },
+			description: 'Totaalwaarde',
+			table: { defaultValue: { summary: 100 } },
 		},
 	},
 	args: {
 		variant: 'progress',
-		indeterminate: false,
 		color: 'accent',
 		size: '28',
 		text: 'Bestanden uploaden',
-		max: 100,
-		value: 60,
-		valueFormat: 'percentage',
-		valueText: '',
-		valueDisplay: 'tooltip',
 		accessibleLabel: '',
+		valueText: '',
+		valueFormat: 'percentage',
+		valueDisplay: 'tooltip',
+		indeterminate: false,
+		value: 60,
+		max: 100,
 	},
 };
 
 const Template = (args: Record<string, any>) => html`
 	<nldd-progress-circle
 		variant=${args.variant}
-		?indeterminate=${args.indeterminate}
 		color=${args.color}
 		size=${args.size}
 		text=${args.text || nothing}
-		max=${args.max}
-		value=${args.value}
-		value-format=${args.valueFormat}
-		value-text=${args.valueText || nothing}
-		value-display=${args.valueDisplay}
 		accessible-label=${args.accessibleLabel || nothing}
+		value-text=${args.valueText || nothing}
+		value-format=${args.valueFormat}
+		value-display=${args.valueDisplay}
+		?indeterminate=${args.indeterminate}
+		value=${args.value}
+		max=${args.max}
 	></nldd-progress-circle>
 `;
 

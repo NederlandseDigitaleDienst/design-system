@@ -22,14 +22,14 @@ export default {
 	args: {
 		rows: 7,
 		width: '',
-		value: '09:30',
-		min: '',
-		max: '',
-		step: 1,
 		accessibleLabel: '',
 		accessibleDescription: '',
 		accessibleDescribedBy: '',
 		invalid: false,
+		value: '09:30',
+		min: '',
+		max: '',
+		step: 1,
 
 	},
 	argTypes: {
@@ -41,23 +41,6 @@ export default {
 		width: {
 			control: 'text',
 			description: "Breedte: 'full' of een eigen CSS-lengte. Leeg is de intrinsieke breedte van twee kolommen.",
-		},
-		value: {
-			control: 'text',
-			description: 'De gekozen tijd als HH:mm (24-uurs)',
-		},
-		min: {
-			control: 'text',
-			description: 'Vroegst toegestane tijd; tevens de basis waarvandaan step telt',
-		},
-		max: {
-			control: 'text',
-			description: 'Laatst toegestane tijd',
-		},
-		step: {
-			control: 'number',
-			description: 'Minutenstap: bepaalt welke minuten in de kolom staan',
-			table: { defaultValue: { summary: '1' } },
 		},
 		accessibleLabel: {
 			name: 'accessible-label',
@@ -80,6 +63,23 @@ export default {
 			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
 			table: { defaultValue: { summary: false } },
 		},
+		value: {
+			control: 'text',
+			description: 'De gekozen tijd als HH:mm (24-uurs)',
+		},
+		min: {
+			control: 'text',
+			description: 'Vroegst toegestane tijd; tevens de basis waarvandaan step telt',
+		},
+		max: {
+			control: 'text',
+			description: 'Laatst toegestane tijd',
+		},
+		step: {
+			control: 'number',
+			description: 'Minutenstap: bepaalt welke minuten in de kolom staan',
+			table: { defaultValue: { summary: '1' } },
+		},
 
 	},
 };
@@ -87,23 +87,23 @@ export default {
 const Template = ({
 	rows,
 	width,
+	accessibleLabel, accessibleDescription,
+	invalid,
 	value,
 	min,
 	max,
 	step,
-	accessibleLabel, accessibleDescription,
-	invalid,
 }: Record<string, any>) => html`
 	<nldd-time-picker
-		?invalid=${invalid}
 		rows=${rows || nothing}
 		width=${width || nothing}
+		accessible-label=${accessibleLabel || nothing}
+		accessible-description=${accessibleDescription || nothing}
+		?invalid=${invalid}
 		value=${value || nothing}
 		min=${min || nothing}
 		max=${max || nothing}
 		step=${step || nothing}
-		accessible-label=${accessibleLabel || nothing}
-		accessible-description=${accessibleDescription || nothing}
 	></nldd-time-picker>
 `;
 

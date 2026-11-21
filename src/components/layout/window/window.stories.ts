@@ -40,11 +40,11 @@ export default {
 		scheme: 'inherit',
 		width: '',
 		height: '',
+		centered: false,
 		top: '',
 		right: '',
 		bottom: '',
 		left: '',
-		centered: false,
 		accessibleLabel: '',
 		noLightDismiss: false,
 		open: false,
@@ -65,6 +65,11 @@ export default {
 			control: 'text',
 			description: 'Hoogte als CSS-lengte. Zonder hoogte is het venster zo hoog als zijn inhoud.',
 		},
+		centered: {
+			control: 'boolean',
+			description: 'Centreert het venster op beide assen. Een rand die je zet wint op zijn eigen as: `centered top="0"` staat bovenaan, horizontaal gecentreerd.',
+			table: { defaultValue: { summary: false } },
+		},
 		top: {
 			control: 'text',
 			description: 'Afstand tot de bovenrand van het scherm, als CSS-waarde.',
@@ -80,11 +85,6 @@ export default {
 		left: {
 			control: 'text',
 			description: 'Afstand tot de linkerrand van het scherm, als CSS-waarde.',
-		},
-		centered: {
-			control: 'boolean',
-			description: 'Centreert het venster op beide assen. Een rand die je zet wint op zijn eigen as: `centered top="0"` staat bovenaan, horizontaal gecentreerd.',
-			table: { defaultValue: { summary: false } },
 		},
 		accessibleLabel: {
 			name: 'accessible-label',
@@ -134,11 +134,11 @@ const Template = (args: Record<string, unknown>) => {
 			scheme=${args.scheme || nothing}
 			width=${args.width || nothing}
 			height=${args.height || nothing}
+			?centered=${args.centered}
 			top=${args.top || nothing}
 			right=${args.right || nothing}
 			bottom=${args.bottom || nothing}
 			left=${args.left || nothing}
-			?centered=${args.centered}
 			accessible-label=${args.accessibleLabel || nothing}
 			?no-light-dismiss=${args.noLightDismiss}
 			?open=${args.open}

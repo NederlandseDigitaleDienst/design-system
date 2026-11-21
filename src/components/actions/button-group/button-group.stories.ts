@@ -15,8 +15,8 @@ export default {
 
 	args: {
 		size: 'md',
-		orientation: 'auto',
 		width: '',
+		orientation: 'auto',
 	},
 	argTypes: {
 		size: {
@@ -25,18 +25,18 @@ export default {
 			description: 'Groepsmaat',
 			table: { defaultValue: { summary: 'md' } },
 		},
-		orientation: {
-			control: 'select',
-			options: ['auto', 'horizontal', 'vertical'],
-			description: 'Richting: `auto` is een rij, en gestapeld over de volle breedte zodra de groep zelf 480px of smaller is.',
-			table: { defaultValue: { summary: 'auto' } },
-		},
 		width: {
 			control: 'select',
 			options: ['(geen)', 'full'],
 			mapping: { '(geen)': '' },
 			description: '`full`: de knoppen vullen de rij in gelijke delen, en staan onder elkaar zodra hun labels niet naast elkaar passen.',
 			table: { defaultValue: { summary: '(geen)' } },
+		},
+		orientation: {
+			control: 'select',
+			options: ['auto', 'horizontal', 'vertical'],
+			description: 'Richting: `auto` is een rij, en gestapeld over de volle breedte zodra de groep zelf 480px of smaller is.',
+			table: { defaultValue: { summary: 'auto' } },
 		},
 	},
 };
@@ -45,8 +45,8 @@ export const Standaard = {
 	render: (args: Record<string, any>) => html`
 	<nldd-button-group
 		size=${args.size}
-		orientation=${args.orientation}
 		width=${args.width || nothing}
+		orientation=${args.orientation}
 	>
 		<nldd-button
 			appearance="primary"

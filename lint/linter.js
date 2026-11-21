@@ -656,6 +656,11 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 				writes: parsed.writes,
 				inLine: standsInLine(node),
 				readOnly: Boolean(node.readOnly),
+				// What takes the place of a wrapper that is gone: its one child.
+				...(finding.fix?.unwrap && node.children.length === 1 && !node.text && !node.opaque
+					? { inner: { tag: node.children[0].name, offset: node.children[0].offset, endOffset: node.children[0].endOffset, startTag: node.children[0].startTag } }
+					: {}),
+				jsx,
 				...position(node.offset),
 			}))
 			.concat(

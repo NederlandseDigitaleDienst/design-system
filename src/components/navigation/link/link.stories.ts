@@ -76,22 +76,6 @@ export default {
 				defaultValue: { summary: '(geen)' },
 			},
 		},
-		href: {
-			control: 'text',
-			description: 'Link doel',
-		},
-		target: {
-			control: 'select',
-			options: ['(geen)', '_self', '_blank', '_parent', '_top'],
-			description: 'Link target (stelt rel automatisch bij voor _blank)',
-			table: { defaultValue: { summary: '(geen)' } },
-		},
-		download: {
-			control: 'select',
-			options: ['(geen)', 'download', 'download="aanvraag-A-1042.pdf"'],
-			mapping: { '(geen)': null, download: '', 'download="aanvraag-A-1042.pdf"': 'aanvraag-A-1042.pdf' },
-			description: 'Slaat het bestand op in plaats van het te openen (alleen met href); een waarde wordt de bestandsnaam',
-		},
 		interestfor: {
 			control: false,
 			description: 'Id van een `nldd-popover` elders op de pagina die laat zien waar de link heen gaat. Hij opent als je de aanwijzer op de link laat rusten, bij focus en bij lang drukken op touch. Een klik volgt de link gewoon. Zet de popover buiten de alinea: een `<p>` erin zou die sluiten.',
@@ -111,6 +95,22 @@ export default {
 			control: false,
 			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
 		},
+		href: {
+			control: 'text',
+			description: 'Link doel',
+		},
+		target: {
+			control: 'select',
+			options: ['(geen)', '_self', '_blank', '_parent', '_top'],
+			description: 'Link target (stelt rel automatisch bij voor _blank)',
+			table: { defaultValue: { summary: '(geen)' } },
+		},
+		download: {
+			control: 'select',
+			options: ['(geen)', 'download', 'download="aanvraag-A-1042.pdf"'],
+			mapping: { '(geen)': null, download: '', 'download="aanvraag-A-1042.pdf"': 'aanvraag-A-1042.pdf' },
+			description: 'Slaat het bestand op in plaats van het te openen (alleen met href); een waarde wordt de bestandsnaam',
+		},
 		disabled: {
 			control: 'boolean',
 			description: 'Uitgeschakelde staat',
@@ -124,27 +124,27 @@ export default {
 		text: 'Voorwaarden voor dakisolatie',
 		startIcon: '',
 		endIcon: '',
-		href: '#',
-		target: '',
-		download: '(geen)',
 		accessibleLabel: '',
 		accessibleDescription: '',
 		accessibleDescribedBy: '',
+		href: '#',
+		target: '',
+		download: '(geen)',
 		disabled: false,
 	},
 };
 
-const Template = ({ size, text, startIcon, endIcon, href, target, download, accessibleLabel, accessibleDescription, disabled }: Record<string, any>) => html`
+const Template = ({ size, text, startIcon, endIcon, accessibleLabel, accessibleDescription, href, target, download, disabled }: Record<string, any>) => html`
 	<nldd-link
-		href=${href || nothing}
-		target=${target || nothing}
-		download=${download ?? nothing}
 		size=${size || nothing}
 		text=${text}
 		start-icon=${startIcon || nothing}
 		end-icon=${endIcon || nothing}
 		accessible-label=${accessibleLabel || nothing}
 		accessible-description=${accessibleDescription || nothing}
+		href=${href || nothing}
+		target=${target || nothing}
+		download=${download ?? nothing}
 		?disabled=${disabled}
 	></nldd-link>
 `;
