@@ -381,8 +381,9 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 	/**
 	 * Scrolling is choosing: whatever comes to rest in the middle is the value.
 	 * The position of the column is the only truth. The selection shows what is
-	 * in the middle on every frame, also while we scroll ourselves, and every
-	 * scroll that comes to rest is read back and recorded. No scroll is ever
+	 * in the middle on every frame the user scrolls (a glide of ours shows the
+	 * value it goes to), and every scroll that comes to rest is read back and
+	 * recorded. No scroll is ever
 	 * ignored, so the selection, the column and the value cannot drift apart.
 	 *
 	 * Rest is `scrollend` where the browser has it, so a pause in momentum
@@ -396,12 +397,14 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 		if (!this.isConnected) return;
 		const el = e.currentTarget as HTMLElement;
 		if (!canScroll(el)) return;
+		// Following the middle during a glide showed the old value again for a
+		// few frames in Safari, which sends scroll events after the paint.
+		if (this._glides.has(el)) return;
 		const centered = this._centeredOption(el);
 		if (centered !== null && centered !== this._scrolledTo[column]) {
 			this._scrolledTo = { ...this._scrolledTo, [column]: centered };
 		}
-		// A glide records where it ends.
-		if (this._glides.has(el) || this._isOwnScroll(el)) return;
+		if (this._isOwnScroll(el)) return;
 		// As an attribute and not as reactive state: this happens every scroll
 		// frame, and re-rendering eighty values per frame is a waste.
 		this.toggleAttribute('data-scrolling', true);
