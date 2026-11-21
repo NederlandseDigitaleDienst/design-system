@@ -39,12 +39,25 @@ if [ "$CLAUDE_CODE_SUBPROCESS_ENV_SCRUB" = 1 ]; then
 fi
 
 npm install --global --no-audit --no-fund @anthropic-ai/claude-code
-prompt="$(sed -e "s#{VERSION}#$VERSION#g" -e "s#{TOOLS}#$TOOLS#g" -e "s#{SKILLS}#$SKILLS#g" "$(dirname "$0")/prompt.md")"
+
+# The sandbox puts an empty, locked file in the project for each protected path that is not
+# there, such as package.json, a lockfile or .bashrc, and adds them to .git/info/exclude.
+# What stands in the project now is the project's; what is added and empty is the sandbox's.
 cd "$PROJECT"
+ls -A > "$TOOLS/root.before"
+cp .git/info/exclude "$TOOLS/exclude.before" 2>/dev/null || true
+
+prompt="$(sed -e "s#{VERSION}#$VERSION#g" -e "s#{TOOLS}#$TOOLS#g" -e "s#{SKILLS}#$SKILLS#g" "$(dirname "$0")/prompt.md")"
 if ! timeout 60m claude --print "$prompt" --model "$MODEL" --add-dir "$TOOLS" --add-dir "$SKILLS" --settings "$TOOLS/settings.json" --tools Bash Read Edit Write Glob Grep --allowedTools Bash Read Edit Write Glob Grep; then
 	echo "::warning::The agent stopped before it was done. The pull request holds what it did until then."
 	printf '\n- De agent die de lijst afwerkt is niet klaar gekomen. Wat hij tot dan deed, staat in deze pull request.\n' >> "$TOOLS/keuzes.md"
 fi
+
+# Out of the sandbox again: what it left goes, so nothing after this trips over an empty package.json.
+ls -A | sort | comm -13 <(sort "$TOOLS/root.before") - | while read -r entry; do
+	if [ -f "$entry" ] && [ ! -s "$entry" ]; then rm -f "$entry"; elif [ -d "$entry" ]; then rmdir "$entry" 2>/dev/null || true; fi
+done
+if [ -f "$TOOLS/exclude.before" ]; then cp "$TOOLS/exclude.before" .git/info/exclude; fi
 
 case "$CLAUDE_CODE_SUBPROCESS_ENV_SCRUB$(cat "$TOOLS/sees-key" 2>/dev/null || true)" in
 	0*) echo "::notice::The commands of the agent ran without a sandbox, as asked: they could read the key for the model." ;;

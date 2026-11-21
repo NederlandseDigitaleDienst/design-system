@@ -16,5 +16,8 @@ If the project builds to a static site, write {TOOLS}/site.json as well:
 {"build": "<one shell command that builds the site from a clean checkout on this runner, installing what it needs>", "site": "<the directory it writes to>"}.
 Run that command once to see that it works. Leave the file out for an app that needs a server or a backend.
 
+Your commands run in a sandbox. It puts empty, locked files in the project for protected paths that are not there,
+such as package.json or a lockfile in the root; a tool that reads them may fail. Then run that check in a clean clone
+outside the project. The files go away after you.
 Leave no file behind that does not belong in the pull request. Do not commit and do not push.
 If you cannot run a command at all, say so as the first line of {TOOLS}/keuzes.md.

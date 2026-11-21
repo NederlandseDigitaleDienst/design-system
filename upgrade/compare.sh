@@ -18,6 +18,8 @@ git worktree add --quiet --detach "$TOOLS/before" HEAD~1
 git worktree add --quiet --detach "$TOOLS/after" HEAD
 (cd "$TOOLS/before" && sh -c "$BUILD")
 (cd "$TOOLS/after" && sh -c "$BUILD")
+# Outside the project: node reads a package.json in the directory it starts in.
+cd "$TOOLS"
 npm install --prefix "$TOOLS/browser" --no-audit --no-fund playwright
 "$TOOLS/browser/node_modules/.bin/playwright" install --with-deps chromium
 nldd compare "$TOOLS/before/$SITE" "$TOOLS/after/$SITE" --out "$TOOLS/compare" --report "$TOOLS/compare/compare.md" --playwright "$TOOLS/browser/node_modules/playwright"
