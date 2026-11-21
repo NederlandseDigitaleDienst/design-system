@@ -86,6 +86,15 @@ chmod +x "$TOOLS/bin/nldd"
 echo "$TOOLS/bin" >> "$GITHUB_PATH"
 echo "version=$version" >> "$GITHUB_OUTPUT"
 
+# A pull request without a state, one from before the state or whose text someone rewrote, holds
+# the version of the run before. Where the project came from is then what the default branch has.
+if [ -n "$number" ] && [ -z "$from" ]; then
+	git worktree add --quiet --detach "$TOOLS/base" "origin/$BASE"
+	CONFINE_RW=("$TOOLS/base")
+	from="$(cd "$TOOLS/base" && confine "$TOOLS/bin/nldd" upgrade --no-install --format json | jq --raw-output '.from // empty')"
+	git worktree remove --force "$TOOLS/base"
+fi
+
 # The upgrade installs the dependencies without their scripts, and then loads the project's own
 # TypeScript to read its types. That is code of the project, so it runs confined, without the token.
 CONFINE_RW=("$PROJECT" "$WORK")
