@@ -56,38 +56,41 @@ Een versie is een map met een gebouwde site, of het adres van een draaiende app.
 
 ## Een pull request bij elke release
 
-De workflow `upgrade.yml` draait de opdracht in je repository en opent een pull request met het verslag als tekst. Een nieuwere release werkt die pull request bij.
+De action `upgrade` draait de opdracht in je repository en opent een pull request met het verslag als tekst. Een nieuwere release werkt die pull request bij, en staat je project er al, dan sluit hij hem. Zet dit in `.github/workflows/nldd-upgrade.yml`:
 
 ```yaml
 on:
   schedule:
     - cron: '0 6 * * 1'
+  workflow_dispatch:
 jobs:
   upgrade:
-    uses: NederlandseDigitaleDienst/design-system/.github/workflows/upgrade.yml@main
+    runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
+    steps:
+      - uses: NederlandseDigitaleDienst/design-system/upgrade@v{{version}}
 ```
 
-Zonder token van een app of een bot opent `github-actions[bot]` de pull request. Dan draait je eigen CI er niet op. Geef de workflow een token als je dat wel wilt.
+De action kloont je repository zelf, dus een checkout is niet nodig. De tag zegt hoe de upgrade wordt afgeleverd. Naar welke versie je project gaat, is `version`: standaard de nieuwste op npm. Verhoog de tag zelf, of laat Dependabot dat doen.
 
-Je organisatie moet een workflow uit een andere repository toestaan. Dat staat onder **Settings**, **Actions**, **General**. Staat daar dat alleen eigen acties mogen, dan faalt de aanroep.
+Zonder token van een app of een bot opent `github-actions[bot]` de pull request. Dan draait je eigen CI er niet op. Geef een token mee als je dat wel wilt, met `token`, of een app met `app-client-id` en `app-private-key`.
 
-`@main` neemt elke wijziging aan de workflow meteen mee. Wil je dat niet, zet dan een versie achter de naam, zoals `upgrade.yml@v0.28.0`, en verhoog die zelf.
+Je organisatie moet een action uit een andere organisatie toestaan. Dat staat onder **Settings**, **Actions**, **General**. Staat daar dat alleen eigen acties mogen, dan faalt de stap.
 
 ### Met een agent
 
 Met `agent: true` werkt een agent de lijst af voordat de pull request opengaat. Hij volgt de skill van dezelfde versie, draait de CI van je project en schrijft zijn keuzes onder het verslag. Daarna leest de opdracht je project opnieuw, zodat het verslag zegt wat de linter nog vindt.
 
 ```yaml
-    with:
-      agent: true
-    secrets:
-      anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+      - uses: NederlandseDigitaleDienst/design-system/upgrade@v{{version}}
+        with:
+          agent: true
+          anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
 ```
 
-De agent krijgt geen token van je repository, en de sleutel van het model blijft buiten de opdrachten die hij draait. Zet hem aan voor een repository waarvan je de inhoud vertrouwt. Het model staat vast, standaard `claude-opus-5-5`, en de pull request noemt het.
+De agent krijgt geen token van je repository. Zijn opdrachten draaien in een sandbox, zodat ze de sleutel van het model niet kunnen lezen. Sommige builds draaien daar niet in; zet dan `sandbox: false`, maar alleen voor een repository waarvan je de inhoud vertrouwt als je eigen. Het model staat vast, standaard `claude-opus-5-5`, en de pull request noemt het.
 
 Bouwt je project naar een statische site, dan komen er ook beelden van voor en na onder de pull request. De agent zoekt uit hoe je site bouwt, of je geeft het mee met `build` en `site`.
 
@@ -123,13 +126,13 @@ Staat de agent aan voor je repository, dan krijgt die het token van de app niet.
 
 ### Met een eigen app
 
-Wil je liever je eigen app, gebruik dan de workflow `upgrade.yml` in je eigen repository en geef die app mee:
+Wil je liever je eigen app, gebruik dan de action in je eigen repository en geef die app mee:
 
 ```yaml
-    with:
-      app_client_id: ${{ vars.UPGRADE_APP_CLIENT_ID }}
-    secrets:
-      app_private_key: ${{ secrets.UPGRADE_APP_KEY }}
+      - uses: NederlandseDigitaleDienst/design-system/upgrade@v{{version}}
+        with:
+          app-client-id: ${{ vars.UPGRADE_APP_CLIENT_ID }}
+          app-private-key: ${{ secrets.UPGRADE_APP_KEY }}
 ```
 
 Je app vraagt dezelfde rechten als in de tabel hierboven.

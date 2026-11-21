@@ -29,6 +29,8 @@ const SITE_NAME = 'NLDD Designsysteem';
  * `stories` is the file the examples on the page come from; with `examples`
  * every story of that file follows the text, under that heading.
  */
+const PACKAGE_VERSION = JSON.parse(readFileSync(resolve(repoRoot, 'package.json'), 'utf8')).version;
+
 const PROSE = [
 	{ path: '/aan-de-slag/', file: 'www/content/aan-de-slag.md', description: 'Installeer het pakket en zet je eerste component neer.' },
 	{ path: '/aan-de-slag/ai-assistent/', file: 'www/content/ai-assistent.md', description: 'Skills voor Claude Code en Cursor.' },
@@ -1219,10 +1221,13 @@ export function buildPages({ base = '/' } = {}) {
 		// as the list of skills. A file that is shown as it is in the repository
 		// has links relative to itself.
 		const source = file.startsWith('www/content/')
-			? read(file).replace(/^\{\{(\w+)\}\}$/gm, (_, key) => {
-					if (!(key in MARKDOWN_INSERTS)) throw new Error(`Onbekende plaatshouder {{${key}}} in ${file}`);
-					return MARKDOWN_INSERTS[key];
-				})
+			? read(file)
+					.replace(/^\{\{(\w+)\}\}$/gm, (_, key) => {
+						if (!(key in MARKDOWN_INSERTS)) throw new Error(`Onbekende plaatshouder {{${key}}} in ${file}`);
+						return MARKDOWN_INSERTS[key];
+					})
+					// The version the site is built from, so an example pins one that exists.
+					.replaceAll('{{version}}', PACKAGE_VERSION)
 			: absoluteLinks(read(file), file);
 		const storyFile = storiesPath ? parseStoryFile(resolve(repoRoot, storiesPath)) : undefined;
 		stories += storyFile?.stories.length ?? 0;
