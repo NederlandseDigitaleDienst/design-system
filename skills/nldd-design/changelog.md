@@ -15,10 +15,19 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.28.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.27.1...v0.28.0) (2026-11-21)
+
 ### Breaking
 
 - **`no-highlight-border` on `nldd-button` and `nldd-icon-button` is gone.** Only a group that draws one border around its buttons used it, such as `nldd-button-bar`, the split button and the pagination, and they now drop that border themselves without an attribute. Remove it from your markup: `nldd lint --fix` does that, and reports it as `button-no-highlight-border-no-effect`.
 - **`optional-label` on `nldd-form-field` is gone: the text of the optional badge is the translation key `components.form-field.optional-label`.** It is UI text, like the other texts of the package, so it goes through `translations` or `setTranslations()`: `<nldd-form-field optional translations='{"components.form-field.optional-label": "Niet verplicht"}'>`. English, Frisian and Papiamentu have a text for it. `nldd lint --fix` moves an `optional-label` into `translations` and reports it as `form-field-optional-label-no-effect`.
+- **Attributes that a component set on its children are gone.** They were never yours to set, but as attributes they showed as controls, in the manifest and in `reference.md`. The parent now passes them on without an attribute, and the child styles itself with a custom state. CSS of your own that selected on one of them no longer matches:
+  - `form-label-alignment` on `nldd-form-field` and `nldd-form-actions`. Set `label-alignment` on the form, or on a field to give that field its own.
+  - `size`, `show-item-labels`, `fluid`, `solo-fluid`, `shrinkable` and `shrunk` on `nldd-toolbar-item`, and `size` on `nldd-toolbar-title`.
+  - `compact` on `nldd-menu-bar-item`. Set `compact` on the `nldd-menu-bar`.
+  - `reorderable` on `nldd-list-item`. Set `reorderable` on the `nldd-list`.
+  - `unmet` and `visible` on `nldd-validation-item`. The `unmet` on the control, with the ids the app sets, stays.
+  - `variant`, `appearance`, `size`, `group-name` and `input-type` on the items of `nldd-segmented-control`, and `size` on the items of `nldd-swatch-picker`.
 - **`nldd-split-view-pane` is gone: what was in it goes straight in the split view.** The pane was a layer between a split view and its content that did nothing a split view cannot do itself. Put the page, or the container with a toolbar, in the slot with the attributes the pane had: `<nldd-page slot="main" landmarks="page">`. The split view gives it the room of its column, makes it a layout container and hides the back button of its title bar where the pane before it is in view. `nldd lint --fix` takes the pane away where it holds one element, and reports the others as `split-view-pane-not-found`.
   - `has-content` and `hide-back` go. An `nldd-navigation-split-view` now counts every pane as content; set `empty` on the element in `main` or `secondary-sidebar` when it says nothing is chosen yet, so a phone shows the list before it.
   - `background` goes on the page itself: `<nldd-page slot="primary-sidebar" background="tinted">`.
