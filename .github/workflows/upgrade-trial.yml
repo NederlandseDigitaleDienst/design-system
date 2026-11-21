@@ -29,6 +29,7 @@ jobs:
       repository: ${{ matrix.target.repository || matrix.target }}
       agent: true
       sandbox: ${{ matrix.target.sandbox != false }}
+      model: ${{ vars.NLDD_FLEET_MODEL || 'claude-opus-5-5' }}
       build: ${{ matrix.target.build }}
       site: ${{ matrix.target.site }}
       app_client_id: ${{ vars.NLDD_FLEET_APP_CLIENT_ID }}

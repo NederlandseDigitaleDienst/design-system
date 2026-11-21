@@ -87,6 +87,10 @@ on:
         description: 'Let an agent work the list of what is left, with the upgrade skill, before the pull request is made. Needs claude_code_oauth_token or anthropic_api_key.'
         type: boolean
         default: false
+      model:
+        description: 'The model the agent works with. Fixed, so the same run does the same work, and named in the pull request.'
+        type: string
+        default: claude-opus-5-5
       sandbox:
         description: 'Keep the key for the model out of the commands the agent runs, by running them in a sandbox. Some builds do not run in it. Turn it off only for a repository whose content you trust as your own.'
         type: boolean
@@ -218,6 +222,7 @@ jobs:
         if: steps.upgrade.outputs.changed == 'true' && inputs.agent
         env:
           VERSION: ${{ steps.upgrade.outputs.version }}
+          MODEL: ${{ inputs.model }}
           OAUTH_TOKEN: ${{ secrets.claude_code_oauth_token }}
           API_KEY: ${{ secrets.anthropic_api_key }}
           # Keeps the key for the model out of the commands the agent runs.
@@ -267,7 +272,7 @@ jobs:
           Run that command once to see that it works. Leave the file out for an app that needs a server or a backend.
           Leave no file behind that does not belong in the pull request. Do not commit and do not push.
           If you cannot run a command at all, say so as the first line of $TOOLS/keuzes.md."
-          if ! timeout 60m claude --print "$prompt" --add-dir "$TOOLS" --settings "$TOOLS/settings.json" --tools Bash Read Edit Write Glob Grep --allowedTools Bash Read Edit Write Glob Grep; then
+          if ! timeout 60m claude --print "$prompt" --model "$MODEL" --add-dir "$TOOLS" --settings "$TOOLS/settings.json" --tools Bash Read Edit Write Glob Grep --allowedTools Bash Read Edit Write Glob Grep; then
             echo "::warning::The agent stopped before it was done. The pull request holds what it did until then."
             printf '\n- De agent die de lijst afwerkt is niet klaar gekomen. Wat hij tot dan deed, staat in deze pull request.\n' >> "$TOOLS/keuzes.md"
           fi
@@ -278,6 +283,9 @@ jobs:
             1yes) echo "::error::A command of the agent could read the key for the model. No pull request is made; replace the key."; exit 1 ;;
             *) echo "::warning::Whether a command of the agent could read the key for the model was not checked: the check did not run." ;;
           esac
+
+          # Who worked the list, for whoever reviews it.
+          printf '\n_Afgewerkt door een agent: %s, met Claude Code %s._\n' "$MODEL" "$(claude --version | cut -d' ' -f1)" >> "$TOOLS/keuzes.md"
 
           # What is left now, as the linter finds it, with the choices of the agent under it.
           nldd upgrade --since "$TOOLS/upgrade.json" --notes "$TOOLS/keuzes.md" --report "$TOOLS/upgrade.md"

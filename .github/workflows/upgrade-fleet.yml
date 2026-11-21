@@ -18,6 +18,7 @@ name: Upgrade the fleet
 #   NLDD_FLEET_AGENT            variable   a JSON array of owner/name: there an agent works the
 #                                          list of what is left. It runs commands in that
 #                                          repository, so name the ones whose content you trust
+#   NLDD_FLEET_MODEL            variable   the model of the agent. Default: claude-opus-5-5
 #   CLAUDE_CODE_OAUTH_TOKEN     secret     for the agent, or
 #   ANTHROPIC_API_KEY           secret     an API key
 #
@@ -76,6 +77,7 @@ jobs:
       version: ${{ inputs.version || 'latest' }}
       agent: ${{ inputs.agent == 'yes' || (inputs.agent != 'no' && contains(fromJSON(vars.NLDD_FLEET_AGENT || '[]'), matrix.target.repository || matrix.target)) }}
       sandbox: ${{ matrix.target.sandbox != false }}
+      model: ${{ vars.NLDD_FLEET_MODEL || 'claude-opus-5-5' }}
       build: ${{ matrix.target.build }}
       site: ${{ matrix.target.site }}
       app_client_id: ${{ vars.NLDD_FLEET_APP_CLIENT_ID }}
