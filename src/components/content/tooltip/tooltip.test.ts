@@ -574,6 +574,18 @@ describe('nldd-tooltip – description in the light DOM', () => {
 		await until(() => !isTooltipVisible(real));
 	});
 
+	// A wrapper with display: contents has no box, but what is in it shows.
+	it('blijft bij een resize met focus als de trigger display: contents heeft', async () => {
+		const tooltip = await fixture<NLDDTooltip>('<nldd-tooltip text="Test"><span style="display: contents"><button>Trigger</button></span></nldd-tooltip>');
+		el = tooltip;
+		await waitForUpdate(tooltip);
+		tooltip.querySelector('span')!.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+		await until(() => isTooltipVisible(tooltip));
+		window.dispatchEvent(new Event('resize'));
+		await waitForUpdate(tooltip);
+		expect(isTooltipVisible(tooltip)).toBe(true);
+	});
+
 	it('blijft bij scrollen als open hem vastzet', async () => {
 		const tooltip = await fixture<NLDDTooltip>('<nldd-tooltip text="Test" open><button>Trigger</button></nldd-tooltip>');
 		el = tooltip;

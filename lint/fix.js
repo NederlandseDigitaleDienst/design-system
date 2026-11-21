@@ -205,7 +205,10 @@ function unwrapEdits(source, finding, { drop = [], move = {} }) {
 	const innerIndent = source.slice(lineStart(inner.offset), inner.offset);
 	// One line, or after other markup on its line: nothing to take back.
 	const flat = lineStart(inner.offset) === lineStart(finding.offset) || /\S/.test(indent) || /\S/.test(innerIndent) || !innerIndent.startsWith(indent);
-	const unit = flat ? '' : innerIndent.slice(indent.length);
+	// Text whose white space counts (a template literal, an expression, <pre>)
+	// keeps its indent: the child is moved, not reformatted.
+	const verbatim = /[`{]|<(pre|textarea)\b/i.test(source.slice(inner.offset, inner.endOffset + 1));
+	const unit = flat || verbatim ? '' : innerIndent.slice(indent.length);
 	const nameEnd = inner.offset + 1 + inner.tag.length;
 	const split = inner.startTag.attributes.length > 0 && /\n/.test(source.slice(nameEnd, inner.startTag.attributes[0].start));
 	const attributeIndent = split ? /\n([ \t]*)$/.exec(source.slice(nameEnd, inner.startTag.attributes[0].start))[1] : '';

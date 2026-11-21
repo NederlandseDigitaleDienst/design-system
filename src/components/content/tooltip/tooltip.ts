@@ -91,6 +91,14 @@ type Timing = 'instant' | 'delay' | 'never';
 
 let tooltipCounter = 0;
 // On a server there is no matchMedia; a tooltip only shows in a browser anyway.
+/** Whether a trigger is on the screen. One with `display: contents` has no
+ *  box of its own, so what is in it counts. */
+function shown(trigger: Element): boolean {
+	if (trigger.checkVisibility()) return true;
+	if (getComputedStyle(trigger).display !== 'contents') return false;
+	return [...trigger.children].some(shown);
+}
+
 const coarsePointerQuery = typeof matchMedia === 'function' ? matchMedia('(pointer: coarse)') : null;
 
 // Defaults mirror the values in tooltip.styles.ts. Used as fallback when the
@@ -420,7 +428,7 @@ export class NLDDTooltip extends LitElement {
 	private _handleScroll = (): void => {
 		// A trigger that is gone from the screen (a toolbar that is only there
 		// at another width) takes its tooltip along, focused or not.
-		if (this._visible && !this.open && this._currentTrigger && !this._currentTrigger.checkVisibility()) {
+		if (this._visible && !this.open && this._currentTrigger && !shown(this._currentTrigger)) {
 			this._interest.close();
 			return;
 		}

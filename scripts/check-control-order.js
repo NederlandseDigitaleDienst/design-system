@@ -21,12 +21,14 @@ const camel = (name) => name.replace(/-([a-z0-9])/g, (_, c) => c.toUpperCase());
 export function readCanon() {
 	const skill = readFileSync(join(root, '.claude/skills/component/SKILL.md'), 'utf8');
 	const start = skill.indexOf('[1. Visueel dominant]');
+	if (start < 0) throw new Error('The canon is gone from .claude/skills/component/SKILL.md: no "[1. Visueel dominant]".');
 	const block = skill.slice(start, skill.indexOf('```', start));
 	const names = [];
 	for (const line of block.split('\n')) {
 		if (line.startsWith('[')) continue;
 		for (const word of line.split(/[\s,+]+/)) if (/^[a-z][A-Za-z0-9]*$/.test(word)) names.push(word);
 	}
+	if (names.length < 100) throw new Error(`The canon in .claude/skills/component/SKILL.md has ${names.length} names; it could not be read.`);
 	return names;
 }
 

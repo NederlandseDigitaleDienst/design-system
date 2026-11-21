@@ -60,6 +60,11 @@ describe('--fix', () => {
 		);
 	});
 
+	it('keeps the indent inside a template literal or <pre> when it takes a pane away', async () => {
+		const { text } = await fixed('<nldd-bar-split-view>\n\t<nldd-split-view-pane slot="main">\n\t\t<nldd-page>\n\t\t\t<pre>\n\t\t\tcode\n\t\t\t</pre>\n\t\t</nldd-page>\n\t</nldd-split-view-pane>\n</nldd-bar-split-view>\n');
+		assert.equal(text, '<nldd-bar-split-view>\n\t<nldd-page slot="main">\n\t\t\t<pre>\n\t\t\tcode\n\t\t\t</pre>\n\t\t</nldd-page>\n</nldd-bar-split-view>\n');
+	});
+
 	it('leaves a split view pane with more than one child, or a background its child cannot take', async () => {
 		for (const source of [
 			'<nldd-bar-split-view><nldd-split-view-pane slot="main"><nldd-page></nldd-page><nldd-page></nldd-page></nldd-split-view-pane></nldd-bar-split-view>',
