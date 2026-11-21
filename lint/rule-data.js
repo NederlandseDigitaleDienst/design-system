@@ -101,6 +101,14 @@ export const BUILT_IN_RULES = {
 		severity: 'warn',
 		description: 'A surface that gives links a color sets all three link colors, or a link on it turns back to the default blue on hover or press.',
 	},
+	'style-color-needs-context': {
+		severity: 'warn',
+		description: 'Text and icons of the design system take their color from `--context-content-color`, not from the CSS `color` around them. An element of your own that sets `color` for what stands in it sets that variable too, with the same value.',
+	},
+	'link-color-no-effect': {
+		severity: 'warn',
+		description: 'A link reads `--context-link-color` and its two states. `--semantics-links-color` gives those their value on `:root` only, so setting it on an element colors no link.',
+	},
 	'file-not-read': {
 		severity: 'warn',
 		description: 'This file has nldd-* markup the linter cannot read, so it was not checked.',

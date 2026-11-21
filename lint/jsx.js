@@ -146,6 +146,24 @@ function staticJsxObject(value) {
 	return JSON.stringify(Object.fromEntries(entries));
 }
 
+/**
+ * The properties a `style={{ … }}` sets, in the names CSS has for them. With a
+ * spread or a computed key in it, nobody can say here what it sets.
+ * @returns {Set<string> | undefined}
+ */
+function jsxStyleNames(value) {
+	let expression = value?.type === 'JSXExpressionContainer' ? value.expression : undefined;
+	while (expression?.type === 'TSAsExpression' || expression?.type === 'TSSatisfiesExpression' || expression?.type === 'ParenthesizedExpression') expression = expression.expression;
+	if (expression?.type !== 'ObjectExpression') return undefined;
+	const names = new Set();
+	for (const property of expression.properties) {
+		if (property.type !== 'Property' || property.computed) return undefined;
+		const key = property.key.type === 'Identifier' ? property.key.name : String(property.key.value);
+		names.add(key.startsWith('--') ? key : key.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`));
+	}
+	return names;
+}
+
 /** Props React keeps to itself: they never reach the element. */
 export const REACT_ONLY = new Set(['key', 'ref', 'dangerouslySetInnerHTML', 'suppressHydrationWarning', 'suppressContentEditableWarning']);
 
@@ -159,6 +177,7 @@ function readJsxAttributes(element, attributes, reading) {
 		const isHandler = /^on[A-Z]/.test(name) || REACT_ONLY.has(name);
 		const value = name === 'translations' ? staticJsxObject(attribute.value) : staticJsxValue(attribute.value);
 		if (!isHandler && value !== undefined) element.attrs.set(name === 'className' ? 'class' : name, value);
+		if (name === 'style') element.styleSets = jsxStyleNames(attribute.value);
 		// An element passed as a prop renders elsewhere, so it is a tree of its own.
 		const nested = [];
 		collectJsx(attribute.value, nested);

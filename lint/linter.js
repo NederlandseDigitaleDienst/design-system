@@ -154,10 +154,49 @@ function checkSlot(node, tags, report) {
 	}
 }
 
+/** What takes its color from `--context-content-color`, unless it names a color of its own. */
+const READS_CONTENT_COLOR = new Set(['nldd-icon', 'nldd-text', 'nldd-title', 'nldd-rich-text', 'nldd-text-cell', 'nldd-title-cell', 'nldd-description-cell', 'nldd-spinner']);
+
+/** The properties the `style` of an element sets, where that can be read: a string in markup, an object in JSX. */
+function styleSets(node) {
+	if (node.styleSets) return node.styleSets;
+	const style = node.attrs.get('style');
+	if (typeof style !== 'string' || /\{\{|\{%|\$\{|<%/.test(style)) return undefined;
+	return new Set(style.split(';').map((declaration) => declaration.split(':')[0].trim().toLowerCase()).filter(Boolean));
+}
+
+/**
+ * The first thing in an element of the app that takes its color from the context.
+ * It looks through the app's own elements and a container, which pass the context
+ * on as it is, and stops at any other component: that may paint a surface of its own.
+ */
+function contentReader(node) {
+	for (const child of node.children) {
+		const color = child.attrs.get('color');
+		if (READS_CONTENT_COLOR.has(child.name) && (color === undefined || color === 'content')) return child;
+		const passesOn = !child.opaque && (!child.name.startsWith('nldd-') || child.name === 'nldd-container');
+		if (passesOn && !styleSets(child)?.has('--context-content-color')) {
+			const found = contentReader(child);
+			if (found) return found;
+		}
+	}
+	return undefined;
+}
+
+/** An element of the app that sets `color` for content that no longer listens to it. */
+function checkContentColor(node, report) {
+	if (node.name.startsWith('nldd-') || node.name.startsWith('#') || node.opaque) return;
+	const sets = styleSets(node);
+	if (!sets?.has('color') || sets.has('--context-content-color')) return;
+	const reader = contentReader(node);
+	if (reader) report('style-color-needs-context', `\`color\` set here does not reach the ${reader.name} inside, which reads \`--context-content-color\`. Set that too, with the same value.`, 'style');
+}
+
 function builtInFindings(root, context) {
 	const { tags } = context;
 	const findings = [];
 	walk(root, (node) => {
+		checkContentColor(node, (rule, message, attribute) => findings.push({ rule, severity: BUILT_IN_RULES[rule].severity, message, node, attribute }));
 		// `<nldd-*>` in running text names a family of tags and is none itself.
 		if (!/^nldd-[a-z0-9-]+$/.test(node.name)) return;
 		const report = (rule, message, attribute, severity = BUILT_IN_RULES[rule].severity) =>
@@ -354,6 +393,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 	}
 
 	const LINK_CONTEXT = ['--context-link-color', '--context-link-is-hovered-color', '--context-link-is-active-color'];
+	const LINK_TOKENS = ['--semantics-links-color', '--semantics-links-is-hovered-color', '--semantics-links-is-active-color'];
 
 	const removedEvents = data.removedEvents ?? {};
 	const eventPatterns = (() => {
@@ -439,6 +479,20 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 			const component = components.find((name) => declaration.name.startsWith(`--_${name}-`));
 			if (!component) continue;
 			report('local-variable-no-override', `\`${declaration.name}\` is internal to nldd-${component}, so setting it is not supported.`, declaration);
+		}
+		// A link token set on an element: the context took its value on `:root`, so this reaches no link.
+		for (const declaration of declared) {
+			if (!LINK_TOKENS.includes(declaration.name)) continue;
+			const sheet = sheets.find(([from, to]) => declaration.offset >= from && declaration.offset < to);
+			if (sheet) {
+				// In a stylesheet only a selector on a component is certain: a class may be a theme on the root.
+				const { start } = enclosingBlock(plain, declaration.offset, { quotes: false, strings: true, from: sheet[0], to: sheet[1] });
+				// `start` is right behind the brace that opens the block: the selector stands before that brace.
+				const selector = plain.slice(Math.max(plain.lastIndexOf('}', start - 2), plain.lastIndexOf('{', start - 2), plain.lastIndexOf(';', start - 2)) + 1, start - 1);
+				if (!/nldd-[a-z]/.test(selector) || /:root|\bhtml\b/.test(selector)) continue;
+			}
+			const context = declaration.name.replace('--semantics-links-', '--context-link-');
+			report('link-color-no-effect', `\`${declaration.name}\` set here colors no link: a link reads \`${context}\`. Set the three \`--context-link-\` colors instead.`, declaration);
 		}
 		const linkBlocks = new Set();
 		// Also in a block that looks like the design system's: it sets all three, so `:root { --context-link-color: red }` is the app's.

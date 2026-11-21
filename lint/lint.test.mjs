@@ -2318,3 +2318,43 @@ describe('the commands that open a browser, before they open one', () => {
 		assert.equal(run('compare', 'old', 'new').status, 2);
 	});
 });
+
+describe('a color that content of the design system no longer takes', () => {
+	const linter = createLinter(loadData());
+	const rulesIn = async (source, file) => (await linter.lintSource(source, file)).findings.filter(({ severity }) => severity !== 'hint').map(({ rule }) => rule);
+	const view = (inner) => `export const A = ({ rest, color }) => <>${inner}</>;`;
+
+	it('is found where an element of the app sets `color` around an icon or a text', async () => {
+		assert.deepEqual(await rulesIn(view('<div style={{ color: "white", background: "black" }}><nldd-icon icon="info" /></div>'), 'a.tsx'), ['style-color-needs-context']);
+		assert.deepEqual(await rulesIn('<div style="color: white"><span><nldd-container><nldd-text text="Dakisolatie"></nldd-text></nldd-container></span></div>', 'a.html'), ['style-color-needs-context']);
+	});
+
+	it('is none where the context is set too, or nothing inside reads it', async () => {
+		for (const inner of [
+			'<div style={{ color: "white", "--context-content-color": "white" }}><nldd-icon icon="info" /></div>',
+			'<span style={{ color: "red" }}>Dakisolatie</span>',
+			'<div style={{ color: "red" }}><nldd-icon icon="info" color="critical" /></div>',
+			'<div style={{ color: "red" }}><nldd-card><nldd-text text="Dakisolatie" /></nldd-card></div>',
+			'<div style={{ backgroundColor: "red" }}><nldd-icon icon="info" /></div>',
+		]) assert.deepEqual(await rulesIn(view(inner), 'a.tsx'), [], inner);
+	});
+
+	it('says nothing where a spread or a binding hides what the style sets', async () => {
+		assert.deepEqual(await rulesIn(view('<div style={{ color: "red", ...rest }}><nldd-icon icon="info" /></div>'), 'a.tsx'), []);
+		assert.deepEqual(await rulesIn('<template><div :style="{ color }"><nldd-icon icon="info" /></div></template>', 'a.vue'), []);
+	});
+});
+
+describe('a link token set on an element', () => {
+	const linter = createLinter(loadData());
+	const lines = async (source, file) => (await linter.lintSource(source, file)).findings.filter(({ rule }) => rule === 'link-color-no-effect').map(({ line }) => line);
+
+	it('colors no link, in a style and in a rule on a component', async () => {
+		assert.deepEqual(await lines('export const A = ({ color }) => <nldd-link href="/x" text="Dossier D-318" style={{ "--semantics-links-color": color }} />;', 'a.tsx'), [1]);
+		assert.deepEqual(await lines('.matrix nldd-link { --semantics-links-is-hovered-color: green; }\n', 'a.css'), [1]);
+	});
+
+	it('is fine on the root, and is left alone on a class, which may be a theme there', async () => {
+		assert.deepEqual(await lines(':root { --semantics-links-color: #154273; }\n.theme-oranje { --semantics-links-color: #e17000; }\nhtml[data-theme] nldd-link { --semantics-links-color: red; }\n', 'a.css'), []);
+	});
+});

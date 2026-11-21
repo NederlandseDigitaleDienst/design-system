@@ -267,7 +267,7 @@ export const IcoonUitlijning = {
 			layout="row"
 			gap="24"
 		>
-			<span style="display: inline-flex; flex-direction: column; gap: 6px; align-items: center; color: var(--semantics-content-secondary-color);">
+			<span style="display: inline-flex; flex-direction: column; gap: 6px; align-items: center;">
 				<nldd-text
 					size="xs"
 					line-height="flat"
@@ -277,6 +277,7 @@ export const IcoonUitlijning = {
 				<nldd-icon
 					icon="person"
 					size="24"
+					color="secondary"
 					style="outline: 1px dashed var(--semantics-dividers-color);"
 				></nldd-icon>
 			</span>

@@ -112,7 +112,8 @@ export function isBundle(filename, source) {
 }
 
 const isStylesheet = (filename) => STYLESHEET_EXTENSIONS.includes(extname(filename));
-const namesTokens = (source) => /var\(\s*--(primitives|semantics|components|context)-|--_[a-z]/.test(source);
+/** Reads a token, sets a variable of a component, or sets a color the design system reads from its context. */
+const namesTokens = (source) => /var\(\s*--(primitives|semantics|components|context)-|--_[a-z]|--(context|semantics-links)-[\w-]+\s*:/.test(source);
 
 /**
  * Whether a file is worth a parser when the group pure is off: most files in
