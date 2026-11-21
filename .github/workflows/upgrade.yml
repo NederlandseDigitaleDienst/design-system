@@ -263,7 +263,8 @@ jobs:
           Where you choose, keep what the page did before the upgrade.
           \`nldd\` on the PATH is the linter of the new version; \`nldd lint\` says what is left.
           Before you stop, run what the project's own CI runs on a pull request, where that needs no secret and no service:
-          read .github/workflows for it. Fix what the upgrade broke.
+          read .github/workflows for it. A check that fails now is broken by the upgrade: fix it, also where the fix is in
+          the project's own scripts or configuration, with the smallest change that makes it pass, and name it in the choices.
           Leave the report as it is: the command writes it again after you. Write $TOOLS/keuzes.md instead, a short list
           in Dutch, plain, without a title, for the people who review the pull request: every choice that does not follow from the changelog,
           what you left and why, and what of the project's CI still fails.
@@ -394,4 +395,9 @@ jobs:
           { echo '<!-- nldd-upgrade-compare -->'; cat compare.md; printf '\nAlle beelden: %s\n' "$ALL"; } > comment.md
           set --
           for image in $(grep --only-matching '(\./[^)]*\.png)' comment.md | tr -d '()'); do set -- "$@" --attach "$image"; done
-          gh pr comment "$NUMBER" --repo "$REPOSITORY" --body-file comment.md "$@"
+          if ! gh pr comment "$NUMBER" --repo "$REPOSITORY" --body-file comment.md "$@"; then
+            # Not every token may attach a file. The text then names each picture, and they are in the artifact.
+            echo "::warning::The pictures could not be attached. The comment links to the artifact instead."
+            sed --regexp-extended 's/^!\[([^]]*)\]\(\.\/([^)]*)\)$/Beeld `\2` in de bijlage van de run./' comment.md > plain.md
+            gh pr comment "$NUMBER" --repo "$REPOSITORY" --body-file plain.md
+          fi
