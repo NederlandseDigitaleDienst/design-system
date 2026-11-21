@@ -1450,7 +1450,7 @@ export class NLDDMenu extends LitElement {
 			? this._resolveDrillInPlacement(anchorEl)
 			: this.placement;
 
-		const { x, y } = await computePosition(anchorEl, this, {
+		const { x, y, placement } = await computePosition(anchorEl, this, {
 			placement: effectivePlacement as Placement,
 			middleware: [
 				offset({ mainAxis: this.anchorOffset, alignmentAxis: -submenuPadding }),
@@ -1469,7 +1469,11 @@ export class NLDDMenu extends LitElement {
 			left: `${x}px`,
 			top: `${y}px`,
 		});
+		this._opensAbove = placement.startsWith('top');
 	}
+
+	/** Whether the last position, after a flip, put the menu above its anchor. */
+	private _opensAbove = false;
 
 	// — Private handlers ——————————————————————————————————————————————————————
 
@@ -1834,9 +1838,7 @@ export class NLDDMenu extends LitElement {
 		const item = selected.getBoundingClientRect();
 		const area = scroller.getBoundingClientRect();
 		const lead = item.height * 1.5;
-		const anchor = this._getAnchorEl()?.getBoundingClientRect();
-		const opensAbove = !!anchor && this.getBoundingClientRect().bottom <= anchor.top + 1;
-		scroller.scrollTop += opensAbove
+		scroller.scrollTop += this._opensAbove
 			? item.bottom - (area.top + scroller.clientHeight - lead)
 			: item.top - (area.top + lead);
 	}
