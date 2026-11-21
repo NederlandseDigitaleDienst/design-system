@@ -47,7 +47,7 @@ name: Upgrade a project
 #
 # With `agent`, an agent works the list before the pull request is made, with
 # the upgrade skill of the same version. It gets the checkout and the
-# dependencies, and no token of the repository: the checkout keeps no
+# dependencies, and no token of the repository: the clone keeps no
 # credentials, and the push happens in a later step. A run without a key for a
 # model skips the agent and says so.
 
@@ -135,12 +135,17 @@ jobs:
           BASE: ${{ inputs.base }}
         run: echo "branch=${BASE:-$(gh api "repos/$REPOSITORY" --jq .default_branch)}" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/checkout@v7
-        with:
-          repository: ${{ inputs.repository || github.repository }}
-          ref: ${{ steps.base.outputs.branch }}
-          token: ${{ steps.app.outputs.token || secrets.token || github.token }}
-          persist-credentials: false
+      # A plain clone, and not the checkout action. The token is asked for when
+      # git needs it and is never written to disk, so a later step without it
+      # cannot push. And the action stops on a repository whose tree holds a
+      # submodule without an address, which a real app turned out to have.
+      - name: Check out
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token || secrets.token || github.token }}
+          BASE: ${{ steps.base.outputs.branch }}
+        run: |
+          gh auth setup-git
+          git clone --quiet --depth 1 --branch "$BASE" "https://github.com/$REPOSITORY" .
 
       - uses: actions/setup-node@v7
         with:
@@ -229,7 +234,6 @@ jobs:
           fi
           git config user.name "$name"
           git config user.email "$id+$name@users.noreply.github.com"
-          gh auth setup-git
 
           title="chore: designsysteem naar $VERSION"
           git switch --force-create "$BRANCH"
