@@ -7,7 +7,6 @@
  * @attr {'primary'|'secondary'|'destructive'|'accent-filled'|'accent-transparent'|'neutral-tinted'|'neutral-base'|'neutral-transparent'|'critical-tinted'|'critical-transparent'|'content-filled'|'content-tinted'} appearance - Visual style, color included: 'primary' | 'secondary' | 'destructive' | 'accent-filled' | 'accent-transparent' | 'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'critical-tinted' | 'critical-transparent' | 'content-filled' | 'content-tinted'. The content appearances take their colors from --context-content-color, for buttons on colored surfaces; content-filled uses the surface color (--context-background-color) for its icon.
  * @attr {'xs'|'sm'|'md'|'lg'} size - Button size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md')
  * @attr {boolean} hide-lg-text - In lg size, hides the text label and enlarges the icon by one step (28px)
- * @attr {boolean} no-highlight-border - Removes the per-appearance highlight border (e.g. when a control group draws a single border instead).
  * @attr {boolean} loading - Loading state (default: false). Shows an activity indicator over the visually hidden icon, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled). Meant for an action that has to wait for the server, such as sending an application. For most actions, show the result right away and confirm in the background, as the design guidelines describe.
  * @attr {string} loading-text - What the screen reader announces while `loading` is on, for a button that does more than load: "Aan het bewaren". Leave it out and the activity indicator says its translated "Laden".
  * @attr {boolean} disabled - Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why.
@@ -63,7 +62,7 @@ import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { ShortcutAvailabilityController } from '../../../utilities/shortcut.js';
 import './../../content/icon/icon.js';
 import './../../status-and-feedback/activity-indicator/activity-indicator.js';
-import { internalsOf } from '../../../utilities/element-state.js';
+import { internalsOf, styleState } from '../../../utilities/element-state.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
 
 export type Size = 'xs' | 'sm' | 'md' | 'lg';
@@ -123,7 +122,10 @@ export class NLDDIconButton extends DescribedBy(withTranslations(LitElement, nld
 	disabled = false;
 
 	/** Removes the per-appearance highlight border (e.g. when nldd-button-bar draws a single group border instead). */
-	@property({ type: Boolean, reflect: true, attribute: 'no-highlight-border' })
+	/** Set by a group that draws one border around its controls, such as
+	 *  nldd-button-bar: drops this control's own highlight border. No attribute:
+	 *  the styles read it as `:state(no-highlight-border)`. */
+	@property({ attribute: false })
 	noHighlightBorder = false;
 
 	@property({ reflect: true, converter: reflectNonDefault<ButtonType>('button') })
@@ -259,6 +261,7 @@ export class NLDDIconButton extends DescribedBy(withTranslations(LitElement, nld
 	}
 
 	override updated(changedProperties: Map<string, unknown>): void {
+		if (changedProperties.has('noHighlightBorder')) styleState(this, 'no-highlight-border', this.noHighlightBorder);
 		anchorPopoverTarget(this, popoverTargetOf(this, this.popovertarget, this.popoverTargetElement));
 		if (changedProperties.has('interestfor')) this._interest.refresh();
 		if (changedProperties.has('width')) {

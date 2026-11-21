@@ -18,7 +18,7 @@ export function splitButtonTemplate(component: NLDDSplitButton): TemplateResult 
 				loading-text=${component.loadingText || nothing}
 				horizontal-alignment="left"
 				width="full"
-				no-highlight-border
+				.noHighlightBorder=${true}
 				single-line
 				?loading=${component.loading}
 				?disabled=${component.disabled}
@@ -32,7 +32,7 @@ export function splitButtonTemplate(component: NLDDSplitButton): TemplateResult 
 					icon="chevron-down-small"
 					text=${component._t('components.split-button.show-options-action', { text: component.text })}
 					tooltip-timing="never"
-					no-highlight-border
+					.noHighlightBorder=${true}
 					hide-lg-text
 					?disabled=${component.disabled}
 					.popoverTargetElement=${component._popoverTarget()}

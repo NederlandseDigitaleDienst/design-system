@@ -176,7 +176,7 @@ export class NLDDButtonBar extends LitElement {
 				assign(el, 'size', this.size);
 				assign(el, 'appearance', this.appearance);
 				// The bar draws one group border (.button-bar::after); children drop theirs.
-				el.setAttribute('no-highlight-border', '');
+				(el as HTMLElement & { noHighlightBorder: boolean }).noHighlightBorder = true;
 			}
 
 			const id = this._idCounter++;

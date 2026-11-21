@@ -21,7 +21,6 @@
  * @attr {string} text - Button text
  * @attr {string} supporting-text - Supporting text shown below the text (md/lg) or after it (sm/xs), in a secondary color. Part of the accessible name (unless `accessible-label` is set, which replaces the whole accessible name).
  * @attr {boolean} single-line - When true, truncates overflowing text with an ellipsis instead of letting it wrap. Requires the button (or an ancestor) to constrain the width.
- * @attr {boolean} no-highlight-border - Removes the per-appearance highlight border (e.g. when nldd-button-bar draws a single group border instead).
  * @attr {boolean} no-tab - Takes the button out of the tab order (tabindex="-1"), for a control owned by a roving container (e.g. a button in a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable.
  * @attr {string} start-icon - Icon name for the start icon (before text)
  * @attr {string} end-icon - Icon name for the end icon (after text)
@@ -60,7 +59,7 @@ import './../../content/icon/icon.js';
 import './../../status-and-feedback/activity-indicator/activity-indicator.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { ShortcutAvailabilityController } from '../../../utilities/shortcut.js';
-import { internalsOf } from '../../../utilities/element-state.js';
+import { internalsOf, styleState } from '../../../utilities/element-state.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
 import { ownerForm } from '../../../utilities/owner-form.js';
 
@@ -193,7 +192,10 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	singleLine = false;
 
 	/** Removes the per-appearance highlight border (e.g. when nldd-button-bar draws a single group border instead). */
-	@property({ type: Boolean, reflect: true, attribute: 'no-highlight-border' })
+	/** Set by a group that draws one border around its controls, such as
+	 *  nldd-button-bar: drops this control's own highlight border. No attribute:
+	 *  the styles read it as `:state(no-highlight-border)`. */
+	@property({ attribute: false })
 	noHighlightBorder = false;
 
 	/** Icon name for the start icon (before text). An icon in the start-icon slot wins. */
@@ -258,6 +260,7 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	}
 
 	override updated(changedProperties: Map<string, unknown>): void {
+		if (changedProperties.has('noHighlightBorder')) styleState(this, 'no-highlight-border', this.noHighlightBorder);
 		anchorPopoverTarget(this, popoverTargetOf(this, this.popovertarget, this.popoverTargetElement));
 		if (changedProperties.has('interestfor')) this._interest.refresh();
 		if (changedProperties.has('maxWidth')) {

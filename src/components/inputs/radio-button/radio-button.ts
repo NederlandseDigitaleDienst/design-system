@@ -33,7 +33,6 @@
  *   such as a list row or an nldd-radio-button-field that is itself the radio;
  *   putting a second radio in there would nest a control inside a control.
  * @attr {boolean} required - Required state. What it asks is whether anything in the group is checked, as a native radio does.
- * @attr {boolean} focus-ring - Draws the focus ring around the shape. Set by nldd-radio-button-field, which is the radio itself and holds the focus. Not part of the public API.
  * @attr {string} name - Radio group name for form submission; ties the buttons of one group together
  * @attr {string} value - Value submitted with the form when this radio button is checked
  * @attr {string} accessible-label - Accessible label, set as aria-label on this element: it is the radio.
@@ -53,6 +52,7 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { RadioGrouping } from '../../../utilities/radio-grouping.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
+import { styleState } from '../../../utilities/element-state.js';
 
 @customElement('nldd-radio-button')
 export class NLDDRadioButton extends DescribedBy(FormAssociated(LitElement)) {
@@ -86,9 +86,10 @@ export class NLDDRadioButton extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	required = false;
 
-	/** Set by nldd-radio-button-field. Not part of the public API: that field is
-	 *  the radio and holds the focus, while the shape it rings is drawn here. */
-	@property({ type: Boolean, reflect: true, attribute: 'focus-ring' })
+	/** Set by nldd-radio-button-field, which is the radio and holds the focus,
+	 *  while the shape it rings is drawn here. No attribute: the styles read it
+	 *  as `:state(focus-ring)`. */
+	@property({ attribute: false })
 	focusRing = false;
 
 	@property({ reflect: true, converter: reflectNonDefault('') })
@@ -156,6 +157,7 @@ export class NLDDRadioButton extends DescribedBy(FormAssociated(LitElement)) {
 
 	override updated(changed: PropertyValues<this>): void {
 		super.updated(changed);
+		if (changed.has('focusRing')) styleState(this, 'focus-ring', this.focusRing);
 		this._syncHostAria();
 	}
 

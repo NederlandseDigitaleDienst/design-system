@@ -485,9 +485,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Removes the per-appearance highlight border (e.g. when nldd-button-bar draws a single group border instead).",
-              "attribute": "no-highlight-border",
-              "reflects": true
+              "description": "Set by a group that draws one border around its controls, such as\nnldd-button-bar: drops this control's own highlight border. No attribute:\nthe styles read it as `:state(no-highlight-border)`."
             },
             {
               "kind": "field",
@@ -882,15 +880,6 @@
               "description": "When true, truncates overflowing text with an ellipsis instead of letting it wrap. Requires the button (or an ancestor) to constrain the width."
             },
             {
-              "name": "no-highlight-border",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Removes the per-appearance highlight border (e.g. when nldd-button-bar draws a single group border instead).",
-              "fieldName": "noHighlightBorder"
-            },
-            {
               "name": "start-icon",
               "type": {
                 "text": "string"
@@ -1197,9 +1186,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Removes the per-appearance highlight border (e.g. when nldd-button-bar draws a single group border instead).",
-              "attribute": "no-highlight-border",
-              "reflects": true
+              "description": "Set by a group that draws one border around its controls, such as\nnldd-button-bar: drops this control's own highlight border. No attribute:\nthe styles read it as `:state(no-highlight-border)`."
             },
             {
               "kind": "field",
@@ -1587,15 +1574,6 @@
               "default": "false",
               "fieldName": "disabled",
               "description": "Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why."
-            },
-            {
-              "name": "no-highlight-border",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Removes the per-appearance highlight border (e.g. when a control group draws a single border instead).",
-              "fieldName": "noHighlightBorder"
             },
             {
               "name": "type",
@@ -21288,9 +21266,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Set by nldd-radio-button-field. Not part of the public API: that field is\nthe radio and holds the focus, while the shape it rings is drawn here.",
-              "attribute": "focus-ring",
-              "reflects": true
+              "description": "Set by nldd-radio-button-field, which is the radio and holds the focus,\nwhile the shape it rings is drawn here. No attribute: the styles read it\nas `:state(focus-ring)`."
             },
             {
               "kind": "field",
@@ -21737,15 +21713,6 @@
               "default": "false",
               "fieldName": "required",
               "description": "Required state. What it asks is whether anything in the group is checked, as a native radio does."
-            },
-            {
-              "name": "focus-ring",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Draws the focus ring around the shape. Set by nldd-radio-button-field, which is the radio itself and holds the focus. Not part of the public API.",
-              "fieldName": "focusRing"
             },
             {
               "name": "name",
@@ -56085,6 +56052,36 @@
             }
           ],
           "description": "Nothing to clear means no internals: most elements never state anything, and\nthis also runs in production. A browser that has no custom states, or takes\nonly dashed names, throws here; a fact is not worth breaking a render for."
+        },
+        {
+          "kind": "function",
+          "name": "styleState",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "element",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "on",
+              "type": {
+                "text": "boolean"
+              }
+            }
+          ],
+          "description": "A state the component's own styles read, as `:state(name)`, in production\ntoo: for what one component tells another that is no attribute of either,\nsuch as the focus ring nldd-radio-button-field asks of its radio."
         }
       ],
       "exports": [
@@ -56109,6 +56106,14 @@
           "name": "setState",
           "declaration": {
             "name": "setState",
+            "module": "src/utilities/element-state.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "styleState",
+          "declaration": {
+            "name": "styleState",
             "module": "src/utilities/element-state.ts"
           }
         }

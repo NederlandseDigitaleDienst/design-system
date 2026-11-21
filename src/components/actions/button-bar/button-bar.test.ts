@@ -161,7 +161,7 @@ describe('nldd-button-bar – child building & attribute propagation', () => {
 		});
 	});
 
-	it('sets no-highlight-border on button children (the bar draws the group border)', async () => {
+	it('drops the highlight border of its buttons (the bar draws the group border)', async () => {
 		el = await fixture<NLDDButtonBar>(`
 			<nldd-button-bar>
 				<nldd-button text="A"></nldd-button>
@@ -169,8 +169,8 @@ describe('nldd-button-bar – child building & attribute propagation', () => {
 			</nldd-button-bar>
 		`);
 		await waitForUpdate(el);
-		expect(el.querySelector('nldd-button')!.hasAttribute('no-highlight-border')).toBe(true);
-		expect(el.querySelector('nldd-icon-button')!.hasAttribute('no-highlight-border')).toBe(true);
+		expect(el.querySelector('nldd-button')!.matches(':state(no-highlight-border)')).toBe(true);
+		expect(el.querySelector('nldd-icon-button')!.matches(':state(no-highlight-border)')).toBe(true);
 	});
 
 	it('propagates initial appearance to button children', async () => {

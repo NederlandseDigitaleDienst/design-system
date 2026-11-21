@@ -287,16 +287,19 @@ describe('nldd-button – icon attributes', () => {
 		expect(end.querySelector('nldd-icon')).not.toBeNull();
 	});
 
-	it('reflects the no-highlight-border attribute', async () => {
-		el = await fixture<NLDDButton>('<nldd-button text="X" no-highlight-border></nldd-button>');
+	it('drops its highlight border when a group sets noHighlightBorder, without an attribute', async () => {
+		el = await fixture<NLDDButton>('<nldd-button text="X"></nldd-button>');
+		el.noHighlightBorder = true;
 		await waitForUpdate(el);
-		expect(el.hasAttribute('no-highlight-border')).toBe(true);
+		expect(el.hasAttribute('no-highlight-border')).toBe(false);
+		expect(el.matches(':state(no-highlight-border)')).toBe(true);
+		expect(getComputedStyle(el).getPropertyValue('--_button-highlight-border-color').trim()).toBe('transparent');
 	});
 
-	it('makes the highlight border transparent when no-highlight-border is set', async () => {
+	it('ignores a no-highlight-border attribute: it is no API', async () => {
 		el = await fixture<NLDDButton>('<nldd-button text="X" no-highlight-border></nldd-button>');
 		await waitForUpdate(el);
-		expect(getComputedStyle(el).getPropertyValue('--_button-highlight-border-color').trim()).toBe('transparent');
+		expect(el.matches(':state(no-highlight-border)')).toBe(false);
 	});
 
 	it('hides the expandable chevron while loading but keeps it laid out', async () => {

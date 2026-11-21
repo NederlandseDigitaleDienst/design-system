@@ -29,6 +29,7 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 - `button-needs-name`: nldd-button needs `text` or `accessible-label`, otherwise it has no accessible name.
 - `button-no-disabled` (hint): Leave the action available and say afterwards what is missing and how to fix it, in this view or the next.
 - `button-no-filler-start` (hint): Start with the verb or noun that carries the meaning: people scan the first words.
+- `button-no-highlight-border-no-effect`: `no-highlight-border` is gone and does nothing; remove it. A group that draws one border around its buttons, such as nldd-button-bar, drops theirs itself.
 - `button-no-vague-text` (hint): Name the action, such as "Bewaar" or "Verwijder account": this text only makes sense after reading what is around it.
 - `button-submit-needs-form`: Put this button in the form, or give the nldd-form an `id` and point `form` at it. As it stands it submits nothing.
 - `button-submit-needs-imperative` (hint): This button does it right now, so use the imperative, such as "Log in", and keep the full verb for a button that leads somewhere.
@@ -72,7 +73,6 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 | `text` | `string` | Button text |
 | `supporting-text` | `string` | Supporting text shown below the text (md/lg) or after it (sm/xs), in a secondary color. Part of the accessible name (unless `accessible-label` is set, which replaces the whole accessible name). |
 | `single-line` | `boolean` | When true, truncates overflowing text with an ellipsis instead of letting it wrap. Requires the button (or an ancestor) to constrain the width. |
-| `no-highlight-border` | `boolean` | Removes the per-appearance highlight border (e.g. when nldd-button-bar draws a single group border instead). |
 | `no-tab` | `boolean` | Takes the button out of the tab order (tabindex="-1"), for a control owned by a roving container (e.g. a button in a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable. |
 | `start-icon` | `string` | Icon name for the start icon (before text) |
 | `end-icon` | `string` | Icon name for the end icon (after text) |
@@ -181,6 +181,7 @@ A container for grouping related buttons together, in a row or stacked. `auto`, 
 - `button-appearance-renamed`: `inherit-filled` and `inherit-tinted` are now `content-filled` and `content-tinted`: they take their colors from `--context-content-color`. The old values do nothing. Rename them here and on every other button.
 - `button-no-disabled` (hint): Leave the action available and say afterwards what is missing and how to fix it, in this view or the next.
 - `button-no-filler-start` (hint): Start with the verb or noun that carries the meaning: people scan the first words.
+- `button-no-highlight-border-no-effect`: `no-highlight-border` is gone and does nothing; remove it. A group that draws one border around its buttons, such as nldd-button-bar, drops theirs itself.
 - `button-no-vague-text` (hint): Name the action, such as "Bewaar" or "Verwijder account": this text only makes sense after reading what is around it.
 - `card-clickable-no-control` (hint): Drop this control: the whole card already is one link and one tab stop.
 - `download-target-no-effect`: `target` does nothing with `download`, which saves the file instead of opening it. Remove one of the two.
@@ -200,7 +201,6 @@ A container for grouping related buttons together, in a row or stacked. `auto`, 
 | `appearance` | `'primary'\|'secondary'\|'destructive'\|'accent-filled'\|'accent-transparent'\|'neutral-tinted'\|'neutral-base'\|'neutral-transparent'\|'critical-tinted'\|'critical-transparent'\|'content-filled'\|'content-tinted'` | Visual style, color included: 'primary' \| 'secondary' \| 'destructive' \| 'accent-filled' \| 'accent-transparent' \| 'neutral-tinted' \| 'neutral-base' \| 'neutral-transparent' \| 'critical-tinted' \| 'critical-transparent' \| 'content-filled' \| 'content-tinted'. The content appearances take their colors from --context-content-color, for buttons on colored surfaces; content-filled uses the surface color (--context-background-color) for its icon. |
 | `size` | `'xs'\|'sm'\|'md'\|'lg'` | Button size: 'xs' \| 'sm' \| 'md' \| 'lg' (default: 'md') |
 | `hide-lg-text` | `boolean` | In lg size, hides the text label and enlarges the icon by one step (28px) |
-| `no-highlight-border` | `boolean` | Removes the per-appearance highlight border (e.g. when a control group draws a single border instead). |
 | `loading` | `boolean` | Loading state (default: false). Shows an activity indicator over the visually hidden icon, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled). Meant for an action that has to wait for the server, such as sending an application. For most actions, show the result right away and confirm in the background, as the design guidelines describe. |
 | `loading-text` | `string` | What the screen reader announces while `loading` is on, for a button that does more than load: "Aan het bewaren". Leave it out and the activity indicator says its translated "Laden". |
 | `disabled` | `boolean` | Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why. |
@@ -1894,7 +1894,6 @@ WAI-ARIA: put the buttons of one group in a container with role="radiogroup" and
 | `no-tab` | `boolean` | Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable. |
 | `decorative` | `boolean` | Renders the shape only: no role, no focus, no name/value, nothing announced. For a control that owns the state elsewhere, such as a list row or an nldd-radio-button-field that is itself the radio; putting a second radio in there would nest a control inside a control. |
 | `required` | `boolean` | Required state. What it asks is whether anything in the group is checked, as a native radio does. |
-| `focus-ring` | `boolean` | Draws the focus ring around the shape. Set by nldd-radio-button-field, which is the radio itself and holds the focus. Not part of the public API. |
 | `name` | `string` | Radio group name for form submission; ties the buttons of one group together |
 | `value` | `string` | Value submitted with the form when this radio button is checked |
 | `accessible-label` | `string` | Accessible label, set as aria-label on this element: it is the radio. |

@@ -1,0 +1,8 @@
+severity: warn
+context: 'nldd-button[no-highlight-border], nldd-icon-button[no-highlight-border]'
+removed: ['no-highlight-border']
+fix: { remove: ['no-highlight-border'] }
+message: '`no-highlight-border` is gone and does nothing; remove it. A group that draws one border around its buttons, such as nldd-button-bar, drops theirs itself.'
+examples:
+  passed: ['<nldd-button-bar><nldd-button text="Vorige"></nldd-button><nldd-button text="Volgende"></nldd-button></nldd-button-bar>']
+  failed: ['<nldd-button text="Vorige" no-highlight-border></nldd-button>', '<nldd-icon-button icon="chevron-left" text="Vorige" no-highlight-border></nldd-icon-button>']

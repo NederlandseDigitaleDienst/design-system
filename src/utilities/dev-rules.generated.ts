@@ -135,6 +135,11 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
+		"id": "button-no-highlight-border-no-effect",
+		"message": "`no-highlight-border` is gone and does nothing; remove it. A group that draws one border around its buttons, such as nldd-button-bar, drops theirs itself.",
+		"context": "nldd-button[no-highlight-border], nldd-icon-button[no-highlight-border]"
+	},
+	{
 		"id": "button-submit-needs-form",
 		"message": "Put this button in the form, or give the nldd-form an `id` and point `form` at it. As it stands it submits nothing.",
 		"context": "nldd-button[type=\"submit\"]",

@@ -44,3 +44,19 @@ export function setState(element: HTMLElement, name: string, on: boolean): void 
 		// See above.
 	}
 }
+
+/**
+ * A state the component's own styles read, as `:state(name)`, in production
+ * too: for what one component tells another that is no attribute of either,
+ * such as the focus ring nldd-radio-button-field asks of its radio.
+ */
+export function styleState(element: HTMLElement, name: string, on: boolean): void {
+	if (!on && !internals.has(element)) return;
+	try {
+		const { states } = internalsOf(element);
+		if (on) states.add(name);
+		else states.delete(name);
+	} catch {
+		// A browser without custom states draws no ring; the field still works.
+	}
+}
