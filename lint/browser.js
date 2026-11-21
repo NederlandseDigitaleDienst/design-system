@@ -24,11 +24,12 @@ const MISSING = 'This needs Playwright with Chromium. Install it in this project
 export async function launchBrowser({ root, module }) {
 	let chromium;
 	try {
-		const path = module ? resolve(root, module) : createRequire(join(root, 'package.json')).resolve('playwright');
+		// A module is a file or the directory of a package: require resolves both, an import only the first.
+		const path = createRequire(join(root, 'package.json')).resolve(module ? resolve(root, module) : 'playwright');
 		const loaded = await import(pathToFileURL(path).href);
 		chromium = (loaded.default ?? loaded).chromium ?? loaded.chromium;
-	} catch {
-		throw new Error(MISSING);
+	} catch (error) {
+		throw new Error(module ? `${MISSING}\n${String(error).split('\n')[0]}` : MISSING);
 	}
 	try {
 		return await chromium.launch();

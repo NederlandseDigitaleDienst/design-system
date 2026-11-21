@@ -133,7 +133,7 @@ export function formatComparison(results, max = 6) {
 	const failed = results.filter((result) => result.error);
 	const differing = results.filter((result) => result.file).sort(byMarks);
 	const identical = results.filter((result) => result.identical).length;
-	const lines = ['## In beeld', '', `${plural(results.length, 'vergelijking', 'vergelijkingen')} van de gebouwde site, voor en na de upgrade, op de breedte van een bureau en van een telefoon. ${identical === results.length ? 'Ze zijn alle pixel voor pixel gelijk.' : `${identical} ${identical === 1 ? 'is' : 'zijn'} pixel voor pixel gelijk, ${differing.length} ${differing.length === 1 ? 'verschilt' : 'verschillen'}.`}`];
+	const lines = ['## In beeld', '', `${plural(results.length, 'vergelijking', 'vergelijkingen')} van de gebouwde site, voor en na de upgrade, op de breedte van een bureau en van een telefoon. ${identical === results.length ? 'Ze zijn alle pixel voor pixel gelijk.' : `${identical === 0 ? 'Geen' : identical} ${identical === 1 ? 'is' : identical === 0 ? 'is' : 'zijn'} pixel voor pixel gelijk, ${differing.length} ${differing.length === 1 ? 'verschilt' : 'verschillen'}.`}`];
 	// One image per page: the viewport that shows most. The other one is in the list below.
 	const shown = [];
 	for (const result of differing) if (shown.length < max && !shown.some(({ path }) => path === result.path)) shown.push(result);
