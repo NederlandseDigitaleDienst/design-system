@@ -89,4 +89,43 @@ Bouwt je project naar een statische site, dan komen er ook beelden van voor en n
 
 ## Na een release, zonder dat je iets doet
 
-Het designsysteem kan je repository na elke release zelf een pull request sturen. Daarvoor installeert een eigenaar van je organisatie de app **NLDD Designsysteem** op de repository, en komt de repository op de lijst. Wil je daarop, open dan een issue in de repository van het designsysteem.
+Het designsysteem kan je repository na elke release zelf een pull request sturen. De app **NLDD Designsysteem** opent die pull request, en daarom draait je eigen CI erop.
+
+### De app installeren
+
+Dit doet een eigenaar van je organisatie, één keer.
+
+1. Open [github.com/apps/nldd-designsysteem](https://github.com/apps/nldd-designsysteem) en kies **Install**.
+2. Kies je organisatie.
+3. Kies **Only select repositories** en vink de repositories aan die het designsysteem gebruiken.
+4. Kies **Install**.
+
+Een repository erbij of eraf zet je later onder de instellingen van je organisatie, bij **GitHub Apps**.
+
+Open daarna een issue in de repository van het designsysteem met de repositories die op de lijst moeten. Zonder plek op de lijst doet de app niets.
+
+### Wat de app mag
+
+| Recht | Waarvoor |
+|---|---|
+| Inhoud, schrijven | De branch `nldd/design-system-upgrade` pushen, en de beelden van voor en na op `refs/nldd/pictures` |
+| Pull requests, schrijven | De pull request openen, bijwerken of sluiten, en de reacties eronder |
+| Workflows, schrijven | Een versie bijwerken die in een workflow staat, zoals de versie in een `npx`-regel |
+| Metadata, lezen | Dit vraagt elke app |
+
+De app heeft geen webhook en luistert naar niets in je repository. Hij doet alleen iets na een release van het designsysteem, of als de beheerders van het designsysteem hem met de hand starten. Hij schrijft alleen op die ene branch, en je main raakt hij niet aan.
+
+Staat de agent aan voor je repository, dan krijgt die het token van de app niet. Hij werkt in een kloon zonder token, en de push gebeurt in een stap na hem.
+
+### Met een eigen app
+
+Wil je liever je eigen app, gebruik dan de workflow `upgrade.yml` in je eigen repository en geef die app mee:
+
+```yaml
+    with:
+      app_client_id: ${{ vars.UPGRADE_APP_CLIENT_ID }}
+    secrets:
+      app_private_key: ${{ secrets.UPGRADE_APP_KEY }}
+```
+
+Je app vraagt dezelfde rechten als in de tabel hierboven.
