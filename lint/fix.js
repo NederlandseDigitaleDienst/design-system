@@ -171,6 +171,8 @@ function wrapEdits(source, finding, wrapper) {
 	if (!inner || /\r?\n[ \t]*\r?\n/.test(inner)) return [];
 	const tags = [...inner.matchAll(/<\/?([a-zA-Z][\w-]*)/g)].map((match) => match[1].toLowerCase());
 	if (tags.some((name) => !INLINE.has(name))) return [];
+	// A block element may not stand in a line of text, so there the text gets a `<span>`.
+	if (wrapper === 'p' && finding.inLine) wrapper = 'span';
 	const leading = /^\s*/.exec(content.text)[0];
 	const trailing = /\s*$/.exec(content.text)[0];
 	const base = leading.includes('\n') ? leading.slice(leading.lastIndexOf('\n') + 1) : undefined;

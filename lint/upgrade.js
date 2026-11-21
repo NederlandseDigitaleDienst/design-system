@@ -157,8 +157,9 @@ export async function upgradeProject(data, { root, target, breaking, config, sev
 			if (finding.rule === 'file-not-read') unread.push(file);
 			else {
 				const list = (messages.get(finding.rule)?.severity ?? finding.severity) === 'error' || brings.of(finding.rule) ? work : standing;
-				const entry = list.get(finding.rule) ?? { rule: finding.rule, severity: finding.severity, message: finding.message, places: [] };
-				entry.places.push({ file, line: finding.line, tag: finding.tag || undefined });
+				const own = !messages.has(finding.rule);
+				const entry = list.get(finding.rule) ?? { rule: finding.rule, severity: finding.severity, message: own ? undefined : finding.message, places: [] };
+				entry.places.push({ file, line: finding.line, tag: finding.tag || undefined, ...(own && { message: finding.message }) });
 				list.set(finding.rule, entry);
 			}
 		}
@@ -175,7 +176,7 @@ export async function upgradeProject(data, { root, target, breaking, config, sev
 		pinned,
 		notRaised,
 		lockfiles,
-		fixed: { total: session.fixed, files: session.fixedFiles, byRule: session.fixedByRule, references: session.references?.fixed ?? 0, stillNamed: session.references?.remaining ?? [] },
+		fixed: { total: session.fixed, files: session.fixedFiles, byRule: session.fixedByRule, inFiles: session.fixedIn.map(({ filename, rules }) => ({ file: relativePath(root, filename), rules })), references: session.references?.fixed ?? 0, stillNamed: session.references?.remaining ?? [] },
 		files: session.files,
 		work: [...work.values()].sort(bySize),
 		undecided: [...undecided.values()].sort(bySize),

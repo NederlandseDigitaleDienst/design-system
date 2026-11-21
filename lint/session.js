@@ -150,6 +150,7 @@ export async function lintProject(data, { root, paths = [], config = {}, severit
 	let fixed = 0;
 	let fixedFiles = 0;
 	const fixedByRule = {};
+	const fixedIn = [];
 	if (relevant.length > 0) {
 		const { createLinter } = await import('./linter.js');
 		const linter = createLinter(data, { wrappers: config.wrappers, severities, projectTokens: projectTokens(inputs), undecided, types });
@@ -170,6 +171,7 @@ export async function lintProject(data, { root, paths = [], config = {}, severit
 				fixed += change.fixed;
 				fixedFiles += 1;
 				for (const [rule, count] of Object.entries(change.byRule)) fixedByRule[rule] = (fixedByRule[rule] ?? 0) + count;
+				fixedIn.push({ filename, rules: Object.keys(change.byRule) });
 				for (const [from, to] of change.renamedTags) renamedTags.set(from, to);
 			}
 			results.push({ filename, source: change.source, findings: change.findings, undecided: change.undecided });
@@ -180,5 +182,5 @@ export async function lintProject(data, { root, paths = [], config = {}, severit
 	// Counted on the markup, so a suppressed `file-not-read` does not make it read.
 	const unread = inputs.filter(({ filename, source }) => isUnread(filename) && hasOurMarkup(source)).length;
 	const partial = input ? [] : partialExcludes(paths, root, config.exclude, scanned);
-	return { results, files, unread, fixed, fixedFiles, fixedByRule, notUtf8, symlinks, unstable, partialExcludes: partial, references };
+	return { results, files, unread, fixed, fixedFiles, fixedByRule, fixedIn, notUtf8, symlinks, unstable, partialExcludes: partial, references };
 }

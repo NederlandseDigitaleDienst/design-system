@@ -28,12 +28,13 @@ here; consult the commit history if you need that level of detail.
 
 ### Changed
 
-- **`nldd lint --fix` puts text in its element where a hole in it can only be text.** `<nldd-text>{{ label }}</nldd-text>` in Vue and `<nldd-text>{'Dakisolatie'}</nldd-text>` in JSX got the finding and no fix, because the fix stopped at any hole. It now writes the `<p>` around it. It leaves text alone in an element whose own `style` makes it inline, where a `<p>` would start a new line.
+- **`nldd lint --fix` puts text in its element where a hole in it can only be text.** `<nldd-text>{{ label }}</nldd-text>` in Vue and `<nldd-text>{'Dakisolatie'}</nldd-text>` in JSX got the finding and no fix, because the fix stopped at any hole. It now writes the `<p>` around it. It leaves text alone in an element whose own `style` makes it inline, where a `<p>` would start a new line. And where only a line of text may stand, in a `<button>`, a `<p>`, a heading or the text of another component, it writes a `<span>`.
 - **The `nldd-design-upgrade` skill starts from `nldd upgrade`.** The command does what is certain, and the skill is about the rest: how to work the list it leaves, what to read, and how to choose.
 - **The `nldd-design-upgrade` skill covers what the linter cannot read in the source.** It says where a version can be pinned besides `package.json`, that markup in Markdown and in strings of another language needs a search on the old names, that the built site and the running page are worth linting too, that the typed elements of the package turn a value that is gone into a type error, and what an upgrade brings to a project that runs `nldd lint` in its own CI. It ends with a list of when an upgrade is done.
 
 ### Fixed
 
+- **`nldd lint` reads JSX behind `?.` and behind a cast.** What `rows?.map((row) => <nldd-text>…</nldd-text>)` renders was not read at all, so nothing in it was checked, while the same line without the `?` was. `(rows as Row[]).map(…)` and `rows!.map(…)` had the same gap. A project that writes its lists this way gets the findings that were always there.
 - **`<nldd-*>` in running text is no unknown element.** A name with a character a tag cannot have names a family of tags, and `unknown-element` reported it.
 
 ## [0.27.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.27.0...v0.27.1) (2026-11-20)

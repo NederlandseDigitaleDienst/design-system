@@ -49,7 +49,7 @@ Het verslag is je werklijst. Het heeft deze delen:
 
 | Deel | Wat je ermee doet |
 |---|---|
-| Nog te doen | Elke plek is een keuze die de linter niet voor je kan maken. De melding zegt wat er veranderde. Los ze allemaal op |
+| Nog te doen | Elke plek is een keuze die de linter niet voor je kan maken. De melding zegt wat er veranderde. Los elke fout op, en alles wat niet meer bestaat. Een waarschuwing van een nieuwe regel die om een ontwerpkeuze vraagt, zoals wat er in een overflowmenu komt, los je op of je laat hem staan en noemt hem in de pull request |
 | Niet gelezen | Bestanden met componenten die de linter niet kan lezen. Loop ze zelf na op de oude namen uit de changelog |
 | Brekende wijzigingen onderweg | Lees ze. Niet elke wijziging heeft een lintregel: een andere maat of een ander gedrag vind je alleen hier |
 | Niet te beslissen in de bron | Plekken waar de inhoud van een element uit een variabele of een onderdeel van de app komt. Open ze en kijk wat daar rendert: tekst hoort in zijn element, een element mag blijven |
@@ -58,6 +58,8 @@ Het verslag is je werklijst. Het heeft deze delen:
 Verifieer bij twijfel tegen [`reference.md`](../nldd-design/reference.md) of een attribuut, slot of event in de doelversie bestaat zoals je verwacht. Die referentie hoort bij de versie van de plugin, en die kan ouder zijn dan je doel.
 
 Een fix zet tekst in `nldd-text` in een `<p>`. Dat ziet er hetzelfde uit als een `<span>`, behalve waar je eigen CSS de `nldd-text` zelf inline maakt: kijk daar. Loop de aangepaste plekken één keer door op betekenis. Een aantal, een datum of een bijschrift in een regel is geen alinea, en krijgt een `<span>`.
+
+Heeft het project een eigen bestand met de typen van de elementen, gegenereerd uit het pakket, genereer dat dan eerst opnieuw. Zoek in `package.json` en in `scripts/` naar het script dat het schrijft. Daarna zegt de typecheck welke attributen en waarden niet meer bestaan, ook waar een variabele ze doorgeeft.
 
 Waar je kiest, kies je voor wat de pagina deed voor de upgrade. Een titel die als gewone tekst bedoeld was, blijft gewone tekst. Een keuze die niet uit de changelog volgt, zet je apart in de pull request.
 

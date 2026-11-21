@@ -203,7 +203,14 @@ function readJsxExpression(expression, parent, flags, reading) {
 			readJsxExpression(expression.alternate, parent, conditional, reading);
 			break;
 		case 'ParenthesizedExpression':
+		case 'TSAsExpression':
+		case 'TSSatisfiesExpression':
+		case 'TSNonNullExpression':
 			readJsxExpression(expression.expression, parent, flags, reading);
+			break;
+		case 'ChainExpression':
+			// `items?.map(...)`: what it renders is there only when `items` is.
+			readJsxExpression(expression.expression, parent, conditional, reading);
 			break;
 		case 'CallExpression': {
 			const found = [];

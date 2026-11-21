@@ -275,6 +275,9 @@ function linkedFile(href, filename) {
 	}
 }
 
+/** Elements that hold a line of text and no block: a `<p>` inside one is invalid, or splits the line. */
+const LINE_ONLY = new Set(['button', 'p', 'span', 'a', 'label', 'summary', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'nldd-text', 'nldd-title', 'nldd-button', 'nldd-link']);
+
 export function createLinter(data = loadData(), { wrappers = {}, severities: configured = {}, projectTokens = [], undecided = () => false, types } = {}) {
 	const canonical = createCanonical(data);
 	const severities = Object.fromEntries(Object.entries(configured).map(([id, level]) => [canonical(id), level]));
@@ -532,6 +535,12 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 		return { findings: withoutCovered(findings), counts, open };
 	}
 
+	/** Whether an element stands where only a line of text may: in a button, a paragraph, a heading, or the text of another component. */
+	function standsInLine(node) {
+		for (let at = node.parent; at; at = at.parent) if (LINE_ONLY.has(at.name)) return true;
+		return false;
+	}
+
 	/** @returns {Promise<{ findings: object[], counts: object }>} */
 	async function lintSource(source, filename, { only, rendered } = {}) {
 		if (only === 'events') return lintEvents(source, filename);
@@ -562,6 +571,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 				startTag: node.startTag,
 				// What a fix may write here: what the reader of this file allows, and nothing where it says so.
 				writes: parsed.writes,
+				inLine: standsInLine(node),
 				readOnly: Boolean(node.readOnly),
 				...position(node.offset),
 			}))

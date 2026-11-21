@@ -40,14 +40,19 @@ function fixedSection({ fixed, files }) {
 	if (fixed.total === 0 && fixed.references === 0) return ['## Automatisch aangepast', '', `Niets: in de ${files} gelezen bestanden stond niets wat alleen een andere naam kreeg.`];
 	const lines = ['## Automatisch aangepast', '', `${plural(fixed.total, 'plek', 'plekken')} in ${plural(fixed.files, 'bestand', 'bestanden')}, door \`nldd lint --fix\`. Dit is alleen wat zeker is.`, ''];
 	for (const [rule, count] of Object.entries(fixed.byRule).sort((a, b) => b[1] - a[1])) lines.push(`- \`${rule}\`: ${count}`);
+	if (fixed.inFiles?.length > 0) lines.push('', '<details>', '<summary>De bestanden, om de aanpassingen door te lopen</summary>', '', ...fixed.inFiles.map(({ file, rules }) => `- \`${file}\`: ${rules.join(', ')}`), '', '</details>');
 	if (fixed.references > 0) lines.push(`- ${plural(fixed.references, 'import, klasse of selector', 'imports, klassen en selectors')} van een hernoemde tag`);
 	for (const place of fixed.stillNamed) lines.push(`- Noemt nog een oude tag: \`${place}\``);
 	return lines;
 }
 
-const placeLines = ({ rule, places }) => [
-	...places.slice(0, MAX_PLACES).map(({ file, line, tag }) => `- [ ] \`${file}:${line}\`${tag ? ` \`<${tag}>\`` : ''}`),
-	...(places.length > MAX_PLACES ? [`- [ ] en nog ${places.length - MAX_PLACES}: \`npx nldd lint --select ${rule}\``] : []),
+/** A place says what stands there: the element, or the message where a rule words one per place, as for an event or a token. */
+const placeLine = ({ file, line, tag, message }) => `- [ ] \`${file}:${line}\`${message ? ` ${message}` : tag ? ` \`<${tag}>\`` : ''}`;
+
+/** `all` lists every place: for what no command can list again. */
+const placeLines = ({ rule, places }, all = false) => [
+	...places.slice(0, all ? places.length : MAX_PLACES).map(placeLine),
+	...(!all && places.length > MAX_PLACES ? [`- [ ] en nog ${places.length - MAX_PLACES}: \`npx nldd lint --select ${rule}\``] : []),
 ];
 
 function workSection({ work, unread }) {
@@ -55,7 +60,7 @@ function workSection({ work, unread }) {
 	const total = work.reduce((sum, { places }) => sum + places.length, 0);
 	const lines = ['## Nog te doen', '', `${plural(total, 'plek', 'plekken')} waar iemand moet kiezen. Ze komen van deze upgrade: iets bestaat niet meer, of een regel is nieuw sinds de versie waar de app vandaan komt.`];
 	for (const entry of work) {
-		lines.push('', `### \`${entry.rule}\` (${entry.places.length}${entry.severity === 'error' ? ', fout' : ''})`, '', entry.message, '', ...placeLines(entry));
+		lines.push('', `### \`${entry.rule}\` (${entry.places.length}${entry.severity === 'error' ? ', fout' : ''})`, '', ...(entry.message ? [entry.message, ''] : []), ...placeLines(entry));
 	}
 	if (unread.length > 0) {
 		lines.push('', '### Niet gelezen', '', 'In deze bestanden staan componenten op een manier die de linter niet kan lezen. Loop ze zelf na.', '');
@@ -90,7 +95,7 @@ function undecidedSection({ undecided, types }) {
 		'',
 		`${plural(total, 'plek', 'plekken')} waar de inhoud van een element uit een variabele of uit een onderdeel van de app komt. Of de regel daar geldt, staat niet in dit bestand, dus de linter meldt het niet als fout. Loop ze na, of lees de draaiende app met \`--url\`.`,
 		...untyped,
-		...undecided.flatMap((entry) => ['', '<details>', `<summary><code>${entry.rule}</code> (${entry.places.length})</summary>`, '', entry.message, '', ...placeLines(entry), '', '</details>']),
+		...undecided.flatMap((entry) => ['', '<details>', `<summary><code>${entry.rule}</code> (${entry.places.length})</summary>`, '', entry.message, '', ...placeLines(entry, true), '', '</details>']),
 	];
 }
 

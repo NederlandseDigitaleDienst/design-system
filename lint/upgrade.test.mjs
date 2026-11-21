@@ -352,6 +352,25 @@ describe('an expression in JSX, read by its type', async () => {
 	});
 });
 
+describe('JSX behind `?.` or a cast', () => {
+	const rulesOf = async (source) => (await createLinter(DATA).lintSource(source, 'View.tsx')).findings.filter(({ severity }) => severity !== 'hint').map(({ rule }) => rule);
+
+	it('is read as the JSX it is', async () => {
+		const view = (list) => `export const View = ({ rows }) => <nldd-list accessible-label="Aanvragen">{${list}.map((row) => <nldd-text key={row.id}>Dakisolatie</nldd-text>)}</nldd-list>;`;
+		for (const list of ['rows', 'rows?', '(rows as Row[])', 'rows!']) assert.deepEqual(await rulesOf(view(list)), ['text-needs-element'], list);
+	});
+});
+
+describe('text where only a line of text may stand', () => {
+	it('gets a `<span>`, since a `<p>` may not stand in a button, a paragraph or other text', async () => {
+		const { applyFixes } = await import('./fix.js');
+		const fixedOf = async (source) => applyFixes(source, (await createLinter(DATA).lintSource(source, 'page.html')).findings).source;
+		assert.match(await fixedOf('<button type="button"><nldd-text>Bewaar</nldd-text></button>\n'), /<nldd-text><span>Bewaar<\/span><\/nldd-text>/);
+		assert.match(await fixedOf('<p>Status: <nldd-text weight="bold">in behandeling</nldd-text></p>\n'), /<nldd-text weight="bold"><span>in behandeling<\/span><\/nldd-text>/);
+		assert.match(await fixedOf('<div><nldd-text>Dakisolatie</nldd-text></div>\n'), /<nldd-text><p>Dakisolatie<\/p><\/nldd-text>/);
+	});
+});
+
 describe('a fix around a hole that can only be text', () => {
 	it('leaves text alone in an element the app made inline, where a `<p>` would start a new line', async () => {
 		const { applyFixes } = await import('./fix.js');
