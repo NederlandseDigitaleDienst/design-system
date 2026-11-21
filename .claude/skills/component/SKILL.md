@@ -418,7 +418,7 @@ shape, corner, tile, compact, minor, pulse, line, dividers, dividerStart,
 dividerEnd, noRibbon, layout, labelAlignment, formLabelAlignment,
 columns, smColumns, mdColumns, lgColumns, columnCount, smColumnCount, mdColumnCount, lgColumnCount,
 panes, iconOnly, responsive, showItemLabels, inspectorAsSheet,
-sidebarAsSheet, primarySidebarAsSheet, inspectorAutoHidden, noLogo
+sidebarAsSheet, primarySidebarAsSheet, inspectorAutoHidden, noLogo, noBlink
 
 [2. Sizing]
 resize, rows, width, minWidth, maxWidth, height, minHeight, maxHeight,
@@ -479,7 +479,7 @@ showAccessibleLabel, hideAccessibleLabel
 modeless, movable, stickyHeader, stickyFooter, hasContent, alwaysVisible,
 showLoadMore, lazyLoad, collapseAnchor, contentPriority, priority, anchor,
 noTab, roving, timing, tooltipTiming, duration, noLightDismiss, noCollapse,
-noBlink, wrap, singleLine, uppercase, syntax, annotatable, query,
+wrap, singleLine, uppercase, syntax, annotatable, query,
 queryMarkMode, aliases, filterFn, firstDayOfWeek, hrefPattern,
 textEditorFor, textEditorCommand, sidebarSectionOnly
 

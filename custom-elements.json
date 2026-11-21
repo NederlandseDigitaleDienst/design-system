@@ -3212,6 +3212,16 @@
             },
             {
               "kind": "field",
+              "name": "noBlink",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "no-blink",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "width",
               "type": {
                 "text": "string"
@@ -3286,16 +3296,6 @@
               },
               "default": "''",
               "attribute": "anchor",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "noBlink",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "no-blink",
               "reflects": true
             },
             {
@@ -3430,6 +3430,15 @@
             },
             {
               "type": {
+                "text": "boolean"
+              },
+              "description": "Closes the menu at once after a choice, without the blink. For a menu whose choice shows at once next to it, such as a token that writes the value it holds: the blink would confirm what is already in view, while the anchor changes under it. A submenu follows the menu it opens from.",
+              "name": "no-blink",
+              "default": "false",
+              "fieldName": "noBlink"
+            },
+            {
+              "type": {
                 "text": "string"
               },
               "description": "Explicit width, pinned exactly. Without it the menu sizes to its content between a minimum and a viewport-aware maximum (min(100vw - inset, 640px)).",
@@ -3493,15 +3502,6 @@
               "name": "anchor",
               "default": "''",
               "fieldName": "anchor"
-            },
-            {
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Closes the menu at once after a choice, without the blink. For a menu whose choice shows at once next to it, such as a token that writes the value it holds: the blink would confirm what is already in view, while the anchor changes under it. A submenu follows the menu it opens from.",
-              "name": "no-blink",
-              "default": "false",
-              "fieldName": "noBlink"
             },
             {
               "type": {
