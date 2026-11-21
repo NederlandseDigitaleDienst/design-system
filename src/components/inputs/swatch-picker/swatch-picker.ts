@@ -22,10 +22,10 @@
  * @attr {string} accessible-label - Accessible name for the group, set as aria-label. In an nldd-form-field the field names it.
  * @attr {string} accessible-labeled-by - Id of an external label element, set as aria-labelledby on the group
  * @attr {boolean} invalid - Marks the group as invalid. Announced with aria-invalid; nothing is drawn for it.
- * @attr {boolean} disabled - Disabled state for all swatches
  * @attr {string} name - Name for form submission
  * @attr {string} value - Value of the chosen swatch
  * @attr {boolean} required - Something has to be chosen
+ * @attr {boolean} disabled - Disabled state for all swatches
  *
  * @fires change - When the choice changes; detail: { value: string }
  *
@@ -41,8 +41,8 @@
  * @attr {string} image - URL of an image that fills the swatch, for a pattern or a material. Needs `text`.
  * @attr {string} image-srcset - Sources of the image at other pixel densities, with x descriptors (e.g. '/oak.jpg 1x, /oak@2x.jpg 2x'). The swatch has a fixed size, so there are no widths to choose from.
  * @attr {boolean} selected - Whether this swatch is chosen (set by the picker)
- * @attr {boolean} disabled - Disabled state
  * @attr {string} value - Value for this swatch
+ * @attr {boolean} disabled - Disabled state
  * @attr {object} translations - Override translation keys (the names of the category colors); unset keys fall back to Dutch.
  */
 import { LitElement } from 'lit';
@@ -97,11 +97,11 @@ export class NLDDSwatchPickerItem extends withTranslations(LitElement, nlddSwatc
 	@property({ type: Boolean, reflect: true })
 	selected = false;
 
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	@property({ type: String })
 	value = '';
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	/** Set by nldd-swatch-picker: this swatch's place in the group, which it
 	 *  cannot count by itself. */
@@ -309,9 +309,6 @@ export class NLDDSwatchPicker extends FormAssociated(LitElement) {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
 
@@ -322,6 +319,9 @@ export class NLDDSwatchPicker extends FormAssociated(LitElement) {
 	 *  checked as soon as anything is chosen, so the browser writes the message. */
 	@property({ type: Boolean, reflect: true })
 	required = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	/** The name this group wrote onto its host, so it only takes back its own. */
 	private _appliedLabel: string | null = null;

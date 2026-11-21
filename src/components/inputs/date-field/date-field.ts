@@ -35,8 +35,6 @@
  * @attr {boolean} no-picker - Hides the calendar button. It is shown by default.
  * @attr {boolean} valid - Marks the field as valid.
  * @attr {boolean} invalid - Marks the field as invalid.
- * @attr {boolean} readonly - Read-only state.
- * @attr {boolean} disabled - Disabled state.
  * @attr {string} name - Name for form submission.
  * @attr {string} input-id - Sets the id on the internal input. Set automatically by nldd-form-field.
  * @attr {string} value - The date as ISO (yyyy-mm-dd). With `range` an ISO 8601 interval: `yyyy-mm-dd/yyyy-mm-dd`. Empty when there is no valid date.
@@ -45,6 +43,8 @@
  * @attr {string} max - Latest allowed date as ISO (yyyy-mm-dd).
  * @attr {boolean} required - Required state.
  * @attr {string} autocomplete - Autocomplete hint, for example 'bday'.
+ * @attr {boolean} readonly - Read-only state.
+ * @attr {boolean} disabled - Disabled state.
  * @attr {object} translations - Translations; unspecified keys fall back to Dutch.
  *
  * @slot picker - Your own nldd-date-picker instead of the default calendar. The field keeps setting `value`, `min`, `max` and `range`; use the slot for what only a calendar knows: `week-numbers`, `first-day-of-week`, `is-date-unavailable` and its own translations.
@@ -131,12 +131,6 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
-	@property({ type: Boolean, reflect: true })
-	readonly = false;
-
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
 
@@ -160,6 +154,12 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 
 	@property({ type: String })
 	autocomplete = '';
+
+	@property({ type: Boolean, reflect: true })
+	readonly = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	/** Override one or more translation keys. Keys left out fall back to Dutch. */
 	@property({ type: Object })

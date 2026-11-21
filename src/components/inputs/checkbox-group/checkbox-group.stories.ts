@@ -37,9 +37,9 @@ export default {
 	args: {
 		accessibleLabel: 'Waarvoor vraag je subsidie aan?',
 		invalid: false,
-		disabled: false,
 		name: 'maatregel',
 		required: false,
+		disabled: false,
 	},
 	argTypes: {
 		accessibleLabel: {
@@ -57,11 +57,6 @@ export default {
 			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
 			table: { defaultValue: { summary: false } },
 		},
-		disabled: {
-			control: 'boolean',
-			description: 'Schakelt alle velden uit',
-			table: { defaultValue: { summary: false } },
-		},
 		name: {
 			control: 'text',
 			description: 'Naam doorgegeven aan alle velden',
@@ -69,6 +64,11 @@ export default {
 		required: {
 			control: 'boolean',
 			description: 'Minstens één selectievakje moet aangevinkt zijn',
+			table: { defaultValue: { summary: false } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Schakelt alle velden uit',
 			table: { defaultValue: { summary: false } },
 		},
 	},
@@ -101,13 +101,13 @@ const fields = html`
 	></nldd-checkbox-field>
 `;
 
-const Template = ({ accessibleLabel, invalid, disabled, name, required }: Record<string, unknown>) => html`
+const Template = ({ accessibleLabel, invalid, name, required, disabled }: Record<string, unknown>) => html`
 	<nldd-checkbox-group
 		accessible-label=${accessibleLabel}
 		?invalid=${invalid}
-		?disabled=${disabled}
 		name=${name}
 		?required=${required}
+		?disabled=${disabled}
 	>
 		${fields}
 	</nldd-checkbox-group>

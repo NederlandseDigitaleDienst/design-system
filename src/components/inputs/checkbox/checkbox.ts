@@ -15,10 +15,10 @@
  * @attr {boolean} indeterminate - Indeterminate state (takes precedence over checked visually)
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
  *   Note: aria-labelledby is not supported as IDREF resolution cannot cross shadow DOM boundaries.
- * @attr {boolean} disabled - Disabled state
  * @attr {string} name - Name for form submission
  * @attr {string} value - Value for form submission
  * @attr {boolean} required - Required state
+ * @attr {boolean} disabled - Disabled state
  *
  * @fires change - Fired when the checkbox state changes; detail: { checked: boolean, value: string }
  */
@@ -77,9 +77,6 @@ export class NLDDCheckbox extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
 
@@ -88,6 +85,9 @@ export class NLDDCheckbox extends DescribedBy(FormAssociated(LitElement)) {
 
 	@property({ type: Boolean, reflect: true })
 	required = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	override formValue(): FormValue {
 		return this.checked ? this.value : null;

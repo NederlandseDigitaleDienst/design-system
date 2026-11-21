@@ -54,14 +54,14 @@ export default {
 			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
 			table: { defaultValue: { summary: false } },
 		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde toestand',
-			table: { defaultValue: { summary: false } },
-		},
 		required: {
 			control: 'boolean',
 			description: 'Verplichte staat.',
+			table: { defaultValue: { summary: false } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde toestand',
 			table: { defaultValue: { summary: false } },
 		},
 
@@ -74,12 +74,12 @@ export default {
 		accessibleDescribedBy: '',
 		checked: false,
 		invalid: false,
-		disabled: false,
 		required: false,
+		disabled: false,
 	},
 };
 
-const Template = ({ color, size, accessibleLabel, accessibleDescription, checked, invalid, disabled, required }: Record<string, any>) => html`
+const Template = ({ color, size, accessibleLabel, accessibleDescription, checked, invalid, required, disabled }: Record<string, any>) => html`
 	<nldd-switch
 		color=${color || nothing}
 		size=${size}
@@ -87,8 +87,8 @@ const Template = ({ color, size, accessibleLabel, accessibleDescription, checked
 		accessible-description=${accessibleDescription || nothing}
 		?checked=${checked}
 		?invalid=${invalid}
-		?disabled=${disabled}
 		?required=${required}
+		?disabled=${disabled}
 	></nldd-switch>
 `;
 

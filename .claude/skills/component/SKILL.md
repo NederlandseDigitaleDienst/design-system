@@ -401,6 +401,8 @@ export const ToestandChecked = {
 
 Per component: pak alleen de keys die je gebruikt en zet ze in deze volgorde. De groepering is een mentaal model — de daadwerkelijke `args`/`argTypes` is een platte lijst. `npm run validate:control-order` controleert de `@attr`-regels en de `@property`-declaraties tegen deze lijst; een naam die er niet in staat, zet je erbij in de groep waar hij hoort. Een naam die in één component iets anders betekent (de `max` van `nldd-avatar-group`), staat in `MEANINGS` in `scripts/check-control-order.js`.
 
+`readonly` en `disabled` staan als laatste, achter Form. Ze overschrijven wat erboven staat: een uitgeschakelde control doet niets meer van wat de andere keys instellen. En je gebruikt ze liever niet (de ontwerprichtlijnen zeggen waarom), dus ze horen niet bovenaan in de controls.
+
 **Sorteer op wat een key doet, niet op hoe hij heet.** De groepen zijn het model, de namenlijsten eronder zijn voorbeelden. Twee componenten kunnen dezelfde naam voor iets anders gebruiken, en dan wint de betekenis. `max` is daar het schoolvoorbeeld van, en staat op drie plekken:
 
 1. **Bij Form** als het een invoergrens is, naast `min` en `step` (`nldd-time-field`).
@@ -484,7 +486,7 @@ textEditorFor, textEditorCommand, sidebarSectionOnly
 [12. States]
 selected, checked, indeterminate, expanded, collapsed, open, active,
 loading, complete, shrunk, valid, invalid, judging, unmet, masked,
-readonly, current, empty, visible, hidden, copyUnavailable, disabled
+current, empty, visible, hidden, copyUnavailable
 
 [13. Form]
 form, for, name, inputId, groupName, value, values, startValue, endValue,
@@ -493,7 +495,10 @@ minlength, maxlength, length, pattern, match, format, accept, multiple,
 directory, allowCustom, required, total, autocomplete, noSpellcheck,
 href, target, rel, download, method, action, enctype, novalidate
 
-[14. Development]
+[14. Overrides]
+readonly, disabled
+
+[15. Development]
 debugOs, debugSafeTriangle
 ```
 

@@ -16,10 +16,10 @@
  * @attr {string} accessible-label - Accessible name for the group (aria-label)
  * @attr {string} accessible-labeled-by - ID of an external label element (aria-labelledby)
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
- * @attr {boolean} disabled - Disables all buttons
  * @attr {string} name - Forwarded to all buttons
  * @attr {'button' | 'checkbox' | 'radio'} type - Selection mode (default: 'checkbox')
  * @attr {boolean} required - Marks the group as required. Enforced in radio mode; in checkbox mode only announced.
+ * @attr {boolean} disabled - Disables all buttons
  *
  * @slot - nldd-toggle-button elements
  *
@@ -74,9 +74,6 @@ export class NLDDToggleButtonGroup extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	@property({ type: String })
 	name = '';
 
@@ -98,6 +95,9 @@ export class NLDDToggleButtonGroup extends LitElement {
 	 */
 	@property({ type: Boolean, reflect: true })
 	required = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	/** The name this group wrote onto its host, so it only takes back its own. */
 	private _appliedLabel: string | null = null;

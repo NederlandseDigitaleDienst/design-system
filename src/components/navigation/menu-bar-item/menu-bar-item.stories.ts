@@ -21,8 +21,8 @@ export default {
 		accessibleLabel: '',
 		contentPriority: '',
 		current: false,
-		disabled: false,
 		href: '',
+		disabled: false,
 	},
 	argTypes: {
 		compact: { control: 'boolean', description: 'Activeert content-priority gedrag (gezet door parent)', table: { defaultValue: { summary: false } } },
@@ -40,8 +40,8 @@ export default {
 			table: { defaultValue: { summary: '(geen)' } },
 		},
 		current: { control: 'boolean', description: 'Markeer als actief/huidig', table: { defaultValue: { summary: false } } },
-		disabled: { control: 'boolean', description: 'Schakel interactie uit', table: { defaultValue: { summary: false } } },
 		href: { control: 'text', description: 'Optionele link URL' },
+		disabled: { control: 'boolean', description: 'Schakel interactie uit', table: { defaultValue: { summary: false } } },
 	},
 };
 
@@ -54,8 +54,8 @@ const Template = ({
 	accessibleLabel,
 	contentPriority,
 	current,
-	disabled,
 	href,
+	disabled,
 }: Record<string, unknown>) => html`
 	<nldd-menu-bar-item
 		?compact=${compact}
@@ -66,8 +66,8 @@ const Template = ({
 		accessible-label=${accessibleLabel || nothing}
 		content-priority=${contentPriority || nothing}
 		?current=${current}
-		?disabled=${disabled}
 		href=${href || nothing}
+		?disabled=${disabled}
 	></nldd-menu-bar-item>
 `;
 

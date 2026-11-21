@@ -30,8 +30,6 @@ export default {
 		noPicker: false,
 		valid: false,
 		invalid: false,
-		readonly: false,
-		disabled: false,
 		name: 'date',
 		value: '',
 		range: false,
@@ -39,6 +37,8 @@ export default {
 		max: '',
 		required: false,
 		autocomplete: '',
+		readonly: false,
+		disabled: false,
 	},
 	argTypes: {
 		size: {
@@ -87,16 +87,6 @@ export default {
 			description: 'Markeert het veld als ongeldig',
 			table: { defaultValue: { summary: false } },
 		},
-		readonly: {
-			control: 'boolean',
-			description: 'Alleen-lezen staat',
-			table: { defaultValue: { summary: false } },
-		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde staat',
-			table: { defaultValue: { summary: false } },
-		},
 		name: {
 			control: 'text',
 			description: 'Naam voor formulierverzending',
@@ -127,6 +117,16 @@ export default {
 			control: 'text',
 			description: 'Autocomplete-hint, bijvoorbeeld bday',
 		},
+		readonly: {
+			control: 'boolean',
+			description: 'Alleen-lezen staat',
+			table: { defaultValue: { summary: false } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde staat',
+			table: { defaultValue: { summary: false } },
+		},
 	},
 };
 
@@ -139,8 +139,6 @@ const Template = ({
 	noPicker,
 	valid,
 	invalid,
-	readonly,
-	disabled,
 	name,
 	value,
 	range,
@@ -148,6 +146,8 @@ const Template = ({
 	max,
 	required,
 	autocomplete,
+	readonly,
+	disabled,
 }: Record<string, unknown>) => html`
 	<nldd-date-field
 		size=${size || nothing}
@@ -158,8 +158,6 @@ const Template = ({
 		?no-picker=${noPicker}
 		?valid=${valid}
 		?invalid=${invalid}
-		?readonly=${readonly}
-		?disabled=${disabled}
 		name=${name || nothing}
 		value=${value || nothing}
 		?range=${range}
@@ -167,6 +165,8 @@ const Template = ({
 		max=${max || nothing}
 		?required=${required}
 		autocomplete=${autocomplete || nothing}
+		?readonly=${readonly}
+		?disabled=${disabled}
 		@change=${action('change')}
 	></nldd-date-field>
 `;

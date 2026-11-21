@@ -14,8 +14,6 @@
  * @attr {boolean} valid - Marks the field as valid
  * @attr {boolean} invalid - Marks the field as invalid
  * @attr {boolean} masked - Whether the password is masked (default: true)
- * @attr {boolean} readonly - Readonly state
- * @attr {boolean} disabled - Disabled state
  * @attr {string} name - Input name for form submission
  * @attr {string} input-id - Sets the id on the native input. Set automatically by nldd-form-field.
  * @attr {string} value - The input value
@@ -24,6 +22,8 @@
  * @attr {string} pattern - Regular expression the value has to match, as the native `pattern`.
  * @attr {boolean} required - Required state
  * @attr {string} autocomplete - Autocomplete hint
+ * @attr {boolean} readonly - Readonly state
+ * @attr {boolean} disabled - Disabled state
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  *
  * @fires input - When the input value changes ({ detail: { value } })
@@ -90,12 +90,6 @@ export class NLDDPasswordField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	masked = true;
 
-	@property({ type: Boolean, reflect: true })
-	readonly = false;
-
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
 
@@ -122,6 +116,12 @@ export class NLDDPasswordField extends DescribedBy(FormAssociated(LitElement)) {
 
 	@property({ type: String })
 	autocomplete = '';
+
+	@property({ type: Boolean, reflect: true })
+	readonly = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	/** Override one or more translation keys. Unset keys fall back to Dutch. */
 	@property({ type: Object })

@@ -27,8 +27,6 @@ export default {
 		noFilter: false,
 		valid: false,
 		invalid: false,
-		readonly: false,
-		disabled: false,
 		// Twee tokens om mee te beginnen: de controls hieronder zetten values bij
 		// elke wijziging opnieuw, dus een veld dat leeg begint blijft leeg zodra je
 		// aan een knop draait, ook aan readonly.
@@ -38,6 +36,8 @@ export default {
 		required: false,
 		autocomplete: '',
 		noSpellcheck: false,
+		readonly: false,
+		disabled: false,
 	},
 	argTypes: {
 		placeholder: {
@@ -75,16 +75,6 @@ export default {
 			description: 'Markeert het veld ongeldig (rode rand + invalid-icoon rechts).',
 			table: { defaultValue: { summary: 'false' } },
 		},
-		readonly: {
-			control: 'boolean',
-			description: 'Alleen-lezen: statische tokens (geen dismiss), geen invoer/picker, read-only-oppervlak.',
-			table: { defaultValue: { summary: 'false' } },
-		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde staat: tokens niet verwijderbaar, invoer dicht.',
-			table: { defaultValue: { summary: 'false' } },
-		},
 		values: {
 			control: 'object',
 			description: 'Geselecteerde token-waarden (array; zet via de `values`-property). Tokens die je in het veld zelf toevoegt komen hier niet in terug, dus een volgende controlwijziging zet deze lijst weer neer.',
@@ -115,6 +105,16 @@ export default {
 			name: 'no-spellcheck',
 			control: 'boolean',
 			description: 'Schakelt browser-spellcheck op de invoer uit.',
+			table: { defaultValue: { summary: 'false' } },
+		},
+		readonly: {
+			control: 'boolean',
+			description: 'Alleen-lezen: statische tokens (geen dismiss), geen invoer/picker, read-only-oppervlak.',
+			table: { defaultValue: { summary: 'false' } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde staat: tokens niet verwijderbaar, invoer dicht.',
 			table: { defaultValue: { summary: 'false' } },
 		},
 	},
@@ -149,14 +149,14 @@ const render = (args: Record<string, unknown>) => html`
 		?no-filter=${args.noFilter}
 		?valid=${args.valid}
 		?invalid=${args.invalid}
-		?readonly=${args.readonly}
-		?disabled=${args.disabled}
 		.values=${(args.values as string[]) ?? []}
 		type=${(args.type as string) ?? 'text'}
 		?allow-custom=${args.allowCustom}
 		?required=${args.required}
 		autocomplete=${(args.autocomplete as string) ?? ''}
 		?no-spellcheck=${args.noSpellcheck}
+		?readonly=${args.readonly}
+		?disabled=${args.disabled}
 	>${options}</nldd-token-field>
 `;
 

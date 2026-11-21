@@ -40,31 +40,31 @@ export default {
 			description: 'Huidige actieve pagina (1-gebaseerd)',
 			table: { defaultValue: { summary: 1 } },
 		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde staat',
-			table: { defaultValue: { summary: false } },
-		},
 		total: {
 			control: { type: 'number', min: 1 },
 			description: 'Totaal aantal pagina\'s',
 			table: { defaultValue: { summary: 1 } },
 		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde staat',
+			table: { defaultValue: { summary: false } },
+		},
 	},
 	args: {
 		centered: false,
 		current: 1,
-		disabled: false,
 		total: 10,
+		disabled: false,
 	},
 };
 
-const Template = ({ centered, current, disabled, total}: Record<string, any>) => html`
+const Template = ({ centered, current, total, disabled}: Record<string, any>) => html`
 	<nldd-pagination
 		?centered=${centered}
 		current=${current}
-		?disabled=${disabled}
 		total=${total}
+		?disabled=${disabled}
 	></nldd-pagination>
 `;
 

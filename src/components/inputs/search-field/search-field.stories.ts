@@ -29,7 +29,6 @@ export default {
 		shortcutWindows: '',
 		shortcutLinux: '',
 		invalid: false,
-		disabled: false,
 		name: '',
 		value: '',
 		minlength: null,
@@ -37,6 +36,7 @@ export default {
 		pattern: '',
 		required: false,
 		noSpellcheck: false,
+		disabled: false,
 	},
 	argTypes: {
 		size: {
@@ -101,11 +101,6 @@ export default {
 			description: 'Ongeldig; aangekondigd met aria-invalid, er wordt niets voor getekend',
 			table: { defaultValue: { summary: false } },
 		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde toestand',
-			table: { defaultValue: { summary: false } },
-		},
 		name: {
 			control: 'text',
 			description: 'Naam voor formulierverwerking',
@@ -139,10 +134,15 @@ export default {
 			description: 'Zet de spellingcontrole van de browser uit',
 			table: { defaultValue: { summary: false } },
 		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde toestand',
+			table: { defaultValue: { summary: false } },
+		},
 	},
 };
 
-const Template = ({ size, width, placeholder, accessibleLabel, accessibleDescription, searchButton, shortcut, shortcutMac, shortcutWindows, shortcutLinux, invalid, disabled, name, value, minlength, maxlength, pattern, required, noSpellcheck }: Record<string, any>) => html`
+const Template = ({ size, width, placeholder, accessibleLabel, accessibleDescription, searchButton, shortcut, shortcutMac, shortcutWindows, shortcutLinux, invalid, name, value, minlength, maxlength, pattern, required, noSpellcheck, disabled }: Record<string, any>) => html`
 	<nldd-search-field
 		size=${size}
 		width=${width}
@@ -155,7 +155,6 @@ const Template = ({ size, width, placeholder, accessibleLabel, accessibleDescrip
 		shortcut-windows=${shortcutWindows || nothing}
 		shortcut-linux=${shortcutLinux || nothing}
 		?invalid=${invalid}
-		?disabled=${disabled}
 		name=${name}
 		value=${value}
 		minlength=${minlength ?? nothing}
@@ -163,6 +162,7 @@ const Template = ({ size, width, placeholder, accessibleLabel, accessibleDescrip
 		pattern=${pattern || nothing}
 		?required=${required}
 		?no-spellcheck=${noSpellcheck}
+		?disabled=${disabled}
 	></nldd-search-field>
 `;
 

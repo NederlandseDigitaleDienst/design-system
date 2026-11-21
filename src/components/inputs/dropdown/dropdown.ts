@@ -26,8 +26,8 @@
  * @attr {boolean} expanded - Reflects whether the native picker popup is open (driven internally)
  * @attr {boolean} valid - Marks the field as valid
  * @attr {boolean} invalid - Marks the field as invalid
- * @attr {boolean} disabled - Disabled state; also forwarded to the slotted select
  * @attr {boolean} required - Required state, handed to the slotted <select>. A `required` on the <select> itself is left alone.
+ * @attr {boolean} disabled - Disabled state; also forwarded to the slotted select
  *
  * @prop {string} value - The value of the slotted select. Setting it before the select or its option is there applies it once that option arrives, unless someone picks an option first.
  *
@@ -95,10 +95,10 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 	invalid = false;
 
 	@property({ type: Boolean, reflect: true })
-	disabled = false;
+	required = false;
 
 	@property({ type: Boolean, reflect: true })
-	required = false;
+	disabled = false;
 
 	private _select: HTMLSelectElement | null = null;
 

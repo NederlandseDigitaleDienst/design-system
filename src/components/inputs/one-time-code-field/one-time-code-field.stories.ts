@@ -32,13 +32,13 @@ export default {
 		accessibleDescribedBy: '',
 		uppercase: false,
 		invalid: false,
-		readonly: false,
-		disabled: false,
 		value: '',
 		type: 'numeric',
 		length: 6,
 		format: '',
 		required: false,
+		readonly: false,
+		disabled: false,
 	},
 	argTypes: {
 		size: {
@@ -77,16 +77,6 @@ export default {
 			description: 'Ongeldige toestand',
 			table: { defaultValue: { summary: false } },
 		},
-		readonly: {
-			control: 'boolean',
-			description: 'Alleen-lezen',
-			table: { defaultValue: { summary: false } },
-		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde toestand',
-			table: { defaultValue: { summary: false } },
-		},
 		value: {
 			control: 'text',
 			description: 'De code',
@@ -111,10 +101,20 @@ export default {
 			description: 'Verplicht; een code die niet af is telt ook als ongeldig',
 			table: { defaultValue: { summary: false } },
 		},
+		readonly: {
+			control: 'boolean',
+			description: 'Alleen-lezen',
+			table: { defaultValue: { summary: false } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde toestand',
+			table: { defaultValue: { summary: false } },
+		},
 	},
 };
 
-const Template = ({ size, centered, accessibleLabel, accessibleDescription, uppercase, invalid, readonly, disabled, value, type, length, format, required }: Record<string, any>) => html`
+const Template = ({ size, centered, accessibleLabel, accessibleDescription, uppercase, invalid, value, type, length, format, required, readonly, disabled }: Record<string, any>) => html`
 	<nldd-one-time-code-field
 		size=${size || nothing}
 		?centered=${centered}
@@ -122,13 +122,13 @@ const Template = ({ size, centered, accessibleLabel, accessibleDescription, uppe
 		accessible-description=${accessibleDescription || nothing}
 		?uppercase=${uppercase}
 		?invalid=${invalid}
-		?readonly=${readonly}
-		?disabled=${disabled}
 		.value=${value ?? ''}
 		type=${type || nothing}
 		length=${length ?? nothing}
 		format=${format || nothing}
 		?required=${required}
+		?readonly=${readonly}
+		?disabled=${disabled}
 		@input=${action('input')}
 		@change=${action('change')}
 		@complete=${action('complete')}

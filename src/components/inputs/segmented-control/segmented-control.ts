@@ -14,11 +14,11 @@
  * @attr {string} accessible-label - Accessible name for the group, set as aria-label
  * @attr {string} accessible-labeled-by - Id of an external label element, set as aria-labelledby on the group
  * @attr {boolean} invalid - Marks the group as invalid. Announced with aria-invalid; nothing is drawn for it.
- * @attr {boolean} disabled - Disabled state for all items
  * @attr {string} name - Name for form submission
  * @attr {string} value - Selected value for radio type
  * @attr {'radio'|'checkbox'} type - Selection mode: 'radio' | 'checkbox' (default: 'radio').
  * @attr {boolean} required - Marks the group as required. Enforced in radio mode; in checkbox mode only announced.
+ * @attr {boolean} disabled - Disabled state for all items
  *
  * @fires change - When selection changes; detail: { value: string } for radio, detail: { values: string[] } for checkbox
  *
@@ -37,11 +37,11 @@
  * @attr {string} shortcut-windows - Override of `shortcut` on Windows (falls back to `shortcut`).
  * @attr {string} shortcut-linux - Override of `shortcut` on Linux (falls back to `shortcut`).
  * @attr {boolean} selected - Whether this item is selected (set by parent)
- * @attr {boolean} disabled - Disabled state
  * @attr {string} group-name - Name of the group for form submission, put on the native checkbox. Set by nldd-segmented-control.
  * @attr {string} value - Value for this item
  * @attr {'radio'|'checkbox'} input-type - Selection mode: 'radio' | 'checkbox' (default: 'radio'). In radio mode the item is the radio itself, in checkbox mode it renders a native checkbox. Set by nldd-segmented-control.
  * @attr {boolean} required - Required state of the native checkbox. In radio mode the group carries the constraint.
+ * @attr {boolean} disabled - Disabled state
  *
  * @slot icon - Slot for a custom icon (e.g. custom SVG). Wins over `icon`.
  *
@@ -118,9 +118,6 @@ export class NLDDSegmentedControlItem extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	selected = false;
 
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	/** Set by nldd-segmented-control. Not part of the public API.
 	 *
 	 * The attribute name is stated: without it Lit derives `groupname`, all
@@ -137,6 +134,9 @@ export class NLDDSegmentedControlItem extends LitElement {
 
 	@property({ type: Boolean, reflect: true })
 	required = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	/** Set by nldd-segmented-control in radio mode: this item's place in the
 	 *  group, which it cannot count by itself. */
@@ -345,9 +345,6 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
 
@@ -374,6 +371,9 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 	 */
 	@property({ type: Boolean, reflect: true })
 	required = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	/** The name this group wrote onto its host, so it only takes back its own. */
 	private _appliedLabel: string | null = null;

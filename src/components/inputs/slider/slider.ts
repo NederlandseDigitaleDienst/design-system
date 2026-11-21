@@ -59,7 +59,6 @@
  * @attr {string} histogram - Counts drawn as bars above the track, one per bucket of (max - min) / n, comma- or space-separated; as a property, an array of numbers. The bars within the chosen value or range are colored.
  * @attr {string} tooltip-timing - When the value shows above the thumb: 'instant' (the default: on hover, keyboard focus and while dragging) or 'never', for a slider whose value shows elsewhere, such as in fields above it
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
- * @attr {boolean} disabled - Disabled state
  * @attr {string} name - Name for form submission
  * @attr {number} value - The value (default: the middle between min and max)
  * @attr {number} start-value - The start of a range (default: min)
@@ -68,6 +67,7 @@
  * @attr {number} min - Smallest value (default: 0)
  * @attr {number} max - Largest value (default: 100)
  * @attr {number} step - Step between values (default: 1)
+ * @attr {boolean} disabled - Disabled state
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  *
  * @prop {(value: number) => string} formatValue - Turns a value into the text of its tooltip and of what a screen reader hears
@@ -150,9 +150,6 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
 
@@ -176,6 +173,9 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 
 	@property({ type: Number })
 	step = 1;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	@property({ type: Object })
 	translations: Partial<NLDDSliderTranslations> = {};

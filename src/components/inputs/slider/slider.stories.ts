@@ -47,7 +47,6 @@ export default {
 		histogram: '',
 		tooltipTiming: 'instant',
 		invalid: false,
-		disabled: false,
 		value: 40,
 		startValue: undefined,
 		endValue: undefined,
@@ -55,6 +54,7 @@ export default {
 		min: 0,
 		max: 100,
 		step: 1,
+		disabled: false,
 	},
 	argTypes: {
 		size: {
@@ -110,11 +110,6 @@ export default {
 			description: 'Markeert de slider als ongeldig',
 			table: { defaultValue: { summary: false } },
 		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde staat',
-			table: { defaultValue: { summary: false } },
-		},
 		value: {
 			control: 'number',
 			description: 'De waarde (zonder `range`)',
@@ -151,6 +146,11 @@ export default {
 			description: 'Stap tussen de waarden',
 			table: { defaultValue: { summary: 1 } },
 		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde staat',
+			table: { defaultValue: { summary: false } },
+		},
 	},
 };
 
@@ -165,7 +165,6 @@ export const Standaard = {
 			histogram=${args.histogram || nothing}
 			tooltip-timing=${args.tooltipTiming}
 			?invalid=${args.invalid}
-			?disabled=${args.disabled}
 			value=${args.value}
 			start-value=${args.startValue ?? nothing}
 			end-value=${args.endValue ?? nothing}
@@ -173,6 +172,7 @@ export const Standaard = {
 			min=${args.min}
 			max=${args.max}
 			step=${args.step}
+			?disabled=${args.disabled}
 		></nldd-slider>
 	`,
 };

@@ -14,10 +14,10 @@
  * @attr {boolean} no-tab - Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable.
  * @attr {boolean} checked - Whether the switch is on/off
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
- * @attr {boolean} disabled - Disabled state
  * @attr {string} name - Name for form submission; nothing is submitted when the switch is off
  * @attr {string} value - Value submitted with the form when the switch is on (default: 'on')
  * @attr {boolean} required - Required state
+ * @attr {boolean} disabled - Disabled state
  *
  * @fires change - When the switch state changes; detail: { checked: boolean, value: string }
  */
@@ -77,9 +77,6 @@ export class NLDDSwitch extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
 
@@ -88,6 +85,9 @@ export class NLDDSwitch extends DescribedBy(FormAssociated(LitElement)) {
 
 	@property({ type: Boolean, reflect: true })
 	required = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	override formValue(): FormValue {
 		return this.checked ? this.value : null;

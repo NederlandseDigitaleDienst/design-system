@@ -100,13 +100,13 @@
  * @attr {string} accessible-label - Accessible label forwarded to the inner input. Set automatically by nldd-form-field.
  * @attr {boolean} valid - Marks the field as valid; shows a check icon on the right, like nldd-dropdown
  * @attr {boolean} invalid - Marks the field as invalid; shows an alert icon on the right, like nldd-dropdown
- * @attr {boolean} disabled - Disabled state
  * @attr {string} name - Name for form submission
  * @attr {string} input-id - Sets the id on the native input. Set automatically by nldd-form-field.
  * @attr {string} accept - Comma-separated list of accepted file types, forwarded to the input (e.g. ".pdf,image/*")
  * @attr {boolean} multiple - Allows choosing more than one file, and dropping a folder
  * @attr {boolean} directory - Offers a folder beside files, since one dialog picks either: choosing and changing open a menu with both, and an area shows a button for each. Takes several files, as `multiple` does
  * @attr {boolean} required - Marks the field required (invalid while no file is chosen)
+ * @attr {boolean} disabled - Disabled state
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  *
  * @prop {File[]} files - The chosen files. Read-only: browsers forbid setting a file input's value, so there is no `value` attribute and no way to preselect a file.
@@ -183,9 +183,6 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
 
@@ -204,6 +201,9 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 
 	@property({ type: Boolean, reflect: true })
 	required = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	@property({ type: Object })
 	translations: Partial<NLDDFileFieldTranslations> = {};

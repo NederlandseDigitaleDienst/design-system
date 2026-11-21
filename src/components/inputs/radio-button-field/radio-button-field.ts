@@ -24,10 +24,10 @@
  * @attr {string} label - Label text for the radio button
  * @attr {boolean} checked - Checked state
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
- * @attr {boolean} disabled - Disabled state
  * @attr {string} name - Radio group name for form submission; ties the fields of one group together. Set automatically by nldd-radio-button-group.
  * @attr {string} value - Value for form submission
  * @attr {boolean} required - Required state. What it asks is whether anything in the group is checked, as a native radio does. Set automatically by nldd-radio-button-group.
+ * @attr {boolean} disabled - Disabled state
  *
  * @fires change - When checked state changes; detail: { checked: boolean, value: string }
  */
@@ -81,9 +81,6 @@ export class NLDDRadioButtonField extends DescribedBy(FormAssociated(LitElement)
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	/** Set by nldd-radio-button-group. Not part of the public API.
 	 *  Reflected: form association reads the host's name attribute, and the
 	 *  group assigns the property. */
@@ -95,6 +92,9 @@ export class NLDDRadioButtonField extends DescribedBy(FormAssociated(LitElement)
 
 	@property({ type: Boolean, reflect: true })
 	required = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	/** Set by nldd-radio-button-group: this field's place in the group, which it
 	 *  cannot count by itself. */

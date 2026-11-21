@@ -29,12 +29,12 @@
  * @attr {boolean} line-numbers - Show a line-number gutter
  * @attr {boolean} wrap - Wrap long lines instead of horizontal scroll
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
- * @attr {boolean} readonly - Readonly state (focusable and selectable, not editable)
- * @attr {boolean} disabled - Disabled state
  * @attr {string} name - Field name for form submission
  * @attr {string} input-id - Sets the id on the editable element. Set automatically by nldd-form-field.
  * @attr {string} value - Editor content
  * @attr {boolean} required - Required state
+ * @attr {boolean} readonly - Readonly state (focusable and selectable, not editable)
+ * @attr {boolean} disabled - Disabled state
  *
  * @fires input - When the content changes (detail: { value })
  * @fires change - When the content is committed on blur (detail: { value })

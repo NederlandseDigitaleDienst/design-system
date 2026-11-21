@@ -49,14 +49,14 @@ export default {
 			description: 'Markeert het veld als ongeldig',
 			table: { defaultValue: { summary: false } },
 		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde toestand',
-			table: { defaultValue: { summary: false } },
-		},
 		required: {
 			control: 'boolean',
 			description: 'Verplichte staat.',
+			table: { defaultValue: { summary: false } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde toestand',
 			table: { defaultValue: { summary: false } },
 		},
 	},
@@ -67,8 +67,8 @@ export default {
 		accessibleDescribedBy: '',
 		valid: false,
 		invalid: false,
-		disabled: false,
 		required: false,
+		disabled: false,
 	},
 };
 
@@ -80,15 +80,15 @@ const options = (selected = '') => [1, 2, 3, 4, 5, 6].map((option) => html`
 	>Optie ${option}</option>
 `);
 
-const Template = ({ size, width, accessibleDescription, valid, invalid, disabled, required }: Record<string, any>) => html`
+const Template = ({ size, width, accessibleDescription, valid, invalid, required, disabled }: Record<string, any>) => html`
 	<nldd-dropdown
 		size=${size}
 		width=${width}
 		accessible-description=${accessibleDescription || nothing}
 		?valid=${valid}
 		?invalid=${invalid}
-		?disabled=${disabled}
 		?required=${required}
+		?disabled=${disabled}
 	>
 		<select
 			name="option"

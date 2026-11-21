@@ -17,7 +17,6 @@
  * @attr {string} shortcut-windows - Override of `shortcut` on Windows (falls back to `shortcut`).
  * @attr {string} shortcut-linux - Override of `shortcut` on Linux (falls back to `shortcut`).
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
- * @attr {boolean} disabled - Disabled state
  * @attr {string} name - Input name for form submission
  * @attr {string} value - The search value
  * @attr {number} minlength - Fewest characters the value may have.
@@ -25,6 +24,7 @@
  * @attr {string} pattern - Regular expression the value has to match, as the native `pattern`.
  * @attr {boolean} required - Required state
  * @attr {boolean} no-spellcheck - Disables browser spellchecking on the inner input
+ * @attr {boolean} disabled - Disabled state
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  *
  * @fires input - When the input value changes; detail: { value: string }
@@ -126,9 +126,6 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
 
@@ -152,6 +149,9 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
 
 	@property({ type: Boolean, reflect: true, attribute: 'no-spellcheck' })
 	noSpellcheck = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	/** Override one or more translation keys. Unset keys fall back to Dutch. */
 	@property({ type: Object })

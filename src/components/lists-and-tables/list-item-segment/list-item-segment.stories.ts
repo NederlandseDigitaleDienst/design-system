@@ -61,8 +61,8 @@ export default {
 		checked: false,
 		expanded: false,
 		current: false,
-		disabled: false,
 		href: '',
+		disabled: false,
 	},
 	argTypes: {
 		width: {
@@ -101,8 +101,8 @@ export default {
 			description: 'Het huidige segment, met `aria-current` op de waarde van `current-type`. Zet het hier en niet op de rij: een gesegmenteerde rij heeft geen eigen link, en de rij leest het van z\'n segmenten en kleurt zichzelf.',
 			table: { defaultValue: { summary: false } },
 		},
-		disabled: { control: 'boolean', description: 'Uitgeschakelde staat' },
 		href: { control: 'text', description: 'Rendert het segment als link. Wint van `checkbox` en `button`.' },
+		disabled: { control: 'boolean', description: 'Uitgeschakelde staat' },
 	},
 };
 
@@ -120,8 +120,8 @@ export const Standaard = {
 					?checked=${args.checked}
 					?expanded=${args.expanded}
 					?current=${args.current}
-					?disabled=${args.disabled}
 					href=${(args.href as string) || nothing}
+					?disabled=${args.disabled}
 				>
 					<nldd-text-cell
 						text="Segment"

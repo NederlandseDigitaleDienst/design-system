@@ -22,10 +22,10 @@ export default {
 		accessibleLabel: 'Kleur',
 		accessibleLabeledBy: '',
 		invalid: false,
-		disabled: false,
 		name: '',
 		value: 'rood',
 		required: false,
+		disabled: false,
 	},
 	argTypes: {
 		size: {
@@ -49,11 +49,6 @@ export default {
 			description: 'Markeert de groep als ongeldig, alleen voor hulptechnologie',
 			table: { defaultValue: { summary: false } },
 		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde staat voor alle staaltjes',
-			table: { defaultValue: { summary: false } },
-		},
 		name: {
 			control: 'text',
 			description: 'Naam voor het formulier',
@@ -65,6 +60,11 @@ export default {
 		required: {
 			control: 'boolean',
 			description: 'Er moet iets gekozen zijn',
+			table: { defaultValue: { summary: false } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde staat voor alle staaltjes',
 			table: { defaultValue: { summary: false } },
 		},
 	},
@@ -97,19 +97,19 @@ const Template = ({
 	size,
 	accessibleLabel,
 	invalid,
-	disabled,
 	name,
 	value,
 	required,
+	disabled,
 }: Record<string, unknown>) => html`
 	<nldd-swatch-picker
 		size=${size || nothing}
 		accessible-label=${accessibleLabel || nothing}
 		?invalid=${invalid}
-		?disabled=${disabled}
 		name=${name || nothing}
 		value=${value || nothing}
 		?required=${required}
+		?disabled=${disabled}
 	>
 		${colors}
 	</nldd-swatch-picker>

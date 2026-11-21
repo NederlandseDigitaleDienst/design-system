@@ -11,8 +11,6 @@
  * @attr {string} accessible-label - Accessible label forwarded to the inner input. Set automatically by nldd-form-field.
  * @attr {boolean} valid - Marks the field as valid
  * @attr {boolean} invalid - Marks the field as invalid
- * @attr {boolean} readonly - Readonly state
- * @attr {boolean} disabled - Disabled state
  * @attr {string} name - Input name for form submission
  * @attr {string} input-id - Sets the id on the native input. Set automatically by nldd-form-field.
  * @attr {string} value - The input value
@@ -25,6 +23,8 @@
  * @attr {boolean} required - Required state
  * @attr {string} autocomplete - Autocomplete hint
  * @attr {boolean} no-spellcheck - Disables browser spellchecking on the inner input
+ * @attr {boolean} readonly - Readonly state
+ * @attr {boolean} disabled - Disabled state
  *
  * @slot button - One `nldd-button`, `nldd-icon-button` or `nldd-toggle-button` at the end of the field: the one action of a form that is only this field (sign up with an email address, redeem a code), or an aid for filling in the field, such as an `nldd-toggle-button` that starts and stops dictation. The field passes on its corner, so the button's corners follow the field's. The field sets its `size`, `sm` in a field of `md` and `xs` in one of `sm`, so it sits inside the border; a `size` of your own is overwritten. A disabled field disables the button too. Give it `type="submit"` in a form, and its own `text`. A form with more fields keeps its buttons in `nldd-form-actions`.
  *
@@ -109,12 +109,6 @@ export class NLDDTextField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
-	@property({ type: Boolean, reflect: true })
-	readonly = false;
-
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
 
@@ -155,6 +149,12 @@ export class NLDDTextField extends DescribedBy(FormAssociated(LitElement)) {
 
 	@property({ type: Boolean, reflect: true, attribute: 'no-spellcheck' })
 	noSpellcheck = false;
+
+	@property({ type: Boolean, reflect: true })
+	readonly = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	@query('.text-field__input')
 	private _input!: HTMLInputElement;

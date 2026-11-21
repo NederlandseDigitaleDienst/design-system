@@ -19,9 +19,9 @@
  * @attr {string} accessible-label - Accessible name for the group, set as aria-label on the group
  * @attr {string} accessible-labeled-by - Id of an external label element, set as aria-labelledby on the group
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
- * @attr {boolean} disabled - Disables all fields in the group
  * @attr {string} name - Forwarded to all nldd-checkbox-field elements in the group; clearing it leaves them the name they had
  * @attr {boolean} required - At least one box in the group has to be checked. Set on every field in the group, nested ones included, whether it is on or off: in a group, the group decides.
+ * @attr {boolean} disabled - Disables all fields in the group
  *
  * @slot - Slot for nldd-checkbox-field elements. Options nested in the `children` slot of a field belong to the group too; see nldd-checkbox-field.
  *
@@ -64,14 +64,14 @@ export class NLDDCheckboxGroup extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	@property({ type: String })
 	name = '';
 
 	@property({ type: Boolean, reflect: true })
 	required = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	/** The name this group wrote onto its host, so it only takes back its own. */
 	private _appliedLabel: string | null = null;

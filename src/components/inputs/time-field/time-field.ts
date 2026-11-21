@@ -37,8 +37,6 @@
  * @attr {boolean} no-picker - Hides the picker button. It is shown by default.
  * @attr {boolean} valid - Marks the field as valid.
  * @attr {boolean} invalid - Marks the field as invalid.
- * @attr {boolean} readonly - Read-only state.
- * @attr {boolean} disabled - Disabled state.
  * @attr {string} name - Name for form submission.
  * @attr {string} input-id - Sets the id on the internal input. Set automatically by nldd-form-field.
  * @attr {string} value - The time as `HH:mm` (24-hour). Empty when there is no valid time.
@@ -47,6 +45,8 @@
  * @attr {number} step - Step in minutes (default 1). Decides which times are valid, what rounding snaps to, and how far the arrow keys jump.
  * @attr {boolean} required - Required state.
  * @attr {string} autocomplete - Autocomplete hint.
+ * @attr {boolean} readonly - Read-only state.
+ * @attr {boolean} disabled - Disabled state.
  * @attr {object} translations - Translations; unspecified keys fall back to Dutch.
  *
  * @slot picker - Your own nldd-time-picker instead of the default one. The field keeps setting `value`, `min`, `max` and `step`; use the slot for what only a picker knows, such as its own translations.
@@ -132,12 +132,6 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
-	@property({ type: Boolean, reflect: true })
-	readonly = false;
-
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
 
@@ -161,6 +155,12 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 
 	@property({ type: String })
 	autocomplete = '';
+
+	@property({ type: Boolean, reflect: true })
+	readonly = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	/** Override one or more translation keys. Keys left out fall back to Dutch. */
 	@property({ type: Object })

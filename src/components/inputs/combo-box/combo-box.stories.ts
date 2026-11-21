@@ -68,16 +68,6 @@ export default {
 			description: 'Markeert het veld als ongeldig',
 			table: { defaultValue: { summary: false } },
 		},
-		readonly: {
-			control: 'boolean',
-			description: 'Alleen-lezen toestand: de waarde blijft leesbaar en selecteerbaar, het menu opent niet',
-			table: { defaultValue: { summary: false } },
-		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde toestand',
-			table: { defaultValue: { summary: false } },
-		},
 		name: {
 			control: 'text',
 			description: 'Naam voor formulierverwerking',
@@ -122,6 +112,16 @@ export default {
 			description: 'Disables browser spellchecking on the inner input',
 			table: { defaultValue: { summary: false } },
 		},
+		readonly: {
+			control: 'boolean',
+			description: 'Alleen-lezen toestand: de waarde blijft leesbaar en selecteerbaar, het menu opent niet',
+			table: { defaultValue: { summary: false } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde toestand',
+			table: { defaultValue: { summary: false } },
+		},
 	},
 	args: {
 		size: 'md',
@@ -134,8 +134,6 @@ export default {
 		noFilter: false,
 		valid: false,
 		invalid: false,
-		readonly: false,
-		disabled: false,
 		name: '',
 		value: '',
 		minlength: null,
@@ -145,6 +143,8 @@ export default {
 		required: false,
 		autocomplete: 'off',
 		noSpellcheck: false,
+		readonly: false,
+		disabled: false,
 	},
 };
 
@@ -159,8 +159,6 @@ const Template = (args: Record<string, any>) => html`
 		?no-filter=${args.noFilter}
 		?valid=${args.valid}
 		?invalid=${args.invalid}
-		?readonly=${args.readonly}
-		?disabled=${args.disabled}
 		name=${args.name}
 		value=${args.value}
 		minlength=${args.minlength ?? nothing}
@@ -170,6 +168,8 @@ const Template = (args: Record<string, any>) => html`
 		?required=${args.required}
 		autocomplete=${args.autocomplete}
 		?no-spellcheck=${args.noSpellcheck}
+		?readonly=${args.readonly}
+		?disabled=${args.disabled}
 	>
 		<nldd-menu empty-text="Geen resultaten">
 			<nldd-menu-item

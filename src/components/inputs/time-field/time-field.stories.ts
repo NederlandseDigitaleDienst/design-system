@@ -29,14 +29,14 @@ export default {
 		noPicker: false,
 		valid: false,
 		invalid: false,
-		readonly: false,
-		disabled: false,
 		name: '',
 		value: '09:30',
 		min: '',
 		max: '',
 		step: 1,
 		required: false,
+		readonly: false,
+		disabled: false,
 	},
 	argTypes: {
 		size: {
@@ -85,16 +85,6 @@ export default {
 			description: 'Markeert het veld als ongeldig',
 			table: { defaultValue: { summary: false } },
 		},
-		readonly: {
-			control: 'boolean',
-			description: 'Alleen-lezen staat',
-			table: { defaultValue: { summary: false } },
-		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde staat',
-			table: { defaultValue: { summary: false } },
-		},
 		name: {
 			control: 'text',
 			description: 'Naam voor formulierverzending',
@@ -121,6 +111,16 @@ export default {
 			description: 'Verplichte staat',
 			table: { defaultValue: { summary: false } },
 		},
+		readonly: {
+			control: 'boolean',
+			description: 'Alleen-lezen staat',
+			table: { defaultValue: { summary: false } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde staat',
+			table: { defaultValue: { summary: false } },
+		},
 	},
 };
 
@@ -132,14 +132,14 @@ const Template = ({
 	noPicker,
 	valid,
 	invalid,
-	readonly,
-	disabled,
 	name,
 	value,
 	min,
 	max,
 	step,
 	required,
+	readonly,
+	disabled,
 }: Record<string, any>) => html`
 	<nldd-time-field
 		size=${size || nothing}
@@ -150,14 +150,14 @@ const Template = ({
 		?no-picker=${noPicker}
 		?valid=${valid}
 		?invalid=${invalid}
-		?readonly=${readonly}
-		?disabled=${disabled}
 		name=${name || nothing}
 		value=${value || nothing}
 		min=${min || nothing}
 		max=${max || nothing}
 		step=${step || nothing}
 		?required=${required}
+		?readonly=${readonly}
+		?disabled=${disabled}
 	></nldd-time-field>
 `;
 

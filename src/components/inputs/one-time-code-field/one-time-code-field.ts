@@ -34,8 +34,6 @@
  * @attr {string} accessible-label - Accessible label forwarded to the inner input. Set automatically by nldd-form-field.
  * @attr {boolean} uppercase - Turns letters into capitals as they are typed or pasted, in the boxes and in the value. Only with `type="alphanumeric"`, and only for a code where case does not matter, as with most activation codes. Leave it off for a code that tells "a" from "A", such as some recovery codes: a value turned into capitals would no longer match.
  * @attr {boolean} invalid - Marks the field as invalid
- * @attr {boolean} readonly - Readonly state
- * @attr {boolean} disabled - Disabled state
  * @attr {string} name - Input name for form submission
  * @attr {string} input-id - Sets the id on the native input. Set automatically by nldd-form-field.
  * @attr {string} value - The code
@@ -43,6 +41,8 @@
  * @attr {number} length - How many characters the code has (default: 6).
  * @attr {string} format - The shape of a code that is printed in groups, such as '###-###' or '#### ####': each `#` is a box, anything else a separator you see but a screen reader does not hear. The number of `#` is then the length, so `format` wins over `length`. The value never holds a separator: '123-234' is submitted as '123234'. Leave it out for a code without groups, as most codes from a text message are.
  * @attr {boolean} required - Required state. A code that is not complete counts as invalid too.
+ * @attr {boolean} readonly - Readonly state
+ * @attr {boolean} disabled - Disabled state
  *
  * @fires input - When the code changes; detail: { value: string }
  * @fires change - When the code is committed; detail: { value: string }
@@ -187,12 +187,6 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
-	@property({ type: Boolean, reflect: true })
-	readonly = false;
-
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
 
@@ -213,6 +207,12 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 
 	@property({ type: Boolean, reflect: true })
 	required = false;
+
+	@property({ type: Boolean, reflect: true })
+	readonly = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	/** Whether the inner input has focus, to show where the next character goes. */
 	@state()

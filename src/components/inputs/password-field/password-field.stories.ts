@@ -66,16 +66,6 @@ export default {
 			description: 'Whether the password is masked',
 			table: { defaultValue: { summary: true } },
 		},
-		readonly: {
-			control: 'boolean',
-			description: 'Alleen-lezen toestand: de waarde blijft leesbaar en selecteerbaar, maar is hier niet te wijzigen',
-			table: { defaultValue: { summary: false } },
-		},
-		disabled: {
-			control: 'boolean',
-			description: 'Disabled state',
-			table: { defaultValue: { summary: false } },
-		},
 		name: {
 			control: 'text',
 			description: 'Form field name',
@@ -110,6 +100,16 @@ export default {
 			description: 'Browser autofill hint (HTML autocomplete attribute)',
 			table: { defaultValue: { summary: '(geen)' } },
 		},
+		readonly: {
+			control: 'boolean',
+			description: 'Alleen-lezen toestand: de waarde blijft leesbaar en selecteerbaar, maar is hier niet te wijzigen',
+			table: { defaultValue: { summary: false } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Disabled state',
+			table: { defaultValue: { summary: false } },
+		},
 	},
 	args: {
 		size: 'md',
@@ -121,8 +121,6 @@ export default {
 		valid: false,
 		invalid: false,
 		masked: true,
-		readonly: false,
-		disabled: false,
 		name: 'password',
 		value: '',
 		minlength: null,
@@ -130,10 +128,12 @@ export default {
 		pattern: '',
 		required: false,
 		autocomplete: '',
+		readonly: false,
+		disabled: false,
 	},
 };
 
-const Template = ({ size, width, placeholder, accessibleLabel, accessibleDescription, valid, invalid, masked, readonly, disabled, name, value, minlength, maxlength, pattern, required, autocomplete }: Record<string, any>) => html`
+const Template = ({ size, width, placeholder, accessibleLabel, accessibleDescription, valid, invalid, masked, name, value, minlength, maxlength, pattern, required, autocomplete, readonly, disabled }: Record<string, any>) => html`
 	<nldd-password-field
 		size=${size}
 		width=${width}
@@ -143,8 +143,6 @@ const Template = ({ size, width, placeholder, accessibleLabel, accessibleDescrip
 		?valid=${valid}
 		?invalid=${invalid}
 		.masked=${masked}
-		?readonly=${readonly}
-		?disabled=${disabled}
 		name=${name}
 		.value=${value}
 		minlength=${minlength ?? nothing}
@@ -152,6 +150,8 @@ const Template = ({ size, width, placeholder, accessibleLabel, accessibleDescrip
 		pattern=${pattern || nothing}
 		?required=${required}
 		autocomplete=${autocomplete}
+		?readonly=${readonly}
+		?disabled=${disabled}
 	></nldd-password-field>
 `;
 

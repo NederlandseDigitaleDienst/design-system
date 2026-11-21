@@ -179,11 +179,11 @@ const NESTED_CONTROLS = [
  * @attr {boolean} checked - Checked state of a `checkbox` or `radio` row. A checkbox row toggles it on activation, a radio row only ever sets it
  * @attr {boolean} expanded - Disclosure state. Drives the `children` group's visibility AND supplies `aria-expanded`, to the row's own control when the row is interactive, or to the segment marked `disclosure`. Written once either way; the item DEV-warns when there is nowhere for it to live.
  * @attr {boolean} current - Marks the item as the one you are on: the page a menu row points at, the record a list has open. Exactly one row in a list carries it, where `selected` may be on many. It paints like `selected` at rest, a quiet fill on purpose: the page itself says where you are, in its title, heading and breadcrumb, so the fill is an extra that should not pull attention from the content, and an automated check that flags its contrast is expected. The fill alone stays under 3:1 (1.3:1 in light, 1.5:1 in dark), so a WCAG audit fails 1.4.1 and 1.4.11 on it unless the place also shows another way, such as in the page title or the breadcrumb. A table of contents that follows the scroll, as in the content page pattern, has no such other sign: expect the finding there, and name it as a deviation in the accessibility statement. It takes the highlighted fill while focus is anywhere in the row, including inside a nested `nldd-list-item-segment`, which is what a segmented row needs: the focus never reaches the row's own control, because there is none. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value. On a segmented row set it on the segment that holds the link instead: the row reads `current` off its own segments and paints itself, so it is written once, where `aria-current` belongs.
- * @attr {boolean} disabled - Switches the row's own control off: a `button` or `checkbox` row stops responding and dims, a `href` row gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). A row without a control of its own has nothing to switch off, and segments carry their own `disabled`. The arrow keys skip a disabled row.
  * @attr {string} href - Renders the item as an `<a>` with this URL. Wins over `checkbox` and `button`; without any of the three the item is a plain container with no action.
  * @attr {string} target - Link target forwarded to the `<a>` (e.g. '_blank'); only applies with `href`. With '_blank' a visually hidden "opens in new tab" announcement is added for assistive technology. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.
  * @attr {string} rel - Link rel forwarded to the `<a>`, only with `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set
  * @attr {string} download - Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab.
+ * @attr {boolean} disabled - Switches the row's own control off: a `button` or `checkbox` row stops responding and dims, a `href` row gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). A row without a control of its own has nothing to switch off, and segments carry their own `disabled`. The arrow keys skip a disabled row.
  *
  * Divider markers, set on a CELL in the row rather than on the row itself:
  * @childattr {boolean} divider-start - The divider starts at this cell instead of at the row's first text or title cell. On the leading cell it restores the full-width line.
@@ -312,17 +312,6 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	@property({ type: Boolean, reflect: true })
 	current = false;
 
-	/**
-	 * Switches off the row's own control.
-	 *
-	 * Only the row's own: a row built out of segments has no control here, and
-	 * each segment carries its own `disabled`. A link cannot be disabled the way
-	 * a button can, so there it is `aria-disabled` plus a blocked click, the
-	 * same trade `nldd-button` makes.
-	 */
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	/** When set, renders the item as a link. */
 	@property({ reflect: true })
 	href?: string;
@@ -345,6 +334,17 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	 *  for the name from the URL, a name to save it under. */
 	@property({ type: String })
 	download: string | undefined = undefined;
+
+	/**
+	 * Switches off the row's own control.
+	 *
+	 * Only the row's own: a row built out of segments has no control here, and
+	 * each segment carries its own `disabled`. A link cannot be disabled the way
+	 * a button can, so there it is `aria-disabled` plus a blocked click, the
+	 * same trade `nldd-button` makes.
+	 */
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	@state()
 	private _showChildren = false;

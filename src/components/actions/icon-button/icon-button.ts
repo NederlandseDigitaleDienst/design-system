@@ -24,7 +24,6 @@
  * @attr {string} tooltip-timing - Forwarded to the inner nldd-tooltip's `timing`: 'delay' (the default, a 700 ms show-delay), 'instant', or 'never' (suppress the visual tooltip; screen readers still get the aria-label). Use 'never' when the surrounding context already explains the button (e.g. spin buttons in nldd-number-field, the chevron in nldd-split-button).
  * @attr {boolean} expanded - Whether the popover/menu controlled by this button is currently open. Forwarded as aria-expanded on the inner button; toggles the is-expanded visual state.
  * @attr {boolean} loading - Loading state (default: false). Shows an activity indicator over the visually hidden icon, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled). Meant for an action that has to wait for the server, such as sending an application. For most actions, show the result right away and confirm in the background, as the design guidelines describe.
- * @attr {boolean} disabled - Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why.
  * @attr {'button'|'submit'|'reset'} type - Button type for form submission: 'button' | 'submit' | 'reset' (ignored when href is set)
  * @attr {string} href - When set, renders an <a> element instead of <button>
  * @attr {string} target - Link target (e.g. '_blank'); only used when href is set. With '_blank' the "opens in new tab" announcement is folded into the aria-label for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.
@@ -33,6 +32,7 @@
  *
  * @slot icon - Slot for a custom icon (e.g. custom SVG). Wins over `icon`; falls back to a placeholder icon when neither is set.
  * @slot popup - A single `nldd-menu` or `nldd-popover` this button invokes. Slotting it auto-anchors the overlay to the button and toggles it on click (no id/anchor wiring). The overlay syncs `expanded` and `aria-haspopup` back onto the button. Add `expandable` for the disclosure chevron. Mirrors nldd-split-button; manual `popovertarget` wiring keeps working without a slotted overlay.
+ * @attr {boolean} disabled - Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why.
  * @attr {object} translations - Override translation keys (e.g. the "opens in new tab" announcement); unset keys fall back to Dutch.
  * @slot interest - A single `nldd-popover` that describes this button and opens on interest instead of on a click: when the pointer rests on the button, when it gets keyboard focus, and on a long press on touch. It takes the place of the button's own tooltip, so let it say what the button does where the icon does not. The button keeps its own click. Focus stays on the button, the popover's content is read as the button's description (after `accessible-label`, which stays its name), and Escape closes it. Information only: put no link or button in it. The popover needs no `accessible-label` here.
  *
@@ -207,9 +207,6 @@ export class NLDDIconButton extends DescribedBy(withTranslations(LitElement, nld
 	@property({ type: Boolean, reflect: true })
 	loading = false;
 
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	@property({ reflect: true, converter: reflectNonDefault<ButtonType>('button') })
 	type: ButtonType = 'button';
 
@@ -232,6 +229,9 @@ export class NLDDIconButton extends DescribedBy(withTranslations(LitElement, nld
 
 	@property({ type: String })
 	download: string | undefined = undefined;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	/** Whether an icon is present via attribute or slot. */
 	private get _hasIcon(): boolean {

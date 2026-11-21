@@ -8,8 +8,8 @@
  * @attr {boolean} centered - Centers the pagination in the container (host fills row, items grouped in the middle)
  * @attr {string} href-pattern - URL pattern with a {page} placeholder, renders links instead of buttons
  * @attr {number} current - Currently active page (1-based)
- * @attr {boolean} disabled - Disabled state. Avoid it where you can; the design guidelines say why.
  * @attr {number} total - Total number of pages (recommended max: 200 for compact select performance)
+ * @attr {boolean} disabled - Disabled state. Avoid it where you can; the design guidelines say why.
  * @attr {object} translations - Translations; unspecified keys fall back to Dutch
  *
  * @fires page-change - On a page change (detail: { page: number, href?: string }). Only cancelable in href mode: preventDefault() blocks navigation (SPA).
@@ -40,11 +40,11 @@ export class NLDDPagination extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<number>(1) })
 	current = 1;
 
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	@property({ reflect: true, converter: reflectNonDefault<number>(1) })
 	total = 1;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	@property({ type: Object })
 	translations: Partial<NLDDPaginationTranslations> = {};

@@ -26,8 +26,6 @@
  * @attr {string} token-control - Trailing control per token: 'dismiss' (default, a ✕ that removes it) or 'menu' (a ⌄ opening a per-token action menu supplied by the template prototypes)
  * @attr {boolean} valid - Marks the field valid (shows the valid icon)
  * @attr {boolean} invalid - Marks the field invalid (shows the invalid icon)
- * @attr {boolean} readonly - Readonly: static tokens, no input/picker, read-only surface
- * @attr {boolean} disabled - Disabled state
  * @attr {string} name - Name for form submission
  * @attr {string} values - Initial token values as a comma-separated string (e.g. "nl, be, de"). Not reflected; the live value is the `.values` array property. Values can't contain commas.
  * @attr {string} type - Input type forwarded to the inner input (e.g. 'email')
@@ -35,6 +33,8 @@
  * @attr {boolean} required - Marks the field required (invalid when it has no tokens)
  * @attr {string} autocomplete - Autocomplete hint forwarded to the inner input
  * @attr {boolean} no-spellcheck - Disables browser spellchecking on the inner input
+ * @attr {boolean} readonly - Readonly: static tokens, no input/picker, read-only surface
+ * @attr {boolean} disabled - Disabled state
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  *
  * @slot - An nldd-menu with nldd-menu-item options; each item's `value`/`text` supplies a token's value and its display label.
@@ -104,14 +104,6 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
-	/** Readonly: shows the tokens as static (no dismiss control, no input, no
-	 *  picker) with the read-only surface treatment. */
-	@property({ type: Boolean, reflect: true })
-	readonly = false;
-
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	@property({ type: String })
 	name = '';
 
@@ -161,6 +153,14 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 
 	@property({ type: Boolean, reflect: true, attribute: 'no-spellcheck' })
 	noSpellcheck = false;
+
+	/** Readonly: shows the tokens as static (no dismiss control, no input, no
+	 *  picker) with the read-only surface treatment. */
+	@property({ type: Boolean, reflect: true })
+	readonly = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	@property({ type: Object })
 	translations: Partial<NLDDTokenFieldTranslations> = {};

@@ -53,11 +53,11 @@ export type ListItemSegmentWidth = 'fit-content' | 'full';
  * @attr {boolean} checked - Checked state of a `checkbox` segment; it toggles on activation
  * @attr {boolean} expanded - Disclosure state, reflected as `aria-expanded` on the control, and painted: the segment stays lit a step above hover for as long as what it opened is on screen, so a menu reads as hanging off this row rather than floating over the list. Set it on the segment that opens something (a tree row's chevron, a menu). Leave it off entirely when the segment discloses nothing: an absent attribute emits no aria-expanded.
  * @attr {boolean} current - Marks the segment as the current one, with `aria-current` set to `current-type`. The row it sits in paints itself as the current row from it, so on a segmented row this is the only place it has to be set.
- * @attr {boolean} disabled - Switches the segment off: a `button` or `checkbox` segment stops responding and dims, a `href` segment gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). The arrow keys skip a row whose only segment is off.
  * @attr {string} href - Renders the segment as an `<a>` with this URL. Wins over `checkbox` and `button`.
  * @attr {string} target - Link target forwarded to the `<a>`; only applies with `href`. With '_blank' a visually hidden "opent in nieuw tabblad" announcement is added. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. With `accessible-label` the hint goes into the label.
  * @attr {string} rel - Link rel forwarded to the `<a>`, only with `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set
  * @attr {string} download - Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab.
+ * @attr {boolean} disabled - Switches the segment off: a `button` or `checkbox` segment stops responding and dims, a `href` segment gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). The arrow keys skip a row whose only segment is off.
  *
  * Divider markers, set on a CELL inside the segment rather than on the segment itself:
  * @childattr {boolean} divider-start - The row's divider starts at this cell instead of at its first text or title cell.
@@ -144,9 +144,6 @@ export class NLDDListItemSegment extends withTranslations(LitElement, nlddListIt
 	@property({ type: Boolean, reflect: true })
 	current = false;
 
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	@property({ reflect: true })
 	href?: string;
 
@@ -160,6 +157,9 @@ export class NLDDListItemSegment extends withTranslations(LitElement, nlddListIt
 	 *  for the name from the URL, a name to save it under. */
 	@property({ type: String })
 	download: string | undefined = undefined;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	/** Set by the parent nldd-list-item, mirroring its list's type. */
 	@state()

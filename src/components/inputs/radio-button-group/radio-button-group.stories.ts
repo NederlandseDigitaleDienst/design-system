@@ -48,11 +48,6 @@ export default {
 			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
 			table: { defaultValue: { summary: false } },
 		},
-		disabled: {
-			control: 'boolean',
-			description: 'Schakelt alle velden uit',
-			table: { defaultValue: { summary: false } },
-		},
 		name: {
 			control: 'text',
 			description: 'Naam doorgegeven aan alle velden',
@@ -62,13 +57,18 @@ export default {
 			description: 'Markeert de groep als verplicht',
 			table: { defaultValue: { summary: false } },
 		},
+		disabled: {
+			control: 'boolean',
+			description: 'Schakelt alle velden uit',
+			table: { defaultValue: { summary: false } },
+		},
 	},
 	args: {
 		accessibleLabel: 'Kies een optie',
 		invalid: false,
-		disabled: false,
 		name: 'demo',
 		required: false,
+		disabled: false,
 	},
 };
 
@@ -88,13 +88,13 @@ const fields = html`
 	></nldd-radio-button-field>
 `;
 
-const Template = ({ accessibleLabel, invalid, disabled, name, required }: Record<string, unknown>) => html`
+const Template = ({ accessibleLabel, invalid, name, required, disabled }: Record<string, unknown>) => html`
 	<nldd-radio-button-group
 		accessible-label=${accessibleLabel}
 		?invalid=${invalid}
-		?disabled=${disabled}
 		name=${name}
 		?required=${required}
+		?disabled=${disabled}
 	>
 		${fields}
 	</nldd-radio-button-group>

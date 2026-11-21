@@ -32,11 +32,11 @@
  * @attr {boolean} no-tab - Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable.
  * @attr {boolean} selected - Selected state
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
- * @attr {boolean} disabled - Disabled state
  * @attr {string} name - Name for form submission (checkbox/radio)
  * @attr {string} value - Value for form submission (checkbox/radio)
  * @attr {'button' | 'checkbox' | 'radio'} type - What the button is: a button with aria-pressed, a native checkbox, or a radio (default: 'button')
  * @attr {boolean} required - Required state. Set by nldd-toggle-button-group.
+ * @attr {boolean} disabled - Disabled state
  *
  *
  * @slot icon - Slot for a custom icon (e.g. custom SVG). Wins over `icon` and `selected-icon`.
@@ -144,9 +144,6 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
 
@@ -158,6 +155,9 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 
 	@property({ type: Boolean, reflect: true })
 	required = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	/** Wiring for a popover slotted into `interest`: opens it on hover, focus
 	 * and a long press, in place of the tooltip. Not private: the template

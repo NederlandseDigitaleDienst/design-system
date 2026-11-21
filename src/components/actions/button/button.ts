@@ -27,7 +27,6 @@
  * @attr {boolean} single-line - When true, truncates overflowing text with an ellipsis instead of letting it wrap. Requires the button (or an ancestor) to constrain the width.
  * @attr {boolean} expanded - Whether the popover/menu controlled by this button is currently open. Forwarded as aria-expanded on the inner button; toggles the is-expanded visual state.
  * @attr {boolean} loading - Loading state (default: false). Shows an activity indicator over the visually hidden content, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled). The content stays laid out, so the button keeps its width. Meant for an action that has to wait for the server, such as sending an application. For most actions, show the result right away and confirm in the background, as the design guidelines describe.
- * @attr {boolean} disabled - Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why.
  * @attr {string} form - Id of the form this button submits or resets, for a button that sits outside it. Takes an `nldd-form` as well as a plain `<form>`. Without it the button acts on the form it stands in. The id is looked up in the button's own root, as the platform does it: a button inside a shadow tree does not reach a form in the document around it. An id that finds nothing, or an `nldd-form` that has not rendered its form yet, says so in development rather than letting the click do nothing.
  * @attr {'button'|'submit'|'reset'} type - Button type for form submission: 'button' | 'submit' | 'reset' (ignored when href is set)
  * @attr {string} href - When set, renders an <a> element instead of <button>
@@ -39,6 +38,7 @@
  * @slot start-icon - Slot for a custom start icon (e.g. custom SVG). Wins over `start-icon`.
  * @slot end-icon - Slot for a custom end icon (e.g. custom SVG). Wins over `end-icon`.
  * @slot popup - A single `nldd-menu` or `nldd-popover` this button invokes. Slotting it auto-anchors the overlay to the button and toggles it on click (no id/anchor wiring). The overlay syncs `expanded` and `aria-haspopup` back onto the button. Add `expandable` for the disclosure chevron. Mirrors nldd-split-button; the manual `anchor`/`popovertarget` wiring keeps working when you don't slot an overlay.
+ * @attr {boolean} disabled - Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why.
  * @attr {object} translations - Override translation keys (e.g. the "opens in new tab" announcement); unset keys fall back to Dutch.
  * @slot interest - A single `nldd-popover` that describes this button and opens on interest instead of on a click: when the pointer rests on the button, when it gets keyboard focus, and on a long press on touch. The button keeps its own click, such as a share button that shows who already has access. A reaction you toggle is an nldd-toggle-button, which has this slot too. Focus stays on the button, the popover's content is read as the button's description, and Escape closes it. The pointer can move onto the popover without closing it. Information only: what hover opens cannot be reached with the keyboard, so put no link or button in it, and use the `popup` slot for content you act on. The popover needs no `accessible-label` here: its content is what is read.
  *
@@ -215,9 +215,6 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	@property({ type: Boolean, reflect: true })
 	loading = false;
 
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	@property({ reflect: true, converter: reflectNonDefault<ButtonType>('button') })
 	type: ButtonType = 'button';
 
@@ -240,6 +237,9 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 
 	@property({ type: String })
 	download: string | undefined = undefined;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	/** Shared wiring for an overlay slotted into `popup`: anchors it to this
 	 * button and turns clicks into open/close. Not private: the template module

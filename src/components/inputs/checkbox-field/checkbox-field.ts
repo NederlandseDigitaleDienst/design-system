@@ -27,10 +27,10 @@
  * @attr {boolean} checked - Checked state
  * @attr {boolean} indeterminate - Indeterminate state
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
- * @attr {boolean} disabled - Disabled state
  * @attr {string} name - Name for form submission
  * @attr {string} value - Value for form submission
  * @attr {boolean} required - Required state. In an nldd-checkbox-group, set by the group, it asks for at least one checked box in the group, not for this one.
+ * @attr {boolean} disabled - Disabled state
  *
  * @slot children - nldd-checkbox-field elements with the options under this one.
  *
@@ -85,9 +85,6 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	/** Reflected: form association reads the host's name attribute, so setting
 	 *  the property alone must still register the field with the form. */
 	@property({ reflect: true, converter: reflectNonDefault('') })
@@ -98,6 +95,9 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 
 	@property({ type: Boolean, reflect: true })
 	required = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	/** In an nldd-checkbox-group, where `required` is about the group and no
 	 *  single box is announced as required. */

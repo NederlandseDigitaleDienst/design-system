@@ -34,10 +34,10 @@
  * @attr {boolean} checked - Checked state
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
  *   Note: aria-labelledby is not supported as IDREF resolution cannot cross shadow DOM boundaries.
- * @attr {boolean} disabled - Disabled state
  * @attr {string} name - Radio group name for form submission; ties the buttons of one group together
  * @attr {string} value - Value submitted with the form when this radio button is checked
  * @attr {boolean} required - Required state. What it asks is whether anything in the group is checked, as a native radio does.
+ * @attr {boolean} disabled - Disabled state
  *
  * @fires change - When checked state changes; detail: { checked: boolean, value: string, name: string }
  */
@@ -99,9 +99,6 @@ export class NLDDRadioButton extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
 
@@ -110,6 +107,9 @@ export class NLDDRadioButton extends DescribedBy(FormAssociated(LitElement)) {
 
 	@property({ type: Boolean, reflect: true })
 	required = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	/** Set by nldd-radio-button-field, which is the radio and holds the focus,
 	 *  while the shape it rings is drawn here. No attribute: the styles read it

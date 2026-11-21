@@ -60,16 +60,6 @@ export default {
 			description: 'Invalid state',
 			table: { defaultValue: { summary: false } },
 		},
-		readonly: {
-			control: 'boolean',
-			description: 'Readonly state',
-			table: { defaultValue: { summary: false } },
-		},
-		disabled: {
-			control: 'boolean',
-			description: 'Disabled state',
-			table: { defaultValue: { summary: false } },
-		},
 		name: {
 			control: 'text',
 			description: 'Input name for form submission',
@@ -128,6 +118,16 @@ export default {
 			description: 'Disables browser spellchecking on the inner input',
 			table: { defaultValue: { summary: false } },
 		},
+		readonly: {
+			control: 'boolean',
+			description: 'Readonly state',
+			table: { defaultValue: { summary: false } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Disabled state',
+			table: { defaultValue: { summary: false } },
+		},
 	},
 	args: {
 		size: 'md',
@@ -137,8 +137,6 @@ export default {
 		accessibleDescribedBy: '',
 		valid: false,
 		invalid: false,
-		readonly: false,
-		disabled: false,
 		name: '',
 		value: '',
 		type: 'text',
@@ -150,10 +148,12 @@ export default {
 		required: false,
 		autocomplete: '',
 		noSpellcheck: false,
+		readonly: false,
+		disabled: false,
 	},
 };
 
-const Template = ({ size, width, placeholder, accessibleDescription, valid, invalid, readonly, disabled, name, value, type, keyboard, enterKey, minlength, maxlength, pattern, required, autocomplete, noSpellcheck }: Record<string, any>) => html`
+const Template = ({ size, width, placeholder, accessibleDescription, valid, invalid, name, value, type, keyboard, enterKey, minlength, maxlength, pattern, required, autocomplete, noSpellcheck, readonly, disabled }: Record<string, any>) => html`
 	<nldd-text-field
 		size=${size}
 		width=${width}
@@ -161,8 +161,6 @@ const Template = ({ size, width, placeholder, accessibleDescription, valid, inva
 		accessible-description=${accessibleDescription || nothing}
 		?valid=${valid}
 		?invalid=${invalid}
-		?readonly=${readonly}
-		?disabled=${disabled}
 		name=${name}
 		.value=${value}
 		type=${type}
@@ -174,6 +172,8 @@ const Template = ({ size, width, placeholder, accessibleDescription, valid, inva
 		?required=${required}
 		autocomplete=${autocomplete}
 		?no-spellcheck=${noSpellcheck}
+		?readonly=${readonly}
+		?disabled=${disabled}
 	></nldd-text-field>
 `;
 

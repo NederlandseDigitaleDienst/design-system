@@ -119,13 +119,6 @@ export default {
 			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
 			table: { defaultValue: { summary: false } },
 		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde toestand',
-			table: {
-				defaultValue: { summary: false },
-			},
-		},
 		type: {
 			control: 'select',
 			options: ['button', 'checkbox', 'radio'],
@@ -138,6 +131,13 @@ export default {
 			control: 'boolean',
 			description: 'Verplichte staat.',
 			table: { defaultValue: { summary: false } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde toestand',
+			table: {
+				defaultValue: { summary: false },
+			},
 		},
 	},
 	args: {
@@ -156,9 +156,9 @@ export default {
 		shortcutLinux: '',
 		selected: false,
 		invalid: false,
-		disabled: false,
 		type: 'button',
 		required: false,
+		disabled: false,
 	},
 };
 
@@ -178,9 +178,9 @@ const Template = (args: Record<string, any>) => html`
 		shortcut-linux=${args.shortcutLinux || nothing}
 		?selected=${args.selected}
 		?invalid=${args.invalid}
-		?disabled=${args.disabled}
 		type=${args.type}
 		?required=${args.required}
+		?disabled=${args.disabled}
 	></nldd-toggle-button>
 `;
 

@@ -54,10 +54,10 @@ export default {
 		lineNumbers: false,
 		wrap: false,
 		invalid: false,
-		readonly: false,
-		disabled: false,
 		value: '',
 		required: false,
+		readonly: false,
+		disabled: false,
 	},
 	argTypes: {
 		resize: {
@@ -109,6 +109,15 @@ export default {
 			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
 			table: { defaultValue: { summary: false } },
 		},
+		value: {
+			control: 'text',
+			description: 'De inhoud van het veld',
+		},
+		required: {
+			control: 'boolean',
+			description: 'Verplichte staat.',
+			table: { defaultValue: { summary: false } },
+		},
 		readonly: {
 			control: 'boolean',
 			description: 'Alleen-lezen staat (focusbaar en selecteerbaar, niet bewerkbaar)',
@@ -117,15 +126,6 @@ export default {
 		disabled: {
 			control: 'boolean',
 			description: 'Uitgeschakelde staat',
-			table: { defaultValue: { summary: false } },
-		},
-		value: {
-			control: 'text',
-			description: 'De inhoud van het veld',
-		},
-		required: {
-			control: 'boolean',
-			description: 'Verplichte staat.',
 			table: { defaultValue: { summary: false } },
 		},
 	},
@@ -141,10 +141,10 @@ const Template = ({
 	lineNumbers,
 	wrap,
 	invalid,
-	readonly,
-	disabled,
 	value,
 	required,
+	readonly,
+	disabled,
 }: Record<string, unknown>) => html`
 	<nldd-code-editor
 		resize=${resize as string}
@@ -156,10 +156,10 @@ const Template = ({
 		?line-numbers=${lineNumbers}
 		?wrap=${wrap}
 		?invalid=${invalid}
-		?readonly=${readonly}
-		?disabled=${disabled}
 		.value=${value || ''}
 		?required=${required}
+		?readonly=${readonly}
+		?disabled=${disabled}
 	></nldd-code-editor>
 `;
 

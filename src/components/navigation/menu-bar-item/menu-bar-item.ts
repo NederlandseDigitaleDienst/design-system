@@ -19,8 +19,8 @@
  * @attr {boolean} expanded - Whether the matching popover is open; sets aria-expanded on the button when expandable or haspopup is set. Tracked automatically for a slotted `<nldd-menu>`.
  * @attr {boolean} open - Whether the linked popover or menu is open
  * @attr {boolean} current - Mark as the active or current item
- * @attr {boolean} disabled - Turn interaction off. Avoid it where you can; the design guidelines say why.
  * @attr {string} href - Optional link URL. Without href it renders as a button.
+ * @attr {boolean} disabled - Turn interaction off. Avoid it where you can; the design guidelines say why.
  *
  * @fires select - On a click on a non-expandable button item (bubbles, composed)
  *
@@ -92,11 +92,11 @@ export class NLDDMenuBarItem extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	current = false;
 
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	@property({ type: String })
 	href = '';
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	/**
 	 * Direct element reference to the popover this item invokes. The IDL-only

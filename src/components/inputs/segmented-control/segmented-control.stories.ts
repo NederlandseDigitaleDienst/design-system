@@ -57,11 +57,6 @@ export default {
 			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
 			table: { defaultValue: { summary: false } },
 		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde toestand',
-			table: { defaultValue: { summary: false } },
-		},
 		value: {
 			control: 'text',
 			description: 'Geselecteerde waarde (radio) of spatie-gescheiden waarden (checkbox)',
@@ -77,6 +72,11 @@ export default {
 			description: 'Verplichte staat.',
 			table: { defaultValue: { summary: false } },
 		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde toestand',
+			table: { defaultValue: { summary: false } },
+		},
 
 	},
 	args: {
@@ -87,14 +87,14 @@ export default {
 		accessibleLabel: '',
 		accessibleLabeledBy: '',
 		invalid: false,
-		disabled: false,
 		value: 'bold',
 		type: 'radio',
 		required: false,
+		disabled: false,
 	},
 };
 
-const Template = ({ variant, appearance, size, width, accessibleLabel, invalid, disabled, value, type, required }: Record<string, any>) => html`
+const Template = ({ variant, appearance, size, width, accessibleLabel, invalid, value, type, required, disabled }: Record<string, any>) => html`
 	<nldd-segmented-control
 		variant=${variant}
 		appearance=${appearance}
@@ -102,10 +102,10 @@ const Template = ({ variant, appearance, size, width, accessibleLabel, invalid, 
 		width=${width || nothing}
 		accessible-label=${accessibleLabel || nothing}
 		?invalid=${invalid}
-		?disabled=${disabled}
 		value=${value}
 		type=${type}
 		?required=${required}
+		?disabled=${disabled}
 	>
 		<nldd-segmented-control-item
 			value="bold"

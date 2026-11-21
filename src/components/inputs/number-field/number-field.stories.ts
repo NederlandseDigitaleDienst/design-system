@@ -54,11 +54,6 @@ export default {
 			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
 			table: { defaultValue: { summary: false } },
 		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde toestand',
-			table: { defaultValue: { summary: false } },
-		},
 		name: {
 			control: 'text',
 			description: 'Naam voor formulierverwerking',
@@ -88,6 +83,11 @@ export default {
 			description: 'Er moet een waarde ingevuld zijn; leeg is dan ongeldig',
 			table: { defaultValue: { summary: false } },
 		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde toestand',
+			table: { defaultValue: { summary: false } },
+		},
 	},
 	args: {
 		size: 'md',
@@ -97,17 +97,17 @@ export default {
 		accessibleDescribedBy: '',
 		hideSpinButtons: false,
 		invalid: false,
-		disabled: false,
 		name: '',
 		value: 1,
 		min: 0,
 		max: 10,
 		step: 1,
 		required: false,
+		disabled: false,
 	},
 };
 
-const Template = ({ size, width, accessibleLabel, accessibleDescription, hideSpinButtons, invalid, disabled, name, value, min, max, step, required }: Record<string, any>) => html`
+const Template = ({ size, width, accessibleLabel, accessibleDescription, hideSpinButtons, invalid, name, value, min, max, step, required, disabled }: Record<string, any>) => html`
 	<nldd-number-field
 		size=${size}
 		width=${width || nothing}
@@ -115,13 +115,13 @@ const Template = ({ size, width, accessibleLabel, accessibleDescription, hideSpi
 		accessible-description=${accessibleDescription || nothing}
 		?hide-spin-buttons=${hideSpinButtons}
 		?invalid=${invalid}
-		?disabled=${disabled}
 		name=${name}
 		value=${value ?? nothing}
 		min=${min}
 		max=${max}
 		step=${step}
 		?required=${required}
+		?disabled=${disabled}
 	></nldd-number-field>
 `;
 

@@ -10,10 +10,10 @@
  * @attr {string} label - Label text for the switch
  * @attr {boolean} checked - Checked state
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
- * @attr {boolean} disabled - Disabled state
  * @attr {string} name - Name for form submission
  * @attr {string} value - Value for form submission
  * @attr {boolean} required - Required state
+ * @attr {boolean} disabled - Disabled state
  *
  * @fires change - When checked state changes; detail: { checked: boolean, value: string }
  */
@@ -60,9 +60,6 @@ export class NLDDSwitchField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	/** Reflected: form association reads the host's name attribute, so setting
 	 *  the property alone must still register the field with the form. */
 	@property({ reflect: true, converter: reflectNonDefault('') })
@@ -73,6 +70,9 @@ export class NLDDSwitchField extends DescribedBy(FormAssociated(LitElement)) {
 
 	@property({ type: Boolean, reflect: true })
 	required = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	override formValue(): FormValue {
 		return this.checked ? this.value : null;

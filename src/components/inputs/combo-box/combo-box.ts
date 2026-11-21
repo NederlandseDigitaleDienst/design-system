@@ -27,8 +27,6 @@
  * @attr {number} max-items - Maximum visible items before scrolling (default: 8)
  * @attr {boolean} valid - Marks the field as valid
  * @attr {boolean} invalid - Marks the field as invalid
- * @attr {boolean} readonly - Read-only state: the value stays readable, selectable and in the tab order, but the menu does not open and there is nothing to clear. The input drops its combobox role and the aria that goes with it, so assistive technology is not told about a list it cannot open. Use this where the value belongs to the record rather than to the form, e.g. the product an asset is an instance of.
- * @attr {boolean} disabled - Disabled state
  * @attr {string} name - Input name for form submission
  * @attr {string} value - The selected form value
  * @attr {number} minlength - Fewest characters the value may have.
@@ -38,6 +36,8 @@
  * @attr {boolean} required - Required state
  * @attr {string} autocomplete - Browser autofill hint. Default 'off' to prevent the native autofill panel from competing with the menu dropdown. Set to a valid token (e.g. 'country', 'organization') when browser autofill is desired.
  * @attr {boolean} no-spellcheck - Disables browser spellchecking on the inner input
+ * @attr {boolean} readonly - Read-only state: the value stays readable, selectable and in the tab order, but the menu does not open and there is nothing to clear. The input drops its combobox role and the aria that goes with it, so assistive technology is not told about a list it cannot open. Use this where the value belongs to the record rather than to the form, e.g. the product an asset is an instance of.
+ * @attr {boolean} disabled - Disabled state
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  *
  * @note Free-text values: only when `allow-custom` is set. Then a typed value that
@@ -153,12 +153,6 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
-	@property({ type: Boolean, reflect: true })
-	readonly = false;
-
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
 
@@ -194,6 +188,12 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 
 	@property({ type: Boolean, reflect: true, attribute: 'no-spellcheck' })
 	noSpellcheck = false;
+
+	@property({ type: Boolean, reflect: true })
+	readonly = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	@property({ type: Object })
 	translations: Partial<NLDDComboBoxTranslations> = {};

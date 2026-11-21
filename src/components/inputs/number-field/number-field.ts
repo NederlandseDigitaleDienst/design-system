@@ -11,13 +11,13 @@
  * @attr {string} accessible-label - Accessible label (aria-label) forwarded to the native input
  * @attr {boolean} hide-spin-buttons - When set, hides the decrement and increment buttons
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
- * @attr {boolean} disabled - Disabled state
  * @attr {string} name - Name for form submission
  * @attr {number} value - Current value. Leave it out for an empty field, which submits an empty string and takes `min` and `max` as no reason to be invalid: only `required` asks for a value, as with a native number input. As a property, `null` is empty. In an empty field + and - are both enabled, and start at 0, or at the nearer end of the range when 0 lies outside it (`min="1"` starts at 1).
  * @attr {number} min - Minimum value (default: -Infinity)
  * @attr {number} max - Maximum value (default: Infinity)
  * @attr {number} step - Step size (default: 1)
  * @attr {boolean} required - A value has to be filled in. An empty field is then invalid.
+ * @attr {boolean} disabled - Disabled state
  * @attr {object} translations - Translations; unspecified keys fall back to Dutch
  *
  * @fires input - When the value changes (typing, +/- button, or on-commit correction); not for typing that reads as the same number, such as `1.0` after `1`. detail: { value: number | null }, null when the field is empty
@@ -99,9 +99,6 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
 
@@ -121,6 +118,9 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 	/** A value has to be filled in. An empty field is then invalid. */
 	@property({ type: Boolean, reflect: true })
 	required = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	/** Override one or more translation keys. Unspecified keys fall back to Dutch. */
 	@property({ type: Object })

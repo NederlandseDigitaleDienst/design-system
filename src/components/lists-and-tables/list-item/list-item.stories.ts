@@ -28,8 +28,8 @@ export default {
 		checked: false,
 		expanded: false,
 		current: false,
-		disabled: false,
 		href: '',
+		disabled: false,
 	},
 	argTypes: {
 		size: {
@@ -84,14 +84,14 @@ export default {
 			description: 'De rij waar je bent: de pagina waar een menu-item heen wijst, het record dat de lijst open heeft staan. In rust net zo grijs als `selected`, en zodra de focus in de rij staat kleurt hij accent. Eén rij per lijst draagt het, waar `selected` er meerdere mag hebben.',
 			table: { defaultValue: { summary: false } },
 		},
+		href: {
+			control: 'text',
+			description: 'Maakt het hele item een link. Wint van `checkbox`, `radio` en `button`.',
+		},
 		disabled: {
 			control: 'boolean',
 			description: 'Zet de eigen control van de rij uit: een `button`- of `checkbox`-rij reageert niet meer en dimt, een `href`-rij krijgt `aria-disabled` en een geblokkeerde klik. Een rij zonder eigen control heeft niets om uit te zetten, en segmenten hebben hun eigen `disabled`. De pijltjes slaan een uitgezette rij over.',
 			table: { defaultValue: { summary: false } },
-		},
-		href: {
-			control: 'text',
-			description: 'Maakt het hele item een link. Wint van `checkbox`, `radio` en `button`.',
 		},
 	},
 };
@@ -110,8 +110,8 @@ export const Standaard = {
 				?checked=${args.checked}
 				?expanded=${args.expanded}
 				?current=${args.current}
-				?disabled=${args.disabled}
 				href=${args.href || nothing}
+				?disabled=${args.disabled}
 			>
 				<nldd-text-cell
 					text="Aanvraag A-1042"

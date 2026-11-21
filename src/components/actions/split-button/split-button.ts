@@ -44,11 +44,11 @@
  * @attr {string} shortcut-windows - Override of `shortcut` on Windows (falls back to `shortcut`).
  * @attr {string} shortcut-linux - Override of `shortcut` on Linux (falls back to `shortcut`).
  * @attr {boolean} loading - Loading state of the main action, as on nldd-button. The chevron stays available.
- * @attr {boolean} disabled - Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why.
  * @attr {string} form - Id of the form the main action submits or resets, for a split button outside it. Takes an `nldd-form` as well as a plain `<form>`, as on nldd-button.
  * @attr {'button'|'submit'|'reset'} type - What the main action does in a form: 'button' (default) | 'submit' | 'reset'. Ignored when `href` is set.
  * @attr {string} href - Turns the main action into a link, as on nldd-button.
  * @attr {string} download - Saves the file `href` points at instead of opening it, as on nldd-button. Only used with `href`.
+ * @attr {boolean} disabled - Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why.
  * @attr {object} translations - Translations; unset keys fall back to Dutch
  *
  * @slot popup - The `nldd-menu` or `nldd-popover` the chevron opens.
@@ -139,9 +139,6 @@ export class NLDDSplitButton extends LitElement {
 	@property({ attribute: false })
 	popoverTargetElement: Element | null = null;
 
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	/** What the main action does in a form. Ignored when `href` is set. */
 	@property({ reflect: true, converter: reflectNonDefault<'button' | 'submit' | 'reset'>('button') })
 	type: 'button' | 'submit' | 'reset' = 'button';
@@ -153,6 +150,9 @@ export class NLDDSplitButton extends LitElement {
 	/** Saves the file `href` points at instead of opening it. */
 	@property()
 	download?: string;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	@property({ type: Object })
 	translations: Partial<NLDDSplitButtonTranslations> = {};

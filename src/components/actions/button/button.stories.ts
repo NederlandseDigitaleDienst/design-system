@@ -194,13 +194,6 @@ export default {
 				defaultValue: { summary: false },
 			},
 		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde toestand',
-			table: {
-				defaultValue: { summary: false },
-			},
-		},
 		type: {
 			control: 'select',
 			options: ['button', 'submit', 'reset'],
@@ -225,6 +218,13 @@ export default {
 			options: ['(geen)', 'download', 'download="aanvraag-A-1042.pdf"'],
 			mapping: { '(geen)': null, download: '', 'download="aanvraag-A-1042.pdf"': 'aanvraag-A-1042.pdf' },
 			description: 'Slaat het bestand op in plaats van het te openen (alleen met href); een waarde wordt de bestandsnaam',
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde toestand',
+			table: {
+				defaultValue: { summary: false },
+			},
 		},
 	},
 	args: {
@@ -252,15 +252,15 @@ export default {
 		singleLine: false,
 		expanded: false,
 		loading: false,
-		disabled: false,
 		type: 'button',
 		href: '',
 		target: '',
 		download: '(geen)',
+		disabled: false,
 	},
 };
 
-const Template = ({ appearance, size, width, maxWidth, horizontalAlignment, text, supportingText, startIcon, endIcon, expandable, popupType, accessibleLabel, accessibleDescription, loadingText, shortcut, shortcutMac, shortcutWindows, shortcutLinux, singleLine, expanded, loading, disabled, type, href, target, download }: Record<string, any>) => html`
+const Template = ({ appearance, size, width, maxWidth, horizontalAlignment, text, supportingText, startIcon, endIcon, expandable, popupType, accessibleLabel, accessibleDescription, loadingText, shortcut, shortcutMac, shortcutWindows, shortcutLinux, singleLine, expanded, loading, type, href, target, download, disabled }: Record<string, any>) => html`
 	<nldd-button
 		appearance=${appearance}
 		size=${size}
@@ -283,11 +283,11 @@ const Template = ({ appearance, size, width, maxWidth, horizontalAlignment, text
 		?single-line=${singleLine}
 		?expanded=${expanded}
 		?loading=${loading}
-		?disabled=${disabled}
 		type=${type}
 		href=${href || nothing}
 		target=${target || nothing}
 		download=${download ?? nothing}
+		?disabled=${disabled}
 	></nldd-button>
 `;
 

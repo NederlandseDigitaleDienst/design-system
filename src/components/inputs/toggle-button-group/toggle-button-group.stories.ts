@@ -60,13 +60,6 @@ export default {
 			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
 			table: { defaultValue: { summary: false } },
 		},
-		disabled: {
-			control: 'boolean',
-			description: 'Schakelt alle knoppen uit',
-			table: {
-				defaultValue: { summary: false },
-			},
-		},
 		name: {
 			control: 'text',
 			description: 'Naam voor formulierverwerking, doorgestuurd naar alle knoppen',
@@ -84,6 +77,13 @@ export default {
 			description: 'Verplichte staat.',
 			table: { defaultValue: { summary: false } },
 		},
+		disabled: {
+			control: 'boolean',
+			description: 'Schakelt alle knoppen uit',
+			table: {
+				defaultValue: { summary: false },
+			},
+		},
 	},
 	args: {
 		appearance: 'neutral-tinted',
@@ -91,10 +91,10 @@ export default {
 		accessibleLabel: '',
 		accessibleLabeledBy: '',
 		invalid: false,
-		disabled: false,
 		name: 'groep',
 		type: 'checkbox',
 		required: false,
+		disabled: false,
 	},
 };
 
@@ -104,10 +104,10 @@ const Template = (args: Record<string, any>) => html`
 		size=${args.size}
 		accessible-label=${args.accessibleLabel || nothing}
 		?invalid=${args.invalid}
-		?disabled=${args.disabled}
 		name=${args.name}
 		type=${args.type}
 		?required=${args.required}
+		?disabled=${args.disabled}
 	>
 		<nldd-toggle-button
 			value="mijn-zaken"

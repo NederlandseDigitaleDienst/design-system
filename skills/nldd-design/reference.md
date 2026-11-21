@@ -79,13 +79,13 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 | `single-line` | `boolean` | When true, truncates overflowing text with an ellipsis instead of letting it wrap. Requires the button (or an ancestor) to constrain the width. |
 | `expanded` | `boolean` | Whether the popover/menu controlled by this button is currently open. Forwarded as aria-expanded on the inner button; toggles the is-expanded visual state. |
 | `loading` | `boolean` | Loading state (default: false). Shows an activity indicator over the visually hidden content, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled). The content stays laid out, so the button keeps its width. Meant for an action that has to wait for the server, such as sending an application. For most actions, show the result right away and confirm in the background, as the design guidelines describe. |
-| `disabled` | `boolean` | Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why. |
 | `form` | `string` | Id of the form this button submits or resets, for a button that sits outside it. Takes an `nldd-form` as well as a plain `<form>`. Without it the button acts on the form it stands in. The id is looked up in the button's own root, as the platform does it: a button inside a shadow tree does not reach a form in the document around it. An id that finds nothing, or an `nldd-form` that has not rendered its form yet, says so in development rather than letting the click do nothing. |
 | `type` | `'button'\|'submit'\|'reset'` | Button type for form submission: 'button' \| 'submit' \| 'reset' (ignored when href is set) |
 | `href` | `string` | When set, renders an <a> element instead of <button> |
 | `target` | `string` | Link target (e.g. '_blank'); only used when href is set. With '_blank' the button adds a visually hidden "opens in new tab" announcement for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. |
 | `rel` | `string` | Link rel attribute, used with href; with target '_blank', 'noopener noreferrer' is added to whatever you set |
 | `download` | `string` | Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab. |
+| `disabled` | `boolean` | Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why. |
 | `translations` | `object` | Override translation keys (e.g. the "opens in new tab" announcement); unset keys fall back to Dutch. |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
@@ -218,12 +218,12 @@ A container for grouping related buttons together, in a row or stacked. `auto`, 
 | `tooltip-timing` | `string` | Forwarded to the inner nldd-tooltip's `timing`: 'delay' (the default, a 700 ms show-delay), 'instant', or 'never' (suppress the visual tooltip; screen readers still get the aria-label). Use 'never' when the surrounding context already explains the button (e.g. spin buttons in nldd-number-field, the chevron in nldd-split-button). |
 | `expanded` | `boolean` | Whether the popover/menu controlled by this button is currently open. Forwarded as aria-expanded on the inner button; toggles the is-expanded visual state. |
 | `loading` | `boolean` | Loading state (default: false). Shows an activity indicator over the visually hidden icon, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled). Meant for an action that has to wait for the server, such as sending an application. For most actions, show the result right away and confirm in the background, as the design guidelines describe. |
-| `disabled` | `boolean` | Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why. |
 | `type` | `'button'\|'submit'\|'reset'` | Button type for form submission: 'button' \| 'submit' \| 'reset' (ignored when href is set) |
 | `href` | `string` | When set, renders an <a> element instead of <button> |
 | `target` | `string` | Link target (e.g. '_blank'); only used when href is set. With '_blank' the "opens in new tab" announcement is folded into the aria-label for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. |
 | `rel` | `string` | Link rel attribute, used with href; with target '_blank', 'noopener noreferrer' is added to whatever you set |
 | `download` | `string` | Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab. |
+| `disabled` | `boolean` | Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why. |
 | `translations` | `object` | Override translation keys (e.g. the "opens in new tab" announcement); unset keys fall back to Dutch. |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
@@ -344,13 +344,13 @@ A single item within an nldd-menu.
 | `query-mark-mode` | `'match'\|'predictive'` | 'match' \| 'predictive' (default: 'predictive'). See text-cell for details. |
 | `aliases` | `string` | Space-separated alternative search terms. |
 | `selected` | `boolean` | Selected state for checkbox and radio types. |
-| `disabled` | `boolean` | Disabled state. |
 | `form` | `string` | Id of the form a `submit` item submits, for an item that does not stand in it, which a menu usually does not. Takes an `nldd-form` as well as a plain `<form>`, looked up in the item's own root. |
 | `value` | `string` | A value of the item's own, read off the item in a `select` handler. The default filter matches on it as well as on `text` and `aliases`. Not a form value: this component is not form-associated. |
 | `type` | `'button'\|'submit'\|'checkbox'\|'radio'` | Item type: 'button' \| 'submit' \| 'checkbox' \| 'radio'. Default: 'button'. A 'submit' item submits its form when chosen, always after `select`, so a logout or delete can be a POST without script: the form it stands in, or the one `form` names. Like a native button, it looks only in its own tree: a menu in a shadow root does not reach a form outside it. To stop it, cancel the form's `submit` event, which runs validation first. One checkbox or radio item gives every item in its menu the check-mark column, so the text of the whole menu starts at one line, as in a native menu. Submenus decide for themselves. |
 | `href` | `string` | Optional link target. A plain button item with an href renders as an `<a>` so it is a real link (middle-click, open in new tab, copy link). Space chooses it like any other item, except in a `navigation` menu, where Space scrolls the page as on any link. Ignored for submenu openers, checkbox/radio items, and while disabled. |
 | `target` | `string` | Where an item with an `href` opens (e.g. '_blank'); adjusts rel automatically. With '_blank' the item adds a visually hidden "opent in nieuw tabblad" for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply. |
 | `rel` | `string` | Link rel of an item with an `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set. |
+| `disabled` | `boolean` | Disabled state. |
 | `translations` | `object` | Override translation keys (the new-tab and other-website announcements); unset keys fall back to Dutch. |
 
 **Slots**
@@ -399,11 +399,11 @@ A split button combines a primary action with a chevron that opens its alternati
 | `shortcut-windows` | `string` | Override of `shortcut` on Windows (falls back to `shortcut`). |
 | `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
 | `loading` | `boolean` | Loading state of the main action, as on nldd-button. The chevron stays available. |
-| `disabled` | `boolean` | Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why. |
 | `form` | `string` | Id of the form the main action submits or resets, for a split button outside it. Takes an `nldd-form` as well as a plain `<form>`, as on nldd-button. |
 | `type` | `'button'\|'submit'\|'reset'` | What the main action does in a form: 'button' (default) \| 'submit' \| 'reset'. Ignored when `href` is set. |
 | `href` | `string` | Turns the main action into a link, as on nldd-button. |
 | `download` | `string` | Saves the file `href` points at instead of opening it, as on nldd-button. Only used with `href`. |
+| `disabled` | `boolean` | Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why. |
 | `translations` | `object` | Translations; unset keys fall back to Dutch |
 
 **Slots**
@@ -1355,10 +1355,10 @@ Nederlandse Digitale Dienst Validation List (Lit + TypeScript) Everything a valu
 | `checked` | `boolean` | Checked state |
 | `indeterminate` | `boolean` | Indeterminate state (takes precedence over checked visually) |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. Note: aria-labelledby is not supported as IDREF resolution cannot cross shadow DOM boundaries. |
-| `disabled` | `boolean` | Disabled state |
 | `name` | `string` | Name for form submission |
 | `value` | `string` | Value for form submission |
 | `required` | `boolean` | Required state |
+| `disabled` | `boolean` | Disabled state |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -1393,10 +1393,10 @@ A checkbox with an inline label for use in forms. Options that belong under this
 | `checked` | `boolean` | Checked state |
 | `indeterminate` | `boolean` | Indeterminate state |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
-| `disabled` | `boolean` | Disabled state |
 | `name` | `string` | Name for form submission |
 | `value` | `string` | Value for form submission |
 | `required` | `boolean` | Required state. In an nldd-checkbox-group, set by the group, it asks for at least one checked box in the group, not for this one. |
+| `disabled` | `boolean` | Disabled state |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -1427,9 +1427,9 @@ Groups nldd-checkbox-field elements as nldd-radio-button-group groups radio butt
 | `accessible-label` | `string` | Accessible name for the group, set as aria-label on the group |
 | `accessible-labeled-by` | `string` | Id of an external label element, set as aria-labelledby on the group |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
-| `disabled` | `boolean` | Disables all fields in the group |
 | `name` | `string` | Forwarded to all nldd-checkbox-field elements in the group; clearing it leaves them the name they had |
 | `required` | `boolean` | At least one box in the group has to be checked. Set on every field in the group, nested ones included, whether it is on or off: in a group, the group decides. |
+| `disabled` | `boolean` | Disables all fields in the group |
 
 **Slots**
 
@@ -1469,12 +1469,12 @@ A monospace editor for code, YAML, JSON and other technical content, built on Co
 | `line-numbers` | `boolean` | Show a line-number gutter |
 | `wrap` | `boolean` | Wrap long lines instead of horizontal scroll |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
-| `readonly` | `boolean` | Readonly state (focusable and selectable, not editable) |
-| `disabled` | `boolean` | Disabled state |
 | `name` | `string` | Field name for form submission |
 | `input-id` | `string` | Sets the id on the editable element. Set automatically by nldd-form-field. |
 | `value` | `string` | Editor content |
 | `required` | `boolean` | Required state |
+| `readonly` | `boolean` | Readonly state (focusable and selectable, not editable) |
+| `disabled` | `boolean` | Disabled state |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -1511,8 +1511,6 @@ A text input with autocomplete dropdown via nldd-menu. Add a slotted nldd-menu w
 | `max-items` | `number` | Maximum visible items before scrolling (default: 8) |
 | `valid` | `boolean` | Marks the field as valid |
 | `invalid` | `boolean` | Marks the field as invalid |
-| `readonly` | `boolean` | Read-only state: the value stays readable, selectable and in the tab order, but the menu does not open and there is nothing to clear. The input drops its combobox role and the aria that goes with it, so assistive technology is not told about a list it cannot open. Use this where the value belongs to the record rather than to the form, e.g. the product an asset is an instance of. |
-| `disabled` | `boolean` | Disabled state |
 | `name` | `string` | Input name for form submission |
 | `value` | `string` | The selected form value |
 | `minlength` | `number` | Fewest characters the value may have. |
@@ -1522,6 +1520,8 @@ A text input with autocomplete dropdown via nldd-menu. Add a slotted nldd-menu w
 | `required` | `boolean` | Required state |
 | `autocomplete` | `string` | Browser autofill hint. Default 'off' to prevent the native autofill panel from competing with the menu dropdown. Set to a valid token (e.g. 'country', 'organization') when browser autofill is desired. |
 | `no-spellcheck` | `boolean` | Disables browser spellchecking on the inner input |
+| `readonly` | `boolean` | Read-only state: the value stays readable, selectable and in the tab order, but the menu does not open and there is nothing to clear. The input drops its combobox role and the aria that goes with it, so assistive technology is not told about a list it cannot open. Use this where the value belongs to the record rather than to the form, e.g. the product an asset is an instance of. |
+| `disabled` | `boolean` | Disabled state |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
@@ -1558,8 +1558,6 @@ A text field for a date, with an optional calendar in a popover. The value is al
 | `no-picker` | `boolean` | Hides the calendar button. It is shown by default. |
 | `valid` | `boolean` | Marks the field as valid. |
 | `invalid` | `boolean` | Marks the field as invalid. |
-| `readonly` | `boolean` | Read-only state. |
-| `disabled` | `boolean` | Disabled state. |
 | `name` | `string` | Name for form submission. |
 | `input-id` | `string` | Sets the id on the internal input. Set automatically by nldd-form-field. |
 | `value` | `string` | The date as ISO (yyyy-mm-dd). With `range` an ISO 8601 interval: `yyyy-mm-dd/yyyy-mm-dd`. Empty when there is no valid date. |
@@ -1568,6 +1566,8 @@ A text field for a date, with an optional calendar in a popover. The value is al
 | `max` | `string` | Latest allowed date as ISO (yyyy-mm-dd). |
 | `required` | `boolean` | Required state. |
 | `autocomplete` | `string` | Autocomplete hint, for example 'bday'. |
+| `readonly` | `boolean` | Read-only state. |
+| `disabled` | `boolean` | Disabled state. |
 | `translations` | `object` | Translations; unspecified keys fall back to Dutch. |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
@@ -1643,8 +1643,8 @@ A visual wrapper around a native `<select>` element. The consumer provides a nat
 | `expanded` | `boolean` | Reflects whether the native picker popup is open (driven internally) |
 | `valid` | `boolean` | Marks the field as valid |
 | `invalid` | `boolean` | Marks the field as invalid |
-| `disabled` | `boolean` | Disabled state; also forwarded to the slotted select |
 | `required` | `boolean` | Required state, handed to the slotted <select>. A `required` on the <select> itself is left alone. |
+| `disabled` | `boolean` | Disabled state; also forwarded to the slotted select |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -1677,13 +1677,13 @@ A file picker that reads as one control. Empty, the whole tinted surface is one 
 | `accessible-label` | `string` | Accessible label forwarded to the inner input. Set automatically by nldd-form-field. |
 | `valid` | `boolean` | Marks the field as valid; shows a check icon on the right, like nldd-dropdown |
 | `invalid` | `boolean` | Marks the field as invalid; shows an alert icon on the right, like nldd-dropdown |
-| `disabled` | `boolean` | Disabled state |
 | `name` | `string` | Name for form submission |
 | `input-id` | `string` | Sets the id on the native input. Set automatically by nldd-form-field. |
 | `accept` | `string` | Comma-separated list of accepted file types, forwarded to the input (e.g. ".pdf,image/*") |
 | `multiple` | `boolean` | Allows choosing more than one file, and dropping a folder |
 | `directory` | `boolean` | Offers a folder beside files, since one dialog picks either: choosing and changing open a menu with both, and an area shows a button for each. Takes several files, as `multiple` does |
 | `required` | `boolean` | Marks the field required (invalid while no file is chosen) |
+| `disabled` | `boolean` | Disabled state |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
@@ -1717,8 +1717,6 @@ A file picker that reads as one control. Empty, the whole tinted surface is one 
 | `accessible-label` | `string` | Accessible label forwarded to the inner textarea. Set automatically by nldd-form-field. |
 | `valid` | `boolean` | Marks the field as valid |
 | `invalid` | `boolean` | Marks the field as invalid |
-| `readonly` | `boolean` | Readonly state |
-| `disabled` | `boolean` | Disabled state |
 | `name` | `string` | Textarea name for form submission |
 | `input-id` | `string` | Sets the id on the native textarea. Set automatically by nldd-form-field. |
 | `value` | `string` | The textarea value |
@@ -1729,6 +1727,8 @@ A file picker that reads as one control. Empty, the whole tinted surface is one 
 | `required` | `boolean` | Required state |
 | `autocomplete` | `string` | Autocomplete hint |
 | `no-spellcheck` | `boolean` | Disables browser spellchecking on the inner textarea |
+| `readonly` | `boolean` | Readonly state |
+| `disabled` | `boolean` | Disabled state |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -1766,13 +1766,13 @@ A numeric input field with decrement and increment buttons.
 | `accessible-label` | `string` | Accessible label (aria-label) forwarded to the native input |
 | `hide-spin-buttons` | `boolean` | When set, hides the decrement and increment buttons |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
-| `disabled` | `boolean` | Disabled state |
 | `name` | `string` | Name for form submission |
 | `value` | `number` | Current value. Leave it out for an empty field, which submits an empty string and takes `min` and `max` as no reason to be invalid: only `required` asks for a value, as with a native number input. As a property, `null` is empty. In an empty field + and - are both enabled, and start at 0, or at the nearer end of the range when 0 lies outside it (`min="1"` starts at 1). |
 | `min` | `number` | Minimum value (default: -Infinity) |
 | `max` | `number` | Maximum value (default: Infinity) |
 | `step` | `number` | Step size (default: 1) |
 | `required` | `boolean` | A value has to be filled in. An empty field is then invalid. |
+| `disabled` | `boolean` | Disabled state |
 | `translations` | `object` | Translations; unspecified keys fall back to Dutch |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
@@ -1807,8 +1807,6 @@ A field for a code someone receives once and types over: by text message, by ema
 | `accessible-label` | `string` | Accessible label forwarded to the inner input. Set automatically by nldd-form-field. |
 | `uppercase` | `boolean` | Turns letters into capitals as they are typed or pasted, in the boxes and in the value. Only with `type="alphanumeric"`, and only for a code where case does not matter, as with most activation codes. Leave it off for a code that tells "a" from "A", such as some recovery codes: a value turned into capitals would no longer match. |
 | `invalid` | `boolean` | Marks the field as invalid |
-| `readonly` | `boolean` | Readonly state |
-| `disabled` | `boolean` | Disabled state |
 | `name` | `string` | Input name for form submission |
 | `input-id` | `string` | Sets the id on the native input. Set automatically by nldd-form-field. |
 | `value` | `string` | The code |
@@ -1816,6 +1814,8 @@ A field for a code someone receives once and types over: by text message, by ema
 | `length` | `number` | How many characters the code has (default: 6). |
 | `format` | `string` | The shape of a code that is printed in groups, such as '###-###' or '#### ####': each `#` is a box, anything else a separator you see but a screen reader does not hear. The number of `#` is then the length, so `format` wins over `length`. The value never holds a separator: '123-234' is submitted as '123234'. Leave it out for a code without groups, as most codes from a text message are. |
 | `required` | `boolean` | Required state. A code that is not complete counts as invalid too. |
+| `readonly` | `boolean` | Readonly state |
+| `disabled` | `boolean` | Disabled state |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -1853,8 +1853,6 @@ A password input field with visibility toggle and validation states.
 | `valid` | `boolean` | Marks the field as valid |
 | `invalid` | `boolean` | Marks the field as invalid |
 | `masked` | `boolean` | Whether the password is masked (default: true) |
-| `readonly` | `boolean` | Readonly state |
-| `disabled` | `boolean` | Disabled state |
 | `name` | `string` | Input name for form submission |
 | `input-id` | `string` | Sets the id on the native input. Set automatically by nldd-form-field. |
 | `value` | `string` | The input value |
@@ -1863,6 +1861,8 @@ A password input field with visibility toggle and validation states.
 | `pattern` | `string` | Regular expression the value has to match, as the native `pattern`. |
 | `required` | `boolean` | Required state |
 | `autocomplete` | `string` | Autocomplete hint |
+| `readonly` | `boolean` | Readonly state |
+| `disabled` | `boolean` | Disabled state |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
@@ -1894,10 +1894,10 @@ WAI-ARIA: put the buttons of one group in a container with role="radiogroup" and
 | `no-tab` | `boolean` | Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable. |
 | `checked` | `boolean` | Checked state |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. Note: aria-labelledby is not supported as IDREF resolution cannot cross shadow DOM boundaries. |
-| `disabled` | `boolean` | Disabled state |
 | `name` | `string` | Radio group name for form submission; ties the buttons of one group together |
 | `value` | `string` | Value submitted with the form when this radio button is checked |
 | `required` | `boolean` | Required state. What it asks is whether anything in the group is checked, as a native radio does. |
+| `disabled` | `boolean` | Disabled state |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -1926,10 +1926,10 @@ A radio button with an inline label. Use inside nldd-radio-button-group, which s
 | `label` | `string` | Label text for the radio button |
 | `checked` | `boolean` | Checked state |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
-| `disabled` | `boolean` | Disabled state |
 | `name` | `string` | Radio group name for form submission; ties the fields of one group together. Set automatically by nldd-radio-button-group. |
 | `value` | `string` | Value for form submission |
 | `required` | `boolean` | Required state. What it asks is whether anything in the group is checked, as a native radio does. Set automatically by nldd-radio-button-group. |
+| `disabled` | `boolean` | Disabled state |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -1958,9 +1958,9 @@ Groups nldd-radio-button-field elements, handles keyboard navigation, and forwar
 | `accessible-label` | `string` | Accessible name for the group, set as aria-label on the group |
 | `accessible-labeled-by` | `string` | Id of an external label element, set as aria-labelledby on the group |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
-| `disabled` | `boolean` | Disables all slotted fields |
 | `name` | `string` | Forwarded to all slotted nldd-radio-button-field elements |
 | `required` | `boolean` | Marks the group as required |
+| `disabled` | `boolean` | Disables all slotted fields |
 
 **Slots**
 
@@ -2002,7 +2002,6 @@ A search input with a leading search icon, an optional dismiss button, and an op
 | `shortcut-windows` | `string` | Override of `shortcut` on Windows (falls back to `shortcut`). |
 | `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
-| `disabled` | `boolean` | Disabled state |
 | `name` | `string` | Input name for form submission |
 | `value` | `string` | The search value |
 | `minlength` | `number` | Fewest characters the value may have. |
@@ -2010,6 +2009,7 @@ A search input with a leading search icon, an optional dismiss button, and an op
 | `pattern` | `string` | Regular expression the value has to match, as the native `pattern`. |
 | `required` | `boolean` | Required state |
 | `no-spellcheck` | `boolean` | Disables browser spellchecking on the inner input |
+| `disabled` | `boolean` | Disabled state |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
@@ -2044,11 +2044,11 @@ A horizontal group of mutually exclusive (radio) or multi-select (checkbox) opti
 | `accessible-label` | `string` | Accessible name for the group, set as aria-label |
 | `accessible-labeled-by` | `string` | Id of an external label element, set as aria-labelledby on the group |
 | `invalid` | `boolean` | Marks the group as invalid. Announced with aria-invalid; nothing is drawn for it. |
-| `disabled` | `boolean` | Disabled state for all items |
 | `name` | `string` | Name for form submission |
 | `value` | `string` | Selected value for radio type |
 | `type` | `'radio'\|'checkbox'` | Selection mode: 'radio' \| 'checkbox' (default: 'radio'). |
 | `required` | `boolean` | Marks the group as required. Enforced in radio mode; in checkbox mode only announced. |
+| `disabled` | `boolean` | Disabled state for all items |
 
 **Slots**
 
@@ -2082,11 +2082,11 @@ A horizontal group of mutually exclusive (radio) or multi-select (checkbox) opti
 | `shortcut-windows` | `string` | Override of `shortcut` on Windows (falls back to `shortcut`). |
 | `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
 | `selected` | `boolean` | Whether this item is selected (set by parent) |
-| `disabled` | `boolean` | Disabled state |
 | `group-name` | `string` | Name of the group for form submission, put on the native checkbox. Set by nldd-segmented-control. |
 | `value` | `string` | Value for this item |
 | `input-type` | `'radio'\|'checkbox'` | Selection mode: 'radio' \| 'checkbox' (default: 'radio'). In radio mode the item is the radio itself, in checkbox mode it renders a native checkbox. Set by nldd-segmented-control. |
 | `required` | `boolean` | Required state of the native checkbox. In radio mode the group carries the constraint. |
+| `disabled` | `boolean` | Disabled state |
 
 **Slots**
 
@@ -2119,7 +2119,6 @@ A value picked along a track, by dragging its thumb, pressing the track or with 
 | `histogram` | `string` | Counts drawn as bars above the track, one per bucket of (max - min) / n, comma- or space-separated; as a property, an array of numbers. The bars within the chosen value or range are colored. |
 | `tooltip-timing` | `string` | When the value shows above the thumb: 'instant' (the default: on hover, keyboard focus and while dragging) or 'never', for a slider whose value shows elsewhere, such as in fields above it |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
-| `disabled` | `boolean` | Disabled state |
 | `name` | `string` | Name for form submission |
 | `value` | `number` | The value (default: the middle between min and max) |
 | `start-value` | `number` | The start of a range (default: min) |
@@ -2128,6 +2127,7 @@ A value picked along a track, by dragging its thumb, pressing the track or with 
 | `min` | `number` | Smallest value (default: 0) |
 | `max` | `number` | Largest value (default: 100) |
 | `step` | `number` | Step between values (default: 1) |
+| `disabled` | `boolean` | Disabled state |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
@@ -2152,12 +2152,12 @@ A numeric control with increment and decrement buttons.
 | `size` | `'xs'\|'sm'\|'md'` | Size: 'xs' \| 'sm' \| 'md' (default: 'md') |
 | `accessible-label` | `string` | Accessible name for the spinbutton; falls back to a generic label |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
-| `disabled` | `boolean` | Disabled state |
 | `name` | `string` | Name for form submission; the value is submitted under this name |
 | `value` | `number` | Current value |
 | `min` | `number` | Minimum value (default: 0) |
 | `max` | `number` | Maximum value (default: Infinity) |
 | `step` | `number` | Step size (default: 1) |
+| `disabled` | `boolean` | Disabled state |
 | `translations` | `object` | Translations; unspecified keys fall back to Dutch |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
@@ -2188,10 +2188,10 @@ A row of swatches to choose one from: a color, or an image of a pattern or a mat
 | `accessible-label` | `string` | Accessible name for the group, set as aria-label. In an nldd-form-field the field names it. |
 | `accessible-labeled-by` | `string` | Id of an external label element, set as aria-labelledby on the group |
 | `invalid` | `boolean` | Marks the group as invalid. Announced with aria-invalid; nothing is drawn for it. |
-| `disabled` | `boolean` | Disabled state for all swatches |
 | `name` | `string` | Name for form submission |
 | `value` | `string` | Value of the chosen swatch |
 | `required` | `boolean` | Something has to be chosen |
+| `disabled` | `boolean` | Disabled state for all swatches |
 
 **Slots**
 
@@ -2223,8 +2223,8 @@ A row of swatches to choose one from: a color, or an image of a pattern or a mat
 | `image` | `string` | URL of an image that fills the swatch, for a pattern or a material. Needs `text`. |
 | `image-srcset` | `string` | Sources of the image at other pixel densities, with x descriptors (e.g. '/oak.jpg 1x, /oak@2x.jpg 2x'). The swatch has a fixed size, so there are no widths to choose from. |
 | `selected` | `boolean` | Whether this swatch is chosen (set by the picker) |
-| `disabled` | `boolean` | Disabled state |
 | `value` | `string` | Value for this swatch |
+| `disabled` | `boolean` | Disabled state |
 | `translations` | `object` | Override translation keys (the names of the category colors); unset keys fall back to Dutch. |
 
 ### `<nldd-switch>`
@@ -2250,10 +2250,10 @@ A toggle control for on/off settings. Prefer nldd-switch-field for labeled usage
 | `no-tab` | `boolean` | Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable. |
 | `checked` | `boolean` | Whether the switch is on/off |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
-| `disabled` | `boolean` | Disabled state |
 | `name` | `string` | Name for form submission; nothing is submitted when the switch is off |
 | `value` | `string` | Value submitted with the form when the switch is on (default: 'on') |
 | `required` | `boolean` | Required state |
+| `disabled` | `boolean` | Disabled state |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -2284,10 +2284,10 @@ A switch toggle with an inline label for use in forms.
 | `label` | `string` | Label text for the switch |
 | `checked` | `boolean` | Checked state |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
-| `disabled` | `boolean` | Disabled state |
 | `name` | `string` | Name for form submission |
 | `value` | `string` | Value for form submission |
 | `required` | `boolean` | Required state |
+| `disabled` | `boolean` | Disabled state |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -2329,13 +2329,13 @@ A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the 
 | `syntax` | `string` | 'hidden' (default) or 'visible'. 'visible': every formatting mark stays in view, dimmed, a bullet as the character you typed (`-`, `*` or `+`), for people who write markdown. 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A bullet reads as a dot, and shows its character on the line the caret is on. A quote reads as a line on the left per level, at the level the result gives each line, as in nldd-rich-text, with the spaces after a `>` beyond the first hidden and a missing one made room for, so every level is the same step; with the caret anywhere in it, its `>` marks and spaces show instead. A `---` line reads as a divider until the caret is on it, and a code block loses its closing ``` line until the caret is in it, since its own tint and edge already say what it is. Its opening line stays as the head of the block, with only the backticks hidden: the language as a label on the left, the copy button on the right. The numbers of a numbered list stay, in the color of the text: they are content. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way. |
 | `annotatable` | `boolean` | Enable the annotation overlay (off by default). Annotations only render when this is set. |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
-| `readonly` | `boolean` | Readonly state (focusable and selectable, not editable) |
-| `disabled` | `boolean` | Disabled state |
 | `name` | `string` | Field name for form submission |
 | `input-id` | `string` | Sets the id on the editable element. Set automatically by nldd-form-field. |
 | `value` | `string` | Editor content (markdown). A value the app sets is kept as it is: the editor keeps the numbers of a numbered list in sequence while the user edits that list, not when the value is set. Only the part that differs changes, so the caret and the selection stay with their text, and the change stays out of the undo history. |
 | `required` | `boolean` | Required state |
 | `no-spellcheck` | `boolean` | Turns spellchecking off. It is on by default, like the other text fields, and leaves out what is not running text: inline code and code blocks, the address of a link and a bare URL (the link text is checked), and mentions. Autocorrect and autocapitalize follow the user's own settings, as in the other fields, also with `no-spellcheck`. Two limits come from the browser: text that was already there is checked once you edit near it, not when the editor opens (the editor lives in a shadow root; Firefox only checks around the caret), and markup that changes how a line is built, such as starting a list item, hides the underlines on that line until you type on. |
+| `readonly` | `boolean` | Readonly state (focusable and selectable, not editable) |
+| `disabled` | `boolean` | Disabled state |
 | `translations` | `object` | Override the editor's assistive-tech strings (the open-in-new-tab link badge, the annotation count badge, the label of a task's box and the copy button of a code block). Unset keys fall back to Dutch. |
 | `text-editor-command` | `string` | The command a control runs on its editor: a name from `runCommand()`, with an argument after a colon (`setHeading:2`, `setList:task`). On an nldd-toggle-button, nldd-button, nldd-icon-button, `<button>` or nldd-menu-item, also in a toolbar's overflow menu. On an nldd-segmented-control the command takes the value of the chosen item: `text-editor-command="setList"` with items `none`, `bullet`, `ordered` and `task`, where a second click on the list that is on turns it off. Works inside the editor (its `toolbar` slot) or inside an element with `text-editor-for`. The editor sets `selected` and `disabled` on it, so do not set those yourself. Disabled: undo and redo without history, indent and outdent where the list item cannot move, copy and cut without a selection, the inline formats in code and the block formats in a code block, and everything but copy in a read-only editor. `setHeading` steps out of a code block first, so "Paragraaf" is the way out. |
 | `text-editor-for` | `string` | Set on any element that holds controls for an editor elsewhere on the page, such as an nldd-toolbar in a bar of the page: the editor's id. Its controls with `text-editor-command` drive that editor. The id is looked up in the document, not in a shadow root. |
@@ -2381,8 +2381,6 @@ A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the 
 | `accessible-label` | `string` | Accessible label forwarded to the inner input. Set automatically by nldd-form-field. |
 | `valid` | `boolean` | Marks the field as valid |
 | `invalid` | `boolean` | Marks the field as invalid |
-| `readonly` | `boolean` | Readonly state |
-| `disabled` | `boolean` | Disabled state |
 | `name` | `string` | Input name for form submission |
 | `input-id` | `string` | Sets the id on the native input. Set automatically by nldd-form-field. |
 | `value` | `string` | The input value |
@@ -2395,6 +2393,8 @@ A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the 
 | `required` | `boolean` | Required state |
 | `autocomplete` | `string` | Autocomplete hint |
 | `no-spellcheck` | `boolean` | Disables browser spellchecking on the inner input |
+| `readonly` | `boolean` | Readonly state |
+| `disabled` | `boolean` | Disabled state |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -2434,8 +2434,6 @@ A text field for a time. The value is always 24-hour `HH:mm`, which is how Dutch
 | `no-picker` | `boolean` | Hides the picker button. It is shown by default. |
 | `valid` | `boolean` | Marks the field as valid. |
 | `invalid` | `boolean` | Marks the field as invalid. |
-| `readonly` | `boolean` | Read-only state. |
-| `disabled` | `boolean` | Disabled state. |
 | `name` | `string` | Name for form submission. |
 | `input-id` | `string` | Sets the id on the internal input. Set automatically by nldd-form-field. |
 | `value` | `string` | The time as `HH:mm` (24-hour). Empty when there is no valid time. |
@@ -2444,6 +2442,8 @@ A text field for a time. The value is always 24-hour `HH:mm`, which is how Dutch
 | `step` | `number` | Step in minutes (default 1). Decides which times are valid, what rounding snaps to, and how far the arrow keys jump. |
 | `required` | `boolean` | Required state. |
 | `autocomplete` | `string` | Autocomplete hint. |
+| `readonly` | `boolean` | Read-only state. |
+| `disabled` | `boolean` | Disabled state. |
 | `translations` | `object` | Translations; unspecified keys fall back to Dutch. |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
@@ -2532,11 +2532,11 @@ A selectable button that toggles between selected and unselected. Available as a
 | `no-tab` | `boolean` | Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable. |
 | `selected` | `boolean` | Selected state |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
-| `disabled` | `boolean` | Disabled state |
 | `name` | `string` | Name for form submission (checkbox/radio) |
 | `value` | `string` | Value for form submission (checkbox/radio) |
 | `type` | `'button' \| 'checkbox' \| 'radio'` | What the button is: a button with aria-pressed, a native checkbox, or a radio (default: 'button') |
 | `required` | `boolean` | Required state. Set by nldd-toggle-button-group. |
+| `disabled` | `boolean` | Disabled state |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -2573,10 +2573,10 @@ Groups nldd-toggle-button elements and manages selection, keyboard navigation, a
 | `accessible-label` | `string` | Accessible name for the group (aria-label) |
 | `accessible-labeled-by` | `string` | ID of an external label element (aria-labelledby) |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
-| `disabled` | `boolean` | Disables all buttons |
 | `name` | `string` | Forwarded to all buttons |
 | `type` | `'button' \| 'checkbox' \| 'radio'` | Selection mode (default: 'checkbox') |
 | `required` | `boolean` | Marks the group as required. Enforced in radio mode; in checkbox mode only announced. |
+| `disabled` | `boolean` | Disables all buttons |
 
 **Slots**
 
@@ -2608,8 +2608,6 @@ A multi-select input that looks like a normal input field: chosen values show as
 | `token-control` | `string` | Trailing control per token: 'dismiss' (default, a ✕ that removes it) or 'menu' (a ⌄ opening a per-token action menu supplied by the template prototypes) |
 | `valid` | `boolean` | Marks the field valid (shows the valid icon) |
 | `invalid` | `boolean` | Marks the field invalid (shows the invalid icon) |
-| `readonly` | `boolean` | Readonly: static tokens, no input/picker, read-only surface |
-| `disabled` | `boolean` | Disabled state |
 | `name` | `string` | Name for form submission |
 | `values` | `string` | Initial token values as a comma-separated string (e.g. "nl, be, de"). Not reflected; the live value is the `.values` array property. Values can't contain commas. |
 | `type` | `string` | Input type forwarded to the inner input (e.g. 'email') |
@@ -2617,6 +2615,8 @@ A multi-select input that looks like a normal input field: chosen values show as
 | `required` | `boolean` | Marks the field required (invalid when it has no tokens) |
 | `autocomplete` | `string` | Autocomplete hint forwarded to the inner input |
 | `no-spellcheck` | `boolean` | Disables browser spellchecking on the inner input |
+| `readonly` | `boolean` | Readonly: static tokens, no input/picker, read-only surface |
+| `disabled` | `boolean` | Disabled state |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
@@ -3837,11 +3837,11 @@ Hyperlink component with two modes: 1. **Standalone (sized)**: set `size="xs"|"s
 | `interestfor` | `string` | ID of an nldd-popover that previews where the link goes, looked up in the tree of this link. It opens on interest instead of on a click: when the pointer rests on the link, when it gets keyboard focus, and on a long press on touch. A click or a tap still follows the link. Focus stays on the link, the popover's content is read as the link's description, and Escape closes it. The pointer can move onto the popover without closing it. Information only: put no link or button in it. Keep the popover outside the paragraph: a link stands in a `<p>`, and a `<p>` of your own inside it would close that paragraph. One popover can serve several links. Keep `accessible-label` on it: it is left out while the popover describes a link. |
 | `accessible-label` | `string` | Accessible label for screen readers |
 | `no-tab` | `boolean` | Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable. |
-| `disabled` | `boolean` | Disabled state. Avoid it where you can; the design guidelines say why. |
 | `href` | `string` | Link target |
 | `target` | `string` | Link target (e.g. '_blank'); adjusts rel automatically. With '_blank' the link adds a visually hidden "opent in nieuw tabblad" announcement for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. |
 | `rel` | `string` | Link rel attribute; with target '_blank', 'noopener noreferrer' is added to whatever you set |
 | `download` | `string` | Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab. |
+| `disabled` | `boolean` | Disabled state. Avoid it where you can; the design guidelines say why. |
 | `translations` | `object` | Override translation keys (e.g. the "opent in nieuw tabblad" announcement); unset keys fall back to Dutch. |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
@@ -3936,8 +3936,8 @@ Interactive building block for use in a menu bar. Renders as an <a> (with href) 
 | `expanded` | `boolean` | Whether the matching popover is open; sets aria-expanded on the button when expandable or haspopup is set. Tracked automatically for a slotted `<nldd-menu>`. |
 | `open` | `boolean` | Whether the linked popover or menu is open |
 | `current` | `boolean` | Mark as the active or current item |
-| `disabled` | `boolean` | Turn interaction off. Avoid it where you can; the design guidelines say why. |
 | `href` | `string` | Optional link URL. Without href it renders as a button. |
+| `disabled` | `boolean` | Turn interaction off. Avoid it where you can; the design guidelines say why. |
 
 **Slots**
 
@@ -3965,8 +3965,8 @@ A pagination control for navigating between pages of content.
 | `centered` | `boolean` | Centers the pagination in the container (host fills row, items grouped in the middle) |
 | `href-pattern` | `string` | URL pattern with a {page} placeholder, renders links instead of buttons |
 | `current` | `number` | Currently active page (1-based) |
-| `disabled` | `boolean` | Disabled state. Avoid it where you can; the design guidelines say why. |
 | `total` | `number` | Total number of pages (recommended max: 200 for compact select performance) |
+| `disabled` | `boolean` | Disabled state. Avoid it where you can; the design guidelines say why. |
 | `translations` | `object` | Translations; unspecified keys fall back to Dutch |
 
 **Events**
@@ -4759,11 +4759,11 @@ A row within an `nldd-list`. Renders as a link when `href` is set, as a checkbox
 | `checked` | `boolean` | Checked state of a `checkbox` or `radio` row. A checkbox row toggles it on activation, a radio row only ever sets it |
 | `expanded` | `boolean` | Disclosure state. Drives the `children` group's visibility AND supplies `aria-expanded`, to the row's own control when the row is interactive, or to the segment marked `disclosure`. Written once either way; the item DEV-warns when there is nowhere for it to live. |
 | `current` | `boolean` | Marks the item as the one you are on: the page a menu row points at, the record a list has open. Exactly one row in a list carries it, where `selected` may be on many. It paints like `selected` at rest, a quiet fill on purpose: the page itself says where you are, in its title, heading and breadcrumb, so the fill is an extra that should not pull attention from the content, and an automated check that flags its contrast is expected. The fill alone stays under 3:1 (1.3:1 in light, 1.5:1 in dark), so a WCAG audit fails 1.4.1 and 1.4.11 on it unless the place also shows another way, such as in the page title or the breadcrumb. A table of contents that follows the scroll, as in the content page pattern, has no such other sign: expect the finding there, and name it as a deviation in the accessibility statement. It takes the highlighted fill while focus is anywhere in the row, including inside a nested `nldd-list-item-segment`, which is what a segmented row needs: the focus never reaches the row's own control, because there is none. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value. On a segmented row set it on the segment that holds the link instead: the row reads `current` off its own segments and paints itself, so it is written once, where `aria-current` belongs. |
-| `disabled` | `boolean` | Switches the row's own control off: a `button` or `checkbox` row stops responding and dims, a `href` row gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). A row without a control of its own has nothing to switch off, and segments carry their own `disabled`. The arrow keys skip a disabled row. |
 | `href` | `string` | Renders the item as an `<a>` with this URL. Wins over `checkbox` and `button`; without any of the three the item is a plain container with no action. |
 | `target` | `string` | Link target forwarded to the `<a>` (e.g. '_blank'); only applies with `href`. With '_blank' a visually hidden "opens in new tab" announcement is added for assistive technology. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. |
 | `rel` | `string` | Link rel forwarded to the `<a>`, only with `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set |
 | `download` | `string` | Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab. |
+| `disabled` | `boolean` | Switches the row's own control off: a `button` or `checkbox` row stops responding and dims, a `href` row gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). A row without a control of its own has nothing to switch off, and segments carry their own `disabled`. The arrow keys skip a disabled row. |
 | `divider-start` | `boolean` | The divider starts at this cell instead of at the row's first text or title cell. On the leading cell it restores the full-width line. |
 | `divider-end` | `boolean` | The divider stops after this cell. With several markers the line runs from the first start to the last end. |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
@@ -4812,11 +4812,11 @@ A segment inside an `nldd-list-item`: it groups a run of cells and makes just th
 | `checked` | `boolean` | Checked state of a `checkbox` segment; it toggles on activation |
 | `expanded` | `boolean` | Disclosure state, reflected as `aria-expanded` on the control, and painted: the segment stays lit a step above hover for as long as what it opened is on screen, so a menu reads as hanging off this row rather than floating over the list. Set it on the segment that opens something (a tree row's chevron, a menu). Leave it off entirely when the segment discloses nothing: an absent attribute emits no aria-expanded. |
 | `current` | `boolean` | Marks the segment as the current one, with `aria-current` set to `current-type`. The row it sits in paints itself as the current row from it, so on a segmented row this is the only place it has to be set. |
-| `disabled` | `boolean` | Switches the segment off: a `button` or `checkbox` segment stops responding and dims, a `href` segment gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). The arrow keys skip a row whose only segment is off. |
 | `href` | `string` | Renders the segment as an `<a>` with this URL. Wins over `checkbox` and `button`. |
 | `target` | `string` | Link target forwarded to the `<a>`; only applies with `href`. With '_blank' a visually hidden "opent in nieuw tabblad" announcement is added. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. With `accessible-label` the hint goes into the label. |
 | `rel` | `string` | Link rel forwarded to the `<a>`, only with `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set |
 | `download` | `string` | Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab. |
+| `disabled` | `boolean` | Switches the segment off: a `button` or `checkbox` segment stops responding and dims, a `href` segment gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). The arrow keys skip a row whose only segment is off. |
 | `divider-start` | `boolean` | The row's divider starts at this cell instead of at its first text or title cell. |
 | `divider-end` | `boolean` | The row's divider stops after this cell. |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |

@@ -38,11 +38,6 @@ export default {
 			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
 			table: { defaultValue: { summary: false } },
 		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde toestand',
-			table: { defaultValue: { summary: false } },
-		},
 		value: {
 			control: { type: 'number' },
 			description: 'Huidige waarde',
@@ -63,21 +58,26 @@ export default {
 			description: 'Stapgrootte',
 			table: { defaultValue: { summary: 1 } },
 		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde toestand',
+			table: { defaultValue: { summary: false } },
+		},
 	},
 	args: {
 		size: 'md',
 		accessibleDescription: '',
 		accessibleDescribedBy: '',
 		invalid: false,
-		disabled: false,
 		value: 5,
 		min: 0,
 		max: 10,
 		step: 1,
+		disabled: false,
 	},
 };
 
-const Template = ({ size, accessibleDescription, invalid, disabled, value, min, max, step }: Record<string, any>) => html`
+const Template = ({ size, accessibleDescription, invalid, value, min, max, step, disabled }: Record<string, any>) => html`
 	<nldd-container
 		layout="row"
 		gap="16"
@@ -88,11 +88,11 @@ const Template = ({ size, accessibleDescription, invalid, disabled, value, min, 
 			size=${size}
 			accessible-description=${accessibleDescription || nothing}
 			?invalid=${invalid}
-			?disabled=${disabled}
 			value=${value}
 			min=${min}
 			max=${max}
 			step=${step}
+			?disabled=${disabled}
 			@change=${(e: any) => {
 				const display = e.target.previousElementSibling;
 				if (display) display.textContent = e.detail.value;

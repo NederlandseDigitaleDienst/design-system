@@ -537,16 +537,6 @@
             },
             {
               "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "type",
               "type": {
                 "text": "ButtonType"
@@ -594,6 +584,16 @@
               },
               "default": "undefined",
               "attribute": "download"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
             },
             {
               "kind": "method",
@@ -919,15 +919,6 @@
               "fieldName": "loading"
             },
             {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why."
-            },
-            {
               "name": "type",
               "type": {
                 "text": "ButtonType"
@@ -974,6 +965,15 @@
               "default": "undefined",
               "fieldName": "download",
               "description": "Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden \"downloadt bestand\" for screen readers. Leave `target` off: a download opens no tab."
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why."
             },
             {
               "name": "accessible-description",
@@ -1348,16 +1348,6 @@
             },
             {
               "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "type",
               "type": {
                 "text": "ButtonType"
@@ -1405,6 +1395,16 @@
               },
               "default": "undefined",
               "attribute": "download"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
             },
             {
               "kind": "method",
@@ -1703,15 +1703,6 @@
               "fieldName": "loading"
             },
             {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why."
-            },
-            {
               "name": "type",
               "type": {
                 "text": "ButtonType"
@@ -1758,6 +1749,15 @@
               "default": "undefined",
               "fieldName": "download",
               "description": "Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden \"downloadt bestand\" for screen readers. Leave `target` off: a download opens no tab."
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why."
             },
             {
               "name": "accessible-description",
@@ -2124,16 +2124,6 @@
             },
             {
               "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "form",
               "type": {
                 "text": "string"
@@ -2191,6 +2181,16 @@
               },
               "default": "undefined",
               "attribute": "rel",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
               "reflects": true
             },
             {
@@ -2355,15 +2355,6 @@
             },
             {
               "type": {
-                "text": "boolean"
-              },
-              "description": "Disabled state.",
-              "name": "disabled",
-              "default": "false",
-              "fieldName": "disabled"
-            },
-            {
-              "type": {
                 "text": "string"
               },
               "description": "Id of the form a `submit` item submits, for an item that does not stand in it, which a menu usually does not. Takes an `nldd-form` as well as a plain `<form>`, looked up in the item's own root.",
@@ -2418,6 +2409,15 @@
               "name": "rel",
               "default": "undefined",
               "fieldName": "rel"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Disabled state.",
+              "name": "disabled",
+              "default": "false",
+              "fieldName": "disabled"
             },
             {
               "name": "translations",
@@ -3732,16 +3732,6 @@
             },
             {
               "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "type",
               "type": {
                 "text": "'button' | 'submit' | 'reset'"
@@ -3768,6 +3758,16 @@
               },
               "description": "Saves the file `href` points at instead of opening it.",
               "attribute": "download"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -3900,15 +3900,6 @@
               "fieldName": "loading"
             },
             {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why."
-            },
-            {
               "name": "type",
               "type": {
                 "text": "'button' | 'submit' | 'reset'"
@@ -3935,6 +3926,15 @@
               },
               "description": "Saves the file `href` points at instead of opening it, as on nldd-button. Only used with `href`.",
               "fieldName": "download"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why."
             },
             {
               "name": "translations",
@@ -10841,16 +10841,6 @@
             },
             {
               "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -10877,6 +10867,16 @@
               },
               "default": "false",
               "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
               "reflects": true
             },
             {
@@ -11287,15 +11287,6 @@
               "fieldName": "invalid"
             },
             {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state"
-            },
-            {
               "name": "name",
               "type": {
                 "text": "string"
@@ -11321,6 +11312,15 @@
               "default": "false",
               "fieldName": "required",
               "description": "Required state. In an nldd-checkbox-group, set by the group, it asks for at least one checked box in the group, not for this one."
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state"
             },
             {
               "name": "accessible-description",
@@ -11452,16 +11452,6 @@
             },
             {
               "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -11477,6 +11467,16 @@
               },
               "default": "false",
               "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
               "reflects": true
             },
             {
@@ -11528,15 +11528,6 @@
               "fieldName": "invalid"
             },
             {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disables all fields in the group"
-            },
-            {
               "name": "name",
               "type": {
                 "text": "string"
@@ -11553,6 +11544,15 @@
               "default": "false",
               "fieldName": "required",
               "description": "At least one box in the group has to be checked. Set on every field in the group, nested ones included, whether it is on or off: in a group, the group decides."
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disables all fields in the group"
             }
           ],
           "superclass": {
@@ -11710,16 +11710,6 @@
             },
             {
               "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -11745,6 +11735,16 @@
               },
               "default": "false",
               "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
               "reflects": true
             },
             {
@@ -12177,15 +12177,6 @@
               "fieldName": "invalid"
             },
             {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state"
-            },
-            {
               "name": "name",
               "type": {
                 "text": "string"
@@ -12211,6 +12202,15 @@
               "default": "false",
               "fieldName": "required",
               "description": "Required state"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state"
             },
             {
               "name": "accessible-description",
@@ -13268,26 +13268,6 @@
             },
             {
               "kind": "field",
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "readonly",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -13375,6 +13355,26 @@
               },
               "default": "false",
               "attribute": "no-spellcheck",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
               "reflects": true
             },
             {
@@ -13817,24 +13817,6 @@
               "description": "Marks the field as invalid"
             },
             {
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "readonly",
-              "description": "Read-only state: the value stays readable, selectable and in the tab order, but the menu does not open and there is nothing to clear. The input drops its combobox role and the aria that goes with it, so assistive technology is not told about a list it cannot open. Use this where the value belongs to the record rather than to the form, e.g. the product an asset is an instance of."
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state"
-            },
-            {
               "name": "name",
               "type": {
                 "text": "string"
@@ -13912,6 +13894,24 @@
               "default": "false",
               "fieldName": "noSpellcheck",
               "description": "Disables browser spellchecking on the inner input"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly",
+              "description": "Read-only state: the value stays readable, selectable and in the tab order, but the menu does not open and there is nothing to clear. The input drops its combobox role and the aria that goes with it, so assistive technology is not told about a list it cannot open. Use this where the value belongs to the record rather than to the form, e.g. the product an asset is an instance of."
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state"
             },
             {
               "name": "translations",
@@ -14411,26 +14411,6 @@
             },
             {
               "kind": "field",
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "readonly",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -14503,6 +14483,26 @@
               },
               "default": "''",
               "attribute": "autocomplete"
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -14915,24 +14915,6 @@
               "description": "Marks the field as invalid."
             },
             {
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "readonly",
-              "description": "Read-only state."
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state."
-            },
-            {
               "name": "name",
               "type": {
                 "text": "string"
@@ -15003,6 +14985,24 @@
               "default": "''",
               "fieldName": "autocomplete",
               "description": "Autocomplete hint, for example 'bday'."
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly",
+              "description": "Read-only state."
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state."
             },
             {
               "name": "translations",
@@ -15618,22 +15618,22 @@
             },
             {
               "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "required",
               "type": {
                 "text": "boolean"
               },
               "default": "false",
               "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
               "reflects": true
             },
             {
@@ -15794,15 +15794,6 @@
               "description": "Marks the field as invalid"
             },
             {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state; also forwarded to the slotted select"
-            },
-            {
               "name": "required",
               "type": {
                 "text": "boolean"
@@ -15810,6 +15801,15 @@
               "default": "false",
               "fieldName": "required",
               "description": "Required state, handed to the slotted <select>. A `required` on the <select> itself is left alone."
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state; also forwarded to the slotted select"
             },
             {
               "name": "accessible-description",
@@ -16397,16 +16397,6 @@
             },
             {
               "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -16463,6 +16453,16 @@
               },
               "default": "false",
               "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
               "reflects": true
             },
             {
@@ -16911,15 +16911,6 @@
               "description": "Marks the field as invalid; shows an alert icon on the right, like nldd-dropdown"
             },
             {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state"
-            },
-            {
               "name": "name",
               "type": {
                 "text": "string"
@@ -16972,6 +16963,15 @@
               "default": "false",
               "fieldName": "required",
               "description": "Marks the field required (invalid while no file is chosen)"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state"
             },
             {
               "name": "translations",
@@ -17193,26 +17193,6 @@
             },
             {
               "kind": "field",
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "readonly",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -17306,6 +17286,26 @@
               },
               "default": "false",
               "attribute": "no-spellcheck",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
               "reflects": true
             },
             {
@@ -17721,24 +17721,6 @@
               "description": "Marks the field as invalid"
             },
             {
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "readonly",
-              "description": "Readonly state"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state"
-            },
-            {
               "name": "name",
               "type": {
                 "text": "string"
@@ -17829,6 +17811,24 @@
               "default": "false",
               "fieldName": "noSpellcheck",
               "description": "Disables browser spellchecking on the inner textarea"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly",
+              "description": "Readonly state"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state"
             },
             {
               "name": "accessible-description",
@@ -18041,16 +18041,6 @@
             },
             {
               "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -18102,6 +18092,16 @@
               "default": "false",
               "description": "A value has to be filled in. An empty field is then invalid.",
               "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
               "reflects": true
             },
             {
@@ -18527,15 +18527,6 @@
               "fieldName": "invalid"
             },
             {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state"
-            },
-            {
               "name": "name",
               "type": {
                 "text": "string"
@@ -18588,6 +18579,15 @@
               "default": "false",
               "description": "A value has to be filled in. An empty field is then invalid.",
               "fieldName": "required"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state"
             },
             {
               "name": "translations",
@@ -18788,26 +18788,6 @@
             },
             {
               "kind": "field",
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "readonly",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -18872,6 +18852,26 @@
               },
               "default": "false",
               "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
               "reflects": true
             },
             {
@@ -19354,24 +19354,6 @@
               "description": "Marks the field as invalid"
             },
             {
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "readonly",
-              "description": "Readonly state"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state"
-            },
-            {
               "name": "name",
               "type": {
                 "text": "string"
@@ -19436,6 +19418,24 @@
               "default": "false",
               "fieldName": "required",
               "description": "Required state. A code that is not complete counts as invalid too."
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly",
+              "description": "Readonly state"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state"
             },
             {
               "name": "accessible-description",
@@ -19654,26 +19654,6 @@
             },
             {
               "kind": "field",
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "readonly",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -19749,6 +19729,26 @@
               },
               "default": "''",
               "attribute": "autocomplete"
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -20181,24 +20181,6 @@
               "description": "Whether the password is masked (default: true)"
             },
             {
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "readonly",
-              "description": "Readonly state"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state"
-            },
-            {
               "name": "name",
               "type": {
                 "text": "string"
@@ -20267,6 +20249,24 @@
               "default": "''",
               "fieldName": "autocomplete",
               "description": "Autocomplete hint"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly",
+              "description": "Readonly state"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state"
             },
             {
               "name": "translations",
@@ -20434,16 +20434,6 @@
             },
             {
               "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -20470,6 +20460,16 @@
               },
               "default": "false",
               "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
               "reflects": true
             },
             {
@@ -20863,15 +20863,6 @@
               "fieldName": "invalid"
             },
             {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state"
-            },
-            {
               "name": "name",
               "type": {
                 "text": "string"
@@ -20897,6 +20888,15 @@
               "default": "false",
               "fieldName": "required",
               "description": "Required state. What it asks is whether anything in the group is checked, as a native radio does. Set automatically by nldd-radio-button-group."
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state"
             },
             {
               "name": "accessible-description",
@@ -21018,16 +21018,6 @@
             },
             {
               "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -21043,6 +21033,16 @@
               },
               "default": "false",
               "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
               "reflects": true
             },
             {
@@ -21094,15 +21094,6 @@
               "fieldName": "invalid"
             },
             {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disables all slotted fields"
-            },
-            {
               "name": "name",
               "type": {
                 "text": "string"
@@ -21119,6 +21110,15 @@
               "default": "false",
               "fieldName": "required",
               "description": "Marks the group as required"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disables all slotted fields"
             }
           ],
           "superclass": {
@@ -21268,16 +21268,6 @@
             },
             {
               "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -21303,6 +21293,16 @@
               },
               "default": "false",
               "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
               "reflects": true
             },
             {
@@ -21723,15 +21723,6 @@
               "fieldName": "invalid"
             },
             {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state"
-            },
-            {
               "name": "name",
               "type": {
                 "text": "string"
@@ -21757,6 +21748,15 @@
               "default": "false",
               "fieldName": "required",
               "description": "Required state. What it asks is whether anything in the group is checked, as a native radio does."
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state"
             },
             {
               "name": "accessible-description",
@@ -21984,16 +21984,6 @@
             },
             {
               "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -22060,6 +22050,16 @@
               },
               "default": "false",
               "attribute": "no-spellcheck",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
               "reflects": true
             },
             {
@@ -22536,15 +22536,6 @@
               "fieldName": "invalid"
             },
             {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state"
-            },
-            {
               "name": "name",
               "type": {
                 "text": "string"
@@ -22604,6 +22595,15 @@
               "default": "false",
               "fieldName": "noSpellcheck",
               "description": "Disables browser spellchecking on the inner input"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state"
             },
             {
               "name": "translations",
@@ -22801,16 +22801,6 @@
             },
             {
               "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "groupName",
               "type": {
                 "text": "string"
@@ -22847,6 +22837,16 @@
               },
               "default": "false",
               "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
               "reflects": true
             },
             {
@@ -22976,15 +22976,6 @@
               "description": "Whether this item is selected (set by parent)"
             },
             {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state"
-            },
-            {
               "name": "group-name",
               "type": {
                 "text": "string"
@@ -23022,6 +23013,15 @@
               "default": "false",
               "fieldName": "required",
               "description": "Required state of the native checkbox. In radio mode the group carries the constraint."
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state"
             }
           ],
           "superclass": {
@@ -23150,16 +23150,6 @@
             },
             {
               "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -23198,6 +23188,16 @@
               "default": "false",
               "description": "Marks the group as required: something has to be selected.\n\nThe group carries the constraint, on a radio of its own that is checked as\nsoon as anything is selected. The items are the radios the user meets, and\nthey have no input left to read it from. The browser writes the message in\nthe user's language.\n\nOnly in radio mode. The same attribute on a checkbox means that box has to\nbe ticked, so a required checkbox group would demand all of them instead of\none. HTML has no way to say \"at least one of these\", and neither do we:\n`aria-required` still goes on the group so assistive software says it, but\nnothing enforces it.",
               "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
               "reflects": true
             },
             {
@@ -23548,15 +23548,6 @@
               "fieldName": "invalid"
             },
             {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state for all items"
-            },
-            {
               "name": "name",
               "type": {
                 "text": "string"
@@ -23594,6 +23585,15 @@
               "default": "false",
               "description": "Marks the group as required. Enforced in radio mode; in checkbox mode only announced.",
               "fieldName": "required"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state for all items"
             }
           ],
           "mixins": [
@@ -23763,16 +23763,6 @@
             },
             {
               "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -23844,6 +23834,16 @@
               },
               "default": "1",
               "attribute": "step"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -24288,15 +24288,6 @@
               "description": "Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it."
             },
             {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state"
-            },
-            {
               "name": "name",
               "type": {
                 "text": "string"
@@ -24367,6 +24358,15 @@
               "default": "1",
               "fieldName": "step",
               "description": "Step between values (default: 1)"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state"
             },
             {
               "name": "translations",
@@ -24513,16 +24513,6 @@
             },
             {
               "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -24563,6 +24553,16 @@
               },
               "default": "1",
               "attribute": "step"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -24951,15 +24951,6 @@
               "fieldName": "invalid"
             },
             {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state"
-            },
-            {
               "name": "name",
               "type": {
                 "text": "string"
@@ -25003,6 +24994,15 @@
               "default": "1",
               "fieldName": "step",
               "description": "Step size (default: 1)"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state"
             },
             {
               "name": "translations",
@@ -25166,6 +25166,15 @@
             },
             {
               "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
               "name": "disabled",
               "type": {
                 "text": "boolean"
@@ -25173,15 +25182,6 @@
               "default": "false",
               "attribute": "disabled",
               "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "value"
             },
             {
               "kind": "method",
@@ -25294,15 +25294,6 @@
               "description": "Whether this swatch is chosen (set by the picker)"
             },
             {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state"
-            },
-            {
               "name": "value",
               "type": {
                 "text": "string"
@@ -25310,6 +25301,15 @@
               "default": "''",
               "fieldName": "value",
               "description": "Value for this swatch"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state"
             },
             {
               "name": "translations",
@@ -25408,16 +25408,6 @@
             },
             {
               "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -25445,6 +25435,16 @@
               "default": "false",
               "description": "Something has to be chosen. Carried by a hidden radio of the group's own,\nchecked as soon as anything is chosen, so the browser writes the message.",
               "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
               "reflects": true
             },
             {
@@ -25769,15 +25769,6 @@
               "fieldName": "invalid"
             },
             {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state for all swatches"
-            },
-            {
               "name": "name",
               "type": {
                 "text": "string"
@@ -25803,6 +25794,15 @@
               "default": "false",
               "description": "Something has to be chosen",
               "fieldName": "required"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state for all swatches"
             }
           ],
           "mixins": [
@@ -25951,16 +25951,6 @@
             },
             {
               "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -25987,6 +25977,16 @@
               },
               "default": "false",
               "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
               "reflects": true
             },
             {
@@ -26382,15 +26382,6 @@
               "fieldName": "invalid"
             },
             {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state"
-            },
-            {
               "name": "name",
               "type": {
                 "text": "string"
@@ -26416,6 +26407,15 @@
               "default": "false",
               "fieldName": "required",
               "description": "Required state"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state"
             },
             {
               "name": "accessible-description",
@@ -26592,16 +26592,6 @@
             },
             {
               "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -26627,6 +26617,16 @@
               },
               "default": "false",
               "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
               "reflects": true
             },
             {
@@ -27053,15 +27053,6 @@
               "fieldName": "invalid"
             },
             {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state"
-            },
-            {
               "name": "name",
               "type": {
                 "text": "string"
@@ -27087,6 +27078,15 @@
               "default": "false",
               "fieldName": "required",
               "description": "Required state"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state"
             },
             {
               "name": "accessible-description",
@@ -31798,26 +31798,6 @@
             },
             {
               "kind": "field",
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "readonly",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -31931,6 +31911,26 @@
               },
               "default": "false",
               "attribute": "no-spellcheck",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
               "reflects": true
             },
             {
@@ -32354,24 +32354,6 @@
               "description": "Marks the field as invalid"
             },
             {
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "readonly",
-              "description": "Readonly state"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state"
-            },
-            {
               "name": "name",
               "type": {
                 "text": "string"
@@ -32483,6 +32465,24 @@
               "default": "false",
               "fieldName": "noSpellcheck",
               "description": "Disables browser spellchecking on the inner input"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly",
+              "description": "Readonly state"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state"
             },
             {
               "name": "accessible-description",
@@ -33023,26 +33023,6 @@
             },
             {
               "kind": "field",
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "readonly",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -33114,6 +33094,26 @@
               },
               "default": "''",
               "attribute": "autocomplete"
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -33526,24 +33526,6 @@
               "description": "Marks the field as invalid."
             },
             {
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "readonly",
-              "description": "Read-only state."
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state."
-            },
-            {
               "name": "name",
               "type": {
                 "text": "string"
@@ -33614,6 +33596,24 @@
               "default": "''",
               "fieldName": "autocomplete",
               "description": "Autocomplete hint."
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly",
+              "description": "Read-only state."
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state."
             },
             {
               "name": "translations",
@@ -34190,16 +34190,6 @@
             },
             {
               "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -34226,6 +34216,16 @@
               "default": "false",
               "description": "Marks the group as required: something has to be selected.\n\nHanded to the items, because that is where the platform reads it. One\nrequired radio makes the whole group required, and the browser writes its\nown message in the user's language.\n\nOnly in radio mode. The same attribute on a checkbox means that box has to\nbe ticked, so spreading it over a checkbox group would demand all of them\ninstead of one. HTML has no way to say \"at least one of these\", and\nneither do we: `aria-required` still goes on the group so assistive\nsoftware says it, but nothing enforces it.",
               "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
               "reflects": true
             },
             {
@@ -34301,15 +34301,6 @@
               "fieldName": "invalid"
             },
             {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disables all buttons"
-            },
-            {
               "name": "name",
               "type": {
                 "text": "string"
@@ -34338,6 +34329,15 @@
               "default": "false",
               "description": "Marks the group as required. Enforced in radio mode; in checkbox mode only announced.",
               "fieldName": "required"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disables all buttons"
             }
           ],
           "superclass": {
@@ -34571,16 +34571,6 @@
             },
             {
               "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -34616,6 +34606,16 @@
               },
               "default": "false",
               "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
               "reflects": true
             },
             {
@@ -35126,15 +35126,6 @@
               "fieldName": "invalid"
             },
             {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state"
-            },
-            {
               "name": "name",
               "type": {
                 "text": "string"
@@ -35172,6 +35163,15 @@
               "default": "false",
               "fieldName": "required",
               "description": "Required state. Set by nldd-toggle-button-group."
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state"
             },
             {
               "name": "accessible-description",
@@ -35375,27 +35375,6 @@
             },
             {
               "kind": "field",
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Readonly: shows the tokens as static (no dismiss control, no input, no\npicker) with the read-only surface treatment.",
-              "attribute": "readonly",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -35460,6 +35439,27 @@
               },
               "default": "false",
               "attribute": "no-spellcheck",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Readonly: shows the tokens as static (no dismiss control, no input, no\npicker) with the read-only surface treatment.",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
               "reflects": true
             },
             {
@@ -35896,24 +35896,6 @@
               "description": "Marks the field invalid (shows the invalid icon)"
             },
             {
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Readonly: static tokens, no input/picker, read-only surface",
-              "fieldName": "readonly"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state"
-            },
-            {
               "name": "name",
               "type": {
                 "text": "string"
@@ -35974,6 +35956,24 @@
               "default": "false",
               "fieldName": "noSpellcheck",
               "description": "Disables browser spellchecking on the inner input"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Readonly: static tokens, no input/picker, read-only surface",
+              "fieldName": "readonly"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state"
             },
             {
               "name": "translations",
@@ -46684,16 +46684,6 @@
             },
             {
               "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "href",
               "type": {
                 "text": "string | undefined"
@@ -46728,6 +46718,16 @@
               "default": "undefined",
               "description": "Saves the file instead of opening it; only used when href is set. Empty\nfor the name from the URL, a name to save it under.",
               "attribute": "download"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
             },
             {
               "kind": "method",
@@ -46885,15 +46885,6 @@
             },
             {
               "type": {
-                "text": "boolean"
-              },
-              "description": "Switches the segment off: a `button` or `checkbox` segment stops responding and dims, a `href` segment gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). The arrow keys skip a row whose only segment is off.",
-              "name": "disabled",
-              "default": "false",
-              "fieldName": "disabled"
-            },
-            {
-              "type": {
                 "text": "string | undefined"
               },
               "description": "Renders the segment as an `<a>` with this URL. Wins over `checkbox` and `button`.",
@@ -46924,6 +46915,15 @@
               "name": "download",
               "default": "undefined",
               "fieldName": "download"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Switches the segment off: a `button` or `checkbox` segment stops responding and dims, a `href` segment gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). The arrow keys skip a row whose only segment is off.",
+              "name": "disabled",
+              "default": "false",
+              "fieldName": "disabled"
             },
             {
               "name": "translations",
@@ -47126,17 +47126,6 @@
             },
             {
               "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Switches off the row's own control.\n\nOnly the row's own: a row built out of segments has no control here, and\neach segment carries its own `disabled`. A link cannot be disabled the way\na button can, so there it is `aria-disabled` plus a blocked click, the\nsame trade `nldd-button` makes.",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "href",
               "type": {
                 "text": "string | undefined"
@@ -47174,6 +47163,17 @@
               "default": "undefined",
               "description": "Saves the file instead of opening it; only used when href is set. Empty\nfor the name from the URL, a name to save it under.",
               "attribute": "download"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Switches off the row's own control.\n\nOnly the row's own: a row built out of segments has no control here, and\neach segment carries its own `disabled`. A link cannot be disabled the way\na button can, so there it is `aria-disabled` plus a blocked click, the\nsame trade `nldd-button` makes.",
+              "attribute": "disabled",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -47341,15 +47341,6 @@
               "fieldName": "current"
             },
             {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Switches the row's own control off: a `button` or `checkbox` row stops responding and dims, a `href` row gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). A row without a control of its own has nothing to switch off, and segments carry their own `disabled`. The arrow keys skip a disabled row.",
-              "fieldName": "disabled"
-            },
-            {
               "name": "href",
               "type": {
                 "text": "string | undefined"
@@ -47381,6 +47372,15 @@
               "default": "undefined",
               "description": "Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden \"downloadt bestand\" for screen readers. Leave `target` off: a download opens no tab.",
               "fieldName": "download"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Switches the row's own control off: a `button` or `checkbox` row stops responding and dims, a `href` row gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). A row without a control of its own has nothing to switch off, and segments carry their own `disabled`. The arrow keys skip a disabled row.",
+              "fieldName": "disabled"
             },
             {
               "name": "translations",
@@ -48781,16 +48781,6 @@
             },
             {
               "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "href",
               "type": {
                 "text": "string | undefined"
@@ -48826,6 +48816,16 @@
               "default": "undefined",
               "description": "Saves the file instead of opening it; only used when href is set. Empty\nfor the name from the URL, a name to save it under.",
               "attribute": "download"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
             },
             {
               "kind": "method",
@@ -48980,15 +48980,6 @@
               "fieldName": "noTab"
             },
             {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state. Avoid it where you can; the design guidelines say why."
-            },
-            {
               "name": "href",
               "type": {
                 "text": "string | undefined"
@@ -49023,6 +49014,15 @@
               "default": "undefined",
               "description": "Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden \"downloadt bestand\" for screen readers. Leave `target` off: a download opens no tab.",
               "fieldName": "download"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state. Avoid it where you can; the design guidelines say why."
             },
             {
               "name": "accessible-description",
@@ -49243,6 +49243,15 @@
             },
             {
               "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "href"
+            },
+            {
+              "kind": "field",
               "name": "disabled",
               "type": {
                 "text": "boolean"
@@ -49250,15 +49259,6 @@
               "default": "false",
               "attribute": "disabled",
               "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "href",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "href"
             },
             {
               "kind": "field",
@@ -49401,15 +49401,6 @@
               "description": "Mark as the active or current item"
             },
             {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Turn interaction off. Avoid it where you can; the design guidelines say why."
-            },
-            {
               "name": "href",
               "type": {
                 "text": "string"
@@ -49417,6 +49408,15 @@
               "default": "''",
               "fieldName": "href",
               "description": "Optional link URL. Without href it renders as a button."
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Turn interaction off. Avoid it where you can; the design guidelines say why."
             },
             {
               "name": "open",
@@ -49659,22 +49659,22 @@
             },
             {
               "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "total",
               "type": {
                 "text": "number"
               },
               "default": "1",
               "attribute": "total",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
               "reflects": true
             },
             {
@@ -49716,15 +49716,6 @@
               "description": "Currently active page (1-based)"
             },
             {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state. Avoid it where you can; the design guidelines say why."
-            },
-            {
               "name": "total",
               "type": {
                 "text": "number"
@@ -49732,6 +49723,15 @@
               "default": "1",
               "fieldName": "total",
               "description": "Total number of pages (recommended max: 200 for compact select performance)"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state. Avoid it where you can; the design guidelines say why."
             },
             {
               "name": "translations",

@@ -95,13 +95,6 @@ export default {
 			control: false,
 			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
 		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde staat',
-			table: {
-				defaultValue: { summary: false },
-			},
-		},
 		href: {
 			control: 'text',
 			description: 'Link doel',
@@ -118,6 +111,13 @@ export default {
 			mapping: { '(geen)': null, download: '', 'download="aanvraag-A-1042.pdf"': 'aanvraag-A-1042.pdf' },
 			description: 'Slaat het bestand op in plaats van het te openen (alleen met href); een waarde wordt de bestandsnaam',
 		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde staat',
+			table: {
+				defaultValue: { summary: false },
+			},
+		},
 	},
 	args: {
 		size: 'md',
@@ -127,14 +127,14 @@ export default {
 		accessibleLabel: '',
 		accessibleDescription: '',
 		accessibleDescribedBy: '',
-		disabled: false,
 		href: '#',
 		target: '',
 		download: '(geen)',
+		disabled: false,
 	},
 };
 
-const Template = ({ size, text, startIcon, endIcon, accessibleLabel, accessibleDescription, disabled, href, target, download }: Record<string, any>) => html`
+const Template = ({ size, text, startIcon, endIcon, accessibleLabel, accessibleDescription, href, target, download, disabled }: Record<string, any>) => html`
 	<nldd-link
 		size=${size || nothing}
 		text=${text}
@@ -142,10 +142,10 @@ const Template = ({ size, text, startIcon, endIcon, accessibleLabel, accessibleD
 		end-icon=${endIcon || nothing}
 		accessible-label=${accessibleLabel || nothing}
 		accessible-description=${accessibleDescription || nothing}
-		?disabled=${disabled}
 		href=${href || nothing}
 		target=${target || nothing}
 		download=${download ?? nothing}
+		?disabled=${disabled}
 	></nldd-link>
 `;
 

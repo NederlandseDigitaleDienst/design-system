@@ -95,13 +95,6 @@ export default {
 				defaultValue: { summary: false },
 			},
 		},
-		disabled: {
-			control: 'boolean',
-			description: 'Disabled state',
-			table: {
-				defaultValue: { summary: false },
-			},
-		},
 		type: {
 			control: 'select',
 			options: ['button', 'submit', 'reset'],
@@ -120,6 +113,13 @@ export default {
 			mapping: { '(geen)': null, download: '', 'download="aanvraag-A-1042.pdf"': 'aanvraag-A-1042.pdf' },
 			description: 'Slaat het bestand op in plaats van het te openen (alleen met href); een waarde wordt de bestandsnaam',
 		},
+		disabled: {
+			control: 'boolean',
+			description: 'Disabled state',
+			table: {
+				defaultValue: { summary: false },
+			},
+		},
 	},
 	args: {
 		appearance: 'neutral-tinted',
@@ -134,10 +134,10 @@ export default {
 		shortcutWindows: '',
 		shortcutLinux: '',
 		loading: false,
-		disabled: false,
 		type: 'button',
 		href: '',
 		download: '(geen)',
+		disabled: false,
 	},
 };
 
@@ -160,7 +160,7 @@ const menu = html`
 	</nldd-menu>
 `;
 
-const Template = ({ appearance, size, width, text, icon, loadingText, shortcut, shortcutMac, shortcutWindows, shortcutLinux, loading, disabled, type, href, download }: Record<string, any>) => html`
+const Template = ({ appearance, size, width, text, icon, loadingText, shortcut, shortcutMac, shortcutWindows, shortcutLinux, loading, type, href, download, disabled }: Record<string, any>) => html`
 	<nldd-split-button
 		appearance=${appearance}
 		size=${size}
@@ -173,10 +173,10 @@ const Template = ({ appearance, size, width, text, icon, loadingText, shortcut, 
 		shortcut-windows=${shortcutWindows || nothing}
 		shortcut-linux=${shortcutLinux || nothing}
 		?loading=${loading}
-		?disabled=${disabled}
 		type=${type}
 		href=${href || nothing}
 		download=${download ?? nothing}
+		?disabled=${disabled}
 		@action-click=${action('action-click')}
 	>${menu}</nldd-split-button>
 `;

@@ -36,12 +36,12 @@ export default {
 		accessibleDescribedBy: '',
 		valid: false,
 		invalid: false,
-		disabled: false,
 		name: '',
 		accept: '',
 		multiple: false,
 		directory: false,
 		required: false,
+		disabled: false,
 	},
 	argTypes: {
 		variant: {
@@ -81,11 +81,6 @@ export default {
 			description: 'Markeert het veld als ongeldig',
 			table: { defaultValue: { summary: false } },
 		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde staat',
-			table: { defaultValue: { summary: false } },
-		},
 		name: {
 			control: 'text',
 			description: 'Naam waaronder het bestand wordt ingediend',
@@ -109,6 +104,11 @@ export default {
 			description: 'Verplicht; ongeldig zolang er geen bestand is gekozen',
 			table: { defaultValue: { summary: false } },
 		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde staat',
+			table: { defaultValue: { summary: false } },
+		},
 	},
 };
 
@@ -120,12 +120,12 @@ export const Standaard = ({
 	accessibleDescription,
 	valid,
 	invalid,
-	disabled,
 	name,
 	accept,
 	multiple,
 	directory,
 	required,
+	disabled,
 }: Record<string, unknown>) => html`
 	<nldd-file-field
 		variant=${variant === 'control' ? nothing : variant}
@@ -134,12 +134,12 @@ export const Standaard = ({
 		accessible-description=${accessibleDescription || nothing}
 		?valid=${valid}
 		?invalid=${invalid}
-		?disabled=${disabled}
 		name=${name || nothing}
 		accept=${accept || nothing}
 		?multiple=${multiple}
 		?directory=${directory}
 		?required=${required}
+		?disabled=${disabled}
 	></nldd-file-field>
 `;
 

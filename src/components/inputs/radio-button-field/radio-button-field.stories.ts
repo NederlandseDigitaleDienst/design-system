@@ -49,11 +49,6 @@ export default {
 			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
 			table: { defaultValue: { summary: false } },
 		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde toestand',
-			table: { defaultValue: { summary: false } },
-		},
 		value: {
 			control: 'text',
 			description: 'Waarde voor formulierverwerking',
@@ -61,6 +56,11 @@ export default {
 		required: {
 			control: 'boolean',
 			description: 'Verplichte staat.',
+			table: { defaultValue: { summary: false } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde toestand',
 			table: { defaultValue: { summary: false } },
 		},
 	},
@@ -71,22 +71,22 @@ export default {
 		accessibleDescribedBy: '',
 		checked: false,
 		invalid: false,
-		disabled: false,
 		value: 'option-1',
 		required: false,
+		disabled: false,
 	},
 };
 
-const Template = ({ color, label, accessibleDescription, checked, invalid, disabled, value, required }: Record<string, any>) => html`
+const Template = ({ color, label, accessibleDescription, checked, invalid, value, required, disabled }: Record<string, any>) => html`
 	<nldd-radio-button-field
 		color=${color || nothing}
 		label=${label}
 		accessible-description=${accessibleDescription || nothing}
 		?checked=${checked}
 		?invalid=${invalid}
-		?disabled=${disabled}
 		value=${value}
 		?required=${required}
+		?disabled=${disabled}
 	></nldd-radio-button-field>
 `;
 

@@ -179,11 +179,11 @@ export default {
 		wrap: true,
 		syntax: 'hidden',
 		invalid: false,
-		readonly: false,
-		disabled: false,
 		value: SAMPLE,
 		required: false,
 		noSpellcheck: false,
+		readonly: false,
+		disabled: false,
 	},
 	argTypes: {
 		resize: {
@@ -228,16 +228,6 @@ export default {
 			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
 			table: { defaultValue: { summary: false } },
 		},
-		readonly: {
-			control: 'boolean',
-			description: 'Alleen-lezen staat',
-			table: { defaultValue: { summary: false } },
-		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde staat',
-			table: { defaultValue: { summary: false } },
-		},
 		value: {
 			control: 'text',
 			description: 'De inhoud (markdown)',
@@ -253,6 +243,16 @@ export default {
 			description: 'Zet de spellingscontrole uit. Standaard aan, zonder code, URL\'s en mentions.',
 			table: { defaultValue: { summary: false } },
 		},
+		readonly: {
+			control: 'boolean',
+			description: 'Alleen-lezen staat',
+			table: { defaultValue: { summary: false } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde staat',
+			table: { defaultValue: { summary: false } },
+		},
 	},
 };
 
@@ -265,11 +265,11 @@ const Template = ({
 	wrap,
 	syntax,
 	invalid,
-	readonly,
-	disabled,
 	value,
 	required,
 	noSpellcheck,
+	readonly,
+	disabled,
 }: Record<string, any>) => html`
 	<nldd-text-editor
 		resize=${resize as string}
@@ -280,11 +280,11 @@ const Template = ({
 		?wrap=${wrap}
 		syntax=${syntax as string}
 		?invalid=${invalid}
-		?readonly=${readonly}
-		?disabled=${disabled}
 		.value=${value || ''}
 		?required=${required}
 		?no-spellcheck=${noSpellcheck}
+		?readonly=${readonly}
+		?disabled=${disabled}
 	></nldd-text-editor>
 `;
 
