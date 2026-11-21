@@ -1,3 +1,6 @@
 {
-	"repositories": []
+	"repositories": [
+		{ "repository": "NederlandseDigitaleDienst/bouwmeester", "agent": true },
+		{ "repository": "NederlandseDigitaleDienst/NeRDS", "agent": true, "build": "(command -v uv >/dev/null || pip install --quiet uv) && uv run --locked mkdocs build", "site": "site" }
+	]
 }
