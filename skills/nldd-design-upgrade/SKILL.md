@@ -157,12 +157,16 @@ Een upgrade is klaar als dit allemaal waar is:
 - de eigen controles van het project slagen: de build, de tests en wat er in de CI draait;
 - een keuze die niet uit de changelog volgt, staat apart in de pull request.
 
+## De volgende keer vanzelf
+
+Staat er in `.github/workflows` nog geen stap met `NederlandseDigitaleDienst/design-system/upgrade`, stel dan voor die toe te voegen: dan komt de volgende upgrade als pull request, met dit deel al gedaan. Zet hem er niet ongevraagd in, want het team kiest of er een agent meedoet en met welk token. Hoe het moet, staat op [Upgraden](https://design.digitaledienst.overheid.nl/upgraden/). Werk je zelf als agent in die action, sla dit dan over.
+
 ## Wat er stil misgaat
 
 Wat een upgrade breekt, faalt zonder foutmelding. Een onbekend attribuut, een verdwenen CSS-variabele of een hernoemd of verwijderd slot rendert gewoon niets of valt terug op een default: inhoud met `slot="indicator"` verdwijnt bijvoorbeeld stil sinds die slot van `nldd-activity-indicator` weg is. Componenten waarschuwen in een dev-build wel over een verkeerde compositie, maar juist deze drie zien ze niet aankomen. Na een upgrade is "het ziet er nog goed uit" daarom geen bewijs.
 
 - **Hernoemde CSS-variabelen zijn de meest gemiste val.** Je eigen CSS verwijst dan naar een naam die niet meer bestaat, zonder foutmelding: de declaratie valt gewoon weg. `nldd lint` vangt dit voor `--primitives-*`, `--semantics-*`, `--components-*` en de `--context-*`-variabelen met een default (`token-not-found`) en noemt de opvolger als die er is. De changelog zet zo'n token onder `Breaking`. Een `--_*` of `--components-*` hoort niet in je eigen CSS: die zijn van één component en bewegen met dat component mee.
-- **Een hernoemd event breekt ook stil.** De listener op de oude naam wordt nooit meer aangeroepen, terwijl het component zijn eigen deel nog doet: een tabbalk kiest zijn tab, maar het paneel wisselt niet. `nldd lint` vangt dit (`event-renamed`) in `addEventListener`, in `@…` en `v-on:` van Vue, Lit en Alpine, in `(…)=` van Angular en in `hx-on`, en `--fix` hernoemt het waar de naam letterlijk staat. Hij vindt de naam ook in een eigen functie die over events gaat, zoals een hook. Een naam die je zelf samenstelt (`addEventListener(prefix + 'change')`) ziet hij niet; zoek daarvoor op de oude namen uit de changelog.
+- **Een hernoemd event breekt ook stil.** De listener op de oude naam wordt nooit meer aangeroepen, terwijl het component zijn eigen deel nog doet: een tabbalk kiest zijn tab, maar het paneel wisselt niet. `nldd lint` vangt dit (`event-renamed`) in `addEventListener`, in `@…` en `v-on:` van Vue, Lit en Alpine, in `(…)=` van Angular en in `hx-on`, en `--fix` hernoemt het waar de naam letterlijk staat. Hij vindt de naam ook in een eigen functie die over events gaat, zoals een hook, en hernoemt hem daar als het project die functie definieert en de naam alleen aan `addEventListener` geeft. Een naam die je zelf samenstelt (`addEventListener(prefix + 'change')`) ziet hij niet; zoek daarvoor op de oude namen uit de changelog.
 - **Controleer de versie die je echt draait**, niet de versie in `package.json`. Een `^0.8.44` in `package.json` met een lockfile van maanden oud draait iets anders dan je denkt. `npm ls @nldd/design-system` geeft het antwoord.
 - **Verifieer in een browser, niet in de code.** Bouw het en kijk. Dat is de enige manier om een stille terugval te zien. Zie [Voor en na vergelijken](#voor-en-na-vergelijken).
 

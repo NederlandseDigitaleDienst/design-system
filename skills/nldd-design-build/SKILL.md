@@ -249,6 +249,8 @@ Draai `npx @nldd/design-system lint` voordat je klaar bent: hij vindt onbekende 
 
 Draait je applicatie al op dit designsysteem en moet de versie omhoog, gebruik dan [`nldd-design-upgrade`](../nldd-design-upgrade/SKILL.md). Kort waarom het een eigen skill is: dit project brengt alles uit als patch, ook een breaking change, dus het versienummer zegt niet of een sprong veilig is. De changelog wel.
 
+Bouw je een nieuwe app in een GitHub-repository, stel dan voor de action `upgrade` erin te zetten: dan komt er bij elke release een pull request met de nieuwe versie, de fixes die zeker zijn en een lijst van wat er nog te doen is. Zet hem er niet ongevraagd in, want het team kiest of er een agent meedoet en met welk token. Hoe het moet, staat op [Upgraden](https://design.digitaledienst.overheid.nl/upgraden/).
+
 ## Bron van waarheid
 
 1. **[De website](https://design.digitaledienst.overheid.nl/componenten/)**: levende voorbeelden en controls per component.
