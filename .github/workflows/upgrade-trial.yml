@@ -4,7 +4,7 @@ name: Try the upgrade (temporary)
 # only be started by hand once it is on main, so this starts the same job from
 # the branch: the app opens the pull request, the agent works the list, and the
 # command comes from this branch. The repositories are in a variable, like the
-# list of the fleet. A push that touches this file starts it. Seventh run.
+# list of the fleet. A push that touches this file starts it. Eighth run.
 
 on:
   push:
