@@ -212,6 +212,15 @@ describe('nldd upgrade', () => {
 		assert.doesNotMatch(report, /Keuzes bij de upgrade/);
 	});
 
+	it('names an old tag in a second reading only where a line still does', async () => {
+		const root = project(files);
+		const { result: first } = await upgrade(root);
+		writeFileSync(join(root, 'notes.css'), '/* nldd-task-board-column */\n/* nldd-kanban-column */\n');
+		const since = { ...first, fixed: { ...first.fixed, stillNamed: ['notes.css:1', 'notes.css:2', 'gone.css:1'] } };
+		const { result } = await upgrade(root, { since });
+		assert.deepEqual(result.fixed.stillNamed, ['notes.css:1']);
+	});
+
 	it('changes nothing in a second reading, also where a fix could', async () => {
 		const root = project(files);
 		const { result: first } = await upgrade(root);

@@ -50,6 +50,23 @@ function upgradeRules(data, from) {
 	return { isNew, of: (id) => (byId.has(id) ? isNew(byId.get(id)) : id in BUILT_IN_RULES) };
 }
 
+/**
+ * The lines an earlier run said still name an old tag, without those that no longer do. An
+ * old tag is one this version does not have, so a line someone has since changed drops out.
+ */
+function stillNaming(data, root, places = []) {
+	return places.filter((place) => {
+		const [, file, line] = /^(.*):(\d+)$/.exec(place) ?? [];
+		let text;
+		try {
+			text = readFileSync(join(root, file), 'utf8').split('\n')[Number(line) - 1] ?? '';
+		} catch {
+			return false;
+		}
+		return (text.match(/nldd-[a-z0-9]+(?:-[a-z0-9]+)*/g) ?? []).some((tag) => !(tag in data.tags));
+	});
+}
+
 /** How many places a run left per rule: what a later reading of the project is held against. */
 function placesLeft({ work, unread, undecided }) {
 	const count = (entries) => entries.reduce((sum, { places }) => sum + places.length, 0);
@@ -183,7 +200,7 @@ export async function upgradeProject(data, { root, target, breaking, config, sev
 		package: PACKAGE,
 		from,
 		to: target,
-		...(since ? { pinned: since.pinned, notRaised: since.notRaised, lockfiles: since.lockfiles, fixed: since.fixed, earlier: placesLeft(since) } : { pinned, notRaised, lockfiles, fixed }),
+		...(since ? { pinned: since.pinned, notRaised: since.notRaised, lockfiles: since.lockfiles, fixed: { ...since.fixed, stillNamed: stillNaming(data, root, since.fixed.stillNamed) }, earlier: placesLeft(since) } : { pinned, notRaised, lockfiles, fixed }),
 		files: session.files,
 		work: [...work.values()].sort(bySize),
 		undecided: [...undecided.values()].sort(bySize),
