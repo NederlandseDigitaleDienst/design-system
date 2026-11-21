@@ -244,6 +244,8 @@ export class NLDDToolbar extends LitElement {
 					const el = m.target as Element;
 					const tag = el.tagName.toLowerCase();
 					if (tag === 'nldd-toolbar-item' || tag === 'nldd-toolbar-title') {
+						// The toolbar sets `hidden` on its own items when they overflow.
+						if (m.attributeName === 'hidden') continue;
 						// Structural attribute change (label/priority/width/…) → rebuild.
 						needsRebuild = true;
 					} else if (el.closest?.('[slot="overflow"]')) {
@@ -843,7 +845,7 @@ export class NLDDToolbar extends LitElement {
 		this._prioritizedItemsCache = null;
 		this._syncHosts();
 
-		const itemAttributeFilter = ['label', 'priority', 'min-width', 'max-width', 'width', 'text', 'disabled', 'selected', 'type'];
+		const itemAttributeFilter = ['label', 'priority', 'min-width', 'max-width', 'width', 'text', 'disabled', 'selected', 'type', 'hidden'];
 		this._observer?.observe(this, { childList: true, attributes: true, subtree: true, attributeFilter: itemAttributeFilter });
 		this._watchChildSizes();
 

@@ -1334,7 +1334,7 @@ Nederlandse Digitale Dienst Validation List (Lit + TypeScript) Everything a valu
 
 ### `<nldd-checkbox>`
 
-**Keywords:** selectievakje, vinkje.
+**Keywords:** selectievakje, vinkje, toggle, toggles.
 
 **Related:** `<nldd-switch>`.
 
@@ -1371,7 +1371,7 @@ Nederlandse Digitale Dienst Validation List (Lit + TypeScript) Everything a valu
 
 A checkbox with an inline label for use in forms. Options that belong under this one are nldd-checkbox-fields of their own, each with `slot="children"`, as rows nest in nldd-list-item. They indent to line up with the label, and are a group named after this option. This checkbox then follows them: checked when all of them are, indeterminate when some are, and unchecked when none are. Checking or unchecking it does the same to every option under it that is not disabled, nor under a disabled one; those fire no `change` of their own then, so listen on this one or higher up. When a disabled option keeps it indeterminate and the rest are already checked, a click unchecks them instead. Its own `change` fires when they change its state, so a box further up follows too. In an nldd-checkbox-group, the options under it belong to the group as well. Form-associated: participates in native form submission under `name` with `value` when checked (the inner nldd-checkbox sits in the shadow root and never joins the consumer's form; the field submits on its behalf).
 
-**Keywords:** selectievakje, vinkje.
+**Keywords:** selectievakje, vinkje, toggle, toggles.
 
 **Related:** `<nldd-switch-field>`.
 
@@ -1415,7 +1415,7 @@ A checkbox with an inline label for use in forms. Options that belong under this
 
 Groups nldd-checkbox-field elements as nldd-radio-button-group groups radio buttons: the same layout, one name for all of them, and a group that a screen reader announces with its label. Each checkbox is a stop of its own for Tab, as checkboxes are; the arrow keys belong to a radio group. Use inside nldd-form-field, which provides the group label. `required` asks for at least one checked box, not for every box: while none is checked, each field reports a missing value, and as soon as one is checked, none does. Nothing announces it per box, since no single box is required, and ARIA has no `aria-required` for a group: say it in the label or the help text, or mark the other questions optional.
 
-**Keywords:** selectievakjes.
+**Keywords:** selectievakjes, toggle, toggles.
 
 **Related:** `<nldd-radio-button-group>`, `<nldd-token-field>`.
 
@@ -1542,7 +1542,7 @@ A text input with autocomplete dropdown via nldd-menu. Add a slotted nldd-menu w
 
 A text field for a date, with an optional calendar in a popover. The value is always ISO (yyyy-mm-dd); on screen it shows the Dutch notation (dd-mm-yyyy). Typing is not masked: input is accepted generously (`31-12-2026`, `31/12/2026`, `31122026`, ISO too) and normalized only when the field is left. Masking per keystroke makes the caret jump, makes backspace unpredictable and confuses screen readers. After a choice in the calendar the chosen day stays lit a moment before the calendar closes, so you see what you picked. The value and `change` do not wait for it. Error messages belong to nldd-form-field, not here. This field reflects only `invalid` / `valid`, like nldd-text-field. `value` holds a valid date or nothing, so an empty field and one with text that is no date both read as ''. `validity` tells them apart: `badInput` for text that is no date, `rangeUnderflow` / `rangeOverflow` for a date outside `min` / `max`, and with `range` and `required` `valueMissing` for a period with only a start. A form does not submit then, and nldd-form marks the field invalid. Without a submit, as in a filter that applies at once, the moment is yours: `field.invalid = !field.validity.valid` on `change`, with a message of your own in the nldd-form-field.
 
-**Keywords:** datum.
+**Keywords:** datum, time, tijd, datetime.
 
 **Related:** `<nldd-date-picker>`.
 
@@ -1588,7 +1588,7 @@ A text field for a date, with an optional calendar in a popover. The value is al
 
 A calendar for picking a date or a period. The component works on its own (inline on a page, in a filter panel) and also sits in the popover of nldd-date-field. Values are always ISO (yyyy-mm-dd). With `range` the user picks a start and an end date in two steps. Arrow keys move by day and by week, Home and End to the edges of the week, PageUp and PageDown by month, and with Shift by year; Enter and Space pick. The month title is a live region, so a screen reader hears which month has focus while paging. Dates that `isDateUnavailable` rules out stay reachable by keyboard, so an arrow key never silently skips a run of them.
 
-**Keywords:** calendar, kalender, datum.
+**Keywords:** calendar, kalender, datum, time, tijd, datetime.
 
 **Related:** `<nldd-date-field>`.
 
@@ -1877,7 +1877,7 @@ A password input field with visibility toggle and validation states.
 
 WAI-ARIA: put the buttons of one group in a container with role="radiogroup" and a name of its own. A screen reader counts the options from that container, so a bare <fieldset> (which is a group, not a radiogroup) leaves them uncounted. nldd-radio-button-group does this for you. Radio buttons with the same name, in the same form and the same tree, form one group the way native radios do: checking one unchecks the others, the arrow keys move between them, Tab stops at the group once, and a screen reader hears each one's place in it. The element itself is the radio, because an input per shadow root would leave every button a group of one. The shape is all this component draws. A radio with a label beside it is nldd-radio-button-field. <fieldset role="radiogroup" aria-labelledby="options-label"> <legend id="options-label">Kies een optie</legend> <nldd-radio-button name="options" value="1" accessible-label="Optie 1"></nldd-radio-button> <nldd-radio-button name="options" value="2" accessible-label="Optie 2"></nldd-radio-button> </fieldset>
 
-**Keywords:** keuzerondje.
+**Keywords:** keuzerondje, toggle, toggles.
 
 **Rules** (`nldd lint`)
 
@@ -1911,7 +1911,7 @@ WAI-ARIA: put the buttons of one group in a container with role="radiogroup" and
 
 A radio button with an inline label. Use inside nldd-radio-button-group, which sets the name and labels the group. Fields that stand on their own group by name, the way native radios do: checking one unchecks the others, the arrow keys move between them and Tab stops at the group once. Put them in a container with role="radiogroup", or a screen reader has nothing to count them from. The field is the radio: it carries the role, the state, the label it is announced by and the focus, and the nldd-radio-button inside only draws the shape. A radio of its own in there would be a second control inside a control, and a group of one to count. Form-associated: the checked field submits its `value` under `name`. Unchecking siblings is the group's job, so exactly one value per group reaches the form.
 
-**Keywords:** keuzerondje.
+**Keywords:** keuzerondje, toggle, toggles.
 
 **Rules** (`nldd lint`)
 
@@ -1943,7 +1943,7 @@ A radio button with an inline label. Use inside nldd-radio-button-group, which s
 
 Groups nldd-radio-button-field elements, handles keyboard navigation, and forwards name and disabled state to all child fields. Use inside nldd-form-field which provides the group label.
 
-**Keywords:** keuzerondjes.
+**Keywords:** keuzerondjes, toggle, toggles.
 
 **Related:** `<nldd-checkbox-group>`, `<nldd-dropdown>`, `<nldd-segmented-control>`, `<nldd-swatch-picker>`.
 
@@ -2231,7 +2231,7 @@ A row of swatches to choose one from: a color, or an image of a pattern or a mat
 
 A toggle control for on/off settings. Prefer nldd-switch-field for labeled usage. It combines the switch with a visible label. Direct use of nldd-switch requires an accessible-label attribute for screen reader accessibility.
 
-**Keywords:** toggle, schakelaar.
+**Keywords:** toggle, toggles, schakelaar.
 
 **Related:** `<nldd-checkbox>`, `<nldd-toggle-button>`.
 
@@ -2267,7 +2267,7 @@ A toggle control for on/off settings. Prefer nldd-switch-field for labeled usage
 
 A switch toggle with an inline label for use in forms.
 
-**Keywords:** schakelaar.
+**Keywords:** toggle, toggles, schakelaar.
 
 **Related:** `<nldd-checkbox-field>`.
 
@@ -2415,7 +2415,7 @@ A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the 
 
 A text field for a time. The value is always 24-hour `HH:mm`, which is how Dutch shows it too, so unlike nldd-date-field there is nothing to convert. Typing is not masked: input is accepted generously and normalized only when the field is left. Error messages belong to nldd-form-field, not here. This field reflects only `invalid` / `valid`, like nldd-text-field. `value` holds a valid time or nothing, so an empty field and one with text that is no time both read as ''. `validity` tells them apart: `badInput` for text that is no time, `rangeUnderflow` / `rangeOverflow` for a time outside `min` / `max`. A form does not submit then, and nldd-form marks the field invalid. Without a submit, as in a filter that applies at once, the moment is yours: `field.invalid = !field.validity.valid` on `change`, with a message of your own in the nldd-form-field. What you do in the picker is a preview until you leave it. The field shows the time right away but commits it on close. "Klaar" and Enter keep the choice, and so does a click outside once you have picked something. Escape puts the old time back. On sm, where the picker is a bottom sheet, "Klaar" sits in its title bar and the sheet offers no cancel: as with a native wheel, you turn back to change your mind. The built-in wheels show 7 rows, and fewer, down to 3, when the picker would otherwise run off the window; they grow back when the window does. On an empty field the wheels open at `min`, or otherwise at the current time rounded to `step`, which does not fill in the field yet.
 
-**Keywords:** tijd.
+**Keywords:** tijd, date, datum, datetime.
 
 **Related:** `<nldd-time-picker>`.
 
@@ -2465,7 +2465,7 @@ A text field for a time. The value is always 24-hour `HH:mm`, which is how Dutch
 
 Two columns, hours and minutes, that slide like a wheel past the selection in the middle. The component works on its own (inline on a page, in a filter panel) and also sits in the popover of nldd-time-field. There the field sets `value`, `min`, `max` and `step`; set them on the field. Values are always 24-hour `HH:mm`. Scrolling is choosing: whatever comes to rest in the middle is the value. The keyboard drives that same selection, because that is what a wheel is: hour and minute are each a spinbutton. The columns underneath are aria-hidden, so the same values are not read out twice.
 
-**Keywords:** tijd.
+**Keywords:** tijd, date, datum, datetime.
 
 **Related:** `<nldd-time-field>`.
 
@@ -2688,7 +2688,7 @@ Use a box to visually group related components in a distinct, contained region. 
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `background` | `'tinted'\|'base'\|'accent-tinted'\|'critical'` | Which surface this box draws, named as it is on nldd-shell, nldd-page, nldd-split-view-pane and nldd-card. It starts tinted where a card starts base: a box is there to stand out from the page, a card to sit on it. - `tinted` (default): a box on a plain page background. - `base`: a box on an already-tinted parent (the border ring gets +2 palette steps so it still reads against a card-on-card). - `accent-tinted`: a tint of the theme's accent, with the contrast of `tinted`, for a box that belongs to the service rather than to the page. - `critical`: a region whose actions are destructive or irreversible (a "danger zone"), tinted and outlined in critical. It carries no ARIA of its own: unlike nldd-banner this is not an announcement but a permanent part of the page, so the heading and the button labels have to name the danger. Color is a reinforcement, never the only signal (WCAG 1.4.1). The box draws the surface and nothing else: it has no padding of its own, the same way nldd-card has none. Put an nldd-container inside it and let that set the inset, so one component owns spacing wherever it is used. |
+| `background` | `'tinted'\|'base'\|'accent-tinted'\|'critical'` | Which surface this box draws, named as it is on nldd-shell, nldd-page and nldd-card. It starts tinted where a card starts base: a box is there to stand out from the page, a card to sit on it. - `tinted` (default): a box on a plain page background. - `base`: a box on an already-tinted parent (the border ring gets +2 palette steps so it still reads against a card-on-card). - `accent-tinted`: a tint of the theme's accent, with the contrast of `tinted`, for a box that belongs to the service rather than to the page. - `critical`: a region whose actions are destructive or irreversible (a "danger zone"), tinted and outlined in critical. It carries no ARIA of its own: unlike nldd-banner this is not an announcement but a permanent part of the page, so the heading and the button labels have to name the danger. Color is a reinforcement, never the only signal (WCAG 1.4.1). The box draws the surface and nothing else: it has no padding of its own, the same way nldd-card has none. Put an nldd-container inside it and let that set the inset, so one component owns spacing wherever it is used. |
 
 **Slots**
 
@@ -3051,6 +3051,7 @@ A four-column layout with a primary sidebar, secondary sidebar, main content are
 | `inspector-accessible-label` | `string` | Accessible name for the inspector sheet dialog (default: 'Details') |
 | `primary-sidebar-accessible-label` | `string` | Accessible name for the primary sidebar sheet dialog (default: 'Navigatie') |
 | `inspector-auto-hidden` | `boolean` | Inspector hidden to free up space for other panes (read-only, set by the split view) |
+| `empty` | `boolean` | This pane says nothing is chosen yet, such as "Kies een dossier". Stacked, the view shows the pane before it instead. Set it on the element in `main` or `secondary-sidebar`. |
 
 **Slots**
 
@@ -3335,7 +3336,7 @@ A non-modal floating panel anchored to a trigger element. Built on the native Po
 
 ### `<nldd-sheet>`
 
-An overlay component that slides in from the side or bottom of the screen. Based on the native <dialog> element for built-in accessibility, focus management, and Escape key support. On small (sm) viewports the sheet always renders as a bottom sheet, regardless of the configured placement. Render the sheet at the document root (teleport/portal it to `document.body`), never inside a split view's content flow: as a slotted flex child it would steal pane height (see `nldd-split-view-pane`). A sheet holds a whole nldd-page: an nldd-top-title-bar in its header slot, the content, and a footer when there are actions. The page behaves as it does anywhere else, with only the middle scrolling, and the text of the bar is also the sheet's accessible name. Do not build a header of your own. Open and close it with `open`, bound to your state together with the close event: the sheet clears `open` itself when the user closes it. show() and hide() do the same for code without a binding. Keep the sheet in the DOM rather than mounting it when it opens, or the animations are skipped.
+An overlay component that slides in from the side or bottom of the screen. Based on the native <dialog> element for built-in accessibility, focus management, and Escape key support. On small (sm) viewports the sheet always renders as a bottom sheet, regardless of the configured placement. Render the sheet at the document root (teleport/portal it to `document.body`), never inside a split view's content flow: as a slotted flex child it would steal the height of the pane it lands in. A sheet holds a whole nldd-page: an nldd-top-title-bar in its header slot, the content, and a footer when there are actions. The page behaves as it does anywhere else, with only the middle scrolling, and the text of the bar is also the sheet's accessible name. Do not build a header of your own. Open and close it with `open`, bound to your state together with the close event: the sheet clears `open` itself when the user closes it. show() and hide() do the same for code without a binding. Keep the sheet in the DOM rather than mounting it when it opens, or the animations are skipped.
 
 **Keywords:** modal, drawer, side panel, bottom sheet, overlay, paneel, lade.
 
@@ -3411,6 +3412,10 @@ A horizontal split view with multiple equal panes side by side. The number of pa
 **Keywords:** master-detail.
 
 **Related:** `<nldd-navigation-split-view>`, `<nldd-stacked-split-view>`, `<nldd-bar-split-view>`.
+
+**Rules** (`nldd lint`)
+
+- `split-view-no-sheet`: Render nldd-sheet at the document root: as a slotted child it takes the height of the pane, and a sticky footer comes loose.
 
 **Attributes**
 
@@ -3575,29 +3580,6 @@ A divider line between panels in a split view. The divider runs from edge to edg
 | `orientation` | `'vertical'\|'horizontal'` | Orientation: 'vertical' \| 'horizontal' |
 | `has-drag-handle` | `boolean` | Show a drag handle |
 
-### `<nldd-split-view-pane>`
-
-A simple pane container for use inside split views. The split view automatically sets context: whether a back button should be shown. The consumer sets `has-content` to indicate the pane has content. The consumer sets `back-text` on the `nldd-top-title-bar` inside the pane. The split view sets `hide-back` when the back button is not applicable. The pane automatically hides the back button via CSS when `hide-back` is active. The pane sets `--context-background-color` which cascades down to all descendants. Set `background="tinted"` on a pane to give it a tinted background independently of sibling panes. Descendants such as `nldd-page` read `--context-background-color` automatically. A pane stretches its slotted content to fill it (`::slotted(*) { flex-grow: 1 }`), so slot only layout content here. Overlays (`nldd-sheet`, popovers, dialogs, menus) belong at the document root: teleport/portal them to `document.body`. Do not leave an overlay as a light-DOM sibling of a split view: it gets slotted into the main pane and becomes an extra flex-grow child that steals pane height, so in document-scroll (root) mode a short page's sticky footer floats mid-screen instead of docking.
-
-**Rules** (`nldd lint`)
-
-- `split-view-no-sheet`: Render nldd-sheet at the document root: as a slotted child it takes the height of the pane, and a sticky footer comes loose.
-- `toolbar-in-pane-needs-container` (hint): Put the toolbar in an nldd-container with padding: the bar split view sets none itself.
-
-**Attributes**
-
-| Attribute | Type | Description |
-| --- | --- | --- |
-| `background` | `'inherit'\|'base'\|'tinted'` | Use a tinted background color (cascades to descendants) |
-| `hide-back` | `boolean` | Hide the back button (set automatically by the split view) |
-| `has-content` | `boolean` | The pane has content (default: false) |
-
-**Slots**
-
-| Slot | Description |
-| --- | --- |
-| _(default)_ | Pane content |
-
 ### `<nldd-stacked-split-view>`
 
 A vertical split view with multiple stacked panes. The number of panes is set via the `panes` attribute. Each pane automatically gets a numbered slot: pane-1, pane-2, etc. Panes that do not fit the available height are automatically hidden.
@@ -3605,6 +3587,10 @@ A vertical split view with multiple stacked panes. The number of panes is set vi
 **Keywords:** master-detail.
 
 **Related:** `<nldd-navigation-split-view>`, `<nldd-side-by-side-split-view>`, `<nldd-bar-split-view>`.
+
+**Rules** (`nldd lint`)
+
+- `split-view-no-sheet`: Render nldd-sheet at the document root: as a slotted child it takes the height of the pane, and a sticky footer comes loose.
 
 **Attributes**
 
@@ -4527,7 +4513,7 @@ A narrow, page-wide status bar (24px) with a deep background color per variant. 
 
 ### `<nldd-step-bar>`
 
-Shows where you are in a process of several steps: a row of discs with a number (or a check mark on what is done), a label under each and a line connecting them. Other systems call this a stepper or a progress indicator. Mark the step you are on with `status="current"`. The parent derives the rest from its position: `past` before it, `future` after. With none marked, step 1 is current. With more than one, the last one wins and a warning goes to the console in a dev build: a flow that forgets to clear the previous step still points at the furthest one. A `status="past"` or `status="future"` on another step overrides what is derived for that step, for flows that jump back or skip a step. One attribute, the same three values as `nldd-step-cell`, so a flow reads in one vocabulary whether it runs across or down. Horizontal only, for 3 to 5 steps and 7 at most: each step needs room for its label, and with more of them you count instead of seeing at a glance how far you are. For more steps, or steps under each other, build an `nldd-list` with an `nldd-step-cell` and an `nldd-title-cell` per row: vertical steps usually carry more than a title, and a list row already does that. When the bar is no wider than the sm breakpoint, or than 120px per step, whichever is wider (a container query, so measured on the component itself rather than on the viewport), it folds into one line of text plus a segmented bar. A label that is too long for its step breaks at a syllable. The full list of steps stays in the DOM, only visually hidden, so assistive software hears no less than a wide screen shows. A step that is a link or a button is out of the tab order then: Tab would land on something you cannot see (WCAG 2.4.7). Accessibility: a `nav` with a label, holding a `role="list"` with a `role="listitem"` per step. The current step gets `aria-current="step"`, the only notion WAI-ARIA has for this. "Done" and "still to do" do not exist as ARIA tokens and travel along as visually hidden text instead.
+Shows where you are in a process of several steps: a row of discs with a number (or a check mark on what is done), a label under each and a line connecting them. Other systems call this a stepper or a progress indicator. Mark the step you are on with `status="current"`. The parent derives the rest from its position: `past` before it, `future` after. With none marked, no step is current and every step is still to do. With more than one, the last one wins and a warning goes to the console in a dev build: a flow that forgets to clear the previous step still points at the furthest one. A `status="past"` or `status="future"` on another step overrides what is derived for that step, for flows that jump back or skip a step. One attribute, the same three values as `nldd-step-cell`, so a flow reads in one vocabulary whether it runs across or down. A bar without a current step shows what is coming, for instance on the page before a process starts. Use that sparingly: what someone needs there is the button that starts the task, and a bar that shows no progress tells little. Mark a step as soon as the process has begun. Horizontal only, for 3 to 5 steps and 7 at most: each step needs room for its label, and with more of them you count instead of seeing at a glance how far you are. For more steps, or steps under each other, build an `nldd-list` with an `nldd-step-cell` and an `nldd-title-cell` per row: vertical steps usually carry more than a title, and a list row already does that. When the bar is no wider than the sm breakpoint, or than 120px per step, whichever is wider (a container query, so measured on the component itself rather than on the viewport), it folds into one line of text plus a segmented bar. A label that is too long for its step breaks at a syllable. The full list of steps stays in the DOM, only visually hidden, so assistive software hears no less than a wide screen shows. A step that is a link or a button is out of the tab order then: Tab would land on something you cannot see (WCAG 2.4.7). Accessibility: a `nav` with a label, holding a `role="list"` with a `role="listitem"` per step. The current step gets `aria-current="step"`, the only notion WAI-ARIA has for this. "Done" and "still to do" do not exist as ARIA tokens and travel along as visually hidden text instead.
 
 **Keywords:** stappen.
 
@@ -4566,7 +4552,7 @@ One step in an `nldd-step-bar`. `status="current"` marks the step you are on; th
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `status` | `'past' \| 'current' \| 'future'` | How far along this step is. `current` marks the step you are on (`aria-current="step"`) and the parent derives the others from it: with none marked step 1 is current, with more than one the last wins. `past` and `future` override what is derived for this step only |
+| `status` | `'past' \| 'current' \| 'future'` | How far along this step is. `current` marks the step you are on (`aria-current="step"`) and the parent derives the others from it: with none marked every step is still to do, with more than one the last wins. `past` and `future` override what is derived for this step only |
 | `text` | `string` | Label under the disc. Content in the default slot wins. |
 | `icon` | `string` | Icon in the disc instead of the number or the check mark |
 | `href` | `string` | Makes the step a link (back to a completed step, for instance) |
@@ -4911,7 +4897,7 @@ A cell that draws steps under each other in an `nldd-list`: a vertical track wit
 
 ### `<nldd-table>`
 
-Exports both NLDDTable and NLDDTableRow. A data table presented as a boxed surface (rounded corners, an inset border ring, a base or tinted fill) that aligns content into shared columns using a CSS grid + subgrid. Row dividers run full-bleed to the edges; the inline padding lives on the rows, so it insets the cell content but not the dividers. Column widths are defined ONCE on the table via the `columns` attribute (a CSS grid track list), like an HTML `<colgroup>`. Rows are `<nldd-table-row>` elements whose children are the existing `nldd-cell` family. Every row uses `grid-template-columns: subgrid`, so all rows snap to the same columns. A generic `nldd-cell` gets `width="full"`, so it fills its column, unless it sets a length of its own. Header: put one `<nldd-table-row slot="header">` in the `header` slot. Its cells become column headers (role="columnheader"). Row headers: give the cell that says what a row is about `row-header` (`nldd-cell`, `nldd-title-cell`, `nldd-text-cell`, `nldd-description-cell`). The row then gives it role="rowheader" instead of "cell", so a screen reader names the row along with every other cell in it, like `<th scope="row">`. The attribute goes on the cell, not as a column index on the row or table, so it survives columns hidden at a breakpoint and needs no counting. It changes the semantics only: the cell variant still decides the look. The cell above the row headers, in the header row, stays a columnheader. Headers that span rows or columns are not supported. Responsive: two complementary strategies. (1) Give columns a minimum width (e.g. `minmax(160px,1fr)`). The table is its own scroll container, so it scrolls horizontally when too narrow (no wrapper needed). (2) Drop columns at breakpoints: provide `sm-columns`/`md-columns`/ `lg-columns` (shorter track lists) and hide the dropped columns' cells with `hide-below`/`hide-above` at the matching breakpoint. The table picks the track list for its own width via the standard sm/md/lg breakpoints. Selection and sorting are intentionally NOT built in: add a column with an `nldd-cell` + `nldd-checkbox` for selection, and drive sorting from an external control (e.g. a dropdown).
+Exports both NLDDTable and NLDDTableRow. A data table presented as a boxed surface (rounded corners, an inset border ring, a base or tinted fill) that aligns content into shared columns using a CSS grid + subgrid. Row dividers run full-bleed to the edges; the inline padding lives on the rows, so it insets the cell content but not the dividers. Column widths are defined ONCE on the table via the `columns` attribute (a CSS grid track list), like an HTML `<colgroup>`. Rows are `<nldd-table-row>` elements whose children are the existing `nldd-cell` family. Every row uses `grid-template-columns: subgrid`, so all rows snap to the same columns. A generic `nldd-cell` gets `width="full"`, so it fills its column, unless it sets a length of its own. Header: put one `<nldd-table-row slot="header">` in the `header` slot. Its cells become column headers (role="columnheader"). Row headers: give the cell that says what a row is about `row-header` (`nldd-cell`, `nldd-title-cell`, `nldd-text-cell`, `nldd-description-cell`). The row then gives it role="rowheader" instead of "cell", so a screen reader names the row along with every other cell in it, like `<th scope="row">`. The attribute goes on the cell, not as a column index on the row or table, so it survives columns hidden at a breakpoint and needs no counting. It changes the semantics only: the cell variant still decides the look. The cell above the row headers, in the header row, stays a columnheader. Headers that span rows or columns are not supported. Responsive: two complementary strategies. (1) Give columns a minimum width (e.g. `minmax(160px,1fr)`). The table is its own scroll container, so it scrolls horizontally when too narrow (no wrapper needed). (2) Drop columns at breakpoints: provide `sm-columns`/`md-columns`/ `lg-columns` (shorter track lists) and hide the dropped columns' cells with `hide-below`/`hide-above` at the matching breakpoint. The table picks the track list for its own width via the standard sm/md/lg breakpoints. A hidden cell is gone at that width, for every reader: drop a column only when what it says is also somewhere else, such as in the row header or on a detail page the row links to. Otherwise scroll, which every table already does (WCAG 1.4.10). Selection and sorting are intentionally NOT built in: add a column with an `nldd-cell` + `nldd-checkbox` for selection, and drive sorting from an external control (e.g. a dropdown).
 
 **Keywords:** tabel.
 

@@ -15,14 +15,17 @@
  * @keywords master-detail, zijbalk
  * @related nldd-side-by-side-split-view, nldd-stacked-split-view, nldd-bar-split-view
  *
- * Use <code>nldd-split-view-pane</code> as direct children for automatic
- * back button handling.
+ * Slot the content of a pane straight into the view, usually an nldd-page.
+ * The view gives it the room of its column and hides the back button of its
+ * nldd-top-title-bar where the pane it leads back to is in view.
  *
  * @attr {boolean} inspector-as-sheet - Always show the inspector as a sheet regardless of available space
  * @attr {boolean} primary-sidebar-as-sheet - Always show the primary sidebar as a sheet, keeping main visible at full width
  * @attr {string} inspector-accessible-label - Accessible name for the inspector sheet dialog (default: 'Details')
  * @attr {string} primary-sidebar-accessible-label - Accessible name for the primary sidebar sheet dialog (default: 'Navigatie')
  * @attr {boolean} inspector-auto-hidden - Inspector hidden to free up space for other panes (read-only, set by the split view)
+ *
+ * @childattr {boolean} empty - This pane says nothing is chosen yet, such as "Kies een dossier". Stacked, the view shows the pane before it instead. Set it on the element in `main` or `secondary-sidebar`.
  *
  * @slot primary-sidebar - Left pane for primary navigation
  * @slot secondary-sidebar - Second pane for secondary navigation (shown when slotted)
@@ -135,7 +138,18 @@ export class NLDDNavigationSplitView extends LitElement {
 	}
 
 	_paneHasContent(slot: string): boolean {
-		return this.querySelector(`:scope > nldd-split-view-pane[slot="${slot}"]`)?.hasAttribute('has-content') ?? false;
+		const pane = this.querySelector(`:scope > [slot="${slot}"]`);
+		return !!pane && !pane.hasAttribute('empty');
+	}
+
+	/**
+	 * @internal Whether the pane the back button of this one leads to is in
+	 * view already, so the button would go nowhere. The primary sidebar has
+	 * none: how deep its navigation goes is up to the consumer.
+	 */
+	_hidesBack(slot: 'secondary-sidebar' | 'main'): boolean {
+		if (slot === 'main') return this.primarySidebarAsSheet || this._mode !== 'full-stack';
+		return !this.primarySidebarAsSheet && this._mode === 'spatial';
 	}
 
 	override connectedCallback() {
@@ -165,12 +179,12 @@ export class NLDDNavigationSplitView extends LitElement {
 
 	private _observePanes() {
 		this._paneObserver?.disconnect();
-		this.querySelectorAll(':scope > nldd-split-view-pane').forEach(pane => {
+		for (const pane of this.children) {
 			this._paneObserver!.observe(pane, {
 				attributes: true,
-				attributeFilter: ['has-content'],
+				attributeFilter: ['empty', 'slot'],
 			});
-		});
+		}
 	}
 
 	/**
@@ -301,46 +315,8 @@ export class NLDDNavigationSplitView extends LitElement {
 			}));
 		}
 
-		this._updatePaneBackButtons();
-	}
-
-	private _updatePaneBackButtons() {
-		const panes = {
-			primarySidebar: this.querySelector(':scope > nldd-split-view-pane[slot="primary-sidebar"]'),
-			secondarySidebar: this.querySelector(':scope > nldd-split-view-pane[slot="secondary-sidebar"]'),
-			main: this.querySelector(':scope > nldd-split-view-pane[slot="main"]'),
-		};
-
-		// When primary-sidebar-as-sheet, main is always the only visible inline pane — no back buttons
-		// Secondary sidebar in the sheet can go back to the primary sidebar — keep its back button
-		if (this.primarySidebarAsSheet) {
-			panes.secondarySidebar?.removeAttribute('hide-back');
-			panes.main?.setAttribute('hide-back', '');
-			return;
-		}
-
-		// All panes visible side by side — primary sidebar never gets hide-back,
-		// secondary sidebar gets hide-back because the primary sidebar is visible alongside it
-		if (this._mode === 'spatial') {
-			panes.secondarySidebar?.setAttribute('hide-back', '');
-			panes.main?.setAttribute('hide-back', '');
-			return;
-		}
-
-		// Primary sidebar is hidden — secondary sidebar can go back to it
-		// Main is visible alongside secondary sidebar — no sequential navigation
-		if (this._mode === 'primary-sidebar-stack') {
-			panes.secondarySidebar?.removeAttribute('hide-back');
-			panes.main?.setAttribute('hide-back', '');
-			return;
-		}
-
-		// Primary sidebar never gets hide-back — consumer controls navigation depth
-		if (this._mode === 'full-stack') {
-			panes.secondarySidebar?.removeAttribute('hide-back');
-			panes.main?.removeAttribute('hide-back');
-			return;
-		}
+		// The back buttons follow the mode, which is not reactive state.
+		this.requestUpdate();
 	}
 
 	// ----------------------------------------------------------------

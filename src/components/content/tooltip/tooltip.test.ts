@@ -552,6 +552,28 @@ describe('nldd-tooltip – description in the light DOM', () => {
 		expect(isTooltipVisible(tooltip)).toBe(true);
 	});
 
+	it('verdwijnt bij een resize als hover hem toonde', async () => {
+		const tooltip = await fixture<NLDDTooltip>('<nldd-tooltip text="Test"><button>Trigger</button></nldd-tooltip>');
+		el = tooltip;
+		await waitForUpdate(tooltip);
+		await triggerShow(tooltip, tooltip.querySelector('button')!);
+		window.dispatchEvent(new Event('resize'));
+		await until(() => !isTooltipVisible(tooltip));
+	});
+
+	// A toolbar that is only there at another width hides the trigger.
+	it('verdwijnt bij een resize die de trigger verbergt, ook met focus', async () => {
+		const tooltip = await fixture<NLDDTooltip>('<div><nldd-tooltip text="Test"><button>Trigger</button></nldd-tooltip></div>');
+		const real = tooltip.querySelector('nldd-tooltip') as NLDDTooltip;
+		el = tooltip;
+		await waitForUpdate(real);
+		real.querySelector('button')!.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+		await until(() => isTooltipVisible(real));
+		(tooltip as HTMLElement).style.display = 'none';
+		window.dispatchEvent(new Event('resize'));
+		await until(() => !isTooltipVisible(real));
+	});
+
 	it('blijft bij scrollen als open hem vastzet', async () => {
 		const tooltip = await fixture<NLDDTooltip>('<nldd-tooltip text="Test" open><button>Trigger</button></nldd-tooltip>');
 		el = tooltip;

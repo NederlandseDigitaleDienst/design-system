@@ -393,7 +393,13 @@ export class NLDDTooltip extends LitElement {
 		this._boundary = undefined;
 		clearTimeout(this._fadeTimer);
 		this._stopScroll?.();
-		this._stopScroll = onAncestorScroll(this, this._handleScroll);
+		const stopScroll = onAncestorScroll(this, this._handleScroll);
+		// A resize moves the trigger just as a scroll does, or hides it.
+		window.addEventListener('resize', this._handleScroll);
+		this._stopScroll = () => {
+			stopScroll();
+			window.removeEventListener('resize', this._handleScroll);
+		};
 	}
 
 	/** It fades out beside its trigger, with the text it had. Stopped at once,
@@ -407,11 +413,17 @@ export class NLDDTooltip extends LitElement {
 		}, cssTimeToMs(getComputedStyle(this).getPropertyValue('--_tooltip-hide-duration')));
 	}
 
-	/** A hover tooltip goes when the page scrolls: it is fixed to the screen,
+	/** A hover tooltip goes when the page scrolls or resizes: it is fixed to the screen,
 	 *  and the pointer leaves its trigger without a mouseleave until the
 	 *  scrolling stops. One shown by focus or `open` follows its trigger, and
 	 *  so does one that is fading out. */
 	private _handleScroll = (): void => {
+		// A trigger that is gone from the screen (a toolbar that is only there
+		// at another width) takes its tooltip along, focused or not.
+		if (this._visible && !this.open && this._currentTrigger && !this._currentTrigger.checkVisibility()) {
+			this._interest.close();
+			return;
+		}
 		if (!this._visible || this.open || this._interest.focused) {
 			this._updatePosition();
 			return;

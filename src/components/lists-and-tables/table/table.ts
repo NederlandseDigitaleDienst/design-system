@@ -34,6 +34,10 @@
  * `lg-columns` (shorter track lists) and hide the dropped columns' cells with
  * `hide-below`/`hide-above` at the matching breakpoint. The table picks the
  * track list for its own width via the standard sm/md/lg breakpoints.
+ * A hidden cell is gone at that width, for every reader: drop a column only
+ * when what it says is also somewhere else, such as in the row header or on a
+ * detail page the row links to. Otherwise scroll, which every table already
+ * does (WCAG 1.4.10).
  *
  * Selection and sorting are intentionally NOT built in: add a column with an
  * `nldd-cell` + `nldd-checkbox` for selection, and drive sorting from an

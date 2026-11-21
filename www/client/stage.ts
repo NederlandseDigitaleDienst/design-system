@@ -3,9 +3,10 @@
  *
  * The site is built with the components it documents, so without a frame a
  * reader cannot tell an example from the page around it. Everything live
- * stands on a stage, and nothing else does. The stage is one box in the
- * surface and color scheme of the example, with dividers under the bar and
- * above the controls. Everything around the example is built with the
+ * stands on a stage, and nothing else does. The stage is one box, with
+ * dividers under the bar and above the controls; only the area between them
+ * takes the surface and color scheme of the example, since the bar and the
+ * controls belong to the page. Everything around the example is built with the
  * components themselves, so the example looks as it does in an application.
  *
  * A stage owns three things the page does not: its color scheme, its surface
@@ -20,6 +21,7 @@ import '../../src/components/content/title/title.js';
 import '../../src/components/inputs/segmented-control/segmented-control.js';
 import '../../src/components/layout/box/box.js';
 import '../../src/components/layout/container/container.js';
+import '../../src/components/status-and-feedback/inline-dialog/inline-dialog.js';
 import '../../src/components/layout/divider/divider.js';
 import '../../src/components/layout/spacer/spacer.js';
 import '../../src/components/actions/toolbar/toolbar.js';
@@ -139,11 +141,20 @@ function nldd(tag: string, attributes: Record<string, string | boolean> = {}, ch
 	return node;
 }
 
-/** A section of the stage below the mat, with the inset every section shares. */
-function section(className: string, children: Node[]): HTMLElement {
-	const container = nldd('container', { padding: '16' }, children);
-	container.classList.add(className);
-	return container;
+/** What stands where an example could not load: what went wrong, in the words of the error, and a way to load it again. */
+export function loadFailure(error: unknown): HTMLElement {
+	const reload = nldd('button', { slot: 'actions', text: 'Opnieuw laden' });
+	reload.addEventListener('click', () => location.reload());
+	const dialog = nldd(
+		'inline-dialog',
+		{
+			variant: 'alert',
+			text: 'Dit voorbeeld kon niet geladen worden',
+			'supporting-text': (error as Error)?.message ?? String(error),
+		},
+		[reload],
+	);
+	return nldd('box', {}, [nldd('container', { padding: '24' }, [dialog])]);
 }
 
 /** A description from JSDoc, with its backticks as code. */
@@ -183,8 +194,6 @@ export class SiteStage extends HTMLElement {
 	private frame?: HTMLIFrameElement;
 	private code?: HTMLElement;
 	private box = nldd('box', { background: 'base' });
-	private events = nldd('container', { list: true, gap: '4' });
-	private eventLog = section('site-stage__events', [this.events]);
 	private dark = siteIsDark();
 	/** Auto follows the scheme of the site, also when it changes later. */
 	private scheme = 'auto';
@@ -253,8 +262,8 @@ export class SiteStage extends HTMLElement {
 		try {
 			this.story = await loadStory(file, name);
 		} catch (error) {
-			this.build({ tools: false });
-			this.canvas.textContent = `Dit voorbeeld kon niet geladen worden: ${(error as Error).message}`;
+			// No stage around it: there is no example to stand on it.
+			this.replaceChildren(loadFailure(error));
 			return;
 		}
 		this.args = { ...this.story.args };
@@ -278,7 +287,6 @@ export class SiteStage extends HTMLElement {
 				this.args = { ...this.args, ...changes };
 				this.draw(this.canvas);
 			},
-			log: (name, detail) => this.log(name, detail),
 		};
 	}
 
@@ -301,13 +309,6 @@ export class SiteStage extends HTMLElement {
 		}
 	}
 
-	private log(name: string, detail: unknown): void {
-		const item = nldd('text', { size: 'sm', color: 'secondary', text: detail ? `${name} ${detail}` : name });
-		this.events.prepend(item);
-		while (this.events.children.length > 4) this.events.lastElementChild?.remove();
-		this.eventLog.hidden = false;
-	}
-
 	private buildFrame(file: string, name: string): void {
 		const base = import.meta.env.BASE_URL;
 		const frame = element('iframe', 'site-stage__frame');
@@ -322,7 +323,6 @@ export class SiteStage extends HTMLElement {
 		frame.src = `${base}voorbeeld/?file=${encodeURIComponent(file)}&story=${encodeURIComponent(name)}&scheme=${this.dark ? 'dark' : 'light'}`;
 		addEventListener('message', (event) => {
 			if (event.source !== frame.contentWindow || event.data?.site !== 'stage') return;
-			if (event.data.type === 'event') this.log(event.data.name, event.data.detail);
 			if (event.data.type === 'source') void this.setSource(event.data.code);
 			if (event.data.type === 'height') frame.style.height = `${event.data.height}px`;
 			if (event.data.type === 'ready') this.resend();
@@ -350,7 +350,7 @@ export class SiteStage extends HTMLElement {
 	private applyScheme(): void {
 		this.dark = this.scheme === 'auto' ? siteIsDark() : this.scheme === 'dark';
 		// Auto leaves the stage to inherit the page; a frame is told.
-		this.box.style.colorScheme = this.scheme === 'auto' ? '' : this.scheme;
+		this.mat.style.colorScheme = this.scheme === 'auto' ? '' : this.scheme;
 		this.post({ type: 'scheme', scheme: this.dark ? 'dark' : 'light' });
 	}
 
@@ -461,7 +461,6 @@ export class SiteStage extends HTMLElement {
 						(surface) => {
 							this.tinted = surface === 'tinted';
 							this.canvas.dataset.surface = surface;
-							this.box.setAttribute('background', surface);
 						},
 						1,
 					),
@@ -523,9 +522,7 @@ export class SiteStage extends HTMLElement {
 				mat.removeAttribute('aria-label');
 			}
 		})).observe(this.canvas);
-		this.eventLog.hidden = true;
-		this.events.setAttribute('aria-label', `Events van ${name}`);
-		this.box.replaceChildren(...(toolbar.children.length ? [bar, nldd('divider')] : []), mat, this.eventLog);
+		this.box.replaceChildren(...(toolbar.children.length ? [bar, nldd('divider')] : []), mat);
 		this.replaceChildren(this.box);
 	}
 
@@ -586,7 +583,7 @@ export class SiteStage extends HTMLElement {
 		if (this.frame) return;
 		const scratch = document.createElement('div');
 		const story = this.story;
-		const silent: StoryContext = { args: this.args, updateArgs: () => {}, log: () => {} };
+		const silent: StoryContext = { args: this.args, updateArgs: () => {} };
 		const render = story.parameters.docs?.source?.render ?? story.render;
 		mount(withContext(silent, () => render(mapArgs(this.args, story.argTypes))), scratch);
 		this.applyOverrides(scratch);
@@ -861,7 +858,7 @@ export class SiteStage extends HTMLElement {
 			[this.quickAdd],
 		);
 		this.quickStrip.classList.add('site-stage__quick');
-		this.eventLog.before(nldd('divider'), this.quickStrip);
+		this.box.append(nldd('divider'), this.quickStrip);
 		this.showQuick();
 	}
 

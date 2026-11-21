@@ -68,7 +68,7 @@
 import { LitElement, PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
-import { addStandaloneScrollLayer, findScrollModeProvider, removeStandaloneScrollLayer, whenScrollModeProviderDefined } from '../../../utilities/scroll-mode-controller.js';
+import { addStandaloneScrollLayer, findScrollModeProvider, inOverlay, removeStandaloneScrollLayer, whenScrollModeProviderDefined } from '../../../utilities/scroll-mode-controller.js';
 import type { ScrollMode, ScrollModeProvider, StandaloneScrollLayer } from '../../../utilities/scroll-mode-controller.js';
 import { pageStyles } from './page.styles.js';
 import { pageTemplate } from './page.template.js';
@@ -209,6 +209,7 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 	private _scrollMode: 'nested' | 'root' = 'nested';
 	private _scrollTarget: EventTarget | null = null;
 	private _scrollProvider: ScrollModeProvider | null = null;
+	private _inOverlay = false;
 	/** @internal Whether the bars are observed, and so can be measured. */
 	_insetsReady = false;
 	private _headerFullHeight = 0;
@@ -266,6 +267,7 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 		// sections query page-container, so no container between them counts.
 		this.style.containerType = 'inline-size';
 		this.style.containerName = 'layout-container page-container';
+		this._inOverlay = inOverlay(this);
 		this._scrollProvider = findScrollModeProvider(this);
 		if (this._scrollProvider) {
 			// Push-driven inside a shell: it pushes the authoritative mode on
@@ -344,7 +346,7 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 	// inherited --context-scroll-mode is read (anything but 'root' means nested).
 	/** @internal */
 	_readScrollMode(mode?: ScrollMode): boolean {
-		const next: ScrollMode = mode ?? this.inheritedScrollMode();
+		const next: ScrollMode = this._inOverlay ? 'nested' : mode ?? this.inheritedScrollMode();
 		if (next === this._scrollMode) return false;
 		this._scrollMode = next;
 		this.dataset.scroll = next;
@@ -426,23 +428,36 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 	 * event. And a scroller that holds nothing to focus cannot be scrolled with
 	 * the keyboard in Safari and Firefox, where Tab never lands in it. It takes a
 	 * tab stop of its own then, and only then: with a link or a field in it, Tab
-	 * already gets there and the arrow keys scroll.
+	 * already gets there and the arrow keys scroll. Without a sticky header the
+	 * host is the scroller, so the host takes it, and gives back only its own.
 	 */
 	_readScrollState(): { focusable: boolean } {
 		// Read phase: _onScroll reads the scroller and sets reactive state, which
 		// Lit renders later. Keep DOM writes out of here.
 		this._onScroll();
-		const scroller = this._scrollEl;
+		const scroller = this.stickyHeader ? this._scrollEl : this;
 		const scrolls = !!scroller && !this._isRoot && scroller.scrollHeight > scroller.clientHeight;
 		return { focusable: scrolls && !holdsFocusable(this) };
 	}
 
+	/** Whether the host's tabindex is the tab stop this page gave itself. */
+	private _hostTabStop = false;
+
 	/** @internal */
 	_applyScrollState({ focusable }: { focusable: boolean }): void {
-		const scroller = this._scrollEl;
-		if (!scroller) return;
-		if (focusable) scroller.setAttribute('tabindex', '0');
-		else scroller.removeAttribute('tabindex');
+		const inner = this._scrollEl;
+		const onHost = focusable && !this.stickyHeader;
+		if (inner) {
+			if (focusable && this.stickyHeader) inner.setAttribute('tabindex', '0');
+			else inner.removeAttribute('tabindex');
+		}
+		if (onHost && !this.hasAttribute('tabindex')) {
+			this.setAttribute('tabindex', '0');
+			this._hostTabStop = true;
+		} else if (!onHost && this._hostTabStop) {
+			this.removeAttribute('tabindex');
+			this._hostTabStop = false;
+		}
 	}
 
 	private _teardownInsetObserver() {

@@ -13,7 +13,7 @@
 import './autoload.js';
 import { loadStory, mapArgs, mount, sourceOf, type LoadedStory } from './stories.js';
 import { withContext, type StoryContext } from './runtime.js';
-import { keepInPlace } from './stage.js';
+import { keepInPlace, loadFailure } from './stage.js';
 import { chosenTheme, onThemeChosenElsewhere, showTheme } from './theme.js';
 
 const params = new URLSearchParams(location.search);
@@ -53,14 +53,13 @@ function draw(): void {
 			args = { ...args, ...changes };
 			draw();
 		},
-		log: (event, detail) => tell({ type: 'event', name: event, detail }),
 	};
 	mount(withContext(context, () => current.render(mapArgs(args, current.argTypes))), root);
 	applyOverrides(root);
 
 	if (current.parameters.docs?.source?.code) return;
 	const scratch = document.createElement('div');
-	const silent: StoryContext = { args, updateArgs: () => {}, log: () => {} };
+	const silent: StoryContext = { args, updateArgs: () => {} };
 	const render = current.parameters.docs?.source?.render ?? current.render;
 	mount(withContext(silent, () => render(mapArgs(args, current.argTypes))), scratch);
 	applyOverrides(scratch);
@@ -100,5 +99,5 @@ try {
 		new ResizeObserver(() => tell({ type: 'height', height: root.offsetHeight })).observe(root);
 	}
 } catch (error) {
-	root.textContent = `Dit voorbeeld kon niet geladen worden: ${(error as Error).message}`;
+	root.replaceChildren(loadFailure(error));
 }

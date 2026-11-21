@@ -927,7 +927,12 @@ export const devRules: DevRule[] = [
 	{
 		"id": "split-view-no-sheet",
 		"message": "Render nldd-sheet at the document root: as a slotted child it takes the height of the pane, and a sticky footer comes loose.",
-		"context": ":is(nldd-split-view-pane, nldd-navigation-split-view, nldd-bar-split-view) > nldd-sheet"
+		"context": ":is(nldd-navigation-split-view, nldd-bar-split-view, nldd-side-by-side-split-view, nldd-stacked-split-view) > nldd-sheet"
+	},
+	{
+		"id": "split-view-pane-not-found",
+		"message": "`nldd-split-view-pane` is gone: put what was in it straight in the split view, with the `slot` of the pane. In an nldd-navigation-split-view, set `empty` on a pane that says nothing is chosen yet.",
+		"context": "nldd-split-view-pane"
 	},
 	{
 		"id": "status-bar-goes-above-top-bar",
@@ -2629,11 +2634,6 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-split-view-divider-orientation",
 		"message": "`orientation` on nldd-split-view-divider takes: horizontal, vertical.",
 		"context": "nldd-split-view-divider[orientation]:not([orientation=\"horizontal\"], [orientation=\"vertical\"])"
-	},
-	{
-		"id": "invalid-value-split-view-pane-background",
-		"message": "`background` on nldd-split-view-pane takes: base, inherit, tinted.",
-		"context": "nldd-split-view-pane[background]:not([background=\"base\"], [background=\"inherit\"], [background=\"tinted\"])"
 	},
 	{
 		"id": "invalid-value-stacked-split-view-background",

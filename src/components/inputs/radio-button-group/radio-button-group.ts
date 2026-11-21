@@ -6,7 +6,7 @@
  * Use inside nldd-form-field which provides the group label.
  *
  * @element nldd-radio-button-group
- * @keywords keuzerondjes
+ * @keywords keuzerondjes, toggle, toggles
  * @related nldd-checkbox-group, nldd-dropdown, nldd-segmented-control, nldd-swatch-picker
  * @attr {string} name - Forwarded to all slotted nldd-radio-button-field elements
  * @attr {boolean} disabled - Disables all slotted fields

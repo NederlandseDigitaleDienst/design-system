@@ -23,7 +23,7 @@
  * </fieldset>
  *
  * @element nldd-radio-button
- * @keywords keuzerondje
+ * @keywords keuzerondje, toggle, toggles
  * @attr {boolean} checked - Checked state
  * @attr {boolean} disabled - Disabled state
  * @attr {'content'} color - 'content' draws the control in the color of the text around it, with the mark in the surface color (`--context-background-color`). A colored surface of your own sets that variable. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.

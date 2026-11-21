@@ -67,7 +67,7 @@ export default {
 	},
 	args: {
 		icon: 'heart',
-		size: '24',
+		size: '96',
 		color: 'content',
 		tile: false,
 		customColor: '',

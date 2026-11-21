@@ -10285,14 +10285,6 @@
         },
         {
           "kind": "js",
-          "name": "NLDDSplitViewPane",
-          "declaration": {
-            "name": "NLDDSplitViewPane",
-            "module": "./layout/split-views/split-view-pane/split-view-pane.js"
-          }
-        },
-        {
-          "kind": "js",
           "name": "NLDDPage",
           "declaration": {
             "name": "NLDDPage",
@@ -11401,7 +11393,9 @@
           "customElement": true,
           "keywords": [
             "selectievakje",
-            "vinkje"
+            "vinkje",
+            "toggle",
+            "toggles"
           ],
           "related": [
             "nldd-switch-field"
@@ -11600,7 +11594,9 @@
             }
           ],
           "keywords": [
-            "selectievakjes"
+            "selectievakjes",
+            "toggle",
+            "toggles"
           ],
           "related": [
             "nldd-radio-button-group",
@@ -12293,7 +12289,9 @@
           ],
           "keywords": [
             "selectievakje",
-            "vinkje"
+            "vinkje",
+            "toggle",
+            "toggles"
           ],
           "related": [
             "nldd-switch"
@@ -15095,7 +15093,10 @@
             }
           ],
           "keywords": [
-            "datum"
+            "datum",
+            "time",
+            "tijd",
+            "datetime"
           ],
           "related": [
             "nldd-date-picker"
@@ -15532,7 +15533,10 @@
           "keywords": [
             "calendar",
             "kalender",
-            "datum"
+            "datum",
+            "time",
+            "tijd",
+            "datetime"
           ],
           "related": [
             "nldd-date-field"
@@ -20964,7 +20968,9 @@
           "tagName": "nldd-radio-button-field",
           "customElement": true,
           "keywords": [
-            "keuzerondje"
+            "keuzerondje",
+            "toggle",
+            "toggles"
           ]
         }
       ],
@@ -21154,7 +21160,9 @@
             }
           ],
           "keywords": [
-            "keuzerondjes"
+            "keuzerondjes",
+            "toggle",
+            "toggles"
           ],
           "related": [
             "nldd-checkbox-group",
@@ -21831,7 +21839,9 @@
           "tagName": "nldd-radio-button",
           "customElement": true,
           "keywords": [
-            "keuzerondje"
+            "keuzerondje",
+            "toggle",
+            "toggles"
           ]
         }
       ],
@@ -26494,6 +26504,8 @@
             }
           ],
           "keywords": [
+            "toggle",
+            "toggles",
             "schakelaar"
           ],
           "related": [
@@ -27164,6 +27176,7 @@
           ],
           "keywords": [
             "toggle",
+            "toggles",
             "schakelaar"
           ],
           "related": [
@@ -28534,11 +28547,49 @@
       "declarations": [
         {
           "kind": "function",
+          "name": "touchesSelection",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "state",
+              "type": {
+                "text": "EditorState"
+              }
+            },
+            {
+              "name": "from",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "to",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "Whether the marks of the construct from `from` to `to` show: the caret or\nthe selection touches it, in an editor that reveals marks at all."
+        },
+        {
+          "kind": "function",
           "name": "hiddenSyntax",
           "description": "The syntax=\"hidden\" extension. Highest precedence, so hiding a mark wins over\nthe dimmed styling the markdown decorations give it."
         }
       ],
       "exports": [
+        {
+          "kind": "js",
+          "name": "touchesSelection",
+          "declaration": {
+            "name": "touchesSelection",
+            "module": "src/components/inputs/text-editor/text-editor.hidden-syntax.ts"
+          }
+        },
         {
           "kind": "js",
           "name": "hiddenSyntax",
@@ -28599,6 +28650,11 @@
       "kind": "javascript-module",
       "path": "src/components/inputs/text-editor/text-editor.links.ts",
       "declarations": [
+        {
+          "kind": "variable",
+          "name": "linkBadgeTooltip",
+          "description": "Whether the badge shows its destination in a tooltip. On while the syntax is\nhidden, for a `[text](url)` link whose marks are hidden too: the URL is then\nnowhere on screen, and the badge is how to see it."
+        },
         {
           "kind": "function",
           "name": "isSafeHref",
@@ -28703,6 +28759,14 @@
         }
       ],
       "exports": [
+        {
+          "kind": "js",
+          "name": "linkBadgeTooltip",
+          "declaration": {
+            "name": "linkBadgeTooltip",
+            "module": "src/components/inputs/text-editor/text-editor.links.ts"
+          }
+        },
         {
           "kind": "js",
           "name": "isSafeHref",
@@ -33651,7 +33715,10 @@
             }
           ],
           "keywords": [
-            "tijd"
+            "tijd",
+            "date",
+            "datum",
+            "datetime"
           ],
           "related": [
             "nldd-time-picker"
@@ -34043,7 +34110,10 @@
           "tagName": "nldd-time-picker",
           "customElement": true,
           "keywords": [
-            "tijd"
+            "tijd",
+            "date",
+            "datum",
+            "datetime"
           ],
           "related": [
             "nldd-time-field"
@@ -36063,7 +36133,7 @@
               "expandedType": {
                 "text": "'accent-tinted' | 'base' | 'critical' | 'tinted'"
               },
-              "description": "Which surface this box draws, named as it is on nldd-shell, nldd-page, nldd-split-view-pane and nldd-card. It starts tinted where a card starts base: a box is there to stand out from the page, a card to sit on it. - `tinted` (default): a box on a plain page background. - `base`: a box on an already-tinted parent (the border ring gets +2 palette steps so it still reads against a card-on-card). - `accent-tinted`: a tint of the theme's accent, with the contrast of `tinted`, for a box that belongs to the service rather than to the page. - `critical`: a region whose actions are destructive or irreversible (a \"danger zone\"), tinted and outlined in critical. It carries no ARIA of its own: unlike nldd-banner this is not an announcement but a permanent part of the page, so the heading and the button labels have to name the danger. Color is a reinforcement, never the only signal (WCAG 1.4.1). The box draws the surface and nothing else: it has no padding of its own, the same way nldd-card has none. Put an nldd-container inside it and let that set the inset, so one component owns spacing wherever it is used."
+              "description": "Which surface this box draws, named as it is on nldd-shell, nldd-page and nldd-card. It starts tinted where a card starts base: a box is there to stand out from the page, a card to sit on it. - `tinted` (default): a box on a plain page background. - `base`: a box on an already-tinted parent (the border ring gets +2 palette steps so it still reads against a card-on-card). - `accent-tinted`: a tint of the theme's accent, with the contrast of `tinted`, for a box that belongs to the service rather than to the page. - `critical`: a region whose actions are destructive or irreversible (a \"danger zone\"), tinted and outlined in critical. It carries no ARIA of its own: unlike nldd-banner this is not an announcement but a permanent part of the page, so the heading and the button labels have to name the danger. Color is a reinforcement, never the only signal (WCAG 1.4.1). The box draws the surface and nothing else: it has no padding of its own, the same way nldd-card has none. Put an nldd-container inside it and let that set the inset, so one component owns spacing wherever it is used."
             }
           ],
           "superclass": {
@@ -42966,7 +43036,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "An overlay component that slides in from the side or bottom of the screen. Based on the native <dialog> element for built-in accessibility, focus management, and Escape key support. On small (sm) viewports the sheet always renders as a bottom sheet, regardless of the configured placement. Render the sheet at the document root (teleport/portal it to `document.body`), never inside a split view's content flow: as a slotted flex child it would steal pane height (see `nldd-split-view-pane`). A sheet holds a whole nldd-page: an nldd-top-title-bar in its header slot, the content, and a footer when there are actions. The page behaves as it does anywhere else, with only the middle scrolling, and the text of the bar is also the sheet's accessible name. Do not build a header of your own. Open and close it with `open`, bound to your state together with the close event: the sheet clears `open` itself when the user closes it. show() and hide() do the same for code without a binding. Keep the sheet in the DOM rather than mounting it when it opens, or the animations are skipped.",
+          "description": "An overlay component that slides in from the side or bottom of the screen. Based on the native <dialog> element for built-in accessibility, focus management, and Escape key support. On small (sm) viewports the sheet always renders as a bottom sheet, regardless of the configured placement. Render the sheet at the document root (teleport/portal it to `document.body`), never inside a split view's content flow: as a slotted flex child it would steal the height of the pane it lands in. A sheet holds a whole nldd-page: an nldd-top-title-bar in its header slot, the content, and a footer when there are actions. The page behaves as it does anywhere else, with only the middle scrolling, and the text of the bar is also the sheet's accessible name. Do not build a header of your own. Open and close it with `open`, bound to your state together with the close event: the sheet clears `open` itself when the user closes it. show() and hide() do the same for code without a binding. Keep the sheet in the DOM rather than mounting it when it opens, or the animations are skipped.",
           "name": "NLDDSheet",
           "members": [
             {
@@ -43645,6 +43715,14 @@
               "default": "false",
               "fieldName": "inspectorAutoHidden",
               "description": "Inspector hidden to free up space for other panes (read-only, set by the split view)"
+            },
+            {
+              "name": "empty",
+              "description": "This pane says nothing is chosen yet, such as \"Kies een dossier\". Stacked, the view shows the pane before it instead. Set it on the element in `main` or `secondary-sidebar`.",
+              "type": {
+                "text": "boolean"
+              },
+              "forChildren": true
             }
           ],
           "superclass": {
@@ -43887,111 +43965,6 @@
           "declaration": {
             "name": "NLDDSplitViewDivider",
             "module": "src/components/layout/split-views/split-view-divider/split-view-divider.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/layout/split-views/split-view-pane/split-view-pane.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "A simple pane container for use inside split views. The split view automatically sets context: whether a back button should be shown. The consumer sets `has-content` to indicate the pane has content. The consumer sets `back-text` on the `nldd-top-title-bar` inside the pane. The split view sets `hide-back` when the back button is not applicable. The pane automatically hides the back button via CSS when `hide-back` is active. The pane sets `--context-background-color` which cascades down to all descendants. Set `background=\"tinted\"` on a pane to give it a tinted background independently of sibling panes. Descendants such as `nldd-page` read `--context-background-color` automatically. A pane stretches its slotted content to fill it (`::slotted(*) { flex-grow: 1 }`), so slot only layout content here. Overlays (`nldd-sheet`, popovers, dialogs, menus) belong at the document root: teleport/portal them to `document.body`. Do not leave an overlay as a light-DOM sibling of a split view: it gets slotted into the main pane and becomes an extra flex-grow child that steals pane height, so in document-scroll (root) mode a short page's sticky footer floats mid-screen instead of docking.",
-          "name": "NLDDSplitViewPane",
-          "members": [
-            {
-              "kind": "field",
-              "name": "background",
-              "type": {
-                "text": "'inherit' | 'base' | 'tinted'"
-              },
-              "default": "'inherit'",
-              "attribute": "background",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "hideBack",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "hide-back",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "hasContent",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "has-content",
-              "reflects": true
-            }
-          ],
-          "attributes": [
-            {
-              "name": "background",
-              "type": {
-                "text": "'inherit' | 'base' | 'tinted'"
-              },
-              "default": "'inherit'",
-              "fieldName": "background",
-              "expandedType": {
-                "text": "'base' | 'inherit' | 'tinted'"
-              },
-              "description": "Use a tinted background color (cascades to descendants)"
-            },
-            {
-              "name": "hide-back",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "hideBack",
-              "description": "Hide the back button (set automatically by the split view)"
-            },
-            {
-              "name": "has-content",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "hasContent",
-              "description": "The pane has content (default: false)"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "nldd-split-view-pane",
-          "customElement": true,
-          "slots": [
-            {
-              "name": "",
-              "description": "Pane content"
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "NLDDSplitViewPane",
-          "declaration": {
-            "name": "NLDDSplitViewPane",
-            "module": "src/components/layout/split-views/split-view-pane/split-view-pane.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "nldd-split-view-pane",
-          "declaration": {
-            "name": "NLDDSplitViewPane",
-            "module": "src/components/layout/split-views/split-view-pane/split-view-pane.ts"
           }
         }
       ]
@@ -47873,7 +47846,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Exports both NLDDTable and NLDDTableRow. A data table presented as a boxed surface (rounded corners, an inset border ring, a base or tinted fill) that aligns content into shared columns using a CSS grid + subgrid. Row dividers run full-bleed to the edges; the inline padding lives on the rows, so it insets the cell content but not the dividers. Column widths are defined ONCE on the table via the `columns` attribute (a CSS grid track list), like an HTML `<colgroup>`. Rows are `<nldd-table-row>` elements whose children are the existing `nldd-cell` family. Every row uses `grid-template-columns: subgrid`, so all rows snap to the same columns. A generic `nldd-cell` gets `width=\"full\"`, so it fills its column, unless it sets a length of its own. Header: put one `<nldd-table-row slot=\"header\">` in the `header` slot. Its cells become column headers (role=\"columnheader\"). Row headers: give the cell that says what a row is about `row-header` (`nldd-cell`, `nldd-title-cell`, `nldd-text-cell`, `nldd-description-cell`). The row then gives it role=\"rowheader\" instead of \"cell\", so a screen reader names the row along with every other cell in it, like `<th scope=\"row\">`. The attribute goes on the cell, not as a column index on the row or table, so it survives columns hidden at a breakpoint and needs no counting. It changes the semantics only: the cell variant still decides the look. The cell above the row headers, in the header row, stays a columnheader. Headers that span rows or columns are not supported. Responsive: two complementary strategies. (1) Give columns a minimum width (e.g. `minmax(160px,1fr)`). The table is its own scroll container, so it scrolls horizontally when too narrow (no wrapper needed). (2) Drop columns at breakpoints: provide `sm-columns`/`md-columns`/ `lg-columns` (shorter track lists) and hide the dropped columns' cells with `hide-below`/`hide-above` at the matching breakpoint. The table picks the track list for its own width via the standard sm/md/lg breakpoints. Selection and sorting are intentionally NOT built in: add a column with an `nldd-cell` + `nldd-checkbox` for selection, and drive sorting from an external control (e.g. a dropdown).",
+          "description": "Exports both NLDDTable and NLDDTableRow. A data table presented as a boxed surface (rounded corners, an inset border ring, a base or tinted fill) that aligns content into shared columns using a CSS grid + subgrid. Row dividers run full-bleed to the edges; the inline padding lives on the rows, so it insets the cell content but not the dividers. Column widths are defined ONCE on the table via the `columns` attribute (a CSS grid track list), like an HTML `<colgroup>`. Rows are `<nldd-table-row>` elements whose children are the existing `nldd-cell` family. Every row uses `grid-template-columns: subgrid`, so all rows snap to the same columns. A generic `nldd-cell` gets `width=\"full\"`, so it fills its column, unless it sets a length of its own. Header: put one `<nldd-table-row slot=\"header\">` in the `header` slot. Its cells become column headers (role=\"columnheader\"). Row headers: give the cell that says what a row is about `row-header` (`nldd-cell`, `nldd-title-cell`, `nldd-text-cell`, `nldd-description-cell`). The row then gives it role=\"rowheader\" instead of \"cell\", so a screen reader names the row along with every other cell in it, like `<th scope=\"row\">`. The attribute goes on the cell, not as a column index on the row or table, so it survives columns hidden at a breakpoint and needs no counting. It changes the semantics only: the cell variant still decides the look. The cell above the row headers, in the header row, stays a columnheader. Headers that span rows or columns are not supported. Responsive: two complementary strategies. (1) Give columns a minimum width (e.g. `minmax(160px,1fr)`). The table is its own scroll container, so it scrolls horizontally when too narrow (no wrapper needed). (2) Drop columns at breakpoints: provide `sm-columns`/`md-columns`/ `lg-columns` (shorter track lists) and hide the dropped columns' cells with `hide-below`/`hide-above` at the matching breakpoint. The table picks the track list for its own width via the standard sm/md/lg breakpoints. A hidden cell is gone at that width, for every reader: drop a column only when what it says is also somewhere else, such as in the row header or on a detail page the row links to. Otherwise scroll, which every table already does (WCAG 1.4.10). Selection and sorting are intentionally NOT built in: add a column with an `nldd-cell` + `nldd-checkbox` for selection, and drive sorting from an external control (e.g. a dropdown).",
           "name": "NLDDTable",
           "members": [
             {
@@ -53775,7 +53748,7 @@
               "type": {
                 "text": "StepBarStatus | undefined"
               },
-              "description": "How far along this step is. `current` marks the step you are on (`aria-current=\"step\"`) and the parent derives the others from it: with none marked step 1 is current, with more than one the last wins. `past` and `future` override what is derived for this step only",
+              "description": "How far along this step is. `current` marks the step you are on (`aria-current=\"step\"`) and the parent derives the others from it: with none marked every step is still to do, with more than one the last wins. `past` and `future` override what is derived for this step only",
               "name": "status",
               "fieldName": "status",
               "expandedType": {
@@ -53828,7 +53801,7 @@
         },
         {
           "kind": "class",
-          "description": "Shows where you are in a process of several steps: a row of discs with a number (or a check mark on what is done), a label under each and a line connecting them. Other systems call this a stepper or a progress indicator. Mark the step you are on with `status=\"current\"`. The parent derives the rest from its position: `past` before it, `future` after. With none marked, step 1 is current. With more than one, the last one wins and a warning goes to the console in a dev build: a flow that forgets to clear the previous step still points at the furthest one. A `status=\"past\"` or `status=\"future\"` on another step overrides what is derived for that step, for flows that jump back or skip a step. One attribute, the same three values as `nldd-step-cell`, so a flow reads in one vocabulary whether it runs across or down. Horizontal only, for 3 to 5 steps and 7 at most: each step needs room for its label, and with more of them you count instead of seeing at a glance how far you are. For more steps, or steps under each other, build an `nldd-list` with an `nldd-step-cell` and an `nldd-title-cell` per row: vertical steps usually carry more than a title, and a list row already does that. When the bar is no wider than the sm breakpoint, or than 120px per step, whichever is wider (a container query, so measured on the component itself rather than on the viewport), it folds into one line of text plus a segmented bar. A label that is too long for its step breaks at a syllable. The full list of steps stays in the DOM, only visually hidden, so assistive software hears no less than a wide screen shows. A step that is a link or a button is out of the tab order then: Tab would land on something you cannot see (WCAG 2.4.7). Accessibility: a `nav` with a label, holding a `role=\"list\"` with a `role=\"listitem\"` per step. The current step gets `aria-current=\"step\"`, the only notion WAI-ARIA has for this. \"Done\" and \"still to do\" do not exist as ARIA tokens and travel along as visually hidden text instead.",
+          "description": "Shows where you are in a process of several steps: a row of discs with a number (or a check mark on what is done), a label under each and a line connecting them. Other systems call this a stepper or a progress indicator. Mark the step you are on with `status=\"current\"`. The parent derives the rest from its position: `past` before it, `future` after. With none marked, no step is current and every step is still to do. With more than one, the last one wins and a warning goes to the console in a dev build: a flow that forgets to clear the previous step still points at the furthest one. A `status=\"past\"` or `status=\"future\"` on another step overrides what is derived for that step, for flows that jump back or skip a step. One attribute, the same three values as `nldd-step-cell`, so a flow reads in one vocabulary whether it runs across or down. A bar without a current step shows what is coming, for instance on the page before a process starts. Use that sparingly: what someone needs there is the button that starts the task, and a bar that shows no progress tells little. Mark a step as soon as the process has begun. Horizontal only, for 3 to 5 steps and 7 at most: each step needs room for its label, and with more of them you count instead of seeing at a glance how far you are. For more steps, or steps under each other, build an `nldd-list` with an `nldd-step-cell` and an `nldd-title-cell` per row: vertical steps usually carry more than a title, and a list row already does that. When the bar is no wider than the sm breakpoint, or than 120px per step, whichever is wider (a container query, so measured on the component itself rather than on the viewport), it folds into one line of text plus a segmented bar. A label that is too long for its step breaks at a syllable. The full list of steps stays in the DOM, only visually hidden, so assistive software hears no less than a wide screen shows. A step that is a link or a button is out of the tab order then: Tab would land on something you cannot see (WCAG 2.4.7). Accessibility: a `nav` with a label, holding a `role=\"list\"` with a `role=\"listitem\"` per step. The current step gets `aria-current=\"step\"`, the only notion WAI-ARIA has for this. \"Done\" and \"still to do\" do not exist as ARIA tokens and travel along as visually hidden text instead.",
           "name": "NLDDStepBar",
           "members": [
             {
@@ -53854,7 +53827,7 @@
               "type": {
                 "text": "number"
               },
-              "description": "1-based position of the last item with `status=\"current\"`, or 1 when none has it.",
+              "description": "1-based position of the last item with `status=\"current\"`, or 0 when none has it.",
               "readonly": true
             },
             {
@@ -54090,7 +54063,7 @@
           "type": {
             "text": "Record<string, () => Promise<unknown>>"
           },
-          "default": "{ 'nldd-accordion': () => import('../components/content/accordion/accordion.js'), 'nldd-accordion-item': () => import('../components/content/accordion/accordion-item.js'), 'nldd-activity-indicator': () => import('../components/status-and-feedback/activity-indicator/activity-indicator.js'), 'nldd-admonition': () => import('../components/content/admonition/admonition.js'), 'nldd-avatar': () => import('../components/content/avatar/avatar.js'), 'nldd-avatar-group': () => import('../components/content/avatar-group/avatar-group.js'), 'nldd-badge': () => import('../components/status-and-feedback/badge/badge.js'), 'nldd-banner': () => import('../components/status-and-feedback/banner/banner.js'), 'nldd-bar-split-view': () => import('../components/layout/split-views/bar-split-view/bar-split-view.js'), 'nldd-blockquote': () => import('../components/content/blockquote/blockquote.js'), 'nldd-box': () => import('../components/layout/box/box.js'), 'nldd-breadcrumbs': () => import('../components/navigation/breadcrumbs/breadcrumbs.js'), 'nldd-breadcrumbs-item': () => import('../components/navigation/breadcrumbs/breadcrumbs.js'), 'nldd-button': () => import('../components/actions/button/button.js'), 'nldd-button-bar': () => import('../components/actions/button-bar/button-bar.js'), 'nldd-button-bar-divider': () => import('../components/actions/button-bar/button-bar.js'), 'nldd-button-group': () => import('../components/actions/button-group/button-group.js'), 'nldd-card': () => import('../components/layout/card/card.js'), 'nldd-cell': () => import('../components/lists-and-tables/cells/cell/cell.js'), 'nldd-checkbox': () => import('../components/inputs/checkbox/checkbox.js'), 'nldd-checkbox-field': () => import('../components/inputs/checkbox-field/checkbox-field.js'), 'nldd-checkbox-group': () => import('../components/inputs/checkbox-group/checkbox-group.js'), 'nldd-code-editor': () => import('../components/inputs/code-editor/code-editor.js'), 'nldd-code-viewer': () => import('../components/content/code-viewer/code-viewer.js'), 'nldd-collection': () => import('../components/layout/collection/collection.js'), 'nldd-combo-box': () => import('../components/inputs/combo-box/combo-box.js'), 'nldd-container': () => import('../components/layout/container/container.js'), 'nldd-date-field': () => import('../components/inputs/date-field/date-field.js'), 'nldd-date-picker': () => import('../components/inputs/date-picker/date-picker.js'), 'nldd-description-cell': () => import('../components/lists-and-tables/cells/description-cell/description-cell.js'), 'nldd-divider': () => import('../components/layout/divider/divider.js'), 'nldd-document-tab-bar': () => import('../components/navigation/document-tab-bar/document-tab-bar.js'), 'nldd-document-tab-bar-item': () => import('../components/navigation/document-tab-bar/document-tab-bar.js'), 'nldd-dropdown': () => import('../components/inputs/dropdown/dropdown.js'), 'nldd-file-field': () => import('../components/inputs/file-field/file-field.js'), 'nldd-form': () => import('../components/forms/form/form.js'), 'nldd-form-actions': () => import('../components/forms/form-actions/form-actions.js'), 'nldd-form-field': () => import('../components/forms/form-field/form-field.js'), 'nldd-form-field-help-text': () => import('../components/forms/form-field/form-field.js'), 'nldd-form-section': () => import('../components/forms/form-section/form-section.js'), 'nldd-full-bleed-section': () => import('../components/layout/page-sections/full-bleed-section/full-bleed-section.js'), 'nldd-hero': () => import('../components/layout/page-sections/hero/hero.js'), 'nldd-icon': () => import('../components/content/icon/icon.js'), 'nldd-icon-button': () => import('../components/actions/icon-button/icon-button.js'), 'nldd-icon-cell': () => import('../components/lists-and-tables/cells/icon-cell/icon-cell.js'), 'nldd-identity': () => import('../components/content/identity/identity.js'), 'nldd-image': () => import('../components/content/image/image.js'), 'nldd-inline-dialog': () => import('../components/status-and-feedback/inline-dialog/inline-dialog.js'), 'nldd-just-in-time-education': () => import('../components/status-and-feedback/just-in-time-education/just-in-time-education.js'), 'nldd-kanban': () => import('../components/layout/kanban/kanban.js'), 'nldd-kanban-column': () => import('../components/layout/kanban/kanban-column.js'), 'nldd-keyboard-shortcut': () => import('../components/content/keyboard-shortcut/keyboard-shortcut.js'), 'nldd-link': () => import('../components/navigation/link/link.js'), 'nldd-link-group': () => import('../components/navigation/link-group/link-group.js'), 'nldd-list': () => import('../components/lists-and-tables/list/list.js'), 'nldd-list-item': () => import('../components/lists-and-tables/list-item/list-item.js'), 'nldd-list-item-segment': () => import('../components/lists-and-tables/list-item-segment/list-item-segment.js'), 'nldd-menu': () => import('../components/actions/menu/menu.js'), 'nldd-menu-bar': () => import('../components/navigation/menu-bar/menu-bar.js'), 'nldd-menu-bar-item': () => import('../components/navigation/menu-bar-item/menu-bar-item.js'), 'nldd-menu-divider': () => import('../components/actions/menu/menu-divider.js'), 'nldd-menu-group': () => import('../components/actions/menu/menu-group.js'), 'nldd-menu-item': () => import('../components/actions/menu/menu-item.js'), 'nldd-modal-dialog': () => import('../components/status-and-feedback/modal-dialog/modal-dialog.js'), 'nldd-multi-line-text-field': () => import('../components/inputs/multi-line-text-field/multi-line-text-field.js'), 'nldd-navigation-split-view': () => import('../components/layout/split-views/navigation-split-view/navigation-split-view.js'), 'nldd-notification': () => import('../components/status-and-feedback/notification/notification.js'), 'nldd-number-field': () => import('../components/inputs/number-field/number-field.js'), 'nldd-one-half-one-half-section': () => import('../components/layout/page-sections/one-half-one-half-section/one-half-one-half-section.js'), 'nldd-one-third-two-thirds-section': () => import('../components/layout/page-sections/one-third-two-thirds-section/one-third-two-thirds-section.js'), 'nldd-one-time-code-field': () => import('../components/inputs/one-time-code-field/one-time-code-field.js'), 'nldd-page': () => import('../components/layout/page/page.js'), 'nldd-page-footer': () => import('../components/layout/page-footer/page-footer.js'), 'nldd-page-footer-legal-bar': () => import('../components/layout/page-footer/page-footer.js'), 'nldd-page-footer-legal-bar-item': () => import('../components/layout/page-footer/page-footer.js'), 'nldd-pagination': () => import('../components/navigation/pagination/pagination.js'), 'nldd-password-field': () => import('../components/inputs/password-field/password-field.js'), 'nldd-popover': () => import('../components/layout/popover/popover.js'), 'nldd-progress-bar': () => import('../components/status-and-feedback/progress-bar/progress-bar.js'), 'nldd-progress-bar-segment-indicator': () => import('../components/status-and-feedback/progress-bar/progress-bar.js'), 'nldd-progress-circle': () => import('../components/status-and-feedback/progress-circle/progress-circle.js'), 'nldd-progress-circle-segment-indicator': () => import('../components/status-and-feedback/progress-circle/progress-circle.js'), 'nldd-radio-button': () => import('../components/inputs/radio-button/radio-button.js'), 'nldd-radio-button-field': () => import('../components/inputs/radio-button-field/radio-button-field.js'), 'nldd-radio-button-group': () => import('../components/inputs/radio-button-group/radio-button-group.js'), 'nldd-reorder-handle-cell': () => import('../components/lists-and-tables/cells/reorder-handle-cell/reorder-handle-cell.js'), 'nldd-rich-text': () => import('../components/content/rich-text/rich-text.js'), 'nldd-search-field': () => import('../components/inputs/search-field/search-field.js'), 'nldd-segmented-control': () => import('../components/inputs/segmented-control/segmented-control.js'), 'nldd-segmented-control-item': () => import('../components/inputs/segmented-control/segmented-control.js'), 'nldd-sheet': () => import('../components/layout/sheet/sheet.js'), 'nldd-shell': () => import('../components/layout/shell/shell.js'), 'nldd-side-by-side-split-view': () => import('../components/layout/split-views/side-by-side-split-view/side-by-side-split-view.js'), 'nldd-sidebar-section': () => import('../components/layout/page-sections/sidebar-section/sidebar-section.js'), 'nldd-simple-section': () => import('../components/layout/page-sections/simple-section/simple-section.js'), 'nldd-skip-link': () => import('../components/navigation/skip-link/skip-link.js'), 'nldd-slider': () => import('../components/inputs/slider/slider.js'), 'nldd-spacer': () => import('../components/layout/spacer/spacer.js'), 'nldd-spacer-cell': () => import('../components/lists-and-tables/cells/spacer-cell/spacer-cell.js'), 'nldd-split-button': () => import('../components/actions/split-button/split-button.js'), 'nldd-split-view-divider': () => import('../components/layout/split-views/split-view-divider/split-view-divider.js'), 'nldd-split-view-pane': () => import('../components/layout/split-views/split-view-pane/split-view-pane.js'), 'nldd-stacked-split-view': () => import('../components/layout/split-views/stacked-split-view/stacked-split-view.js'), 'nldd-status-bar': () => import('../components/status-and-feedback/status-bar/status-bar.js'), 'nldd-step-bar': () => import('../components/status-and-feedback/step-bar/step-bar.js'), 'nldd-step-bar-item': () => import('../components/status-and-feedback/step-bar/step-bar.js'), 'nldd-step-cell': () => import('../components/lists-and-tables/cells/step-cell/step-cell.js'), 'nldd-stepper': () => import('../components/inputs/stepper/stepper.js'), 'nldd-swatch-picker': () => import('../components/inputs/swatch-picker/swatch-picker.js'), 'nldd-swatch-picker-item': () => import('../components/inputs/swatch-picker/swatch-picker.js'), 'nldd-switch': () => import('../components/inputs/switch/switch.js'), 'nldd-switch-field': () => import('../components/inputs/switch-field/switch-field.js'), 'nldd-tab-bar': () => import('../components/navigation/tab-bar/tab-bar.js'), 'nldd-tab-bar-item': () => import('../components/navigation/tab-bar/tab-bar.js'), 'nldd-table': () => import('../components/lists-and-tables/table/table.js'), 'nldd-table-row': () => import('../components/lists-and-tables/table/table.js'), 'nldd-tag': () => import('../components/content/tag/tag.js'), 'nldd-term': () => import('../components/content/term/term.js'), 'nldd-text': () => import('../components/content/text/text.js'), 'nldd-text-cell': () => import('../components/lists-and-tables/cells/text-cell/text-cell.js'), 'nldd-text-editor': () => import('../components/inputs/text-editor/text-editor.js'), 'nldd-text-field': () => import('../components/inputs/text-field/text-field.js'), 'nldd-time-field': () => import('../components/inputs/time-field/time-field.js'), 'nldd-time-picker': () => import('../components/inputs/time-picker/time-picker.js'), 'nldd-title': () => import('../components/content/title/title.js'), 'nldd-title-cell': () => import('../components/lists-and-tables/cells/title-cell/title-cell.js'), 'nldd-toggle-button': () => import('../components/inputs/toggle-button/toggle-button.js'), 'nldd-toggle-button-group': () => import('../components/inputs/toggle-button-group/toggle-button-group.js'), 'nldd-token': () => import('../components/content/token/token.js'), 'nldd-token-field': () => import('../components/inputs/token-field/token-field.js'), 'nldd-toolbar': () => import('../components/actions/toolbar/toolbar.js'), 'nldd-toolbar-item': () => import('../components/actions/toolbar/toolbar-item.js'), 'nldd-toolbar-title': () => import('../components/actions/toolbar/toolbar-title.js'), 'nldd-tooltip': () => import('../components/content/tooltip/tooltip.js'), 'nldd-top-navigation-bar': () => import('../components/navigation/top-navigation-bar/top-navigation-bar.js'), 'nldd-top-title-bar': () => import('../components/navigation/top-title-bar/top-title-bar.js'), 'nldd-two-thirds-one-third-section': () => import('../components/layout/page-sections/two-thirds-one-third-section/two-thirds-one-third-section.js'), 'nldd-validation-item': () => import('../components/forms/validation-list/validation-list.js'), 'nldd-validation-list': () => import('../components/forms/validation-list/validation-list.js'), 'nldd-visually-hidden': () => import('../components/content/visually-hidden/visually-hidden.js'), 'nldd-window': () => import('../components/layout/window/window.js'), }",
+          "default": "{ 'nldd-accordion': () => import('../components/content/accordion/accordion.js'), 'nldd-accordion-item': () => import('../components/content/accordion/accordion-item.js'), 'nldd-activity-indicator': () => import('../components/status-and-feedback/activity-indicator/activity-indicator.js'), 'nldd-admonition': () => import('../components/content/admonition/admonition.js'), 'nldd-avatar': () => import('../components/content/avatar/avatar.js'), 'nldd-avatar-group': () => import('../components/content/avatar-group/avatar-group.js'), 'nldd-badge': () => import('../components/status-and-feedback/badge/badge.js'), 'nldd-banner': () => import('../components/status-and-feedback/banner/banner.js'), 'nldd-bar-split-view': () => import('../components/layout/split-views/bar-split-view/bar-split-view.js'), 'nldd-blockquote': () => import('../components/content/blockquote/blockquote.js'), 'nldd-box': () => import('../components/layout/box/box.js'), 'nldd-breadcrumbs': () => import('../components/navigation/breadcrumbs/breadcrumbs.js'), 'nldd-breadcrumbs-item': () => import('../components/navigation/breadcrumbs/breadcrumbs.js'), 'nldd-button': () => import('../components/actions/button/button.js'), 'nldd-button-bar': () => import('../components/actions/button-bar/button-bar.js'), 'nldd-button-bar-divider': () => import('../components/actions/button-bar/button-bar.js'), 'nldd-button-group': () => import('../components/actions/button-group/button-group.js'), 'nldd-card': () => import('../components/layout/card/card.js'), 'nldd-cell': () => import('../components/lists-and-tables/cells/cell/cell.js'), 'nldd-checkbox': () => import('../components/inputs/checkbox/checkbox.js'), 'nldd-checkbox-field': () => import('../components/inputs/checkbox-field/checkbox-field.js'), 'nldd-checkbox-group': () => import('../components/inputs/checkbox-group/checkbox-group.js'), 'nldd-code-editor': () => import('../components/inputs/code-editor/code-editor.js'), 'nldd-code-viewer': () => import('../components/content/code-viewer/code-viewer.js'), 'nldd-collection': () => import('../components/layout/collection/collection.js'), 'nldd-combo-box': () => import('../components/inputs/combo-box/combo-box.js'), 'nldd-container': () => import('../components/layout/container/container.js'), 'nldd-date-field': () => import('../components/inputs/date-field/date-field.js'), 'nldd-date-picker': () => import('../components/inputs/date-picker/date-picker.js'), 'nldd-description-cell': () => import('../components/lists-and-tables/cells/description-cell/description-cell.js'), 'nldd-divider': () => import('../components/layout/divider/divider.js'), 'nldd-document-tab-bar': () => import('../components/navigation/document-tab-bar/document-tab-bar.js'), 'nldd-document-tab-bar-item': () => import('../components/navigation/document-tab-bar/document-tab-bar.js'), 'nldd-dropdown': () => import('../components/inputs/dropdown/dropdown.js'), 'nldd-file-field': () => import('../components/inputs/file-field/file-field.js'), 'nldd-form': () => import('../components/forms/form/form.js'), 'nldd-form-actions': () => import('../components/forms/form-actions/form-actions.js'), 'nldd-form-field': () => import('../components/forms/form-field/form-field.js'), 'nldd-form-field-help-text': () => import('../components/forms/form-field/form-field.js'), 'nldd-form-section': () => import('../components/forms/form-section/form-section.js'), 'nldd-full-bleed-section': () => import('../components/layout/page-sections/full-bleed-section/full-bleed-section.js'), 'nldd-hero': () => import('../components/layout/page-sections/hero/hero.js'), 'nldd-icon': () => import('../components/content/icon/icon.js'), 'nldd-icon-button': () => import('../components/actions/icon-button/icon-button.js'), 'nldd-icon-cell': () => import('../components/lists-and-tables/cells/icon-cell/icon-cell.js'), 'nldd-identity': () => import('../components/content/identity/identity.js'), 'nldd-image': () => import('../components/content/image/image.js'), 'nldd-inline-dialog': () => import('../components/status-and-feedback/inline-dialog/inline-dialog.js'), 'nldd-just-in-time-education': () => import('../components/status-and-feedback/just-in-time-education/just-in-time-education.js'), 'nldd-kanban': () => import('../components/layout/kanban/kanban.js'), 'nldd-kanban-column': () => import('../components/layout/kanban/kanban-column.js'), 'nldd-keyboard-shortcut': () => import('../components/content/keyboard-shortcut/keyboard-shortcut.js'), 'nldd-link': () => import('../components/navigation/link/link.js'), 'nldd-link-group': () => import('../components/navigation/link-group/link-group.js'), 'nldd-list': () => import('../components/lists-and-tables/list/list.js'), 'nldd-list-item': () => import('../components/lists-and-tables/list-item/list-item.js'), 'nldd-list-item-segment': () => import('../components/lists-and-tables/list-item-segment/list-item-segment.js'), 'nldd-menu': () => import('../components/actions/menu/menu.js'), 'nldd-menu-bar': () => import('../components/navigation/menu-bar/menu-bar.js'), 'nldd-menu-bar-item': () => import('../components/navigation/menu-bar-item/menu-bar-item.js'), 'nldd-menu-divider': () => import('../components/actions/menu/menu-divider.js'), 'nldd-menu-group': () => import('../components/actions/menu/menu-group.js'), 'nldd-menu-item': () => import('../components/actions/menu/menu-item.js'), 'nldd-modal-dialog': () => import('../components/status-and-feedback/modal-dialog/modal-dialog.js'), 'nldd-multi-line-text-field': () => import('../components/inputs/multi-line-text-field/multi-line-text-field.js'), 'nldd-navigation-split-view': () => import('../components/layout/split-views/navigation-split-view/navigation-split-view.js'), 'nldd-notification': () => import('../components/status-and-feedback/notification/notification.js'), 'nldd-number-field': () => import('../components/inputs/number-field/number-field.js'), 'nldd-one-half-one-half-section': () => import('../components/layout/page-sections/one-half-one-half-section/one-half-one-half-section.js'), 'nldd-one-third-two-thirds-section': () => import('../components/layout/page-sections/one-third-two-thirds-section/one-third-two-thirds-section.js'), 'nldd-one-time-code-field': () => import('../components/inputs/one-time-code-field/one-time-code-field.js'), 'nldd-page': () => import('../components/layout/page/page.js'), 'nldd-page-footer': () => import('../components/layout/page-footer/page-footer.js'), 'nldd-page-footer-legal-bar': () => import('../components/layout/page-footer/page-footer.js'), 'nldd-page-footer-legal-bar-item': () => import('../components/layout/page-footer/page-footer.js'), 'nldd-pagination': () => import('../components/navigation/pagination/pagination.js'), 'nldd-password-field': () => import('../components/inputs/password-field/password-field.js'), 'nldd-popover': () => import('../components/layout/popover/popover.js'), 'nldd-progress-bar': () => import('../components/status-and-feedback/progress-bar/progress-bar.js'), 'nldd-progress-bar-segment-indicator': () => import('../components/status-and-feedback/progress-bar/progress-bar.js'), 'nldd-progress-circle': () => import('../components/status-and-feedback/progress-circle/progress-circle.js'), 'nldd-progress-circle-segment-indicator': () => import('../components/status-and-feedback/progress-circle/progress-circle.js'), 'nldd-radio-button': () => import('../components/inputs/radio-button/radio-button.js'), 'nldd-radio-button-field': () => import('../components/inputs/radio-button-field/radio-button-field.js'), 'nldd-radio-button-group': () => import('../components/inputs/radio-button-group/radio-button-group.js'), 'nldd-reorder-handle-cell': () => import('../components/lists-and-tables/cells/reorder-handle-cell/reorder-handle-cell.js'), 'nldd-rich-text': () => import('../components/content/rich-text/rich-text.js'), 'nldd-search-field': () => import('../components/inputs/search-field/search-field.js'), 'nldd-segmented-control': () => import('../components/inputs/segmented-control/segmented-control.js'), 'nldd-segmented-control-item': () => import('../components/inputs/segmented-control/segmented-control.js'), 'nldd-sheet': () => import('../components/layout/sheet/sheet.js'), 'nldd-shell': () => import('../components/layout/shell/shell.js'), 'nldd-side-by-side-split-view': () => import('../components/layout/split-views/side-by-side-split-view/side-by-side-split-view.js'), 'nldd-sidebar-section': () => import('../components/layout/page-sections/sidebar-section/sidebar-section.js'), 'nldd-simple-section': () => import('../components/layout/page-sections/simple-section/simple-section.js'), 'nldd-skip-link': () => import('../components/navigation/skip-link/skip-link.js'), 'nldd-slider': () => import('../components/inputs/slider/slider.js'), 'nldd-spacer': () => import('../components/layout/spacer/spacer.js'), 'nldd-spacer-cell': () => import('../components/lists-and-tables/cells/spacer-cell/spacer-cell.js'), 'nldd-split-button': () => import('../components/actions/split-button/split-button.js'), 'nldd-split-view-divider': () => import('../components/layout/split-views/split-view-divider/split-view-divider.js'), 'nldd-stacked-split-view': () => import('../components/layout/split-views/stacked-split-view/stacked-split-view.js'), 'nldd-status-bar': () => import('../components/status-and-feedback/status-bar/status-bar.js'), 'nldd-step-bar': () => import('../components/status-and-feedback/step-bar/step-bar.js'), 'nldd-step-bar-item': () => import('../components/status-and-feedback/step-bar/step-bar.js'), 'nldd-step-cell': () => import('../components/lists-and-tables/cells/step-cell/step-cell.js'), 'nldd-stepper': () => import('../components/inputs/stepper/stepper.js'), 'nldd-swatch-picker': () => import('../components/inputs/swatch-picker/swatch-picker.js'), 'nldd-swatch-picker-item': () => import('../components/inputs/swatch-picker/swatch-picker.js'), 'nldd-switch': () => import('../components/inputs/switch/switch.js'), 'nldd-switch-field': () => import('../components/inputs/switch-field/switch-field.js'), 'nldd-tab-bar': () => import('../components/navigation/tab-bar/tab-bar.js'), 'nldd-tab-bar-item': () => import('../components/navigation/tab-bar/tab-bar.js'), 'nldd-table': () => import('../components/lists-and-tables/table/table.js'), 'nldd-table-row': () => import('../components/lists-and-tables/table/table.js'), 'nldd-tag': () => import('../components/content/tag/tag.js'), 'nldd-term': () => import('../components/content/term/term.js'), 'nldd-text': () => import('../components/content/text/text.js'), 'nldd-text-cell': () => import('../components/lists-and-tables/cells/text-cell/text-cell.js'), 'nldd-text-editor': () => import('../components/inputs/text-editor/text-editor.js'), 'nldd-text-field': () => import('../components/inputs/text-field/text-field.js'), 'nldd-time-field': () => import('../components/inputs/time-field/time-field.js'), 'nldd-time-picker': () => import('../components/inputs/time-picker/time-picker.js'), 'nldd-title': () => import('../components/content/title/title.js'), 'nldd-title-cell': () => import('../components/lists-and-tables/cells/title-cell/title-cell.js'), 'nldd-toggle-button': () => import('../components/inputs/toggle-button/toggle-button.js'), 'nldd-toggle-button-group': () => import('../components/inputs/toggle-button-group/toggle-button-group.js'), 'nldd-token': () => import('../components/content/token/token.js'), 'nldd-token-field': () => import('../components/inputs/token-field/token-field.js'), 'nldd-toolbar': () => import('../components/actions/toolbar/toolbar.js'), 'nldd-toolbar-item': () => import('../components/actions/toolbar/toolbar-item.js'), 'nldd-toolbar-title': () => import('../components/actions/toolbar/toolbar-title.js'), 'nldd-tooltip': () => import('../components/content/tooltip/tooltip.js'), 'nldd-top-navigation-bar': () => import('../components/navigation/top-navigation-bar/top-navigation-bar.js'), 'nldd-top-title-bar': () => import('../components/navigation/top-title-bar/top-title-bar.js'), 'nldd-two-thirds-one-third-section': () => import('../components/layout/page-sections/two-thirds-one-third-section/two-thirds-one-third-section.js'), 'nldd-validation-item': () => import('../components/forms/validation-list/validation-list.js'), 'nldd-validation-list': () => import('../components/forms/validation-list/validation-list.js'), 'nldd-visually-hidden': () => import('../components/content/visually-hidden/visually-hidden.js'), 'nldd-window': () => import('../components/layout/window/window.js'), }",
           "description": "Per nldd-* tag, a dynamic import of the module that defines it."
         }
       ],
@@ -60229,6 +60202,24 @@
         },
         {
           "kind": "function",
+          "name": "inOverlay",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "Element"
+              }
+            }
+          ],
+          "description": "Whether `host` sits in an overlay. An overlay is not the document, so what\nis in it never scrolls the document: its mode is nested, whatever the shell\naround it derives or the inherited variable says before the overlay has\nupgraded and reset it."
+        },
+        {
+          "kind": "function",
           "name": "addStandaloneScrollLayer",
           "return": {
             "type": {
@@ -60351,6 +60342,15 @@
               "default": "null"
             },
             {
+              "kind": "field",
+              "name": "_inOverlay",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
               "kind": "method",
               "name": "hostConnected",
               "return": {
@@ -60411,6 +60411,14 @@
           "name": "SINGLE_COLUMN_CHANGE_EVENT",
           "declaration": {
             "name": "SINGLE_COLUMN_CHANGE_EVENT",
+            "module": "src/utilities/scroll-mode-controller.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "inOverlay",
+          "declaration": {
+            "name": "inOverlay",
             "module": "src/utilities/scroll-mode-controller.ts"
           }
         },

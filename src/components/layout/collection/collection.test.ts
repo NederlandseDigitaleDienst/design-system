@@ -290,6 +290,12 @@ describe('nldd-collection', () => {
 		expect(el.hasAttribute('scrollable')).toBe(false);
 	});
 
+	it('does not render a footer element, so Safari exposes no contentinfo landmark', async () => {
+		el = await fixture(`<nldd-collection><div>Item 1</div></nldd-collection>`);
+		expect(el.shadowRoot!.querySelector('footer')).toBeNull();
+		expect(el.shadowRoot!.querySelector('.collection__footer')!.tagName).toBe('DIV');
+	});
+
 	it('updates overflow state when items are added at runtime (no resize needed)', async () => {
 		el = await fixture(`
 			<nldd-collection layout="horizontal-scroll" style="width: 200px;">

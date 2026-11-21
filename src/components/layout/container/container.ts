@@ -326,6 +326,9 @@ export class NLDDContainer extends LitElement {
 	/** The children this container gave `listitem`, so it only takes back its own. */
 	private _listItems = new WeakSet<Element>();
 
+	/** Whether the host's `role="list"` came from `list`, so a role from the markup survives. */
+	private _ownsListRole = false;
+
 	override connectedCallback(): void {
 		super.connectedCallback();
 		this._syncSizedByContent();
@@ -336,8 +339,13 @@ export class NLDDContainer extends LitElement {
 
 	/** The list role on the host, and `listitem` on each child without a role of its own. */
 	private _applyListRoles(): void {
-		if (this.list) this.setAttribute('role', 'list');
-		else if (this.getAttribute('role') === 'list') this.removeAttribute('role');
+		if (this.list && this.getAttribute('role') !== 'list') {
+			this.setAttribute('role', 'list');
+			this._ownsListRole = true;
+		} else if (!this.list && this._ownsListRole) {
+			this.removeAttribute('role');
+			this._ownsListRole = false;
+		}
 		const slot = this.renderRoot?.querySelector('slot:not([name])') as HTMLSlotElement | null;
 		for (const child of slot?.assignedElements() ?? []) {
 			if (this.list && !child.hasAttribute('role')) {

@@ -6,7 +6,7 @@
  * Direct use of nldd-switch requires an accessible-label attribute for screen reader accessibility.
  *
  * @element nldd-switch
- * @keywords toggle, schakelaar
+ * @keywords toggle, toggles, schakelaar
  * @related nldd-checkbox, nldd-toggle-button
  * @attr {boolean} checked - Whether the switch is on/off
  * @attr {boolean} disabled - Disabled state

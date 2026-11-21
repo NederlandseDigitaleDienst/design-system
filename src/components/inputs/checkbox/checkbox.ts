@@ -2,7 +2,7 @@
  * Nederlandse Digitale Dienst Checkbox Component (Lit + TypeScript)
  *
  * @element nldd-checkbox
- * @keywords selectievakje, vinkje
+ * @keywords selectievakje, vinkje, toggle, toggles
  * @related nldd-switch
  * @attr {boolean} checked - Checked state
  * @attr {boolean} disabled - Disabled state

@@ -174,6 +174,7 @@ export const pageStyles = css`
 		flex-grow: 1;
 	}
 
+	:host(:focus-visible),
 	.page__scroll:focus-visible {
 		outline: var(--_page-focus-ring-outline);
 		outline-offset: var(--_page-focus-ring-outline-offset);

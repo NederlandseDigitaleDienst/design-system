@@ -4013,3 +4013,45 @@ describe('nldd-menu after it closed', () => {
 		expect(menu.style.top).toBe('-999px');
 	});
 });
+
+describe('nldd-menu – opens on the current choice', () => {
+	let el: HTMLElement;
+	let removeTokens: () => void;
+
+	beforeEach(() => { removeTokens = loadTokens(); });
+	afterEach(() => {
+		cleanup(el);
+		removeTokens();
+	});
+
+	it('scrolls the selected item to one and a half items below the top of the list, not the page', async () => {
+		const items = Array.from({ length: 30 }, (_, i) =>
+			`<nldd-menu-item type="radio" text="Item ${i + 1}"${i === 19 ? ' selected' : ''}></nldd-menu-item>`).join('');
+		el = await fixture(`<div><button id="opener">Open</button><nldd-menu anchor="opener" max-items="5">${items}</nldd-menu></div>`);
+		const menu = el.querySelector('nldd-menu') as HTMLElement & { updateComplete: Promise<unknown> };
+		const pageScroll = document.scrollingElement!.scrollTop;
+		menu.showPopover();
+		const scroller = menu.shadowRoot!.querySelector<HTMLElement>('.menu__scroller')!;
+		await until(() => scroller.scrollTop > 0);
+		const selected = menu.querySelector('[selected]')!.getBoundingClientRect();
+		const area = scroller.getBoundingClientRect();
+		expect(Math.abs(selected.top - area.top - selected.height * 1.5)).toBeLessThan(2);
+		expect(document.scrollingElement!.scrollTop).toBe(pageScroll);
+		menu.hidePopover();
+	});
+
+	it('counts from the bottom edge when it opens above its anchor', async () => {
+		const items = Array.from({ length: 30 }, (_, i) =>
+			`<nldd-menu-item type="radio" text="Item ${i + 1}"${i === 19 ? ' selected' : ''}></nldd-menu-item>`).join('');
+		el = await fixture(`<div><button id="opener" style="margin-top: 700px">Open</button><nldd-menu anchor="opener" placement="top-start" max-items="5">${items}</nldd-menu></div>`);
+		const menu = el.querySelector('nldd-menu') as HTMLElement;
+		menu.showPopover();
+		const scroller = menu.shadowRoot!.querySelector<HTMLElement>('.menu__scroller')!;
+		await until(() => scroller.scrollTop > 0);
+		const selected = menu.querySelector('[selected]')!.getBoundingClientRect();
+		const area = scroller.getBoundingClientRect();
+		expect(menu.getBoundingClientRect().bottom).toBeLessThanOrEqual(document.getElementById('opener')!.getBoundingClientRect().top + 1);
+		expect(Math.abs(area.top + scroller.clientHeight - selected.bottom - selected.height * 1.5)).toBeLessThan(2);
+		menu.hidePopover();
+	});
+});

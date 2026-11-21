@@ -14,7 +14,10 @@
 import loaders from 'virtual:site-components';
 import { fragmentId } from './fragment.js';
 
-const PANE = (slot: string) => `:scope > nldd-split-view-pane[slot="${slot}"]`;
+/** The attributes www/build/site.js writes on the page in main. */
+const MAIN_ATTRIBUTES = ['landmarks', 'accessible-label', 'sticky-header', 'empty', 'data-site-opens-first'];
+
+const PANE = (slot: string) => `:scope > [slot="${slot}"]`;
 
 /** The link a click follows, when it is one this script may take over. */
 function linkOf(event: MouseEvent): URL | null {
@@ -83,7 +86,7 @@ function clearSearch(view: Element | null): void {
  */
 function sidebarScroll(view: Element): { restore(): void } {
 	const scrollerOf = (pane: Element | null) =>
-		pane?.querySelector(':scope > nldd-page')?.shadowRoot?.querySelector<HTMLElement>('.page__scroll') ?? null;
+		pane?.shadowRoot?.querySelector<HTMLElement>('.page__scroll') ?? null;
 	const kept = ['primary-sidebar', 'secondary-sidebar'].map((slot) => {
 		const pane = view.querySelector(PANE(slot));
 		return { pane, top: scrollerOf(pane)?.scrollTop ?? 0 };
@@ -116,11 +119,18 @@ function swap(view: Element, next: Document, nextView: Element): Element {
 		secondary?.remove();
 	}
 
-	// The pane stays and takes the content of the next one: in WebKit a pane
-	// that leaves its slot resets the scroll of the sidebars beside it.
+	// The page in main stays and takes the attributes and the content of the
+	// next one: in WebKit a pane that leaves its slot resets the scroll of the
+	// sidebars beside it.
 	const nextMain = nextView.querySelector(PANE('main'))!;
 	const main = view.querySelector(PANE('main'))!;
-	main.toggleAttribute('has-content', nextMain.hasAttribute('has-content'));
+	// Only what the site writes on it: the page sets attributes of its own,
+	// such as the style that makes it a layout container.
+	for (const name of MAIN_ATTRIBUTES) {
+		const value = nextMain.getAttribute(name);
+		if (value === null) main.removeAttribute(name);
+		else if (main.getAttribute(name) !== value) main.setAttribute(name, value);
+	}
 	main.replaceChildren(...[...nextMain.children].map((child) => document.adoptNode(child)));
 
 	document.title = next.title;
@@ -148,7 +158,7 @@ async function settle(
 	// When the panes stack, the sidebar gives way to main: focus goes along.
 	await new Promise((resolve) => setTimeout(resolve));
 	await (view as Element & { updateComplete?: Promise<unknown> }).updateComplete;
-	const focused = document.activeElement?.closest('nldd-split-view-pane');
+	const focused = document.activeElement?.closest('nldd-navigation-split-view > [slot]');
 	const chosenTab = tab ? main.querySelector<HTMLElement>('nldd-tab-bar-item[current]') : null;
 	if (chosenTab) chosenTab.focus({ preventScroll: true });
 	else if (keepFocus && focused?.checkVisibility()) {
@@ -208,6 +218,23 @@ async function go(
 	const main = swap(view, next, nextView);
 	scrolled.restore();
 	await settle(view, main, url, { restore: !push, keepFocus: fromSidebar, tab: fromTab });
+	openFirst(view);
+}
+
+/**
+ * An overview that leaves main empty (the changelog) shows its first page
+ * where main is in view beside the list. On a phone it stays the list, so
+ * back from a version lands there.
+ */
+function openFirst(view: Element): void {
+	const main = view.querySelector(PANE('main'));
+	const list = view.querySelector(PANE('secondary-sidebar'));
+	if (!main?.hasAttribute('data-site-opens-first') || !main.checkVisibility() || !list?.checkVisibility()) return;
+	const href = list.querySelector('nldd-list-item[href]')?.getAttribute('href');
+	if (!href) return;
+	const url = new URL(href, location.href);
+	history.replaceState({ site: true }, '', url);
+	void go(url, { push: false, fromSidebar: true });
 }
 
 /**
@@ -218,9 +245,9 @@ function markChosen(event: Event): boolean {
 	const item = event
 		.composedPath()
 		.find((node): node is Element => node instanceof Element && node.localName === 'nldd-list-item');
-	const pane = item?.closest('nldd-split-view-pane');
+	const pane = item?.closest('nldd-navigation-split-view > [slot]');
 	if (!item || !pane || pane.getAttribute('slot') === 'main') return false;
-	for (const other of item.closest('nldd-split-view-pane')!.querySelectorAll('nldd-list-item[current]')) {
+	for (const other of item.closest('nldd-navigation-split-view > [slot]')!.querySelectorAll('nldd-list-item[current]')) {
 		if (other !== item) other.removeAttribute('current');
 	}
 	item.setAttribute('current', '');
@@ -234,7 +261,7 @@ document.addEventListener('click', (event) => {
 	const fromSidebar = markChosen(event);
 	const section = event
 		.composedPath()
-		.some((node) => node instanceof Element && node.matches('nldd-split-view-pane[slot="primary-sidebar"]'));
+		.some((node) => node instanceof Element && node.matches('nldd-navigation-split-view > [slot="primary-sidebar"]'));
 	if (section) clearSearch(document.querySelector('nldd-navigation-split-view'));
 	// The page on screen: nothing to load, unless a back button took a pane away.
 	if (url.pathname + url.search === shown) {
@@ -244,6 +271,16 @@ document.addEventListener('click', (event) => {
 	const fromTab = event.composedPath().some((node) => node instanceof Element && node.localName === 'nldd-tab-bar-item');
 	void go(url, { push: true, fromSidebar, fromTab });
 });
+
+{
+	const view = document.querySelector('nldd-navigation-split-view');
+	if (view) {
+		void customElements
+			.whenDefined('nldd-navigation-split-view')
+			.then(() => (view as Element & { updateComplete?: Promise<unknown> }).updateComplete)
+			.then(() => openFirst(view));
+	}
+}
 
 document.querySelector('nldd-navigation-split-view')?.addEventListener('back', () => {
 	trimmed = true;
@@ -278,7 +315,7 @@ document.querySelector('nldd-navigation-split-view')?.addEventListener('keydown'
 	if (keyboard.metaKey || keyboard.ctrlKey || keyboard.shiftKey || keyboard.altKey) return;
 	const view = event.currentTarget as Element;
 	const path = event.composedPath();
-	const pane = path.find((node): node is Element => node instanceof Element && node.localName === 'nldd-split-view-pane');
+	const pane = path.find((node): node is Element => node instanceof Element && node.matches('nldd-navigation-split-view > [slot]'));
 	if (!pane || pane.parentElement !== view) return;
 	const onRow = path.some((node) => node instanceof Element && node.localName === 'nldd-list-item');
 	const onTitle = path.some((node) => node instanceof Element && node.matches('#pagina-titel :is(h1, h2)'));

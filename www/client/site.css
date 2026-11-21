@@ -24,6 +24,15 @@ nldd-rich-text td code {
 	max-width: 280px;
 }
 
+/* From lg the toolbar has the way back to the landing page; the sections
+   only have it in their title bar below that. */
+@media (min-width: 63rem) {
+	nldd-navigation-split-view > [slot="primary-sidebar"] {
+		/* nldd-lint-disable-next-line internal-context-no-use -- the split view hides no back button in the first sidebar */
+		--context-back-button-display: none;
+	}
+}
+
 @layer site {
 	/* ## Stage */
 
@@ -32,7 +41,11 @@ nldd-rich-text td code {
 	}
 
 	/* Inside the highlight border of the box, which the frame would paint over. */
+	/* overflow-x makes the mat a scroll container, so sticky content inside
+	   sticks to its top edge, not under the page's bar. */
 	.site-stage__mat {
+		--context-inset-top: 0px;
+		--context-inset-bottom: 0px;
 		padding-inline: var(--semantics-surfaces-highlight-border-width);
 		overflow-x: auto;
 	}
@@ -55,16 +68,17 @@ nldd-rich-text td code {
 	   an example reads the surface it stands on, and that must be the one the
 	   stage says it is, not whatever the page happens to have behind it. */
 	.site-stage__canvas {
-		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
+		--context-background-color: var(--semantics-surfaces-base-background-color);
 
 		box-sizing: border-box;
 		padding: 24px;
 		font: var(--primitives-font-body-md-regular-snug);
+		background-color: var(--context-background-color);
 		color: var(--semantics-content-color);
 	}
 
 	.site-stage__canvas[data-surface='tinted'] {
-		--context-parent-background-color: var(--semantics-surfaces-tinted-background-color);
+		--context-background-color: var(--semantics-surfaces-tinted-background-color);
 	}
 
 	.site-stage__frame {

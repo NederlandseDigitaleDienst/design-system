@@ -4,7 +4,7 @@
  * A switch toggle with an inline label for use in forms.
  *
  * @element nldd-switch-field
- * @keywords schakelaar
+ * @keywords toggle, toggles, schakelaar
  * @related nldd-checkbox-field
  * @attr {boolean} checked - Checked state
  * @attr {boolean} disabled - Disabled state

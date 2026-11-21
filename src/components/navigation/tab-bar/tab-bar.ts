@@ -360,6 +360,8 @@ export class NLDDTabBar extends withTranslations(LitElement, nlddTabBarTranslati
 	};
 
 	private _onItemsMutated = (records: MutationRecord[]): void => {
+		// A current set after the first render moves the keyboard entry point.
+		if (records.some(record => record.attributeName === 'current')) this._syncItems();
 		this._scheduleOverflow(records.some(record => record.attributeName !== 'current'));
 	};
 

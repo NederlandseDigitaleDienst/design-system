@@ -161,7 +161,7 @@ import { AnnotationClipboard } from './text-editor.clipboard.js';
 import { textEditorKeymap } from './text-editor.keymap.js';
 import { orderedListRenumber } from './text-editor.ordered-list.js';
 import { dragToMove, dragMovePlugin } from './text-editor.drag.js';
-import { linkOpenBadge } from './text-editor.links.js';
+import { linkBadgeTooltip, linkOpenBadge } from './text-editor.links.js';
 import { stableCursor } from './text-editor.cursor.js';
 import { focusSelectionGuard } from './text-editor.focus-selection.js';
 import { hiddenSyntax } from './text-editor.hidden-syntax.js';
@@ -445,7 +445,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 			...this.inputExtensions(),
 			this._wrapCompartment.of(this.wrap ? EditorView.lineWrapping : []),
 			this._spellcheckCompartment.of(this.noSpellcheck ? [] : spellcheck()),
-			this._syntaxCompartment.of(this.syntax === 'hidden' ? hiddenSyntax() : []),
+			this._syntaxCompartment.of(this.syntax === 'hidden' ? [hiddenSyntax(), linkBadgeTooltip.of(true)] : []),
 			EditorView.updateListener.of((u) => {
 				if (u.docChanged || u.selectionSet) this._emitState();
 			}),
@@ -587,7 +587,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 			this.reconfigure(this._wrapCompartment, this.wrap ? EditorView.lineWrapping : []);
 		}
 		if (changed.has('syntax')) {
-			this.reconfigure(this._syntaxCompartment, this.syntax === 'hidden' ? hiddenSyntax() : []);
+			this.reconfigure(this._syntaxCompartment, this.syntax === 'hidden' ? [hiddenSyntax(), linkBadgeTooltip.of(true)] : []);
 		}
 		if (changed.has('noSpellcheck')) {
 			this.reconfigure(this._spellcheckCompartment, this.noSpellcheck ? [] : spellcheck());

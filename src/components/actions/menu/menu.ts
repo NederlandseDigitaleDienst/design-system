@@ -1804,12 +1804,14 @@ export class NLDDMenu extends LitElement {
 		document.addEventListener('pointerdown', this._handleDocumentPointerdown, true);
 
 		await this.updateComplete;
+		this._scrollToSelected();
 		if (this.variant !== 'listbox') {
 			const keyboard = isKeyboardMode();
 			const items = this._getVisibleItems();
 			if (keyboard && items.length > 0) {
-				this._setHighlight(items[0]);
-				items[0].focus();
+				const start = items.find(item => item.hasAttribute('selected')) ?? items[0];
+				this._setHighlight(start);
+				start.focus({ preventScroll: true });
 			} else {
 				const menu = this.shadowRoot?.querySelector<HTMLElement>('.menu');
 				menu?.classList.toggle('is-pointer-focus', !keyboard);
@@ -1817,6 +1819,26 @@ export class NLDDMenu extends LitElement {
 			}
 		}
 	};
+
+	/**
+	 * Opens on the current choice, one and a half items in from the edge on the
+	 * anchor's side: close to the button, with the choices before it still in
+	 * view. Only the menu's own scroller moves: `scrollIntoView` would scroll
+	 * the page behind it as well.
+	 */
+	private _scrollToSelected(): void {
+		const scroller = this.shadowRoot?.querySelector<HTMLElement>('.menu__scroller');
+		const selected = this._getVisibleItems().find(item => item.hasAttribute('selected'));
+		if (!scroller || !selected || scroller.scrollHeight <= scroller.clientHeight) return;
+		const item = selected.getBoundingClientRect();
+		const area = scroller.getBoundingClientRect();
+		const lead = item.height * 1.5;
+		const anchor = this._getAnchorEl()?.getBoundingClientRect();
+		const opensAbove = !!anchor && this.getBoundingClientRect().bottom <= anchor.top + 1;
+		scroller.scrollTop += opensAbove
+			? item.bottom - (area.top + scroller.clientHeight - lead)
+			: item.top - (area.top + lead);
+	}
 
 	override render() {
 		return menuTemplate.call(this, this._isEmpty, this.variant);

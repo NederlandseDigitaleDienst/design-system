@@ -20,7 +20,7 @@
  * never joins the consumer's form; the field submits on its behalf).
  *
  * @element nldd-checkbox-field
- * @keywords selectievakje, vinkje
+ * @keywords selectievakje, vinkje, toggle, toggles
  * @related nldd-switch-field
  * @attr {boolean} checked - Checked state
  * @attr {boolean} indeterminate - Indeterminate state

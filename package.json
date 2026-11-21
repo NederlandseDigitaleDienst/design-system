@@ -283,10 +283,6 @@
       "types": "./dist/components/layout/split-views/split-view-divider/split-view-divider.d.ts",
       "default": "./dist/components/layout/split-views/split-view-divider/split-view-divider.js"
     },
-    "./split-view-pane": {
-      "types": "./dist/components/layout/split-views/split-view-pane/split-view-pane.d.ts",
-      "default": "./dist/components/layout/split-views/split-view-pane/split-view-pane.js"
-    },
     "./page": {
       "types": "./dist/components/layout/page/page.d.ts",
       "default": "./dist/components/layout/page/page.js"

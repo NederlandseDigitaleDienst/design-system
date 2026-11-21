@@ -27,6 +27,8 @@ export const toolbarStyles = css`
 		${inheritedTextReset}
 		box-sizing: border-box;
 		display: block;
+		width: 100%;
+		min-width: 0;
 	}
 
 	:host([size="sm"]) {

@@ -13,7 +13,7 @@
  * same values are not read out twice.
  *
  * @element nldd-time-picker
- * @keywords tijd
+ * @keywords tijd, date, datum, datetime
  * @related nldd-time-field
  *
  * @attr {string} value - The chosen time as `HH:mm` (24-hour), written exactly so: unlike `min` and `max`, it is what the picker reports back. In nldd-time-field the field writes it.

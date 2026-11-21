@@ -15,7 +15,7 @@
  * by keyboard, so an arrow key never silently skips a run of them.
  *
  * @element nldd-date-picker
- * @keywords calendar, kalender, datum
+ * @keywords calendar, kalender, datum, time, tijd, datetime
  * @related nldd-date-field
  *
  * @attr {string} value - The chosen date as ISO (yyyy-mm-dd). Only without `range`.
@@ -270,9 +270,8 @@ export class NLDDDatePicker extends DescribedBy(withTranslations<NLDDDatePickerT
 		const focusSelected = (): void => {
 			const selected = menu?.querySelector<HTMLElement>('nldd-menu-item[selected]');
 			if (!selected || this.shadowRoot?.activeElement === selected) return;
-			// Both of these scroll every scrollable ancestor by default, and the page
-			// is one of them - opening the menu would shift what is behind it.
-			selected.scrollIntoView({ block: 'nearest' });
+			// The menu has already scrolled it to the middle; focus must not scroll
+			// it again, nor the page behind it.
 			selected.focus({ preventScroll: true });
 		};
 		requestAnimationFrame(focusSelected);

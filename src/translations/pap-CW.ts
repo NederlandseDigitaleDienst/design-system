@@ -318,6 +318,7 @@ export const papCW: Record<TranslationKey, string> = {
 	'components.step-bar.status-current-label': 'Paso aktual',
 	'components.step-bar.status-future-label': 'Ainda pa hasi',
 	'components.step-bar.compact-text': 'Paso {current} di {total}',
+	'components.step-bar.compact-overview-text': '{total} pasonan',
 	'components.term.source-capitalize': 'Fuente',
 	'components.term.sheet-dismiss-action': 'Sera',
 };

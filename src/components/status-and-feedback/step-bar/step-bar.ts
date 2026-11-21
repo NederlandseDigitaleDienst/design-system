@@ -7,13 +7,18 @@
  *
  * Mark the step you are on with `status="current"`. The parent derives the
  * rest from its position: `past` before it, `future` after. With none marked,
- * step 1 is current. With more than one, the last one wins and a warning goes
+ * no step is current and every step is still to do. With more than one, the last one wins and a warning goes
  * to the console in a dev build: a flow that forgets to clear the previous
  * step still points at the furthest one. A `status="past"` or
  * `status="future"` on another step overrides what is derived for that step,
  * for flows that jump back or skip a step. One attribute, the same three
  * values as `nldd-step-cell`, so a flow reads in one vocabulary
  * whether it runs across or down.
+ *
+ * A bar without a current step shows what is coming, for instance on the
+ * page before a process starts. Use that sparingly: what someone needs there
+ * is the button that starts the task, and a bar that shows no progress tells
+ * little. Mark a step as soon as the process has begun.
  *
  * Horizontal only, for 3 to 5 steps and 7 at most: each step needs room for
  * its label, and with more of them you count instead of seeing at a glance
@@ -80,7 +85,7 @@ export type StepBarStatus = 'past' | 'current' | 'future';
  *
  * @element nldd-step-bar-item
  *
- * @attr {'past' | 'current' | 'future'} status - How far along this step is. `current` marks the step you are on (`aria-current="step"`) and the parent derives the others from it: with none marked step 1 is current, with more than one the last wins. `past` and `future` override what is derived for this step only
+ * @attr {'past' | 'current' | 'future'} status - How far along this step is. `current` marks the step you are on (`aria-current="step"`) and the parent derives the others from it: with none marked every step is still to do, with more than one the last wins. `past` and `future` override what is derived for this step only
  * @attr {string} text - Label under the disc. Content in the default slot wins.
  * @attr {string} icon - Icon in the disc instead of the number or the check mark
  * @attr {string} href - Makes the step a link (back to a completed step, for instance)
@@ -185,15 +190,13 @@ export class NLDDStepBar extends withTranslations<NLDDStepBarTranslations>(
 		return this._items.length;
 	}
 
-	/** 1-based position of the last item with `status="current"`, or 1 when none has it. */
+	/** 1-based position of the last item with `status="current"`, or 0 when none has it. */
 	get resolvedCurrent(): number {
-		const index = this._items.map(item => item.status).lastIndexOf('current');
-		return index === -1 ? 1 : index + 1;
+		return this._items.map(item => item.status).lastIndexOf('current') + 1;
 	}
 
 	get currentItem(): NLDDStepBarItem | undefined {
-		return this._items.find(item => item.resolvedStatus === 'current')
-			?? this._items[this.resolvedCurrent - 1];
+		return this._items.find(item => item.resolvedStatus === 'current');
 	}
 
 	/** `status` lives on the children, so a change there has to reach this
