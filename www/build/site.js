@@ -19,6 +19,7 @@ import { loadData } from '../../lint/linter.js';
 import { collectComponents, collectPatterns, parseStoryFile, repoRoot } from './sources.js';
 import { codeViewer, escapeHtml, renderMarkdown } from './markdown.js';
 import { controlFor } from './attribute-values.js';
+import { sortByCanon } from '../../scripts/check-control-order.js';
 import { MARKDOWN_INSERTS } from './skills.js';
 import { DEFAULT_THEME, themesByHue } from '../../scripts/lib/themes.js';
 
@@ -496,7 +497,9 @@ function controlsOf(component) {
 	const known = loadData().tags[element.tagName]?.attrs ?? {};
 	return {
 		tag: element.tagName,
-		attributes: (element.attributes ?? []).map((a) => controlFor(file, a, known[a.name]?.values)).filter(Boolean),
+		attributes: sortByCanon(element.attributes ?? [], (a) => a.name, element.tagName.replace(/^nldd-/, ''))
+			.map((a) => controlFor(file, a, known[a.name]?.values))
+			.filter(Boolean),
 	};
 }
 
@@ -666,7 +669,7 @@ function describe(text = '') {
 }
 
 function elementApi(element) {
-	const attributes = (element.attributes ?? []).map((a) => ({
+	const attributes = sortByCanon(element.attributes ?? [], (a) => a.name, element.tagName.replace(/^nldd-/, '')).map((a) => ({
 		name: inlineCode(a.name),
 		text: describe(a.description),
 		facts: [

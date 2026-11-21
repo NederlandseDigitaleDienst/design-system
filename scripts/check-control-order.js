@@ -114,6 +114,24 @@ export function expectedOrder(canon, names, component) {
 	return [...names].sort((a, b) => ranks.get(a) - ranks.get(b));
 }
 
+let canonCache;
+
+/**
+ * Items in the canonical order of their attribute names, for a list that does
+ * not come from the declarations, such as the manifest: it puts what a mixin
+ * adds after the component's own attributes. Names outside the canon go last.
+ */
+export function sortByCanon(items, nameOf, component) {
+	canonCache ??= readCanon();
+	const canon = canonCache;
+	const names = items.map((item) => camel(nameOf(item)));
+	const rank = (i) => {
+		const r = rankIn(canon, names, i, component);
+		return r < 0 ? canon.length + 1 : r;
+	};
+	return items.map((item, i) => ({ item, r: rank(i), i })).sort((a, b) => a.r - b.r || a.i - b.i).map(({ item }) => item);
+}
+
 function componentFiles(dir) {
 	const out = [];
 	for (const entry of readdirSync(dir)) {
