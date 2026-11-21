@@ -8,6 +8,8 @@ export PATH=/usr/bin:/bin
 source "$ACTION/confine.sh"
 reset_git
 git() { command git -c core.hooksPath=/dev/null "$@"; }
+{ read -r name; read -r email; } < "$TOOLS/identity"
+export GIT_AUTHOR_NAME="$name" GIT_COMMITTER_NAME="$name" GIT_AUTHOR_EMAIL="$email" GIT_COMMITTER_EMAIL="$email"
 
 cd "$TOOLS/compare"
 {

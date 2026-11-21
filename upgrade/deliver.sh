@@ -32,8 +32,10 @@ else
 	name='github-actions[bot]'
 	id=41898282
 fi
-git config user.name "$name"
-git config user.email "$id+$name@users.noreply.github.com"
+# Not in the git configuration, which a later step puts back as it was cloned: it comes along as the environment.
+printf '%s\n%s\n' "$name" "$id+$name@users.noreply.github.com" > "$TOOLS/identity"
+export GIT_AUTHOR_NAME="$name" GIT_COMMITTER_NAME="$name"
+export GIT_AUTHOR_EMAIL="$id+$name@users.noreply.github.com" GIT_COMMITTER_EMAIL="$id+$name@users.noreply.github.com"
 
 # What the repository tracks, and a file made after the command ran: the agent's.
 title="chore: designsysteem naar $VERSION"
