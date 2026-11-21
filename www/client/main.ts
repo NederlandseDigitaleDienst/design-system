@@ -26,6 +26,37 @@ function wireBack(): void {
 }
 
 /**
+ * The way back to the landing page: in the toolbar once both sidebars are on
+ * the screen, in the title bar of the sections otherwise, as on a phone.
+ */
+function wireHome(): void {
+	const view = document.querySelector('nldd-navigation-split-view');
+	if (!view) return;
+	const panes = () => [...view.querySelectorAll<HTMLElement>(':scope > [slot]')];
+	const update = () => {
+		const area = view.getBoundingClientRect();
+		const shown = panes().filter((pane) => {
+			const box = pane.getBoundingClientRect();
+			return box.width > 0 && box.right > area.left + 1 && box.left < area.right - 1;
+		});
+		const both = ['primary-sidebar', 'secondary-sidebar'].every((slot) => shown.some((pane) => pane.slot === slot));
+		view.toggleAttribute('data-site-sidebars-shown', both);
+	};
+	const sizes = new ResizeObserver(update);
+	const observe = () => {
+		sizes.disconnect();
+		sizes.observe(view);
+		for (const pane of panes()) sizes.observe(pane);
+	};
+	new MutationObserver(() => {
+		observe();
+		update();
+	}).observe(view, { childList: true, subtree: true, attributeFilter: ['empty', 'slot'] });
+	observe();
+	update();
+}
+
+/**
  * Below the width where the sidebar is a sheet, a button opens it. The button
  * says whether the sheet is open, as the content page pattern has it.
  */
@@ -241,6 +272,7 @@ function wireTheme(): void {
 
 wireTheme();
 wireBack();
+wireHome();
 wireSidebar();
 wireContents();
 wireFilter();

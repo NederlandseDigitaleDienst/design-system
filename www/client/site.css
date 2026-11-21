@@ -24,13 +24,21 @@ nldd-rich-text td code {
 	max-width: 280px;
 }
 
-/* From lg the toolbar has the way back to the landing page; the sections
-   only have it in their title bar below that. */
-@media (min-width: 63rem) {
-	nldd-navigation-split-view > [slot="primary-sidebar"] {
-		/* nldd-lint-disable-next-line internal-context-no-use -- the split view hides no back button in the first sidebar */
-		--context-back-button-display: none;
-	}
+/* With both sidebars on the screen the toolbar has the way back to the
+   landing page (main.ts sets the attribute). */
+nldd-navigation-split-view[data-site-sidebars-shown] > [slot="primary-sidebar"] {
+	/* nldd-lint-disable-next-line internal-context-no-use -- the split view hides no back button in the first sidebar */
+	--context-back-button-display: none;
+}
+
+/* Not `hidden`: the toolbar sets that on its own items when they overflow. */
+body:not(:has(nldd-navigation-split-view[data-site-sidebars-shown])) [data-site-home] {
+	display: none;
+}
+
+/* Without the way back the name lines up with the content below it. */
+body:not(:has(nldd-navigation-split-view[data-site-sidebars-shown])) nldd-toolbar-title {
+	margin-inline-start: var(--primitives-space-8);
 }
 
 @layer site {

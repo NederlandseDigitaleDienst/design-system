@@ -340,9 +340,10 @@ function themePicker({ compact = false } = {}) {
 
 /**
  * The main toolbar, around the panes: back to the landing page and the name
- * of the site at the start, the theme at the end. Up to md the way back is in
- * the title bar of the sections instead (site.css hides it there from lg), and
- * the theme is an icon button, so the name has room.
+ * of the site at the start, the theme at the end. The way back shows once both
+ * sidebars are on the screen; until then it is in the title bar of the
+ * sections, as on a phone (main.ts switches between the two). Up to md the
+ * theme is an icon button, so the name has room.
  */
 function toolbar({ compact = false } = {}) {
 	return `<nldd-container
@@ -350,13 +351,11 @@ function toolbar({ compact = false } = {}) {
 			${compact ? 'below="md"' : 'above="lg"'}
 			padding="8"
 		>
-			<nldd-toolbar accessible-label="${SITE_NAME}">${
-				compact
-					? ''
-					: `
+			<nldd-toolbar accessible-label="${SITE_NAME}">
 				<nldd-toolbar-item
 					slot="start"
 					priority="3"
+					data-site-home
 				>
 					<nldd-icon-button
 						icon="chevron-left"
@@ -369,8 +368,7 @@ function toolbar({ compact = false } = {}) {
 						text="Home"
 						href="/"
 					></nldd-menu-item>
-				</nldd-toolbar-item>`
-			}
+				</nldd-toolbar-item>
 				<nldd-toolbar-title
 					slot="start"
 					text="${SITE_NAME}"

@@ -65,7 +65,7 @@ test('the landing page is the one written by hand, with the head every page has'
 test('every page behind the landing page is an application: a toolbar around a split view, without the bar of the landing page', () => {
 	for (const path of ['componenten/button/index.html', 'patronen/form/index.html', 'richtlijnen/index.html']) {
 		assert.match(pages[path], /<nldd-bar-split-view>[^]*<nldd-navigation-split-view slot="main">/, path);
-		assert.match(pages[path], /<nldd-icon-button\s+icon="chevron-left"\s+text="Home"\s+href="\/"/, path);
+		assert.match(pages[path], /data-site-home\s*>\s*<nldd-icon-button\s+icon="chevron-left"\s+text="Home"\s+href="\/"/, path);
 		assert.match(pages[path], /text="Documentatie"\s+heading-level="2"\s+back-text="Home"\s+back-href="\/"/, path);
 		assert.match(pages[path], /<nldd-toolbar-title\s+slot="start"\s+text="NLDD Designsysteem"\s+min-width="0"/, path);
 		assert.match(pages[path], /<nldd-page[^]*?slot="footer"[^]*?<nldd-link-group accessible-label="Over deze site" size="sm">/, path);
