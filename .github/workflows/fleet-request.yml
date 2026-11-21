@@ -1,0 +1,101 @@
+name: Fleet request
+
+# An issue from the form "Aanmelden" becomes a pull request on fleet.json.
+#
+# The app on the repository is the consent: only an owner of its organization
+# can install it. So the request is checked by making a token of the app for
+# that repository, which fails where the app is not. That needs the key of the
+# app, so this runs in the environment `fleet`, as the fleet does; an issue
+# event runs on main, which is what the environment allows.
+#
+# The body of the issue is the input of a stranger. It reaches the script in
+# an environment variable and is parsed there, never interpolated into a
+# command. The pull request is made with the token of this workflow, so the
+# checks of this repository do not start on it by themselves; generate:fleet
+# runs here first, so a wrong entry never becomes a pull request.
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  contents: read
+
+jobs:
+  request:
+    if: contains(github.event.issue.labels.*.name, 'fleet') && github.event.issue.state == 'open'
+    runs-on: ubuntu-latest
+    environment: fleet
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    concurrency:
+      group: fleet-request-${{ github.event.issue.number }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+      NUMBER: ${{ github.event.issue.number }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Read the request
+        id: entry
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+          if ! entry="$(node scripts/fleet-request.js 2> reason.txt)"; then
+            { echo 'Dit verzoek kan niet op `fleet.json`:'; echo; sed 's/^/- /' reason.txt; echo; echo 'Pas het issue aan, dan probeer ik het opnieuw.'; } > comment.md
+            gh issue comment "$NUMBER" --body-file comment.md
+            exit 1
+          fi
+          repository="$(jq --raw-output .repository <<< "$entry")"
+          echo "repository=$repository" >> "$GITHUB_OUTPUT"
+          echo "owner=${repository%%/*}" >> "$GITHUB_OUTPUT"
+          echo "name=${repository#*/}" >> "$GITHUB_OUTPUT"
+
+      - name: Is the app installed there
+        id: app
+        continue-on-error: true
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.NLDD_FLEET_APP_CLIENT_ID }}
+          private-key: ${{ secrets.NLDD_FLEET_APP_KEY }}
+          owner: ${{ steps.entry.outputs.owner }}
+          repositories: ${{ steps.entry.outputs.name }}
+
+      - name: Say that the app is missing
+        if: steps.app.outcome != 'success'
+        env:
+          REPOSITORY: ${{ steps.entry.outputs.repository }}
+        run: |
+          printf 'De app [NLDD Designsysteem](https://github.com/apps/nldd-designsysteem) staat niet op `%s`. Laat een eigenaar van de organisatie hem installeren, en pas daarna dit issue aan: dan probeer ik het opnieuw.\n' "$REPOSITORY" > comment.md
+          gh issue comment "$NUMBER" --body-file comment.md
+          exit 1
+
+      - name: Open the pull request
+        env:
+          REPOSITORY: ${{ steps.entry.outputs.repository }}
+        run: |
+          node scripts/generate-fleet.js
+          if git diff --quiet; then
+            gh issue comment "$NUMBER" --body "\`$REPOSITORY\` staat al zo op \`fleet.json\`."
+            gh issue close "$NUMBER"
+            exit 0
+          fi
+          branch="fleet/request-$NUMBER"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch --force-create "$branch"
+          git add fleet.json README.md
+          git commit --quiet --message "chore(fleet): $REPOSITORY op de lijst"
+          git push --force origin "$branch"
+          existing="$(gh pr list --head "$branch" --state open --json number --jq '.[0].number')"
+          if [ -z "$existing" ]; then
+            printf 'Zet `%s` op `fleet.json`, zoals gevraagd in #%s. De app staat op de repository.\n\nCloses #%s\n' "$REPOSITORY" "$NUMBER" "$NUMBER" > body.md
+            url="$(gh pr create --base main --head "$branch" --title "chore(fleet): $REPOSITORY op de lijst" --body-file body.md)"
+            gh issue comment "$NUMBER" --body "Pull request: $url. De beheerders van het designsysteem kijken hem na."
+          fi

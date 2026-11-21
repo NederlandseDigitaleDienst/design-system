@@ -111,7 +111,12 @@ Een repository erbij of eraf zet je later onder de instellingen van je organisat
 
 ### Aanmelden
 
-Zet daarna je repository op de lijst: een pull request op de repository van het designsysteem die een regel toevoegt aan [`fleet.json`](https://github.com/NederlandseDigitaleDienst/design-system/blob/main/fleet.json), op alfabet.
+Zet daarna je repository op de lijst. Dat kan op twee manieren:
+
+- **Met [het formulier](https://github.com/NederlandseDigitaleDienst/design-system/issues/new?template=fleet.yml).** Een workflow controleert of de app op je repository staat en maakt er een pull request van.
+- **Met een eigen pull request** die een regel toevoegt aan [`fleet.json`](https://github.com/NederlandseDigitaleDienst/design-system/blob/main/fleet.json), op alfabet.
+
+Een regel ziet er zo uit:
 
 ```json
 { "repository": "jouw-organisatie/jouw-app", "agent": true }

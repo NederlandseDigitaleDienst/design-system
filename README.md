@@ -283,7 +283,7 @@ De soevereine overheidscloud. Alle frontends staan in [fundament-oss/fundament](
 
 ## Elke release een pull request
 
-Na elke release stuurt het designsysteem deze repositories een pull request: de nieuwe versie, de fixes die zeker zijn en een lijst van wat er nog te doen is. Een team meldt zich zelf aan, met een pull request die een regel toevoegt aan [`fleet.json`](./fleet.json), nadat een eigenaar van de organisatie de app [NLDD Designsysteem](https://github.com/apps/nldd-designsysteem) op de repository heeft gezet. Hoe dat gaat en wat elk veld betekent, staat op [Upgraden](https://design.digitaledienst.overheid.nl/upgraden/).
+Na elke release stuurt het designsysteem deze repositories een pull request: de nieuwe versie, de fixes die zeker zijn en een lijst van wat er nog te doen is. Een team meldt zich zelf aan, nadat een eigenaar van de organisatie de app [NLDD Designsysteem](https://github.com/apps/nldd-designsysteem) op de repository heeft gezet: met [het formulier](https://github.com/NederlandseDigitaleDienst/design-system/issues/new?template=fleet.yml), of met een pull request die een regel toevoegt aan [`fleet.json`](./fleet.json). Hoe dat gaat en wat elk veld betekent, staat op [Upgraden](https://design.digitaledienst.overheid.nl/upgraden/).
 
 <!-- fleet:start -->
 | Repository | Agent | Beelden |
