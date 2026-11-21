@@ -304,6 +304,30 @@ describe('nldd-form-field description wiring', () => {
 		expect(describedBy(input)).toEqual([capital]);
 	});
 
+	it('takes its callback back from a validation list that leaves it, and when it leaves the page', async () => {
+		el = await fixture(`
+			<nldd-form-field label="Wachtwoord">
+				<input value="abc">
+				<nldd-validation-list>
+					<nldd-validation-item minlength="8">Minimaal 8 tekens</nldd-validation-item>
+				</nldd-validation-list>
+				<nldd-validation-list>
+					<nldd-validation-item match="[A-Z]">Een hoofdletter</nldd-validation-item>
+				</nldd-validation-list>
+			</nldd-form-field>
+		`);
+		await waitForUpdate(el);
+		const [first, second] = el.querySelectorAll('nldd-validation-list') as unknown as (HTMLElement & { onItemVisibilityChange: (() => void) | null })[];
+		expect(first.onItemVisibilityChange).toBeTypeOf('function');
+		document.body.appendChild(first);
+		await waitForUpdate(el);
+		expect(first.onItemVisibilityChange).toBeNull();
+		expect(second.onItemVisibilityChange).toBeTypeOf('function');
+		el.remove();
+		expect(second.onItemVisibilityChange).toBeNull();
+		first.remove();
+	});
+
 	it('keeps describing the input when the control turns valid again', async () => {
 		el = await fixture(`
 			<nldd-form-field label="Email">

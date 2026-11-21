@@ -118,6 +118,9 @@ function generateId(): string {
    nldd-form-field
    ============================================================ */
 
+/** A validation list as the field sees it: it says when one of its items shows or hides. */
+type ValidationListHost = HTMLElement & { onItemVisibilityChange: (() => void) | null };
+
 @customElement('nldd-form-field')
 export class NLDDFormField extends LitElement {
 	static override styles = formFieldStyles;
@@ -181,6 +184,8 @@ export class NLDDFormField extends LitElement {
 	private _listObserver: MutationObserver | null = null;
 	/** Handed to each validation list, which calls it when an item shows or hides. */
 	private _onItemVisibilityChange = () => this._syncDescription();
+	/** The lists that hold that callback now, to take it back from. */
+	private _watchedLists: ValidationListHost[] = [];
 
 	/** The last label this field wrote onto the control, so it only takes back its own. */
 	private _appliedLabel: string | null = null;
@@ -219,6 +224,16 @@ export class NLDDFormField extends LitElement {
 		super.disconnectedCallback();
 		this._childObserver?.disconnect();
 		this._listObserver?.disconnect();
+		this._watchLists([]);
+	}
+
+	/** Hands the visibility callback to these lists, and takes it back from the others. */
+	private _watchLists(lists: ValidationListHost[]): void {
+		for (const list of this._watchedLists) {
+			if (!lists.includes(list) && list.onItemVisibilityChange === this._onItemVisibilityChange) list.onItemVisibilityChange = null;
+		}
+		for (const list of lists) list.onItemVisibilityChange = this._onItemVisibilityChange;
+		this._watchedLists = lists;
 	}
 
 	/**
@@ -393,10 +408,8 @@ export class NLDDFormField extends LitElement {
 		const lists = children.filter(el => tag(el) === 'nldd-validation-list');
 		this._listObserver ??= new MutationObserver(() => this._syncDescription());
 		this._listObserver.disconnect();
-		for (const list of lists) {
-			this._listObserver.observe(list, { childList: true, subtree: true });
-			(list as HTMLElement & { onItemVisibilityChange: (() => void) | null }).onItemVisibilityChange = this._onItemVisibilityChange;
-		}
+		for (const list of lists) this._listObserver.observe(list, { childList: true, subtree: true });
+		this._watchLists(lists as ValidationListHost[]);
 		const describedBy = [
 			...lists.flatMap(list => Array.from(list.children).filter(el => tag(el) === 'nldd-validation-item' && (el as HTMLElement & { visible?: boolean }).visible)),
 			...children.filter(el => tag(el) === 'nldd-form-field-help-text'),
