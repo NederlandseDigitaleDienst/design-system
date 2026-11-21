@@ -4,22 +4,15 @@ name: Upgrade the fleet
 # with a pull request of its own. The work per repository is the action in
 # /upgrade, the same one a team uses.
 #
-# The list is not in this repository: which apps use the design system is
-# theirs to tell. Everything this workflow needs is a variable of this
-# repository or a secret of its environment `fleet`, and without the list it
-# does nothing:
+# The list is fleet.json, at the root of this repository. A team puts its own
+# repository on it with a pull request, after an owner of its organization has
+# installed the app on that repository; scripts/lib/fleet.js says what an entry
+# may say, and the README shows the list. The rest is a variable of this
+# repository or a secret of its environment `fleet`:
 #
-#   NLDD_FLEET                  variable   the list, a JSON array. An entry is owner/name, or
-#                                          { "repository", "build", "site", "sandbox" }: the
-#                                          command that builds a site on a plain runner and
-#                                          the directory it writes to, for pictures, and
-#                                          `false` to run the agent without a sandbox
 #   NLDD_FLEET_APP_CLIENT_ID    variable   the GitHub App that opens the pull requests,
 #   NLDD_FLEET_APP_KEY          secret     and its private key
 #   NLDD_FLEET_TOKEN            secret     or, without an app, a token of a bot account
-#   NLDD_FLEET_AGENT            variable   a JSON array of owner/name: there an agent works the
-#                                          list of what is left. It runs commands in that
-#                                          repository, so name the ones whose content you trust
 #   NLDD_FLEET_MODEL            variable   the model of the agent. Default: claude-opus-5-5
 #   CLAUDE_CODE_OAUTH_TOKEN     secret     for the agent, or
 #   ANTHROPIC_API_KEY           secret     an API key
@@ -56,8 +49,8 @@ on:
       agent:
         description: 'Let an agent work the list of what is left.'
         type: choice
-        options: ['as set in NLDD_FLEET_AGENT', 'yes', 'no']
-        default: 'as set in NLDD_FLEET_AGENT'
+        options: ['as fleet.json says', 'yes', 'no']
+        default: 'as fleet.json says'
       from_source:
         description: 'Take the command from main, not from npm: what is merged and not yet released.'
         type: boolean
@@ -67,10 +60,41 @@ permissions:
   contents: read
 
 jobs:
+  # The list to run, from fleet.json: every entry, or the one repository asked for by hand.
+  list:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    outputs:
+      targets: ${{ steps.list.outputs.targets }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            fleet.json
+            scripts/lib/fleet.js
+          sparse-checkout-cone-mode: false
+
+      - id: list
+        env:
+          ONLY: ${{ inputs.repository }}
+        run: |
+          node --input-type=module --eval "
+            import { readFileSync } from 'node:fs';
+            import { fleetErrors, fleetMatrix } from './scripts/lib/fleet.js';
+            const fleet = JSON.parse(readFileSync('fleet.json', 'utf8'));
+            const errors = fleetErrors(fleet);
+            if (errors.length) { console.error(errors.join('\n')); process.exit(1); }
+            const only = process.env.ONLY;
+            const all = fleetMatrix(fleet);
+            const named = all.find(({ repository }) => repository.toLowerCase() === only?.toLowerCase());
+            const targets = only ? [named ?? fleetMatrix({ repositories: [{ repository: only }] })[0]] : all;
+            console.log('targets=' + JSON.stringify(targets));
+          " >> "$GITHUB_OUTPUT"
+
   upgrade:
-    if: >-
-      (inputs.repository != '' || vars.NLDD_FLEET != '') &&
-      (github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success')
+    needs: list
+    if: needs.list.outputs.targets != '[]'
     runs-on: ubuntu-latest
     timeout-minutes: 120
     environment: fleet
@@ -79,10 +103,10 @@ jobs:
       # A few at a time: a release that breaks something shows in the first pull requests.
       max-parallel: 3
       matrix:
-        target: ${{ fromJSON(inputs.repository && format('["{0}"]', inputs.repository) || vars.NLDD_FLEET) }}
+        target: ${{ fromJSON(needs.list.outputs.targets) }}
     # One run per repository at a time: two would overwrite each other's branch.
     concurrency:
-      group: nldd-upgrade-${{ matrix.target.repository || matrix.target }}
+      group: nldd-upgrade-${{ matrix.target.repository }}
     steps:
       # The action of the commit this runs on. It clones the project itself, outside this checkout.
       - uses: actions/checkout@v7
@@ -91,17 +115,16 @@ jobs:
 
       - uses: ./upgrade
         with:
-          repository: ${{ matrix.target.repository || matrix.target }}
+          repository: ${{ matrix.target.repository }}
           version: ${{ inputs.version || 'latest' }}
           token: ${{ secrets.NLDD_FLEET_TOKEN || github.token }}
           app-client-id: ${{ vars.NLDD_FLEET_APP_CLIENT_ID }}
           app-private-key: ${{ secrets.NLDD_FLEET_APP_KEY }}
-          agent: ${{ inputs.agent == 'yes' || (inputs.agent != 'no' && contains(fromJSON(vars.NLDD_FLEET_AGENT || '[]'), matrix.target.repository || matrix.target)) }}
+          agent: ${{ inputs.agent == 'yes' || (inputs.agent != 'no' && matrix.target.agent) }}
           claude-code-oauth-token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
           model: ${{ vars.NLDD_FLEET_MODEL || 'claude-opus-5-5' }}
-          # Only an entry that says `false` turns it off. A plain name has no field, and null equals false in an expression.
-          sandbox: ${{ format('{0}', matrix.target.sandbox) != 'false' }}
+          sandbox: ${{ matrix.target.sandbox }}
           build: ${{ matrix.target.build }}
           site: ${{ matrix.target.site }}
           from-source: ${{ inputs.from_source }}

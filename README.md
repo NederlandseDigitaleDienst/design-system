@@ -280,3 +280,11 @@ De soevereine overheidscloud. Alle frontends staan in [fundament-oss/fundament](
 | Wat | Live | Broncode |
 | --- | ---- | -------- |
 | Waggle, een persoonlijk overzicht van je bewaarde Mattermost-berichten | [waggle.rijksapp.nl](https://waggle.rijksapp.nl) | [robbertbos/waggle](https://code.overheid.nl/robbertbos/waggle) |
+
+## Elke release een pull request
+
+Na elke release stuurt het designsysteem deze repositories een pull request: de nieuwe versie, de fixes die zeker zijn en een lijst van wat er nog te doen is. Een team meldt zich zelf aan, met een pull request die een regel toevoegt aan [`fleet.json`](./fleet.json), nadat een eigenaar van de organisatie de app [NLDD Designsysteem](https://github.com/apps/nldd-designsysteem) op de repository heeft gezet. Hoe dat gaat en wat elk veld betekent, staat op [Upgraden](https://design.digitaledienst.overheid.nl/upgraden/).
+
+<!-- fleet:start -->
+Nog geen repository.
+<!-- fleet:end -->

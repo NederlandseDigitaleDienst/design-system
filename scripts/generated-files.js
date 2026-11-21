@@ -67,6 +67,12 @@ export const GENERATED = [
 		check: 'pr',
 	},
 	{
+		// The list in fleet.json, checked and written into the README. A wrong entry fails the pull request that adds it.
+		script: 'generate:fleet',
+		files: ['README.md'],
+		check: 'pr',
+	},
+	{
 		script: 'generate:plugin-version',
 		files: ['.claude-plugin', '.cursor-plugin'],
 		check: 'pr',

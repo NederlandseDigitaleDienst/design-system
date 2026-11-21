@@ -159,7 +159,7 @@ Een upgrade is klaar als dit allemaal waar is:
 
 ## De volgende keer vanzelf
 
-Staat er in `.github/workflows` nog geen stap met `NederlandseDigitaleDienst/design-system/upgrade`, stel dan voor die toe te voegen: dan komt de volgende upgrade als pull request, met dit deel al gedaan. Zet hem er niet ongevraagd in, want het team kiest of er een agent meedoet en met welk token. Hoe het moet, staat op [Upgraden](https://design.digitaledienst.overheid.nl/upgraden/). Werk je zelf als agent in die action, sla dit dan over.
+Staat er in `.github/workflows` nog geen stap met `NederlandseDigitaleDienst/design-system/upgrade`, stel dan voor die toe te voegen, of de repository aan te melden in `fleet.json` van het designsysteem: dan komt de volgende upgrade als pull request, met dit deel al gedaan. Zet hem er niet ongevraagd in, want het team kiest of er een agent meedoet en met welk token. Hoe het moet, staat op [Upgraden](https://design.digitaledienst.overheid.nl/upgraden/). Werk je zelf als agent in die action, sla dit dan over.
 
 ## Wat er stil misgaat
 

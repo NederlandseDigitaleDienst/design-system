@@ -96,7 +96,7 @@ Bouwt je project naar een statische site, dan komen er ook beelden van voor en n
 
 ## Na een release, zonder dat je iets doet
 
-Het designsysteem kan je repository na elke release zelf een pull request sturen. De app **NLDD Designsysteem** opent die pull request, en daarom draait je eigen CI erop.
+Het designsysteem kan je repository na elke release zelf een pull request sturen. Daarvoor installeer je de app en meld je je repository aan. De app **NLDD Designsysteem** opent die pull request, en daarom draait je eigen CI erop.
 
 ### De app installeren
 
@@ -109,7 +109,26 @@ Dit doet een eigenaar van je organisatie, één keer.
 
 Een repository erbij of eraf zet je later onder de instellingen van je organisatie, bij **GitHub Apps**.
 
-Open daarna een issue in de repository van het designsysteem met de repositories die op de lijst moeten. Zonder plek op de lijst doet de app niets.
+### Aanmelden
+
+Zet daarna je repository op de lijst: een pull request op de repository van het designsysteem die een regel toevoegt aan [`fleet.json`](https://github.com/NederlandseDigitaleDienst/design-system/blob/main/fleet.json), op alfabet.
+
+```json
+{ "repository": "jouw-organisatie/jouw-app", "agent": true }
+```
+
+| Veld | Betekenis |
+|---|---|
+| `repository` | De repository, als eigenaar/naam |
+| `agent` | Een agent werkt de lijst af voordat de pull request opengaat. Standaard niet |
+| `build` en `site` | Hoe je site bouwt vanaf een schone checkout, en naar welke map, voor beelden van voor en na |
+| `sandbox` | `false` draait de agent zonder sandbox. Alleen voor een repository die de beheerders vertrouwen als hun eigen |
+
+Een fout in de regel faalt in je pull request, niet bij de volgende release. Afmelden is de regel weer weghalen, of de app van je repository halen.
+
+Deze repositories staan er nu op:
+
+{{fleetList}}
 
 ### Wat de app mag
 
