@@ -7,10 +7,10 @@
  */
 
 import { lstatSync, readFileSync, statSync, writeFileSync } from 'node:fs';
-import { extname, relative, resolve, sep } from 'node:path';
+import { extname, relative, resolve } from 'node:path';
 import { applyFixes, linesNaming, renameReferences } from './fix.js';
 import { BUILT_IN_RULES, GROUPS, OPT_IN_GROUPS } from './rule-data.js';
-import { DEFAULT_EXTENSIONS, findFiles, IGNORED_DIRECTORIES, MARKDOWN_EXTENSIONS, STRING_EXTENSIONS, partialExcludes, isBundle, isRelevant, projectTokens, REFERENCE_EXTENSIONS, SCRIPT_EXTENSIONS, STYLESHEET_EXTENSIONS, UNREAD_EXTENSIONS } from './project.js';
+import { DEFAULT_EXTENSIONS, findFiles, MARKDOWN_EXTENSIONS, STRING_EXTENSIONS, partialExcludes, isBuildOutput, isBuilt, isRelevant, projectTokens, REFERENCE_EXTENSIONS, SCRIPT_EXTENSIONS, STYLESHEET_EXTENSIONS, UNREAD_EXTENSIONS } from './project.js';
 
 /** Every name `--select`, `--ignore` and .nldd-lint.json may use: rule ids, aliases and groups. */
 export function knownKeys(data) {
@@ -58,16 +58,6 @@ export async function fixUntilStable(linter, original, filename, options) {
 const isUnread = (filename) => UNREAD_EXTENSIONS.includes(extname(filename));
 const hasOurMarkup = (source) => /<nldd-[a-z]/.test(source);
 
-/** In a directory a build writes to, such as `dist`: output, not the app's own source. */
-const isBuilt = (file, root) => relative(root, file).split(sep).some((part) => IGNORED_DIRECTORIES.has(part));
-
-/**
- * A script a bundler wrote. Its chunks hold the design system's own component
- * styles and markup in strings, which read as an app overriding them. The pages
- * and stylesheets next to it are what a build has to show.
- */
-const isBuiltScript = (file, root) => /\.[cm]?js$/.test(file) && isBuilt(file, root);
-
 /** The tag is gone from the markup; what still names it would break or stop matching. */
 function fixReferences(renamedTags, paths, root, exclude) {
 	const inMarkup = findFiles(paths, root, exclude);
@@ -79,8 +69,8 @@ function fixReferences(renamedTags, paths, root, exclude) {
 	for (const list of [inMarkup, elsewhere]) {
 		for (const filename of list) {
 			const source = readFileSync(filename, 'utf8');
-			// The lint pass skips a bundle, so a rename leaves it alone too.
-			if (isBundle(filename, source)) continue;
+			// The lint pass skips what a build wrote, so a rename leaves it alone too.
+			if (isBuildOutput(filename, source, root)) continue;
 			const change = isBuilt(filename, root) ? { source, fixed: 0 } : renameReferences(source, renamedTags, kindOf(filename));
 			if (change.fixed > 0 && !isSymlink(filename) && isUtf8(filename)) {
 				writeFileSync(filename, change.source);
@@ -120,11 +110,10 @@ export async function lintProject(data, { root, paths = [], config = {}, severit
 	const inputs = input
 		? [{ filename: resolve(root, input.filename), source: input.source }]
 		: findFiles(paths, root, config.exclude, scanned)
-				.filter((filename) => named.has(resolve(filename)) || !isBuiltScript(filename, root))
 				.map((filename) => ({ filename, source: readFileSync(filename, 'utf8') }))
+				.filter(({ filename, source }) => named.has(resolve(filename)) || !isBuildOutput(filename, source, root))
 				// A template the linter cannot read matters only with our markup; the rest is let go.
-				.filter(({ filename, source }) => !(isUnread(filename) || inStrings(filename)) || hasOurMarkup(source))
-				.filter(({ filename, source }) => !isBundle(filename, source));
+				.filter(({ filename, source }) => !(isUnread(filename) || inStrings(filename)) || hasOurMarkup(source));
 
 	// Most files in an app use no component at all, and those need no parser either.
 	// A stylesheet is still read for the tokens it declares.

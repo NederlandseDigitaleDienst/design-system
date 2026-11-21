@@ -148,7 +148,7 @@ Rood en blauw zijn bijna altijd een fout uit de upgrade. Roze is vaak een bewust
 
 Een upgrade is klaar als dit allemaal waar is:
 
-- `nldd upgrade` heeft onder "Nog te doen" en "Niet gelezen" niets meer staan;
+- `nldd upgrade --since <json van de eerste run>` heeft onder "Nog te doen" en "Niet gelezen" niets meer staan. Dat leest het project opnieuw en verandert niets. Bewaar daarvoor de eerste run als JSON, met `--format json`. Met `--notes <bestand>` komen je keuzes in het verslag;
 - de brekende wijzigingen uit het verslag zijn gelezen, en elk punt dat de app raakt is verwerkt;
 - de versie is op elke plek gelijk;
 - `nldd lint` van de doelversie vindt niets nieuws in de gebouwde site;

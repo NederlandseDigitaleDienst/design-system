@@ -117,6 +117,33 @@ async function capture(context, url) {
 /** `/over/ons/` on a phone as a file name: `over_ons-mobile.png`. */
 const imageName = (path, viewport) => `${path.replace(/[^\w.-]+/g, '_').replace(/^_|_$/g, '') || 'home'}-${viewport}.png`;
 
+/** The pages that show most come first: the most marks, and the desk before the phone. */
+const byMarks = (a, b) => b.marks - a.marks || Number(b.viewport === 'desktop') - Number(a.viewport === 'desktop') || a.path.localeCompare(b.path);
+
+/**
+ * What a comparison found, as Markdown for under a pull request: the counts,
+ * the images that show most, and the pages that differ without an image here.
+ * In Dutch, as the report of `nldd upgrade`. The images are named relative to
+ * the directory they are in.
+ * @param {object[]} results - from compareSites()
+ * @param {number} [max] - how many images the text shows
+ */
+export function formatComparison(results, max = 6) {
+	const plural = (count, one, more) => `${count} ${count === 1 ? one : more}`;
+	const failed = results.filter((result) => result.error);
+	const differing = results.filter((result) => result.file).sort(byMarks);
+	const identical = results.filter((result) => result.identical).length;
+	const lines = ['## In beeld', '', `${plural(results.length, 'vergelijking', 'vergelijkingen')} van de gebouwde site, voor en na de upgrade, op de breedte van een bureau en van een telefoon. ${identical === results.length ? 'Ze zijn alle pixel voor pixel gelijk.' : `${identical} ${identical === 1 ? 'is' : 'zijn'} pixel voor pixel gelijk, ${differing.length} ${differing.length === 1 ? 'verschilt' : 'verschillen'}.`}`];
+	// One image per page: the viewport that shows most. The other one is in the list below.
+	const shown = [];
+	for (const result of differing) if (shown.length < max && !shown.some(({ path }) => path === result.path)) shown.push(result);
+	for (const { path, viewport, file, marks } of shown) lines.push('', `### \`${path}\` (${viewport === 'desktop' ? 'bureau' : 'telefoon'}, ${plural(marks, 'verschil', 'verschillen')})`, '', `![${path}, voor en na](./${file})`);
+	const rest = differing.filter((result) => !shown.includes(result));
+	if (rest.length > 0) lines.push('', '<details>', `<summary>Verschilt ook (${rest.length})</summary>`, '', ...rest.map(({ path, viewport, marks }) => `- \`${path}\` (${viewport === 'desktop' ? 'bureau' : 'telefoon'}): ${plural(marks, 'verschil', 'verschillen')}`), '', '</details>');
+	if (failed.length > 0) lines.push('', 'Niet vergeleken:', '', ...failed.map(({ path, viewport, error }) => `- \`${path}\` (${viewport === 'desktop' ? 'bureau' : 'telefoon'}): ${error}`));
+	return `${lines.join('\n')}\n`;
+}
+
 /**
  * @param {object} options
  * @param {string} options.root - the project

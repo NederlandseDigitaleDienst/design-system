@@ -105,10 +105,20 @@ export function partialExcludes(paths, root, exclude = [], extensions = DEFAULT_
 /** The average line length above which a script counts as minified. */
 const MINIFIED_LINE_LENGTH = 500;
 
-/** A built or minified script: not the app's own source, and no use to lint. */
-export function isBundle(filename, source) {
+/** In a directory a build writes to, such as `dist`: output, not the app's own source. */
+export const isBuilt = (filename, root) => relative(root, filename).split(sep).some((part) => IGNORED_DIRECTORIES.has(part));
+
+/**
+ * A script a build wrote: it stands in a directory builds write to, or it is
+ * minified. Output, not the app's own source, so a scan skips it and a rename
+ * leaves it alone. Its chunks hold markup in strings and the styles of the
+ * components. The pages and stylesheets next to it are what a build has to
+ * show. Whether a script is the design system's own code is another question,
+ * answered from what it reads: `isComponentCode` in linter.js.
+ */
+export function isBuildOutput(filename, source, root) {
 	if (!/\.[cm]?js$/.test(filename)) return false;
-	return /\.min\.[cm]?js$/.test(filename) || source.length / source.split('\n').length > MINIFIED_LINE_LENGTH;
+	return isBuilt(filename, root) || /\.min\.[cm]?js$/.test(filename) || source.length / source.split('\n').length > MINIFIED_LINE_LENGTH;
 }
 
 const isStylesheet = (filename) => STYLESHEET_EXTENSIONS.includes(extname(filename));

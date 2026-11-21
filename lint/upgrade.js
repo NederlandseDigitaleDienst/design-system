@@ -50,6 +50,12 @@ function upgradeRules(data, from) {
 	return { isNew, of: (id) => (byId.has(id) ? isNew(byId.get(id)) : id in BUILT_IN_RULES) };
 }
 
+/** How many places a run left per rule: what a later reading of the project is held against. */
+function placesLeft({ work, unread, undecided }) {
+	const count = (entries) => entries.reduce((sum, { places }) => sum + places.length, 0);
+	return { work: work.map(({ rule, places }) => ({ rule, places: places.length })), unread: unread.length, undecided: count(undecided) };
+}
+
 const bySize = (a, b) => Number(b.severity === 'error') - Number(a.severity === 'error') || b.places.length - a.places.length;
 
 /**
@@ -81,9 +87,12 @@ export function withRendered(result, session, root) {
  * @param {(id: string) => string} [options.canonical] - a rule id under its current name, for the baseline
  * @param {boolean | 'full'} [options.install] - rewrite the lockfiles (default true), or with `full` install what they list too, so the project's types can be read
  * @param {(command: string, args: string[], cwd: string) => { ok: boolean, output?: string, error?: string }} [options.run]
+ * @param {object} [options.since] - the result of an earlier run on this project. The project is
+ *   then only read: the version, the lockfile and the fixes are that run's, what is left is of now
  * @returns {Promise<object>} what was done and what is left, as the report and the worklist read it
  */
-export async function upgradeProject(data, { root, target, breaking, config, severities, canonical, install = true, run = runQuietly }) {
+export async function upgradeProject(data, { root, target, breaking, config, severities, canonical, install = true, run = runQuietly, since }) {
+	if (since && since.to !== target) throw new Error(`The earlier run went to ${since.to}, and this command is ${target}. Run the same version.`);
 	// 1. The version, wherever the project names it.
 	const pinned = [];
 	const notRaised = [];
@@ -103,7 +112,7 @@ export async function upgradeProject(data, { root, target, breaking, config, sev
 		}
 		return asked.get(version);
 	};
-	for (const filename of findFiles([], root, config.exclude, PIN_EXTENSIONS)) {
+	for (const filename of since ? [] : findFiles([], root, config.exclude, PIN_EXTENSIONS)) {
 		if (NOT_A_PIN.test(basename(filename))) continue;
 		const source = readFileSync(filename, 'utf8');
 		const found = pinsIn(filename, source);
@@ -115,7 +124,7 @@ export async function upgradeProject(data, { root, target, breaking, config, sev
 		for (const place of change.left) notRaised.push({ file, ...place });
 		if (basename(filename) === 'package.json' && change.raised.some(({ kind }) => kind === 'manifest')) manifestDirectories.add(dirname(filename));
 	}
-	const from = pinned.map((pin) => pin.from).sort(compareVersions)[0];
+	const from = since ? since.from : pinned.map((pin) => pin.from).sort(compareVersions)[0];
 
 	// 2. The lockfile of each manifest that changed.
 	const lockfiles = [];
@@ -135,7 +144,7 @@ export async function upgradeProject(data, { root, target, breaking, config, sev
 	// is listed for the rules that can fail a build: there the upgrade can break without a finding.
 	const types = createTypes();
 	const canBreak = (rule) => rule.severity === 'error' && brings.isNew(rule);
-	const session = await lintProject(data, { root, config, severities, fix: true, markdown: true, undecided: canBreak, types });
+	const session = await lintProject(data, { root, config, severities, fix: !since, markdown: true, undecided: canBreak, types });
 
 	// 4. What is left, without what the project accepted in its baseline.
 	const baseline = readBaseline(root, canonical);
@@ -169,14 +178,12 @@ export async function upgradeProject(data, { root, target, breaking, config, sev
 	const text = session.results.map(({ source }) => source).join('\n');
 	const changes = from ? breakingFor(breaking, from, target, text) : { total: 0, touching: [] };
 
+	const fixed = { total: session.fixed, files: session.fixedFiles, byRule: session.fixedByRule, inFiles: session.fixedIn.map(({ filename, rules }) => ({ file: relativePath(root, filename), rules })), references: session.references?.fixed ?? 0, stillNamed: session.references?.remaining ?? [] };
 	return {
 		package: PACKAGE,
 		from,
 		to: target,
-		pinned,
-		notRaised,
-		lockfiles,
-		fixed: { total: session.fixed, files: session.fixedFiles, byRule: session.fixedByRule, inFiles: session.fixedIn.map(({ filename, rules }) => ({ file: relativePath(root, filename), rules })), references: session.references?.fixed ?? 0, stillNamed: session.references?.remaining ?? [] },
+		...(since ? { pinned: since.pinned, notRaised: since.notRaised, lockfiles: since.lockfiles, fixed: since.fixed, earlier: placesLeft(since) } : { pinned, notRaised, lockfiles, fixed }),
 		files: session.files,
 		work: [...work.values()].sort(bySize),
 		undecided: [...undecided.values()].sort(bySize),

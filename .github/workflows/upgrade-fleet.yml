@@ -7,11 +7,16 @@ name: Upgrade the fleet
 # theirs to tell. Everything this workflow needs is a variable or a secret of
 # this repository, and without the list it does nothing:
 #
-#   NLDD_FLEET                  variable   the list, a JSON array of owner/name
+#   NLDD_FLEET                  variable   the list, a JSON array. An entry is owner/name, or
+#                                          { "repository", "build", "site" } for a site that
+#                                          gets pictures: the command that builds it on a
+#                                          plain runner, and the directory it writes to
 #   NLDD_FLEET_APP_CLIENT_ID    variable   the GitHub App that opens the pull requests,
 #   NLDD_FLEET_APP_KEY          secret     and its private key
 #   NLDD_FLEET_TOKEN            secret     or, without an app, a token of a bot account
-#   NLDD_FLEET_AGENT            variable   `true` lets an agent work the list of what is left
+#   NLDD_FLEET_AGENT            variable   a JSON array of owner/name: there an agent works the
+#                                          list of what is left. It runs commands in that
+#                                          repository, so name the ones whose content you trust
 #   CLAUDE_CODE_OAUTH_TOKEN     secret     for the agent, or
 #   ANTHROPIC_API_KEY           secret     an API key
 #
@@ -60,15 +65,17 @@ jobs:
       # A few at a time: a release that breaks something shows in the first pull requests.
       max-parallel: 3
       matrix:
-        repository: ${{ fromJSON(inputs.repository && format('["{0}"]', inputs.repository) || vars.NLDD_FLEET) }}
+        target: ${{ fromJSON(inputs.repository && format('["{0}"]', inputs.repository) || vars.NLDD_FLEET) }}
     uses: ./.github/workflows/upgrade.yml
     permissions:
       contents: write
       pull-requests: write
     with:
-      repository: ${{ matrix.repository }}
+      repository: ${{ matrix.target.repository || matrix.target }}
       version: ${{ inputs.version || 'latest' }}
-      agent: ${{ inputs.agent == 'yes' || (inputs.agent != 'no' && vars.NLDD_FLEET_AGENT == 'true') }}
+      agent: ${{ inputs.agent == 'yes' || (inputs.agent != 'no' && contains(fromJSON(vars.NLDD_FLEET_AGENT || '[]'), matrix.target.repository || matrix.target)) }}
+      build: ${{ matrix.target.build }}
+      site: ${{ matrix.target.site }}
       app_client_id: ${{ vars.NLDD_FLEET_APP_CLIENT_ID }}
       tool_ref: ${{ inputs.tool_ref }}
     secrets:

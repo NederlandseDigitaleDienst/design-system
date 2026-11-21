@@ -20,14 +20,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        repository: ${{ fromJSON(vars.NLDD_FLEET_TRIAL) }}
+        target: ${{ fromJSON(vars.NLDD_FLEET_TRIAL) }}
     uses: ./.github/workflows/upgrade.yml
     permissions:
       contents: write
       pull-requests: write
     with:
-      repository: ${{ matrix.repository }}
+      repository: ${{ matrix.target.repository || matrix.target }}
       agent: true
+      build: ${{ matrix.target.build }}
+      site: ${{ matrix.target.site }}
       app_client_id: ${{ vars.NLDD_FLEET_APP_CLIENT_ID }}
       tool_ref: feat/upgrade-rounds
     secrets:

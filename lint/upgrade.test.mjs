@@ -9,7 +9,7 @@ import { lintProject } from './session.js';
 import { lockfileCommand } from './lockfiles.js';
 import { compareVersions, raisePins } from './pins.js';
 import { breakingFor, upgradeProject, withRendered } from './upgrade.js';
-import { formatReport, formatSummary } from './upgrade-report.js';
+import { formatReport, formatSummary, splitReport } from './upgrade-report.js';
 
 const DATA = loadData();
 const severities = resolveSeverities(DATA, {});
@@ -187,6 +187,46 @@ describe('nldd upgrade', () => {
 		const brought = await upgraded('0.22.0');
 		assert.deepEqual([brought.work.map(({ rule }) => rule), brought.standing.length], [['title-needs-heading-level'], 0]);
 		assert.match(formatReport(had), /## Stond er al\n\n1 waarschuwing van regels die er in 0\.20\.0 ook waren/);
+	});
+
+	it('reads the project again after the list was worked, and holds what is left against the first run', async () => {
+		const root = project(files);
+		const { result: first } = await upgrade(root);
+		// Someone works the list: the attribute that has no effect goes.
+		writeFileSync(join(root, 'page.html'), read(root, 'page.html').replace(' color="inherit"', ''));
+		const { result, ran } = await upgrade(root, { since: JSON.parse(JSON.stringify(first)) });
+		assert.deepEqual(ran, [], 'a second reading installs nothing');
+		assert.deepEqual([result.from, result.pinned, result.fixed.total], ['0.20.0', first.pinned, 3], 'the version and the fixes are those of the first run');
+		assert.deepEqual(result.work, []);
+		assert.deepEqual(result.earlier.work, [{ rule: 'title-color-no-effect', places: 1 }]);
+		const report = formatReport({ ...result, notes: '- De kleur volgt nu het vlak.\n' });
+		assert.match(report, /## Afgewerkt na de opdracht\n\nDe opdracht liet 1 plek over\..*Er staat niets meer open\./);
+		assert.match(report, /- `title-color-no-effect`: van 1 naar 0/);
+		assert.match(report, /## Nog te doen\n\nNiets\.[^]*## Keuzes\n\n- De kleur volgt nu het vlak\./);
+	});
+
+	it('changes nothing in a second reading, also where a fix could', async () => {
+		const root = project(files);
+		const { result: first } = await upgrade(root);
+		writeFileSync(join(root, 'page.html'), '<nldd-title size="3" heading-level="2" text="Aanvraag A-1043"></nldd-title>\n');
+		const { result } = await upgrade(root, { since: first });
+		assert.match(read(root, 'page.html'), /size="3"/);
+		assert.deepEqual(result.work.map(({ rule }) => rule), ['title-size-renamed']);
+		assert.match(formatReport(result), /- `title-size-renamed`: nieuw, 1/);
+		await assert.rejects(upgrade(root, { since: { ...first, to: '0.26.0' } }), /Run the same version/);
+	});
+
+	it('cuts a report too long for one pull request at a section, and leaves nothing out', () => {
+		const section = (name, lines) => `## ${name}\n\n${Array.from({ length: lines }, (_, index) => `- [ ] \`src/${name}/${index}.tsx:1\` \`<nldd-text>\``).join('\n')}`;
+		const text = `# Designsysteem van 0.20.0 naar 0.27.1\n\n${section('Eerste', 40)}\n\n${section('Tweede', 40)}\n\n${section('Derde', 400)}\n`;
+		assert.deepEqual(splitReport(text), [text]);
+		const parts = splitReport(text, 4000);
+		assert.ok(parts.length > 2 && parts.every((part) => part.length <= 4000));
+		assert.match(parts[0], /^# Designsysteem van 0\.20\.0 naar 0\.27\.1\n\n## Eerste[^]*Het verslag gaat verder in de reacties hieronder\.\n$/);
+		assert.match(parts[1], /^# Designsysteem van 0\.20\.0 naar 0\.27\.1 \(deel 2 van \d+\)\n\n/);
+		assert.doesNotMatch(parts.at(-1), /gaat verder/);
+		const places = (value) => value.match(/- \[ \] `[^`]+`/g);
+		assert.deepEqual(parts.flatMap(places), places(text));
 	});
 
 	it('installs what the lockfile lists when asked to, so the types of the project can be read', async () => {

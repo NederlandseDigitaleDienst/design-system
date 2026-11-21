@@ -1,6 +1,6 @@
 /** The `nldd` command, started from cli.js: arguments in, formatted findings out. What it checks is lint/session.js. */
 
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
 import { formatGithub, formatJson, formatStatistics, formatText } from './format.js';
@@ -35,6 +35,8 @@ const USAGE = `Usage:
                                     photograph two versions of a site and outline every component that
                                     changed. A version is a built site in a directory, or the address of
                                     a running one. Needs Playwright
+    --report <file>                 write what was found there, as Markdown for under a pull request,
+                                    with the images that show most
     --label-before <text>           what stands above the left half (default: Voor)
     --label-after <text>            and above the right half (default: Na)
     --storage-state, --playwright   as with lint --url
@@ -42,8 +44,15 @@ const USAGE = `Usage:
                                     wherever the project names it, rewrite the lockfile, apply every fix
                                     that is certain, and report what is left. Run the version you want:
                                     npx @nldd/design-system@latest upgrade
-    --report <file>                 write the report there, as Markdown for a pull request
+    --report <file>                 write the report there, as Markdown for a pull request. A report
+                                    too long for one is cut at a section: the parts that follow are
+                                    <file>.2.md, <file>.3.md, for a comment each
     --format json                   the same as data, for a script or an agent
+    --since <file>                  after the list was worked: read the project again and report what
+                                    is left now, next to what an earlier run left. <file> is the JSON
+                                    of that run. Changes nothing in the project
+    --notes <file>                  with --since: the choices of whoever worked the list, for the
+                                    report, under the heading Keuzes
     --no-install                    leave the lockfile to you
     --install                       install the dependencies too, without their scripts: with the project's
                                     TypeScript there, an expression in JSX is read by its type
@@ -142,7 +151,7 @@ async function lintPages(data, paths, options, { root, config, severities }) {
 async function runCompare([before, after, ...paths], options) {
 	if (!before || !after) throw new Error('nldd compare takes two versions: a directory with a built site, or an address, for each.');
 	if (!options.out) throw new Error('nldd compare writes images, so it takes --out <directory>.');
-	const { compareSites } = await import('./compare.js');
+	const { compareSites, formatComparison } = await import('./compare.js');
 	const results = await compareSites({
 		root: process.cwd(),
 		before,
@@ -157,6 +166,7 @@ async function runCompare([before, after, ...paths], options) {
 	const failed = results.filter((result) => result.error).length;
 	const identical = results.filter((result) => result.identical).length;
 	const images = results.filter((result) => result.file).length;
+	if (options.report) writeFileSync(resolve(process.cwd(), options.report), formatComparison(results));
 	console.log(`\n${results.length} comparisons, ${identical} identical, ${images} with an image in ${options.out}${failed ? `, ${failed} that could not be made` : ''}`);
 	return 0;
 }
@@ -170,7 +180,9 @@ async function runUpgrade(data, paths, options) {
 	if (options.format && options.format !== 'json') throw new Error('nldd upgrade writes Markdown, or JSON with --format json.');
 	const root = process.cwd();
 	const { upgradeProject, withRendered } = await import('./upgrade.js');
-	const { formatReport, formatSummary } = await import('./upgrade-report.js');
+	const { formatReport, formatSummary, splitReport } = await import('./upgrade-report.js');
+	if (options.notes && !options.since) throw new Error('--notes goes with --since: it is the text of whoever worked the list.');
+	const since = options.since ? JSON.parse(readFileSync(resolve(root, options.since), 'utf8')) : undefined;
 	const config = readConfig(root, knownKeys(data));
 	const severities = resolveSeverities(data, config.rules, {});
 	const upgraded = await upgradeProject(data, {
@@ -181,11 +193,18 @@ async function runUpgrade(data, paths, options) {
 		severities,
 		canonical: createCanonical(data),
 		install: options['no-install'] ? false : options.install ? 'full' : true,
+		since,
 	});
+	if (options.notes && existsSync(resolve(root, options.notes))) upgraded.notes = readFileSync(resolve(root, options.notes), 'utf8');
 	// The running app, where the project has one up: the places the source left undecided.
 	const result = options.url ? withRendered(upgraded, await lintPages(data, [], options, { root, config, severities }), root) : upgraded;
 	if (options.report) {
-		writeFileSync(resolve(root, options.report), formatReport(result));
+		// One file per part. A part of an earlier run that this one does not have would be posted again.
+		const file = resolve(root, options.report);
+		const partFile = (number) => (number === 1 ? file : `${file.replace(/\.md$/, '')}.${number}.md`);
+		const parts = splitReport(formatReport(result));
+		parts.forEach((part, index) => writeFileSync(partFile(index + 1), part));
+		for (let number = parts.length + 1; existsSync(partFile(number)); number++) rmSync(partFile(number));
 		console.error(formatSummary(result));
 	}
 	if (options.format === 'json') console.log(JSON.stringify(result, null, 2));
@@ -313,6 +332,8 @@ async function main() {
 			playwright: { type: 'string' },
 			out: { type: 'string' },
 			report: { type: 'string' },
+			since: { type: 'string' },
+			notes: { type: 'string' },
 			'no-install': { type: 'boolean' },
 			install: { type: 'boolean' },
 			types: { type: 'boolean' },

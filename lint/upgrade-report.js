@@ -69,6 +69,25 @@ function workSection({ work, unread }) {
 	return lines;
 }
 
+/** After a second reading: what the first run left and what is left now, per rule. The lists above are of now. */
+function sinceSection({ earlier, work, unread, undecided }) {
+	if (!earlier) return [];
+	const now = new Map(work.map(({ rule, places }) => [rule, places.length]));
+	const before = earlier.work.reduce((sum, { places }) => sum + places, 0) + earlier.unread;
+	const left = work.reduce((sum, { places }) => sum + places.length, 0) + unread.length;
+	const open = undecided.reduce((sum, { places }) => sum + places.length, 0);
+	const lines = [
+		'## Afgewerkt na de opdracht',
+		'',
+		`De opdracht liet ${plural(before, 'plek', 'plekken')} over. Daarna is de lijst afgewerkt en heeft de linter het project opnieuw gelezen. ${left === 0 ? 'Er staat niets meer open.' : `Er ${left === 1 ? 'staat' : 'staan'} er nog ${left} open.`}`,
+		'',
+		...earlier.work.map(({ rule, places }) => `- \`${rule}\`: van ${places} naar ${now.get(rule) ?? 0}`),
+		...work.filter(({ rule }) => !earlier.work.some((entry) => entry.rule === rule)).map(({ rule, places }) => `- \`${rule}\`: nieuw, ${places.length}`),
+	];
+	if (earlier.undecided > 0) lines.push('', `Niet te beslissen in de bron: van ${earlier.undecided} naar ${open}.`);
+	return lines;
+}
+
 /** The first sentence of an entry: its bold lead, or its first line. */
 const leadOf = (text) => text.split('\n')[0].replace(/^\*\*(.+?)\*\*.*$/, '$1').replace(/[.,:]$/, '');
 
@@ -139,7 +158,8 @@ function renderedSection({ rendered }) {
  */
 export function formatReport(result) {
 	const title = result.from ? `# Designsysteem van ${result.from} naar ${result.to}` : `# Designsysteem naar ${result.to}`;
-	const sections = [versionSection(result), fixedSection(result), workSection(result), undecidedSection(result), renderedSection(result), breakingSection(result), standingSection(result)].filter((lines) => lines.length > 0);
+	const notes = result.notes?.trim() ? ['## Keuzes', '', result.notes.trim()] : [];
+	const sections = [versionSection(result), fixedSection(result), sinceSection(result), workSection(result), notes, undecidedSection(result), renderedSection(result), breakingSection(result), standingSection(result)].filter((lines) => lines.length > 0);
 	const closing = result.rendered
 		? ['## Kijken', '', 'Leg oud en nieuw naast elkaar:', '', '```', 'npx nldd compare <oud> <nieuw> --out vergelijking', '```']
 		: [
@@ -153,6 +173,45 @@ export function formatReport(result) {
 				'```',
 			];
 	return `${[[title], ...sections, closing].map((lines) => lines.join('\n')).join('\n\n')}\n`;
+}
+
+/** What GitHub takes as the text of a pull request or of a comment is 65,536 characters. */
+export const PART_LIMIT = 60000;
+
+/** The pieces a text falls into at a heading of this depth, each starting with its heading. */
+const piecesAt = (text, depth) => text.split(new RegExp(`\\n(?=${'#'.repeat(depth)} )`));
+
+/**
+ * The report as texts that each fit where it goes: a pull request, and a comment
+ * under it per part that follows. Cut at a section, inside a section too long
+ * for one part at a rule, and inside that at a line. Nothing is left out.
+ * @returns {string[]} one part, or more, each ending in a newline
+ */
+export function splitReport(text, limit = PART_LIMIT) {
+	if (text.length <= limit) return [text];
+	const title = text.split('\n')[0];
+	// Room for the line that says another part follows, and for the title of that part.
+	const room = limit - title.length - 200;
+	const atoms = (piece, depth) => {
+		if (piece.length <= room) return [piece];
+		if (depth <= 3) return piecesAt(piece, depth).flatMap((part) => atoms(part, depth + 1));
+		const lines = [];
+		for (const line of piece.split('\n')) {
+			if (lines.length > 0 && lines.at(-1).length + line.length + 1 <= room) lines[lines.length - 1] += `\n${line}`;
+			else lines.push(line.slice(0, room));
+		}
+		return lines;
+	};
+	const parts = [];
+	for (const atom of atoms(text.trimEnd(), 2)) {
+		if (parts.length > 0 && parts.at(-1).length + atom.length + 1 <= room) parts[parts.length - 1] += `\n${atom}`;
+		else parts.push(atom);
+	}
+	return parts.map((part, index) => {
+		const head = index === 0 ? '' : `${title} (deel ${index + 1} van ${parts.length})\n\n`;
+		const tail = index < parts.length - 1 ? `\n\nHet verslag gaat verder in ${index === 0 ? 'de reacties hieronder' : 'de volgende reactie'}.` : '';
+		return `${head}${part.trimEnd()}${tail}\n`;
+	});
 }
 
 /** One line for the terminal, when the report goes to a file. */
