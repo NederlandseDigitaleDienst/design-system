@@ -206,7 +206,8 @@ function unwrapEdits(source, finding, { drop = [], move = {} }) {
 	// One line, or after other markup on its line: nothing to take back.
 	const flat = lineStart(inner.offset) === lineStart(finding.offset) || /\S/.test(indent) || /\S/.test(innerIndent) || !innerIndent.startsWith(indent);
 	// Text whose white space counts (a template literal, an expression, <pre>)
-	// keeps its indent: the child is moved, not reformatted.
+	// keeps its indent: the child is moved, not reformatted. Any `{` counts on
+	// purpose: a skipped de-indent costs nothing, a wrong one changes the text.
 	const verbatim = /[`{]|<(pre|textarea)\b/i.test(source.slice(inner.offset, inner.endOffset + 1));
 	const unit = flat || verbatim ? '' : innerIndent.slice(indent.length);
 	const nameEnd = inner.offset + 1 + inner.tag.length;
