@@ -1,11 +1,13 @@
 name: Upgrade the fleet
 
 # After a release is on npm, brings every repository on the list to it, each
-# with a pull request of its own. The work per repository is upgrade.yml.
+# with a pull request of its own. The work per repository is the action in
+# /upgrade, the same one a team uses.
 #
 # The list is not in this repository: which apps use the design system is
-# theirs to tell. Everything this workflow needs is a variable or a secret of
-# this repository, and without the list it does nothing:
+# theirs to tell. Everything this workflow needs is a variable of this
+# repository or a secret of its environment `fleet`, and without the list it
+# does nothing:
 #
 #   NLDD_FLEET                  variable   the list, a JSON array. An entry is owner/name, or
 #                                          { "repository", "build", "site", "sandbox" }: the
@@ -22,13 +24,20 @@ name: Upgrade the fleet
 #   CLAUDE_CODE_OAUTH_TOKEN     secret     for the agent, or
 #   ANTHROPIC_API_KEY           secret     an API key
 #
+# The secrets are in the environment `fleet`, which only main may use. With
+# the key of the app a run can push to every repository the app is installed
+# on, so a workflow on another branch must not reach it. That is also why this
+# job runs the action itself and does not call upgrade.yml: a job that calls a
+# workflow cannot have an environment.
+#
 # The app is installed once per organization, by an owner who picks the
 # repositories. A repository on the list where it is not installed fails on its
 # own and holds up no other.
 #
-# Run by hand, it takes one repository that need not be on the list. Started
-# on a branch with from_source, it takes the command from that branch: that is
-# how a change to the command is tried on a real app before its release.
+# Run by hand, it takes one repository that need not be on the list, and with
+# from_source the command of main before its release. A change on a branch is
+# tried from a repository of your own, with the action of that branch and a
+# token of your own: the environment keeps the key of the app on main.
 
 on:
   workflow_run:
@@ -50,7 +59,7 @@ on:
         options: ['as set in NLDD_FLEET_AGENT', 'yes', 'no']
         default: 'as set in NLDD_FLEET_AGENT'
       from_source:
-        description: 'Take the command from the branch this runs on, not from npm.'
+        description: 'Take the command from main, not from npm: what is merged and not yet released.'
         type: boolean
         default: false
 
@@ -62,29 +71,37 @@ jobs:
     if: >-
       (inputs.repository != '' || vars.NLDD_FLEET != '') &&
       (github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    environment: fleet
     strategy:
       fail-fast: false
       # A few at a time: a release that breaks something shows in the first pull requests.
       max-parallel: 3
       matrix:
         target: ${{ fromJSON(inputs.repository && format('["{0}"]', inputs.repository) || vars.NLDD_FLEET) }}
-    uses: ./.github/workflows/upgrade.yml
-    permissions:
-      contents: write
-      pull-requests: write
-    with:
-      repository: ${{ matrix.target.repository || matrix.target }}
-      version: ${{ inputs.version || 'latest' }}
-      agent: ${{ inputs.agent == 'yes' || (inputs.agent != 'no' && contains(fromJSON(vars.NLDD_FLEET_AGENT || '[]'), matrix.target.repository || matrix.target)) }}
-      # Only an entry that says `false` turns it off. A plain name has no field, and null equals false in an expression.
-      sandbox: ${{ format('{0}', matrix.target.sandbox) != 'false' }}
-      model: ${{ vars.NLDD_FLEET_MODEL || 'claude-opus-5-5' }}
-      build: ${{ matrix.target.build }}
-      site: ${{ matrix.target.site }}
-      app_client_id: ${{ vars.NLDD_FLEET_APP_CLIENT_ID }}
-      from_source: ${{ inputs.from_source }}
-    secrets:
-      token: ${{ secrets.NLDD_FLEET_TOKEN }}
-      app_private_key: ${{ secrets.NLDD_FLEET_APP_KEY }}
-      claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-      anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+    # One run per repository at a time: two would overwrite each other's branch.
+    concurrency:
+      group: nldd-upgrade-${{ matrix.target.repository || matrix.target }}
+    steps:
+      # The action of the commit this runs on. It clones the project itself, outside this checkout.
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: ./upgrade
+        with:
+          repository: ${{ matrix.target.repository || matrix.target }}
+          version: ${{ inputs.version || 'latest' }}
+          token: ${{ secrets.NLDD_FLEET_TOKEN || github.token }}
+          app-client-id: ${{ vars.NLDD_FLEET_APP_CLIENT_ID }}
+          app-private-key: ${{ secrets.NLDD_FLEET_APP_KEY }}
+          agent: ${{ inputs.agent == 'yes' || (inputs.agent != 'no' && contains(fromJSON(vars.NLDD_FLEET_AGENT || '[]'), matrix.target.repository || matrix.target)) }}
+          claude-code-oauth-token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
+          model: ${{ vars.NLDD_FLEET_MODEL || 'claude-opus-5-5' }}
+          # Only an entry that says `false` turns it off. A plain name has no field, and null equals false in an expression.
+          sandbox: ${{ format('{0}', matrix.target.sandbox) != 'false' }}
+          build: ${{ matrix.target.build }}
+          site: ${{ matrix.target.site }}
+          from-source: ${{ inputs.from_source }}
