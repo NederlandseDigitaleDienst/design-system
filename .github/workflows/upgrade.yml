@@ -1,74 +1,17 @@
 name: Upgrade a project
 
 # Brings one repository to a version of the design system and opens a pull
-# request for it, or updates the one that is open. The work is `nldd upgrade`:
-# it raises the version wherever the project names it, rewrites the lockfile,
-# applies every fix that is certain, and writes what is left as the text of the
-# pull request. This workflow only runs it and delivers the result.
+# request for it. The work is the action in /upgrade; this workflow gives it a
+# job of its own, with the permissions it needs and one run per repository at a
+# time. upgrade-fleet.yml calls it for every repository on its list.
 #
-# It runs with `--install`: the dependencies are installed, without their
-# scripts, so the linter can read the project's types. In a React app that is
-# the difference between a list of places and a pull request that is done.
+# A team can call this workflow, or use the action in a job of its own:
 #
-# A team calls it from its own repository, on a schedule:
+#   steps:
+#     - uses: NederlandseDigitaleDienst/design-system/upgrade@v0.28.0
 #
-#   on:
-#     schedule:
-#       - cron: '0 6 * * 1'
-#   jobs:
-#     upgrade:
-#       uses: NederlandseDigitaleDienst/design-system/.github/workflows/upgrade.yml@main
-#       permissions:
-#         contents: write
-#         pull-requests: write
-#
-# upgrade-fleet.yml calls it for every repository on its list, with a token of
-# its own, so a team that did nothing gets the same pull request.
-#
-# Who opens the pull request follows from what the caller passes, and the
-# commit carries the same name:
-#
-#   app_client_id and app_private_key   a GitHub App, installed in the
-#                                       organization of the repository. One app
-#                                       serves every organization that installs
-#                                       it; the token is made per repository
-#                                       and ends with the job.
-#   token                               a bot account, or anyone's token.
-#   neither                             github-actions[bot]. A pull request made
-#                                       this way does not start the repository's
-#                                       other workflows, so its CI does not run.
-#
-# The app or the account needs contents and pull requests, both to write. A
-# project that names the version in a workflow file needs workflows as well.
-#
-# One branch per repository, rewritten on every run: a newer release replaces
-# the pull request that is open, it does not open a second one. A project that
-# is at the version already has its open pull request closed.
-#
-# With `agent`, an agent works the list before the pull request is made, with
-# the upgrade skill of the same version. Then the command reads the project
-# again: the text of the pull request says what the linter still finds, not
-# what the agent says it did. The agent writes down its choices and nothing
-# else of the report.
-#
-# The agent runs commands in a repository that is not ours, so it gets as
-# little as the work takes. No token of the repository: the clone keeps no
-# credentials, and the push happens in a later step. The key for the model is
-# kept out of every command it runs, and the run checks that it was. That
-# takes a sandbox, and some builds do not run in one: `sandbox: false` gives
-# the agent the whole runner, for a repository you trust as your own. Still:
-# turn the agent on for repositories whose content you trust, and give a fleet
-# a key with a spending limit, not that of a person. A run without a key
-# skips the agent and says so.
-#
-# A project that builds to a static site gets pictures. The site is built
-# before and after the upgrade and `nldd compare` photographs both: the pages
-# that differ come as a comment under the pull request, all images as an
-# artifact of the run. The pictures of the comment are attached as GitHub
-# attaches a file; where that is refused they go on refs/nldd/pictures, a ref
-# that is no branch. How it builds is `build` and `site`, or else what the
-# agent found in the project and wrote down. The agent looks; this workflow
-# runs the command, in a step that holds no token.
+# The inputs are those of the action; the README of the action, in
+# upgrade/action.yml, says what each one does.
 
 on:
   workflow_call:
@@ -109,10 +52,10 @@ on:
         description: 'The client ID of a GitHub App that opens the pull request. Needs the secret app_private_key.'
         type: string
         default: ''
-      tool_ref:
-        description: 'Run the command from this branch or tag of the design system, not from npm. For trying a change to the command before its release; `version` is then the version of that branch.'
-        type: string
-        default: ''
+      from_source:
+        description: 'Run the command and the skill from the commit of this workflow, not from npm. For trying a change to them before their release; `version` is then that of the commit.'
+        type: boolean
+        default: false
     secrets:
       token:
         description: 'A token that may push a branch and open a pull request in the repository. Default: the token of the workflow.'
@@ -140,304 +83,29 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    env:
-      BRANCH: nldd/design-system-upgrade
-      SOURCE: NederlandseDigitaleDienst/design-system
-      REPOSITORY: ${{ inputs.repository || github.repository }}
     steps:
-      - name: Name the repository
-        id: repository
-        run: |
-          # What the command and the agent read and write next to the project, outside the checkout.
-          echo "TOOLS=$RUNNER_TEMP/nldd" >> "$GITHUB_ENV"
-          echo "owner=${REPOSITORY%%/*}" >> "$GITHUB_OUTPUT"
-          echo "name=${REPOSITORY#*/}" >> "$GITHUB_OUTPUT"
-
-      - name: Token of the app
-        id: app
-        if: inputs.app_client_id != ''
-        uses: actions/create-github-app-token@v3
+      # The action of the same commit as this workflow, so the two never drift apart.
+      # job.workflow_sha is that commit; actionlint does not know it yet.
+      - uses: actions/checkout@v7
         with:
-          client-id: ${{ inputs.app_client_id }}
-          private-key: ${{ secrets.app_private_key }}
-          owner: ${{ steps.repository.outputs.owner }}
-          repositories: ${{ steps.repository.outputs.name }}
+          repository: NederlandseDigitaleDienst/design-system
+          ref: ${{ job.workflow_sha }}
+          path: .nldd-action
+          persist-credentials: false
 
-      - name: Find the branch to upgrade
-        id: base
-        env:
-          GH_TOKEN: ${{ steps.app.outputs.token || secrets.token || github.token }}
-          BASE: ${{ inputs.base }}
-        run: echo "branch=${BASE:-$(gh api "repos/$REPOSITORY" --jq .default_branch)}" >> "$GITHUB_OUTPUT"
-
-      # A plain clone, and not the checkout action. The token is asked for when
-      # git needs it and is never written to disk, so a later step without it
-      # cannot push. And the action stops on a repository whose tree holds a
-      # submodule without an address, which a real app turned out to have.
-      - name: Check out
-        env:
-          GH_TOKEN: ${{ steps.app.outputs.token || secrets.token || github.token }}
-          BASE: ${{ steps.base.outputs.branch }}
-        run: |
-          gh auth setup-git
-          git clone --quiet --depth 1 --branch "$BASE" "https://github.com/$REPOSITORY" .
-
-      - uses: actions/setup-node@v7
+      - uses: ./.nldd-action/upgrade
         with:
-          node-version: 24
-
-      - name: Upgrade
-        id: upgrade
-        env:
-          WANTED: ${{ inputs.version }}
-          TOOL_REF: ${{ inputs.tool_ref }}
-        run: |
-          # `nldd` is the command of the version the project goes to, in every step from here.
-          mkdir -p "$TOOLS/bin"
-          if [ -n "$TOOL_REF" ]; then
-            git clone --quiet --depth 1 --branch "$TOOL_REF" "https://github.com/$SOURCE" "$TOOLS/source"
-            npm ci --prefix "$TOOLS/source" --omit=dev --ignore-scripts --no-audit --no-fund
-            version="$(node --print "require('$TOOLS/source/package.json').version")"
-            printf '#!/bin/sh\nexec node "%s" "$@"\n' "$TOOLS/source/lint/cli.js" > "$TOOLS/bin/nldd"
-          else
-            version="$(npm view "@nldd/design-system@$WANTED" version)"
-            printf '#!/bin/sh\nexec npx --yes "@nldd/design-system@%s" "$@"\n' "$version" > "$TOOLS/bin/nldd"
-          fi
-          chmod +x "$TOOLS/bin/nldd"
-          echo "$TOOLS/bin" >> "$GITHUB_PATH"
-          echo "version=$version" >> "$GITHUB_OUTPUT"
-
-          "$TOOLS/bin/nldd" upgrade --install --report "$TOOLS/upgrade.md" --format json > "$TOOLS/upgrade.json"
-          if git diff --quiet; then
-            echo "Nothing to upgrade."
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-          fi
-          # What the install left behind, so that only a file made after this is taken for work.
-          git ls-files --others --exclude-standard | sort > "$TOOLS/untracked"
-
-      # What is certain is done. What is left asks for a choice, and that is what
-      # the skill is for: it reads the list and the breaking changes, and decides
-      # per place. Off by default: a team reads the list itself, or asks for this.
-      - name: Work the list
-        if: steps.upgrade.outputs.changed == 'true' && inputs.agent
-        env:
-          VERSION: ${{ steps.upgrade.outputs.version }}
-          MODEL: ${{ inputs.model }}
-          OAUTH_TOKEN: ${{ secrets.claude_code_oauth_token }}
-          API_KEY: ${{ secrets.anthropic_api_key }}
-          # Keeps the key for the model out of the commands the agent runs.
-          CLAUDE_CODE_SUBPROCESS_ENV_SCRUB: ${{ inputs.sandbox && '1' || '0' }}
-        run: |
-          if [ -n "$OAUTH_TOKEN" ]; then
-            export CLAUDE_CODE_OAUTH_TOKEN="$OAUTH_TOKEN"
-          elif [ -n "$API_KEY" ]; then
-            export ANTHROPIC_API_KEY="$API_KEY"
-          else
-            echo "::warning::The agent was asked for, and there is no claude_code_oauth_token or anthropic_api_key. The pull request holds what the command did."
-            exit 0
-          fi
-          unset OAUTH_TOKEN API_KEY
-
-          # The skill of the version the project now has.
-          if [ ! -d "$TOOLS/source" ]; then
-            git clone --quiet --depth 1 --branch "v$VERSION" "https://github.com/$SOURCE" "$TOOLS/source"
-          fi
-
-          # A command of the session itself says whether it can see the key: it runs as the agent's commands do.
-          printf '#!/bin/sh\nif [ -n "${CLAUDE_CODE_OAUTH_TOKEN:-}${ANTHROPIC_API_KEY:-}" ]; then echo yes; else echo no; fi > "%s"\n' "$TOOLS/sees-key" > "$TOOLS/sees-key.sh"
-          chmod +x "$TOOLS/sees-key.sh"
-          # In the sandbox a build may write to its caches in the home directory, and to nothing else outside the clone.
-          mkdir -p "$HOME/.npm" "$HOME/.cache"
-          jq --null-input --arg hook "$TOOLS/sees-key.sh" --arg home "$HOME" '{
-            hooks: { SessionStart: [{ hooks: [{ type: "command", command: $hook }] }] },
-            sandbox: { filesystem: { allowWrite: [($home + "/.npm"), ($home + "/.cache")] } }
-          }' > "$TOOLS/settings.json"
-
-          # With the key kept out, the agent's commands run in a sandbox of their own. That needs
-          # bubblewrap, and a runner that lets a process without privileges make a namespace.
-          if [ "$CLAUDE_CODE_SUBPROCESS_ENV_SCRUB" = 1 ]; then
-            sudo apt-get update --quiet --quiet
-            sudo apt-get install --yes --quiet --quiet --no-install-recommends bubblewrap socat
-            sudo sysctl --quiet --write kernel.apparmor_restrict_unprivileged_userns=0
-          fi
-
-          npm install --global --no-audit --no-fund @anthropic-ai/claude-code
-          prompt="This repository was just upgraded to @nldd/design-system $VERSION by \`nldd upgrade\`.
-          The report is in $TOOLS/upgrade.md. Follow $TOOLS/source/skills/nldd-design-upgrade/SKILL.md from step 2:
-          work every place under \"Nog te doen\", \"Niet gelezen\" and \"Niet te beslissen in de bron\", and read the breaking changes it lists.
-          Where you choose, keep what the page did before the upgrade.
-          \`nldd\` on the PATH is the linter of the new version; \`nldd lint\` says what is left.
-          Before you stop, run what the project's own CI runs on a pull request, where that needs no secret and no service:
-          read .github/workflows for it. A check that fails now is broken by the upgrade: fix it, also where the fix is in
-          the project's own scripts or configuration, with the smallest change that makes it pass, and name it in the choices.
-          Leave the report as it is: the command writes it again after you. Write $TOOLS/keuzes.md instead, a short list
-          in Dutch, plain, without a title, for the people who review the pull request: every choice that does not follow from the changelog,
-          what you left and why, and what of the project's CI still fails.
-          If the project builds to a static site, write $TOOLS/site.json as well: {\"build\": \"<one shell command that builds
-          the site from a clean checkout on this runner, installing what it needs>\", \"site\": \"<the directory it writes to>\"}.
-          Run that command once to see that it works. Leave the file out for an app that needs a server or a backend.
-          Leave no file behind that does not belong in the pull request. Do not commit and do not push.
-          If you cannot run a command at all, say so as the first line of $TOOLS/keuzes.md."
-          if ! timeout 60m claude --print "$prompt" --model "$MODEL" --add-dir "$TOOLS" --settings "$TOOLS/settings.json" --tools Bash Read Edit Write Glob Grep --allowedTools Bash Read Edit Write Glob Grep; then
-            echo "::warning::The agent stopped before it was done. The pull request holds what it did until then."
-            printf '\n- De agent die de lijst afwerkt is niet klaar gekomen. Wat hij tot dan deed, staat in deze pull request.\n' >> "$TOOLS/keuzes.md"
-          fi
-
-          case "$CLAUDE_CODE_SUBPROCESS_ENV_SCRUB$(cat "$TOOLS/sees-key" 2>/dev/null)" in
-            0*) echo "::notice::The commands of the agent ran without a sandbox, as asked: they could read the key for the model." ;;
-            1no) ;;
-            1yes) echo "::error::A command of the agent could read the key for the model. No pull request is made; replace the key."; exit 1 ;;
-            *) echo "::warning::Whether a command of the agent could read the key for the model was not checked: the check did not run." ;;
-          esac
-
-          # Who worked the list, for whoever reviews it.
-          printf '\n_Afgewerkt door een agent: %s, met Claude Code %s._\n' "$MODEL" "$(claude --version | cut -d' ' -f1)" >> "$TOOLS/keuzes.md"
-
-          # What is left now, as the linter finds it, with the choices of the agent under it.
-          nldd upgrade --since "$TOOLS/upgrade.json" --notes "$TOOLS/keuzes.md" --report "$TOOLS/upgrade.md"
-
-      - name: Open or update the pull request
-        id: deliver
-        env:
-          GH_TOKEN: ${{ steps.app.outputs.token || secrets.token || github.token }}
-          APP: ${{ steps.app.outputs.app-slug }}
-          BASE: ${{ steps.base.outputs.branch }}
-          VERSION: ${{ steps.upgrade.outputs.version }}
-          CHANGED: ${{ steps.upgrade.outputs.changed }}
-        run: |
-          number="$(gh pr list --repo "$REPOSITORY" --head "$BRANCH" --state open --json number --jq '.[0].number')"
-          if [ "$CHANGED" != true ]; then
-            # The project got there without this pull request.
-            if [ -n "$number" ]; then
-              gh pr close "$number" --repo "$REPOSITORY" --delete-branch --comment "Het project staat al op $VERSION. Deze pull request is niet meer nodig."
-            fi
-            exit 0
-          fi
-
-          # The commit is by whoever opens the pull request.
-          if [ -n "$APP" ]; then
-            name="${APP}[bot]"
-            id="$(gh api "users/$name" --jq .id)"
-          elif name="$(gh api user --jq .login 2>/dev/null)"; then
-            id="$(gh api user --jq .id)"
-          else
-            name='github-actions[bot]'
-            id=41898282
-          fi
-          git config user.name "$name"
-          git config user.email "$id+$name@users.noreply.github.com"
-
-          # What the repository tracks, and a file made after the command ran: the agent's.
-          title="chore: designsysteem naar $VERSION"
-          git switch --force-create "$BRANCH"
-          git add --update
-          git ls-files --others --exclude-standard | sort | comm -13 "$TOOLS/untracked" - | xargs --no-run-if-empty --delimiter '\n' git add --
-          git commit --quiet --message "$title"
-          git push --force origin "$BRANCH"
-
-          if [ -n "$number" ]; then
-            gh pr edit "$number" --repo "$REPOSITORY" --title "$title" --body-file "$TOOLS/upgrade.md"
-          else
-            gh pr create --repo "$REPOSITORY" --base "$BASE" --head "$BRANCH" --title "$title" --body-file "$TOOLS/upgrade.md"
-            number="$(gh pr view "$BRANCH" --repo "$REPOSITORY" --json number --jq .number)"
-          fi
-          echo "number=$number" >> "$GITHUB_OUTPUT"
-
-          # A report too long for one text continues in comments. Those of an earlier run go first.
-          gh api --paginate "repos/$REPOSITORY/issues/$number/comments" --jq '.[] | select(.body | startswith("<!-- nldd-upgrade")) | .id' |
-            while read -r comment; do gh api --method DELETE "repos/$REPOSITORY/issues/comments/$comment"; done
-          find "$TOOLS" -maxdepth 1 -name 'upgrade.*.md' | sort --version-sort | while read -r part; do
-            { echo '<!-- nldd-upgrade -->'; cat "$part"; } | gh pr comment "$number" --repo "$REPOSITORY" --body-file -
-          done
-          echo "$REPOSITORY naar $VERSION: $(gh pr view "$number" --repo "$REPOSITORY" --json url --jq .url)" >> "$GITHUB_STEP_SUMMARY"
-
-      # The pictures are an extra: a site that does not build here still gets its pull request.
-      # Both versions are built from a clean checkout of their commit, so neither build
-      # leaves anything in the other. No token is in reach of the build.
-      - name: Photograph the site before and after
-        id: compare
-        if: steps.deliver.outputs.number != ''
-        continue-on-error: true
-        env:
-          BUILD: ${{ inputs.build }}
-          SITE: ${{ inputs.site }}
-        run: |
-          # How the site builds: what the caller passed, or else what the agent found in the project.
-          if [ -z "$BUILD" ] && [ -f "$TOOLS/site.json" ]; then
-            BUILD="$(jq --raw-output '.build // empty' "$TOOLS/site.json")"
-            SITE="$(jq --raw-output '.site // empty' "$TOOLS/site.json")"
-          fi
-          if [ -z "$BUILD" ] || [ -z "$SITE" ]; then
-            echo "No pictures: nothing says how this project builds a site."
-            exit 0
-          fi
-          git worktree add --quiet --detach "$TOOLS/before" HEAD~1
-          git worktree add --quiet --detach "$TOOLS/after" HEAD
-          (cd "$TOOLS/before" && sh -c "$BUILD")
-          (cd "$TOOLS/after" && sh -c "$BUILD")
-          npm install --prefix "$TOOLS/browser" --no-audit --no-fund playwright
-          "$TOOLS/browser/node_modules/.bin/playwright" install --with-deps chromium
-          nldd compare "$TOOLS/before/$SITE" "$TOOLS/after/$SITE" --out "$TOOLS/compare" --report "$TOOLS/compare/compare.md" --playwright "$TOOLS/browser/node_modules/playwright"
-          echo "made=true" >> "$GITHUB_OUTPUT"
-
-      - name: Keep the pictures
-        id: pictures
-        if: steps.compare.outputs.made == 'true'
-        uses: actions/upload-artifact@v7
-        with:
-          name: nldd-compare-${{ steps.repository.outputs.name }}
-          path: ${{ runner.temp }}/nldd/compare
-
-      - name: Show the pictures under the pull request
-        if: steps.compare.outputs.made == 'true'
-        continue-on-error: true
-        env:
-          GH_TOKEN: ${{ steps.app.outputs.token || secrets.token || github.token }}
-          NUMBER: ${{ steps.deliver.outputs.number }}
-          ALL: ${{ steps.pictures.outputs.artifact-url }}
-        run: |
-          cd "$TOOLS/compare"
-          { echo '<!-- nldd-upgrade-compare -->'; cat compare.md; printf '\nAlle beelden: %s\n' "$ALL"; } > comment.md
-          images="$(grep --only-matching '(\./[^)]*\.png)' comment.md | tr -d '()' | sed 's#^\./##')"
-          id="$(gh api "repos/$REPOSITORY" --jq .id)"
-
-          # Each picture goes where GitHub keeps what is attached to a comment. That is the address
-          # `gh --attach` uses; gh itself refuses the token of an app before it asks, the address does not.
-          cp comment.md hosted.md
-          attached=true
-          for image in $images; do
-            status="$(curl --silent --output answer.json --write-out '%{http_code}' --request POST \
-              "https://uploads.github.com/user-attachments/assets?name=$image&content_type=image/png&repository_id=$id" \
-              --header "Authorization: Bearer $GH_TOKEN" --header 'Content-Type: application/octet-stream' \
-              --header 'Accept: application/vnd.github+json' --data-binary "@$image")" || status=000
-            url="$(jq --raw-output '.url // empty' answer.json 2>/dev/null || true)"
-            if [ -z "$url" ]; then
-              echo "::notice::Attaching was refused: HTTP $status, $(head -c 200 answer.json 2>/dev/null | tr -d '\n')"
-              attached=false
-              break
-            fi
-            sed --in-place "s#(\./$image)#($url)#" hosted.md
-          done
-
-          # Where that is refused, the pictures go in a commit of their own, on a ref that is no
-          # branch, and the comment points at them by that commit. A next run replaces the ref.
-          if [ "$attached" != true ]; then
-            echo "::notice::The pictures could not be attached, so they are pushed to refs/nldd/pictures."
-            export GIT_INDEX_FILE="$TOOLS/pictures.index"
-            git -C "$GITHUB_WORKSPACE" read-tree --empty
-            for image in $images; do
-              blob="$(git -C "$GITHUB_WORKSPACE" hash-object -w "$PWD/$image")"
-              git -C "$GITHUB_WORKSPACE" update-index --add --cacheinfo "100644,$blob,$image"
-            done
-            tree="$(git -C "$GITHUB_WORKSPACE" write-tree)"
-            commit="$(git -C "$GITHUB_WORKSPACE" commit-tree "$tree" -m "Beelden van de designsysteem-upgrade")"
-            if git -C "$GITHUB_WORKSPACE" push --force origin "$commit:refs/nldd/pictures"; then
-              sed --regexp-extended "s#^(!\[[^]]*\]\()\./([^)]*)\)\$#\1https://github.com/$REPOSITORY/raw/$commit/\2)#" comment.md > hosted.md
-            else
-              echo "::warning::The pictures could not be pushed either. The comment names them, and they are in the artifact."
-              sed --regexp-extended 's/^!\[([^]]*)\]\(\.\/([^)]*)\)$/Beeld `\2` in de bijlage van de run./' comment.md > hosted.md
-            fi
-          fi
-          gh pr comment "$NUMBER" --repo "$REPOSITORY" --body-file hosted.md
+          repository: ${{ inputs.repository || github.repository }}
+          base: ${{ inputs.base }}
+          version: ${{ inputs.version }}
+          token: ${{ secrets.token || github.token }}
+          app-client-id: ${{ inputs.app_client_id }}
+          app-private-key: ${{ secrets.app_private_key }}
+          agent: ${{ inputs.agent }}
+          anthropic-api-key: ${{ secrets.anthropic_api_key }}
+          claude-code-oauth-token: ${{ secrets.claude_code_oauth_token }}
+          model: ${{ inputs.model }}
+          sandbox: ${{ inputs.sandbox }}
+          build: ${{ inputs.build }}
+          site: ${{ inputs.site }}
+          from-source: ${{ inputs.from_source }}
