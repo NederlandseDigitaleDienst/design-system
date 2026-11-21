@@ -43,15 +43,21 @@ function wireHome(): void {
 		view.toggleAttribute('data-site-sidebars-shown', both);
 	};
 	const sizes = new ResizeObserver(update);
-	const observe = () => {
-		sizes.disconnect();
-		sizes.observe(view);
-		for (const pane of panes()) sizes.observe(pane);
-	};
-	new MutationObserver(() => {
+	// The panes and their `empty`, not what is in them: a story renders often.
+	const mutations = new MutationObserver(() => {
 		observe();
 		update();
-	}).observe(view, { childList: true, subtree: true, attributeFilter: ['empty', 'slot'] });
+	});
+	const observe = () => {
+		sizes.disconnect();
+		mutations.disconnect();
+		sizes.observe(view);
+		mutations.observe(view, { childList: true });
+		for (const pane of panes()) {
+			sizes.observe(pane);
+			mutations.observe(pane, { attributeFilter: ['empty', 'slot'] });
+		}
+	};
 	observe();
 	update();
 }

@@ -34,15 +34,7 @@ export function hasState(root: ParentNode, name: string): boolean {
  * only dashed names, throws here; a fact is not worth breaking a render for.
  */
 export function setState(element: HTMLElement, name: string, on: boolean): void {
-	if (!import.meta.env?.DEV) return;
-	if (!on && !internals.has(element)) return;
-	try {
-		const { states } = internalsOf(element);
-		if (on) states.add(name);
-		else states.delete(name);
-	} catch {
-		// See above.
-	}
+	if (import.meta.env?.DEV) styleState(element, name, on);
 }
 
 /**

@@ -181,7 +181,7 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 	@property({ reflect: true, attribute: 'logo-supporting-text-2', converter: reflectNonDefault<string>('') })
 	logoSupportingText2 = '';
 
-	// ## Link properties
+	// ## Link and website properties
 
 	@property({ type: String, attribute: 'logo-href' })
 	logoHref = '';

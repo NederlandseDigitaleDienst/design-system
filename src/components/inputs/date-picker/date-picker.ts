@@ -282,8 +282,8 @@ export class NLDDDatePicker extends DescribedBy(withTranslations<NLDDDatePickerT
 		const focusSelected = (): void => {
 			const selected = menu?.querySelector<HTMLElement>('nldd-menu-item[selected]');
 			if (!selected || this.shadowRoot?.activeElement === selected) return;
-			// The menu has already scrolled it to the middle; focus must not scroll
-			// it again, nor the page behind it.
+			// The menu has already scrolled it into view; focus must not scroll it
+			// again, nor the page behind it.
 			selected.focus({ preventScroll: true });
 		};
 		requestAnimationFrame(focusSelected);

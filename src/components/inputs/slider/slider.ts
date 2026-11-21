@@ -321,9 +321,11 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 		const input = event.target as HTMLInputElement;
 		const dragged = input === this._dragInput && this._dragThumb;
 		// Past the other thumb the dragged input holds the other end's value, so
-		// it fires nothing on that value: the pointer moves the thumb from there.
+		// it fires nothing on that value: the pointer moves the thumb too.
 		if (dragged && this._trackThumb) {
-			this._set(this._trackThumb, this._trackThumb === 'start' ? this._start : this._end);
+			const landed = this._set(this._trackThumb, parseFloat(input.value), undefined, true);
+			if (landed !== this._trackThumb && landed !== 'value') this._grab(landed);
+			this._emit('input');
 			return;
 		}
 		const moved = dragged || thumb;
