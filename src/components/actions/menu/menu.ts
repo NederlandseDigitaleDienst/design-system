@@ -1804,8 +1804,9 @@ export class NLDDMenu extends LitElement {
 		document.addEventListener('pointerdown', this._handleDocumentPointerdown, true);
 
 		await this.updateComplete;
-		this._scrollToSelected();
+		// A listbox is the popup of a field, which leads its scrolling.
 		if (this.variant !== 'listbox') {
+			this._scrollToSelected();
 			const keyboard = isKeyboardMode();
 			const items = this._getVisibleItems();
 			if (keyboard && items.length > 0) {

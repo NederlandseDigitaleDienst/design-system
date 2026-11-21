@@ -4040,6 +4040,18 @@ describe('nldd-menu – opens on the current choice', () => {
 		menu.hidePopover();
 	});
 
+	it('leaves the scrolling of a listbox to its field', async () => {
+		const items = Array.from({ length: 30 }, (_, i) =>
+			`<nldd-menu-item type="radio" text="Item ${i + 1}"${i === 19 ? ' selected' : ''}></nldd-menu-item>`).join('');
+		el = await fixture(`<div><button id="opener">Open</button><nldd-menu anchor="opener" variant="listbox" max-items="5">${items}</nldd-menu></div>`);
+		const menu = el.querySelector('nldd-menu') as HTMLElement & { updateComplete: Promise<unknown> };
+		menu.showPopover();
+		await menu.updateComplete;
+		await new Promise(resolve => setTimeout(resolve, 50));
+		expect(menu.shadowRoot!.querySelector<HTMLElement>('.menu__scroller')!.scrollTop).toBe(0);
+		menu.hidePopover();
+	});
+
 	it('counts from the bottom edge when it opens above its anchor', async () => {
 		const items = Array.from({ length: 30 }, (_, i) =>
 			`<nldd-menu-item type="radio" text="Item ${i + 1}"${i === 19 ? ' selected' : ''}></nldd-menu-item>`).join('');
