@@ -87,7 +87,7 @@ test('a page marks its section in the first sidebar, itself in the second, and g
 	const button = pages['componenten/button/index.html'];
 	assert.match(button, /<nldd-list-item href="\/componenten\/" current>/);
 	assert.match(button, /<nldd-list-item\s+href="\/componenten\/button\/"\s+current\s/);
-	assert.match(button, /<nldd-search-field\s+data-site-filter\s+placeholder="Component zoeken"/);
+	assert.match(button, /<nldd-search-field\s+data-site-filter\s+placeholder="Component zoeken"\s+shortcut="\/"/);
 	assert.match(button, /data-site-search="icon button icon-button acties icoonknop knop actions"/);
 	// Each row names the pages it relates to, which the search lists under its matches.
 	assert.match(button, /data-site-slug="sheet"\s+data-site-related="modal-dialog popover window"/);

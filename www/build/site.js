@@ -765,6 +765,7 @@ function siblingNav(groups, current, hrefOf, { label, search } = {}) {
 	return `<nldd-search-field
 					data-site-filter
 					placeholder="${escapeHtml(search.placeholder)}"
+					shortcut="/"
 				></nldd-search-field>
 				<nldd-spacer size="24"></nldd-spacer>
 				${groupList}
