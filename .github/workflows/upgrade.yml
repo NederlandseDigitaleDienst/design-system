@@ -237,6 +237,12 @@ jobs:
           chmod +x "$TOOLS/sees-key.sh"
           printf '{"hooks":{"SessionStart":[{"hooks":[{"type":"command","command":"%s"}]}]}}' "$TOOLS/sees-key.sh" > "$TOOLS/settings.json"
 
+          # With the key kept out, the agent's commands run in a sandbox of their own. That needs
+          # bubblewrap, and a runner that lets a process without privileges make a namespace.
+          sudo apt-get update --quiet --quiet
+          sudo apt-get install --yes --quiet --quiet --no-install-recommends bubblewrap socat
+          sudo sysctl --quiet --write kernel.apparmor_restrict_unprivileged_userns=0
+
           npm install --global --no-audit --no-fund @anthropic-ai/claude-code
           prompt="This repository was just upgraded to @nldd/design-system $VERSION by \`nldd upgrade\`.
           The report is in $TOOLS/upgrade.md. Follow $TOOLS/source/skills/nldd-design-upgrade/SKILL.md from step 2:
@@ -251,7 +257,8 @@ jobs:
           If the project builds to a static site, write $TOOLS/site.json as well: {\"build\": \"<one shell command that builds
           the site from a clean checkout on this runner, installing what it needs>\", \"site\": \"<the directory it writes to>\"}.
           Run that command once to see that it works. Leave the file out for an app that needs a server or a backend.
-          Leave no file behind that does not belong in the pull request. Do not commit and do not push."
+          Leave no file behind that does not belong in the pull request. Do not commit and do not push.
+          If you cannot run a command at all, say so as the first line of $TOOLS/keuzes.md."
           if ! timeout 60m claude --print "$prompt" --add-dir "$TOOLS" --settings "$TOOLS/settings.json" --tools Bash Read Edit Write Glob Grep --allowedTools Bash Read Edit Write Glob Grep; then
             echo "::warning::The agent stopped before it was done. The pull request holds what it did until then."
             printf '\n- De agent die de lijst afwerkt is niet klaar gekomen. Wat hij tot dan deed, staat in deze pull request.\n' >> "$TOOLS/keuzes.md"
