@@ -109,13 +109,23 @@ function referencePins(source) {
 	}));
 }
 
+function ownManifest(source) {
+	try {
+		return JSON.parse(source).name === PACKAGE;
+	} catch {
+		return false;
+	}
+}
+
 /**
  * Every place in one file that names the version, and what there could not be raised.
- * @returns {{ edits: object[], left: { line: number, text: string, reason: 'range' | 'ambiguous' | 'file-hash' | 'other-hash' }[] }}
+ * @returns {{ edits: object[], left: { line: number, text: string, reason: 'range' | 'ambiguous' | 'file-hash' | 'other-hash' | 'record-stays' }[] }}
  */
 export function pinsIn(filename, source) {
 	if (!source.includes(PACKAGE)) return { edits: [], left: [] };
 	const name = basename(filename);
+	// The manifest of the package itself, a copy committed next to its files: its version is that of those files.
+	if (name === 'package.json' && ownManifest(source)) return { edits: [], left: [] };
 	const sets = extname(name) === '.json' ? [keyedPins(source, name === 'package.json'), recordPins(source)] : [];
 	return { edits: [...sets.flatMap(({ edits }) => edits), ...referencePins(source)], left: sets.flatMap(({ left }) => left) };
 }
@@ -132,11 +142,19 @@ export function raisePins(filename, source, target, dist = () => undefined) {
 	const { edits, left } = pinsIn(filename, source);
 	const raised = [];
 	const changes = [];
-	for (const edit of edits) {
+	// A record that stays keeps its address too: a tarball URL of the new version next to the old
+	// version and hash would make the file contradict itself. So the records go first.
+	const ordered = [...edits.filter(({ kind }) => kind !== 'reference'), ...edits.filter(({ kind }) => kind === 'reference')];
+	const recordStays = () => left.some(({ reason }) => reason === 'ambiguous' || reason === 'other-hash');
+	for (const edit of ordered) {
 		if (compareVersions(edit.from, target) >= 0) continue;
 		const line = lineOf(source, edit.at);
 		if (edit.guarded) {
 			left.push({ line, text: `${PACKAGE}@${edit.from}`, reason: 'file-hash' });
+			continue;
+		}
+		if (edit.kind === 'reference' && recordStays()) {
+			left.push({ line, text: `${PACKAGE}@${edit.from}`, reason: 'record-stays' });
 			continue;
 		}
 		const swaps = [];

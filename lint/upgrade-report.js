@@ -18,6 +18,7 @@ const KINDS = { manifest: 'afhankelijkheid', record: 'vastgelegde versie', refer
 const WHY_LEFT = {
 	range: 'want dit is geen enkele versie',
 	ambiguous: 'want het bestand noemt meer dan één versie of hash, en welke bij het pakket hoort is gokken',
+	'record-stays': 'want de vastgelegde versie in hetzelfde bestand blijft staan, en een adres van de nieuwe versie ernaast zou daarmee in tegenspraak zijn',
 	'file-hash': 'want de tag heeft een `integrity` van het ene bestand dat hij laadt. Zet de versie en die hash samen om',
 	'other-hash': 'want de hash ernaast is niet die van het pakket in het register. Zet de versie en die hash samen om',
 };

@@ -75,7 +75,15 @@ export function serveDirectory(directory) {
 	const root = resolve(directory);
 	return new Promise((done) => {
 		const server = createServer((request, response) => {
-			let path = join(root, decodeURIComponent(new URL(request.url, 'http://localhost').pathname));
+			let path;
+			try {
+				path = join(root, decodeURIComponent(new URL(request.url, 'http://localhost').pathname));
+			} catch {
+				// A percent sign that starts no escape, such as in /100%.png: no file, and no crash.
+				response.writeHead(400);
+				response.end();
+				return;
+			}
 			// Nothing above the directory, whatever the URL asks for.
 			if (path !== root && !path.startsWith(root + sep)) {
 				response.writeHead(403);

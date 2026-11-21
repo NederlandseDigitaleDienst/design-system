@@ -32,6 +32,19 @@ describe('the version, wherever a project names it', () => {
 		assert.equal(compareVersions('1.0.0', '1.0.0'), 0);
 	});
 
+	it('leaves a committed copy of the package alone: its version is that of the files next to it', () => {
+		const copy = JSON.stringify({ name: '@nldd/design-system', version: '0.20.0', main: 'dist/nldd.js' }, null, 2);
+		assert.deepEqual(raisePins('package.json', copy, '0.28.0'), { source: copy, raised: [], left: [] });
+	});
+
+	it('keeps the address of a tarball where the record next to it stays', () => {
+		const lock = JSON.stringify({ '@nldd/design-system': { version: '0.13.2', resolved: 'https://registry.npmjs.org/@nldd/design-system/-/design-system-0.13.2.tgz', integrity: 'sha512-ours' } }, null, 2);
+		const { source, raised, left } = raisePins('pins.json', lock, '0.28.0', () => undefined);
+		assert.equal(source, lock);
+		assert.deepEqual(raised, []);
+		assert.deepEqual(left.map(({ reason }) => reason), ['other-hash', 'record-stays']);
+	});
+
 	it('raises a dependency and keeps the range the project chose', () => {
 		const manifest = (range) => JSON.stringify({ dependencies: { '@nldd/design-system': range, lit: '^3.0.0' } }, null, 2);
 		for (const [from, to] of [['^0.13.2', '^0.27.1'], ['~0.13.2', '~0.27.1'], ['0.13.2', '0.27.1']]) {
@@ -243,6 +256,26 @@ describe('nldd upgrade', () => {
 		assert.doesNotMatch(parts.at(-1), /gaat verder/);
 		const places = (value) => value.match(/- \[ \] `[^`]+`/g);
 		assert.deepEqual(parts.flatMap(places), places(text));
+	});
+
+	it('comes from the version the project installs, not from an old mention in a document', async () => {
+		const { result } = await upgrade(project({ ...files, 'README.md': 'Sinds `npm i @nldd/design-system@0.14.0` gebruiken we het designsysteem.\n' }));
+		assert.equal(result.from, '0.20.0');
+	});
+
+	it('puts an error the project made so itself under the work, and an old built-in warning apart', async () => {
+		const page = '<nldd-title text="Aanvraag A-1042" heading-level="2"></nldd-title>\n';
+		const config = { rules: { 'title-needs-heading-level': 'error' } };
+		const suppressed = '<!-- nldd-lint-disable-next-line unknown-attribute -->\n<nldd-title text="Dossier D-318" heading-level="2" kleur="rood"></nldd-title>\n';
+		const { result } = await upgrade(project({ ...files, 'page.html': page + suppressed, 'own.css': '.a { --_button-gap: 0; }\n' }), {
+			config,
+			severities: resolveSeverities(DATA, config.rules),
+		});
+		const rules = (list) => list.map(({ rule }) => rule);
+		assert.ok(!rules(result.standing).includes('title-needs-heading-level'), 'an error of the project is work');
+		// From 0.20.0: a built-in rule that came after it is brought, one from before it was there already.
+		assert.ok(rules(result.work).includes('local-variable-no-override'));
+		assert.deepEqual(rules(result.standing), ['suppression-needs-reason']);
 	});
 
 	it('installs what the lockfile lists when asked to, so the types of the project can be read', async () => {

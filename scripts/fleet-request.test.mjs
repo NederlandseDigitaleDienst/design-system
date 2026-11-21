@@ -18,6 +18,12 @@ describe('an issue that asks to be on fleet.json', () => {
 		assert.deepEqual(withEntry(fleet, { repository: 'O/C' }).repositories, [{ repository: 'o/a' }, { repository: 'O/C' }]);
 	});
 
+	it('puts an entry where the check of the list expects it, also with punctuation in the name', async () => {
+		const { fleetErrors } = await import('./lib/fleet.js');
+		const fleet = withEntry({ repositories: [{ repository: 'org/a-x' }, { repository: 'org/b' }] }, { repository: 'org/a_x' });
+		assert.deepEqual(fleetErrors(fleet), []);
+	});
+
 	it('writes the file as it is written by hand, one line per entry', () => {
 		assert.equal(formatFleet(JSON.parse(readFileSync(new URL('../fleet.json', import.meta.url), 'utf8'))), readFileSync(new URL('../fleet.json', import.meta.url), 'utf8'));
 		assert.equal(formatFleet({ repositories: [] }), '{\n\t"repositories": []\n}\n');

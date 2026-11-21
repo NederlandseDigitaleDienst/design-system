@@ -13,7 +13,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { fleetErrors } from './lib/fleet.js';
+import { byRepository, fleetErrors } from './lib/fleet.js';
 
 /** The answers of an issue form, by their heading. "_No response_" is no answer. */
 export function formAnswers(body) {
@@ -39,7 +39,7 @@ export function requestedEntry(body) {
 /** fleet.json with the entry in its place. */
 export function withEntry(fleet, entry) {
 	const others = fleet.repositories.filter(({ repository }) => repository.toLowerCase() !== entry.repository.toLowerCase());
-	const repositories = [...others, entry].sort((a, b) => a.repository.toLowerCase().localeCompare(b.repository.toLowerCase()));
+	const repositories = [...others, entry].sort(byRepository);
 	return { ...fleet, repositories };
 }
 

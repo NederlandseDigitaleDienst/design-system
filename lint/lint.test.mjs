@@ -2396,3 +2396,14 @@ describe('a link token set on an element', () => {
 		assert.deepEqual(await lines(':root { --semantics-links-color: #154273; }\n.theme-oranje { --semantics-links-color: #e17000; }\nhtml[data-theme] nldd-link { --semantics-links-color: red; }\n', 'a.css'), []);
 	});
 });
+
+describe('the built-in rules', () => {
+	it('each say what an upgrade brings: a rule about what exists, or the last release without it', async () => {
+		const { BUILT_IN_RULES } = await import('./rule-data.js');
+		const version = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).version;
+		for (const [id, rule] of Object.entries(BUILT_IN_RULES)) {
+			assert.ok(rule.group === 'api' || /^\d+\.\d+\.\d+$/.test(rule.after ?? ''), `${id} has group 'api' or an after`);
+			if (rule.after) assert.ok(rule.after <= version || rule.after.split('.').map(Number) <= version.split('.').map(Number), `${id}: after ${rule.after} is no later than ${version}`);
+		}
+	});
+});

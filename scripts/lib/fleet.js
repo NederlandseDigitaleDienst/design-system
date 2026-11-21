@@ -18,6 +18,12 @@ export const FIELDS = {
 
 const REPOSITORY = /^[A-Za-z0-9-]+\/[A-Za-z0-9._-]+$/;
 
+/** The order of the list: by name, without regard to case. One comparison, so the check and the form agree. */
+export const byRepository = (a, b) => {
+	const [x, y] = [a.repository.toLowerCase(), b.repository.toLowerCase()];
+	return x < y ? -1 : x > y ? 1 : 0;
+};
+
 /**
  * @param {unknown} fleet - the parsed contents of fleet.json
  * @returns {string[]} what is wrong with it, one line each; none when it is right
@@ -38,8 +44,8 @@ export function fleetErrors(fleet) {
 		else seen.add(entry.repository.toLowerCase());
 		if (Boolean(entry.build) !== Boolean(entry.site)) errors.push(`${at} needs both "build" and "site", or neither.`);
 	});
-	const names = fleet.repositories.map((entry) => String(entry?.repository ?? '').toLowerCase());
-	if (names.join('\n') !== [...names].sort().join('\n')) errors.push('The repositories are in alphabetical order, so an entry lands in one place and two teams do not edit the same line.');
+	const named = fleet.repositories.map((entry) => ({ repository: String(entry?.repository ?? '') }));
+	if (named.some((entry, index) => index > 0 && byRepository(named[index - 1], entry) > 0)) errors.push('The repositories are in alphabetical order, so an entry lands in one place and two teams do not edit the same line.');
 	return errors;
 }
 

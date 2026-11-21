@@ -47,7 +47,7 @@ export function breakingFor(breaking, from, target, text) {
 function upgradeRules(data, from) {
 	const byId = new Map(data.rules.map((rule) => [rule.id, rule]));
 	const isNew = (rule) => rule.group === 'api' || (rule.after !== undefined && compareVersions(from, rule.after) <= 0);
-	return { isNew, of: (id) => (byId.has(id) ? isNew(byId.get(id)) : id in BUILT_IN_RULES) };
+	return { isNew, of: (id) => isNew(byId.get(id) ?? BUILT_IN_RULES[id] ?? { group: 'api' }) };
 }
 
 /**
@@ -141,7 +141,10 @@ export async function upgradeProject(data, { root, target, breaking, config, sev
 		for (const place of change.left) notRaised.push({ file, ...place });
 		if (basename(filename) === 'package.json' && change.raised.some(({ kind }) => kind === 'manifest')) manifestDirectories.add(dirname(filename));
 	}
-	const from = since ? since.from : pinned.map((pin) => pin.from).sort(compareVersions)[0];
+	// Where the project came from is what it installs: a manifest, or a record of the version. A
+	// mention in a document is raised too, but an old one there says nothing about the app.
+	const installed = pinned.filter(({ kind }) => kind === 'manifest' || kind === 'record');
+	const from = since ? since.from : (installed.length > 0 ? installed : pinned).map((pin) => pin.from).sort(compareVersions)[0];
 
 	// 2. The lockfile of each manifest that changed.
 	const lockfiles = [];
@@ -182,7 +185,8 @@ export async function upgradeProject(data, { root, target, breaking, config, sev
 			if (finding.severity === 'hint') continue;
 			if (finding.rule === 'file-not-read') unread.push(file);
 			else {
-				const list = (messages.get(finding.rule)?.severity ?? finding.severity) === 'error' || brings.of(finding.rule) ? work : standing;
+				// An error is work, also one the project made so itself: it fails its CI.
+				const list = finding.severity === 'error' || (messages.get(finding.rule)?.severity ?? BUILT_IN_RULES[finding.rule]?.severity) === 'error' || brings.of(finding.rule) ? work : standing;
 				const own = !messages.has(finding.rule);
 				const entry = list.get(finding.rule) ?? { rule: finding.rule, severity: finding.severity, message: own ? undefined : finding.message, places: [] };
 				entry.places.push({ file, line: finding.line, tag: finding.tag || undefined, ...(own && { message: finding.message }) });

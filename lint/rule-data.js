@@ -51,77 +51,100 @@ export function loadData() {
 /**
  * Kept in the code rather than src/rules/: they are generated from the contract,
  * for every component, without anyone writing a rule.
+ *
+ * As a rule in src/rules/, each says what an upgrade brings: `group: 'api'` for
+ * one about what exists in a version, which comes with every upgrade, and
+ * otherwise `after`, the last release without it. A new one gets the version in
+ * package.json when it is added; a test holds every one to that.
  */
 export const BUILT_IN_RULES = {
 	'unknown-element': {
+		group: 'api',
 		severity: 'error',
 		description: 'The tag does not exist in this version of the design system.',
 	},
 	'unknown-attribute': {
+		group: 'api',
 		severity: 'warn',
 		description: 'The component does not have this attribute, so setting it does nothing.',
 	},
 	'invalid-value': {
+		group: 'api',
 		severity: 'warn',
 		description: 'The attribute only accepts a fixed set of values, and this is not one of them.',
 	},
 	'unknown-icon': {
+		group: 'api',
 		severity: 'warn',
 		description: 'There is no icon with this name.',
 	},
 	'unknown-slot': {
+		group: 'api',
 		severity: 'warn',
 		description: 'The parent component has no slot with this name, so the element does not render.',
 	},
 	deprecated: {
+		group: 'api',
 		severity: 'warn',
 		description: 'This still works, but will go away in a later version.',
 	},
 	'token-not-found': {
+		group: 'api',
 		severity: 'warn',
 		description: 'The design system has no token with this name, so the declaration that uses it does nothing.',
 	},
 	'event-renamed': {
+		group: 'api',
 		severity: 'warn',
 		description: 'The component no longer fires an event with this name, so a listener on it is never called.',
 	},
 	'translation-key-not-found': {
+		group: 'api',
 		severity: 'warn',
 		description: 'The element has no translation key with this name, so the text stays Dutch.',
 	},
 	'local-variable-no-override': {
+		after: '0.22.0',
 		severity: 'warn',
 		description: 'A `--_` variable belongs to the inside of one component and can change in any release. Use the component\'s attributes, or open an issue for what is missing.',
 	},
 	'internal-context-no-use': {
+		after: '0.27.0',
 		severity: 'warn',
 		description: 'This `--context-` variable is wiring between components and can change in any release. Use the component\'s attributes, or open an issue for what is missing.',
 	},
 	'link-context-needs-states': {
+		after: '0.22.0',
 		severity: 'warn',
 		description: 'A surface that gives links a color sets all three link colors, or a link on it turns back to the default blue on hover or press.',
 	},
 	'style-color-needs-context': {
+		after: '0.28.0',
 		severity: 'warn',
 		description: 'Text and icons of the design system take their color from `--context-content-color`, not from the CSS `color` around them. An element of your own that sets `color` for what stands in it sets that variable too, with the same value.',
 	},
 	'link-color-no-effect': {
+		after: '0.28.0',
 		severity: 'warn',
 		description: 'A link reads `--context-link-color` and its two states. `--semantics-links-color` gives those their value on `:root` only, so setting it on an element colors no link.',
 	},
 	'file-not-read': {
+		after: '0.22.0',
 		severity: 'warn',
 		description: 'This file has nldd-* markup the linter cannot read, so it was not checked.',
 	},
 	'suppression-needs-reason': {
+		after: '0.13.2',
 		severity: 'warn',
 		description: 'Say why after `--`, so the next reader knows why this rule is off here.',
 	},
 	'syntax-error': {
+		after: '0.13.2',
 		severity: 'warn',
 		description: 'This file could not be read, so most of it was not checked.',
 	},
 	'suppression-not-needed': {
+		after: '0.13.2',
 		severity: 'warn',
 		description: 'This rule does not fire on the next line, so the suppression can go.',
 	},
