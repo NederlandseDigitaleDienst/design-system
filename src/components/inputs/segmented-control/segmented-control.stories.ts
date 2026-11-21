@@ -42,16 +42,6 @@ export default {
 			control: 'text',
 			description: 'Width mode: "full" (stretches to container), "fit-content" (per-item content size), or any CSS length (e.g. "240px")',
 		},
-		value: {
-			control: 'text',
-			description: 'Geselecteerde waarde (radio) of spatie-gescheiden waarden (checkbox)',
-		},
-		type: {
-			control: 'select',
-			options: ['radio', 'checkbox'],
-			description: 'Type selectie: radio (enkelvoudig) of checkbox (meervoudig)',
-			table: { defaultValue: { summary: 'radio' } },
-		},
 		accessibleLabel: {
 			name: 'accessible-label',
 			control: 'text',
@@ -72,6 +62,16 @@ export default {
 			description: 'Uitgeschakelde toestand',
 			table: { defaultValue: { summary: false } },
 		},
+		value: {
+			control: 'text',
+			description: 'Geselecteerde waarde (radio) of spatie-gescheiden waarden (checkbox)',
+		},
+		type: {
+			control: 'select',
+			options: ['radio', 'checkbox'],
+			description: 'Type selectie: radio (enkelvoudig) of checkbox (meervoudig)',
+			table: { defaultValue: { summary: 'radio' } },
+		},
 		required: {
 			control: 'boolean',
 			description: 'Verplichte staat.',
@@ -84,28 +84,28 @@ export default {
 		appearance: 'neutral-tinted',
 		size: 'md',
 		width: '',
-		value: 'bold',
-		type: 'radio',
 		accessibleLabel: '',
 		accessibleLabeledBy: '',
 		invalid: false,
 		disabled: false,
+		value: 'bold',
+		type: 'radio',
 		required: false,
 	},
 };
 
-const Template = ({ variant, appearance, size, width, value, type, accessibleLabel, invalid, disabled, required }: Record<string, any>) => html`
+const Template = ({ variant, appearance, size, width, accessibleLabel, invalid, disabled, value, type, required }: Record<string, any>) => html`
 	<nldd-segmented-control
-		value=${value}
+		variant=${variant}
 		appearance=${appearance}
 		size=${size}
-		type=${type}
-		variant=${variant}
-		?invalid=${invalid}
-		?required=${required}
-		?disabled=${disabled}
 		width=${width || nothing}
 		accessible-label=${accessibleLabel || nothing}
+		?invalid=${invalid}
+		?disabled=${disabled}
+		value=${value}
+		type=${type}
+		?required=${required}
 	>
 		<nldd-segmented-control-item
 			value="bold"

@@ -20,44 +20,29 @@ export default {
 		},
 	},
 	args: {
+		placeholder: 'Land toevoegen…',
+		accessibleLabel: 'Landen',
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
+		noFilter: false,
+		valid: false,
+		invalid: false,
+		readonly: false,
+		disabled: false,
 		// Twee tokens om mee te beginnen: de controls hieronder zetten values bij
 		// elke wijziging opnieuw, dus een veld dat leeg begint blijft leeg zodra je
 		// aan een knop draait, ook aan readonly.
 		values: ['nl', 'be'],
-		placeholder: 'Land toevoegen…',
 		type: 'text',
-		autocomplete: '',
-		accessibleLabel: 'Landen',
-		accessibleDescription: '',
-		accessibleDescribedBy: '',
 		allowCustom: false,
-		noFilter: false,
-		valid: false,
-		invalid: false,
-		noSpellcheck: false,
-		readonly: false,
 		required: false,
-		disabled: false,
+		autocomplete: '',
+		noSpellcheck: false,
 	},
 	argTypes: {
-		values: {
-			control: 'object',
-			description: 'Geselecteerde token-waarden (array; zet via de `values`-property). Tokens die je in het veld zelf toevoegt komen hier niet in terug, dus een volgende controlwijziging zet deze lijst weer neer.',
-			table: { defaultValue: { summary: '[]' } },
-		},
 		placeholder: {
 			control: 'text',
 			description: 'Placeholder in de invoer.',
-		},
-		type: {
-			control: 'select',
-			options: ['text', 'email', 'tel', 'url'],
-			description: 'Input-type doorgegeven aan de invoer (bijv. `email`).',
-			table: { defaultValue: { summary: 'text' } },
-		},
-		autocomplete: {
-			control: 'text',
-			description: 'Autocomplete-hint doorgegeven aan de invoer.',
 		},
 		accessibleLabel: {
 			name: 'accessible-label',
@@ -73,12 +58,6 @@ export default {
 			name: 'accessible-described-by',
 			control: false,
 			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
-		},
-		allowCustom: {
-			name: 'allow-custom',
-			control: 'boolean',
-			description: 'Sta vrij getypte waarden toe (naast de menu-opties).',
-			table: { defaultValue: { summary: 'false' } },
 		},
 		noFilter: {
 			name: 'no-filter',
@@ -96,15 +75,31 @@ export default {
 			description: 'Markeert het veld ongeldig (rode rand + invalid-icoon rechts).',
 			table: { defaultValue: { summary: 'false' } },
 		},
-		noSpellcheck: {
-			name: 'no-spellcheck',
-			control: 'boolean',
-			description: 'Schakelt browser-spellcheck op de invoer uit.',
-			table: { defaultValue: { summary: 'false' } },
-		},
 		readonly: {
 			control: 'boolean',
 			description: 'Alleen-lezen: statische tokens (geen dismiss), geen invoer/picker, read-only-oppervlak.',
+			table: { defaultValue: { summary: 'false' } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde staat: tokens niet verwijderbaar, invoer dicht.',
+			table: { defaultValue: { summary: 'false' } },
+		},
+		values: {
+			control: 'object',
+			description: 'Geselecteerde token-waarden (array; zet via de `values`-property). Tokens die je in het veld zelf toevoegt komen hier niet in terug, dus een volgende controlwijziging zet deze lijst weer neer.',
+			table: { defaultValue: { summary: '[]' } },
+		},
+		type: {
+			control: 'select',
+			options: ['text', 'email', 'tel', 'url'],
+			description: 'Input-type doorgegeven aan de invoer (bijv. `email`).',
+			table: { defaultValue: { summary: 'text' } },
+		},
+		allowCustom: {
+			name: 'allow-custom',
+			control: 'boolean',
+			description: 'Sta vrij getypte waarden toe (naast de menu-opties).',
 			table: { defaultValue: { summary: 'false' } },
 		},
 		required: {
@@ -112,9 +107,14 @@ export default {
 			description: 'Verplicht: ongeldig zolang er geen tokens zijn.',
 			table: { defaultValue: { summary: 'false' } },
 		},
-		disabled: {
+		autocomplete: {
+			control: 'text',
+			description: 'Autocomplete-hint doorgegeven aan de invoer.',
+		},
+		noSpellcheck: {
+			name: 'no-spellcheck',
 			control: 'boolean',
-			description: 'Uitgeschakelde staat: tokens niet verwijderbaar, invoer dicht.',
+			description: 'Schakelt browser-spellcheck op de invoer uit.',
 			table: { defaultValue: { summary: 'false' } },
 		},
 	},
@@ -143,20 +143,20 @@ const options = html`
 
 const render = (args: Record<string, unknown>) => html`
 	<nldd-token-field
-		.values=${(args.values as string[]) ?? []}
 		placeholder=${(args.placeholder as string) ?? ''}
-		type=${(args.type as string) ?? 'text'}
-		autocomplete=${(args.autocomplete as string) ?? ''}
 		accessible-label=${(args.accessibleLabel as string) ?? ''}
 		accessible-description=${(args.accessibleDescription as string) || nothing}
-		?allow-custom=${args.allowCustom}
 		?no-filter=${args.noFilter}
 		?valid=${args.valid}
 		?invalid=${args.invalid}
-		?no-spellcheck=${args.noSpellcheck}
 		?readonly=${args.readonly}
-		?required=${args.required}
 		?disabled=${args.disabled}
+		.values=${(args.values as string[]) ?? []}
+		type=${(args.type as string) ?? 'text'}
+		?allow-custom=${args.allowCustom}
+		?required=${args.required}
+		autocomplete=${(args.autocomplete as string) ?? ''}
+		?no-spellcheck=${args.noSpellcheck}
 	>${options}</nldd-token-field>
 `;
 
@@ -164,9 +164,9 @@ export const Standaard = { render };
 
 export const Leeg = { args: { placeholder: 'Land toevoegen…', values: [] }, render };
 export const MetTokens = { args: { values: ['nl', 'be', 'de'] }, render };
-export const ToestandInvalid = { name: 'Toestand invalid', args: { values: ['nl'], invalid: true }, render };
+export const ToestandInvalid = { name: 'Toestand invalid', args: { invalid: true, values: ['nl'] }, render };
 
-export const ToestandReadonly = { name: 'Toestand readonly', args: { values: ['nl', 'be'], readonly: true }, render };
+export const ToestandReadonly = { name: 'Toestand readonly', args: { readonly: true, values: ['nl', 'be'] }, render };
 
 /**
  * Vrije invoer zonder opties-menu: `allow-custom` aan en geen slotted `nldd-menu`.
@@ -177,11 +177,11 @@ export const ToestandReadonly = { name: 'Toestand readonly', args: { values: ['n
 export const EigenWaarden = {
 	args: {
 		placeholder: 'E-mailadres toevoegen…',
-		type: 'email',
-		autocomplete: 'email',
 		accessibleLabel: 'E-mailadressen',
-		allowCustom: true,
 		values: ['ada@example.com'],
+		type: 'email',
+		allowCustom: true,
+		autocomplete: 'email',
 	},
 	render: (args: Record<string, unknown>) => html`
 		<nldd-token-field
@@ -210,8 +210,8 @@ export const EigenWaarden = {
  */
 export const TokensMetMenu = {
 	args: {
-		accessibleLabel: 'Landen',
 		placeholder: 'Land toevoegen…',
+		accessibleLabel: 'Landen',
 		values: ['nl', 'be', 'de'],
 	},
 	render: (args: Record<string, unknown>) => {

@@ -18,40 +18,22 @@ export default {
 		},
 	},
 	args: {
-		range: false,
-		firstDayOfWeek: 1,
-		weekNumbers: false,
 		width: '',
 		accessibleLabel: '',
 		accessibleDescription: '',
 		accessibleDescribedBy: '',
+		weekNumbers: false,
+		firstDayOfWeek: 1,
+		invalid: false,
 		value: '',
 		start: '',
 		end: '',
+		range: false,
 		min: '',
 		max: '',
-		invalid: false,
 
 	},
 	argTypes: {
-		range: {
-			control: 'boolean',
-			description: 'Kies een periode in plaats van één datum',
-			table: { defaultValue: { summary: false } },
-		},
-		firstDayOfWeek: {
-			name: 'first-day-of-week',
-			control: 'select',
-			options: [0, 1, 2, 3, 4, 5, 6],
-			description: 'Eerste dag van de week, 0 is zondag',
-			table: { defaultValue: { summary: 1 } },
-		},
-		weekNumbers: {
-			name: 'week-numbers',
-			control: 'boolean',
-			description: 'Toont ISO-weeknummers in een kolom links',
-			table: { defaultValue: { summary: false } },
-		},
 		width: {
 			control: 'text',
 			description: 'Breedte: full (vult de container) of een CSS-lengte (bv. 560px); leeg is de intrinsieke zeven-cellen-breedte',
@@ -72,6 +54,24 @@ export default {
 			control: false,
 			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
 		},
+		weekNumbers: {
+			name: 'week-numbers',
+			control: 'boolean',
+			description: 'Toont ISO-weeknummers in een kolom links',
+			table: { defaultValue: { summary: false } },
+		},
+		firstDayOfWeek: {
+			name: 'first-day-of-week',
+			control: 'select',
+			options: [0, 1, 2, 3, 4, 5, 6],
+			description: 'Eerste dag van de week, 0 is zondag',
+			table: { defaultValue: { summary: 1 } },
+		},
+		invalid: {
+			control: 'boolean',
+			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
+			table: { defaultValue: { summary: false } },
+		},
 		value: {
 			control: 'text',
 			description: 'De gekozen datum als ISO (jjjj-mm-dd). Alleen zonder range.',
@@ -84,6 +84,11 @@ export default {
 			control: 'text',
 			description: 'Einde van de periode als ISO. Alleen met range.',
 		},
+		range: {
+			control: 'boolean',
+			description: 'Kies een periode in plaats van één datum',
+			table: { defaultValue: { summary: false } },
+		},
 		min: {
 			control: 'text',
 			description: 'Vroegste datum: ISO, of today met een verschuiving (today-18y)',
@@ -92,41 +97,37 @@ export default {
 			control: 'text',
 			description: 'Laatste datum: ISO, of today met een verschuiving (today+1y)',
 		},
-		invalid: {
-			control: 'boolean',
-			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
-			table: { defaultValue: { summary: false } },
-		},
 
 	},
 };
 
 const Template = ({
-	range,
-	firstDayOfWeek,
-	weekNumbers,
 	width,
-	accessibleLabel, accessibleDescription,
+	accessibleLabel,
+	accessibleDescription,
+	weekNumbers,
+	firstDayOfWeek,
+	invalid,
 	value,
 	start,
 	end,
+	range,
 	min,
 	max,
-	invalid,
 }: Record<string, unknown>) => html`
 	<nldd-date-picker
-		?range=${range}
-		first-day-of-week=${firstDayOfWeek}
-		?week-numbers=${weekNumbers}
 		width=${width || nothing}
 		accessible-label=${accessibleLabel || nothing}
 		accessible-description=${accessibleDescription || nothing}
+		?week-numbers=${weekNumbers}
+		first-day-of-week=${firstDayOfWeek}
+		?invalid=${invalid}
 		value=${value || nothing}
 		start=${start || nothing}
 		end=${end || nothing}
+		?range=${range}
 		min=${min || nothing}
 		max=${max || nothing}
-		?invalid=${invalid}
 		@change=${action('change')}
 		@input=${action('input')}
 	></nldd-date-picker>
@@ -185,9 +186,9 @@ export const ZonderWeekenden = () => {
 export const MetWeeknummers = {
 	render: Template,
 	args: {
-		range: true,
-		weekNumbers: true,
 		accessibleLabel: 'Verslagperiode',
+		weekNumbers: true,
+		range: true,
 	},
 };
 

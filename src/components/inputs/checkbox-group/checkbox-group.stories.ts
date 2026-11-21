@@ -35,13 +35,23 @@ export default {
 		},
 	},
 	args: {
+		accessibleLabel: 'Waarvoor vraag je subsidie aan?',
 		invalid: false,
 		disabled: false,
 		name: 'maatregel',
 		required: false,
-		accessibleLabel: 'Waarvoor vraag je subsidie aan?',
 	},
 	argTypes: {
+		accessibleLabel: {
+			name: 'accessible-label',
+			control: 'text',
+			description: 'Toegankelijk label voor screen readers. In een `nldd-form-field` geeft het veld de groep zijn naam.',
+		},
+		accessibleLabeledBy: {
+			name: 'accessible-labeled-by',
+			control: false,
+			description: 'Id van een element elders op de pagina dat deze groep benoemt, zoals `aria-labelledby`.',
+		},
 		invalid: {
 			control: 'boolean',
 			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
@@ -60,16 +70,6 @@ export default {
 			control: 'boolean',
 			description: 'Minstens één selectievakje moet aangevinkt zijn',
 			table: { defaultValue: { summary: false } },
-		},
-		accessibleLabel: {
-			name: 'accessible-label',
-			control: 'text',
-			description: 'Toegankelijk label voor screen readers. In een `nldd-form-field` geeft het veld de groep zijn naam.',
-		},
-		accessibleLabeledBy: {
-			name: 'accessible-labeled-by',
-			control: false,
-			description: 'Id van een element elders op de pagina dat deze groep benoemt, zoals `aria-labelledby`.',
 		},
 	},
 };
@@ -101,13 +101,13 @@ const fields = html`
 	></nldd-checkbox-field>
 `;
 
-const Template = ({ invalid, disabled, name, required, accessibleLabel }: Record<string, unknown>) => html`
+const Template = ({ accessibleLabel, invalid, disabled, name, required }: Record<string, unknown>) => html`
 	<nldd-checkbox-group
+		accessible-label=${accessibleLabel}
 		?invalid=${invalid}
 		?disabled=${disabled}
 		name=${name}
 		?required=${required}
-		accessible-label=${accessibleLabel}
 	>
 		${fields}
 	</nldd-checkbox-group>

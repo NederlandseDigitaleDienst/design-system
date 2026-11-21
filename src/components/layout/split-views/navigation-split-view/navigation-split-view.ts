@@ -21,9 +21,9 @@
  *
  * @attr {boolean} inspector-as-sheet - Always show the inspector as a sheet regardless of available space
  * @attr {boolean} primary-sidebar-as-sheet - Always show the primary sidebar as a sheet, keeping main visible at full width
+ * @attr {boolean} inspector-auto-hidden - Inspector hidden to free up space for other panes (read-only, set by the split view)
  * @attr {string} inspector-accessible-label - Accessible name for the inspector sheet dialog (default: 'Details')
  * @attr {string} primary-sidebar-accessible-label - Accessible name for the primary sidebar sheet dialog (default: 'Navigatie')
- * @attr {boolean} inspector-auto-hidden - Inspector hidden to free up space for other panes (read-only, set by the split view)
  *
  * @childattr {boolean} empty - This pane says nothing is chosen yet, such as "Kies een dossier". Stacked, the view shows the pane before it instead. Set it on the element in `main` or `secondary-sidebar`.
  *
@@ -75,6 +75,9 @@ export class NLDDNavigationSplitView extends LitElement {
 	@property({ type: Boolean, reflect: true, attribute: 'primary-sidebar-as-sheet' })
 	primarySidebarAsSheet = false;
 
+	@property({ type: Boolean, reflect: true, attribute: 'inspector-auto-hidden' })
+	inspectorAutoHidden = false;
+
 	/** Accessible name for the inspector sheet dialog. */
 	@property({ type: String, attribute: 'inspector-accessible-label' })
 	inspectorAccessibleLabel = 'Details';
@@ -82,9 +85,6 @@ export class NLDDNavigationSplitView extends LitElement {
 	/** Accessible name for the primary sidebar sheet dialog. */
 	@property({ type: String, attribute: 'primary-sidebar-accessible-label' })
 	primarySidebarAccessibleLabel = 'Navigatie';
-
-	@property({ type: Boolean, reflect: true, attribute: 'inspector-auto-hidden' })
-	inspectorAutoHidden = false;
 
 	// Internal visibility driven by layout algorithm — not part of public API
 	@state()

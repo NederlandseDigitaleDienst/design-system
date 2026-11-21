@@ -45,25 +45,35 @@ export default {
 		},
 	},
 	args: {
-		embedded: false,
-		language: '',
-		lineNumbers: false,
-		value: '',
-		placeholder: '',
-		rows: 6,
 		resize: 'auto',
+		rows: 6,
+		placeholder: '',
+		language: '',
+		embedded: false,
+		accessibleLabel: 'Code',
+		lineNumbers: false,
 		wrap: false,
 		invalid: false,
 		readonly: false,
-		required: false,
 		disabled: false,
-		accessibleLabel: 'Code',
+		value: '',
+		required: false,
 	},
 	argTypes: {
-		embedded: {
-			control: 'boolean',
-			description: 'Zonder kader, vulling, padding en focusring, voor een editor in een eigen compositie die die zelf levert',
-			table: { defaultValue: { summary: false } },
+		resize: {
+			control: 'select',
+			options: ['none', 'vertical', 'auto'],
+			description: 'Resize-gedrag. auto = groeit mee, vertical = slepen vanaf rows, none = vast.',
+			table: { defaultValue: { summary: 'auto' } },
+		},
+		rows: {
+			control: 'number',
+			description: 'Minimale zichtbare regels (de vloer in elke resize-modus)',
+			table: { defaultValue: { summary: 6 } },
+		},
+		placeholder: {
+			control: 'text',
+			description: 'Placeholder tekst',
 		},
 		language: {
 			control: 'select',
@@ -72,30 +82,22 @@ export default {
 			description: 'Grammatica voor syntax-highlighting (lazy geladen). Leeg = geen highlighting.',
 			table: { defaultValue: { summary: '(geen)' } },
 		},
+		embedded: {
+			control: 'boolean',
+			description: 'Zonder kader, vulling, padding en focusring, voor een editor in een eigen compositie die die zelf levert',
+			table: { defaultValue: { summary: false } },
+		},
+		accessibleLabel: {
+			name: 'accessible-label',
+			control: 'text',
+			description: 'Toegankelijk label',
+			table: { defaultValue: { summary: 'Code' } },
+		},
 		lineNumbers: {
 			name: 'line-numbers',
 			control: 'boolean',
 			description: 'Toon een regelnummer-gutter (klik een nummer om de caret naar die regel te zetten)',
 			table: { defaultValue: { summary: false } },
-		},
-		value: {
-			control: 'text',
-			description: 'De inhoud van het veld',
-		},
-		placeholder: {
-			control: 'text',
-			description: 'Placeholder tekst',
-		},
-		rows: {
-			control: 'number',
-			description: 'Minimale zichtbare regels (de vloer in elke resize-modus)',
-			table: { defaultValue: { summary: 6 } },
-		},
-		resize: {
-			control: 'select',
-			options: ['none', 'vertical', 'auto'],
-			description: 'Resize-gedrag. auto = groeit mee, vertical = slepen vanaf rows, none = vast.',
-			table: { defaultValue: { summary: 'auto' } },
 		},
 		wrap: {
 			control: 'boolean',
@@ -112,54 +114,52 @@ export default {
 			description: 'Alleen-lezen staat (focusbaar en selecteerbaar, niet bewerkbaar)',
 			table: { defaultValue: { summary: false } },
 		},
-		required: {
-			control: 'boolean',
-			description: 'Verplichte staat.',
-			table: { defaultValue: { summary: false } },
-		},
 		disabled: {
 			control: 'boolean',
 			description: 'Uitgeschakelde staat',
 			table: { defaultValue: { summary: false } },
 		},
-		accessibleLabel: {
-			name: 'accessible-label',
+		value: {
 			control: 'text',
-			description: 'Toegankelijk label',
-			table: { defaultValue: { summary: 'Code' } },
+			description: 'De inhoud van het veld',
+		},
+		required: {
+			control: 'boolean',
+			description: 'Verplichte staat.',
+			table: { defaultValue: { summary: false } },
 		},
 	},
 };
 
 const Template = ({
-	embedded,
-	language,
-	lineNumbers,
-	value,
-	placeholder,
-	rows,
 	resize,
+	rows,
+	placeholder,
+	language,
+	embedded,
+	accessibleLabel,
+	lineNumbers,
 	wrap,
 	invalid,
 	readonly,
-	required,
 	disabled,
-	accessibleLabel,
+	value,
+	required,
 }: Record<string, unknown>) => html`
 	<nldd-code-editor
-		?embedded=${embedded}
-		language=${language || nothing}
-		?line-numbers=${lineNumbers}
-		.value=${value || ''}
-		placeholder=${placeholder || nothing}
-		rows=${rows as number}
 		resize=${resize as string}
-		?wrap=${wrap}
-		?readonly=${readonly}
-		?invalid=${invalid}
-		?required=${required}
-		?disabled=${disabled}
+		rows=${rows as number}
+		placeholder=${placeholder || nothing}
+		language=${language || nothing}
+		?embedded=${embedded}
 		accessible-label=${accessibleLabel || nothing}
+		?line-numbers=${lineNumbers}
+		?wrap=${wrap}
+		?invalid=${invalid}
+		?readonly=${readonly}
+		?disabled=${disabled}
+		.value=${value || ''}
+		?required=${required}
 	></nldd-code-editor>
 `;
 

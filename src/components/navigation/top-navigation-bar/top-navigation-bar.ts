@@ -22,6 +22,7 @@
  * @related nldd-top-title-bar, nldd-menu-bar
  *
  * @attr {boolean} no-logo - Hides the whole logo bar, wordmark included.
+ * @attr {string} width - Limits the bar content to a max-width so it lines up with the page sections. 'full' fills the entire width, or pass your own CSS length.
  * @attr {string} logo-title - Title of the wordmark next to the logo. Without it the logo stands alone.
  * @attr {string} logo-subtitle - Subtitle under the wordmark title. Only visible when there is a wordmark.
  * @attr {string} logo-supporting-text-1 - First supporting line under the wordmark title. Only visible when there is a wordmark.
@@ -29,9 +30,8 @@
  * @attr {string} logo-href - URL for the logo and wordmark. Without it they are not a link but an image with an accessible label. Leave it out when `website-href` already goes to the same page: two links to the start page side by side are two tab stops and the same link twice in a screen reader's list of links.
  * @attr {string} website-title - Name of the website or application, above the menu bar. Empty leaves the title line out. On a narrow screen, where it has a line of its own, a long name wraps; on md and lg it sits beside the menu on one line, so keep it short enough to fit there.
  * @attr {string} website-href - URL for the website title. Without it the title stays plain text.
- * @attr {string} back-href - URL of the back button. Without it a click fires the `back-click` event, so the consumer navigates itself.
  * @attr {string} back-text - Text of the back button. The button appears as soon as back-text or back-href is set; without text it falls back to the translation ("Terug").
- * @attr {string} width - Limits the bar content to a max-width so it lines up with the page sections. 'full' fills the entire width, or pass your own CSS length.
+ * @attr {string} back-href - URL of the back button. Without it a click fires the `back-click` event, so the consumer navigates itself.
  *
  * @slot global - The global navigation: an nldd-menu-bar with nldd-menu-bar-item elements. On narrow widths these items move into the menu sheet behind the menu button.
  * @slot utility - The utility navigation, such as search and language: an nldd-menu-bar with nldd-menu-bar-item elements. Stays in the bar on every width.
@@ -157,9 +157,6 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 
 	// ## Main properties
 
-	@property({ reflect: true, attribute: 'website-title', converter: reflectNonDefault<string>('') })
-	websiteTitle = '';
-
 	@property({ type: Boolean, attribute: 'no-logo', reflect: true })
 	noLogo = false;
 
@@ -189,16 +186,19 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 	@property({ type: String, attribute: 'logo-href' })
 	logoHref = '';
 
+	@property({ reflect: true, attribute: 'website-title', converter: reflectNonDefault<string>('') })
+	websiteTitle = '';
+
 	@property({ type: String, attribute: 'website-href' })
 	websiteHref = '';
 
 	// ## Back button properties
 
-	@property({ type: String, attribute: 'back-href' })
-	backHref = '';
-
 	@property({ reflect: true, attribute: 'back-text', converter: reflectNonDefault<string>('') })
 	backText = '';
+
+	@property({ type: String, attribute: 'back-href' })
+	backHref = '';
 
 	// ## Internal state
 

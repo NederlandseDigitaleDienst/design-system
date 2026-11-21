@@ -45,18 +45,6 @@ export default {
 				defaultValue: { summary: 'md' },
 			},
 		},
-		name: {
-			control: 'text',
-			description: 'Naam voor formulierverwerking, doorgestuurd naar alle knoppen',
-		},
-		type: {
-			control: 'select',
-			options: ['button', 'checkbox', 'radio'],
-			description: 'Selectiemodus',
-			table: {
-				defaultValue: { summary: 'checkbox' },
-			},
-		},
 		accessibleLabel: {
 			name: 'accessible-label',
 			control: 'text',
@@ -72,11 +60,6 @@ export default {
 			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
 			table: { defaultValue: { summary: false } },
 		},
-		required: {
-			control: 'boolean',
-			description: 'Verplichte staat.',
-			table: { defaultValue: { summary: false } },
-		},
 		disabled: {
 			control: 'boolean',
 			description: 'Schakelt alle knoppen uit',
@@ -84,30 +67,47 @@ export default {
 				defaultValue: { summary: false },
 			},
 		},
+		name: {
+			control: 'text',
+			description: 'Naam voor formulierverwerking, doorgestuurd naar alle knoppen',
+		},
+		type: {
+			control: 'select',
+			options: ['button', 'checkbox', 'radio'],
+			description: 'Selectiemodus',
+			table: {
+				defaultValue: { summary: 'checkbox' },
+			},
+		},
+		required: {
+			control: 'boolean',
+			description: 'Verplichte staat.',
+			table: { defaultValue: { summary: false } },
+		},
 	},
 	args: {
 		appearance: 'neutral-tinted',
 		size: 'md',
-		name: 'groep',
-		type: 'checkbox',
 		accessibleLabel: '',
 		accessibleLabeledBy: '',
 		invalid: false,
-		required: false,
 		disabled: false,
+		name: 'groep',
+		type: 'checkbox',
+		required: false,
 	},
 };
 
 const Template = (args: Record<string, any>) => html`
 	<nldd-toggle-button-group
-		type=${args.type}
-		name=${args.name}
 		appearance=${args.appearance}
 		size=${args.size}
-		?invalid=${args.invalid}
-		?required=${args.required}
-		?disabled=${args.disabled}
 		accessible-label=${args.accessibleLabel || nothing}
+		?invalid=${args.invalid}
+		?disabled=${args.disabled}
+		name=${args.name}
+		type=${args.type}
+		?required=${args.required}
 	>
 		<nldd-toggle-button
 			value="mijn-zaken"

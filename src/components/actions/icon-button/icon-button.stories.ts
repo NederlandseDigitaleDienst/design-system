@@ -63,25 +63,22 @@ export default {
 			control: 'text',
 			description: 'Width mode: "full" (stretches to container) or any CSS length (e.g. "240px")',
 		},
-		hideLgText: {
-			name: 'hide-lg-text',
-			control: 'boolean',
-			description: 'In lg-formaat: verbergt het tekstlabel en vergroot het icoon één stap (28px)',
+		text: {
+			control: 'text',
+			description: 'Tekst die als aria-label en title tooltip wordt gebruikt, en zichtbaar is als label onder het icoon in lg formaat',
+		},
+		icon: {
+			control: 'select',
+			options: ICONS,
+			description: 'Icoon naam voor nldd-icon',
 			table: {
-				defaultValue: { summary: 'false' },
+				defaultValue: { summary: 'icon-placeholder' },
 			},
 		},
 		expandable: {
 			name: 'expandable',
 			control: 'boolean',
 			description: 'Voegt een chevron toe om aan te geven dat deze knop een menu of popover opent',
-			table: {
-				defaultValue: { summary: false },
-			},
-		},
-		expanded: {
-			control: 'boolean',
-			description: 'Geeft aan dat het popover/menu uitgeklapt is. Wordt geforward als aria-expanded op de inner button en activeert de is-expanded visuele state.',
 			table: {
 				defaultValue: { summary: false },
 			},
@@ -102,17 +99,34 @@ export default {
 			control: false,
 			description: 'Id van een `nldd-popover` elders op de pagina die deze knop beschrijft en opent bij interesse, zoals de `interest`-slot: als je de aanwijzer op de knop laat rusten, bij focus en bij lang drukken op touch. Voor een popover die meer knoppen delen, of een knop in een `<p>`. Een popover in de `interest`-slot wint.',
 		},
-		text: {
+		accessibleLabel: {
+			name: 'accessible-label',
 			control: 'text',
-			description: 'Tekst die als aria-label en title tooltip wordt gebruikt, en zichtbaar is als label onder het icoon in lg formaat',
+			description: 'Overschrijft de tekst als aria-label en title tooltip voor schermlezer-context. Gebruik als de zichtbare tekst onvoldoende context biedt (bijv. tekst "Toon", accessible-label "Toon wachtwoord"). De tekst blijft zichtbaar in lg formaat.',
 		},
-		icon: {
-			control: 'select',
-			options: ICONS,
-			description: 'Icoon naam voor nldd-icon',
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		},
+		hideLgText: {
+			name: 'hide-lg-text',
+			control: 'boolean',
+			description: 'In lg-formaat: verbergt het tekstlabel en vergroot het icoon één stap (28px)',
 			table: {
-				defaultValue: { summary: 'icon-placeholder' },
+				defaultValue: { summary: 'false' },
 			},
+		},
+		loadingText: {
+			name: 'loading-text',
+			control: 'text',
+			description: 'Wat de schermlezer aankondigt tijdens loading, zoals "Aan het bewaren"',
+			table: { defaultValue: { summary: 'Laden' } },
 		},
 		shortcut: {
 			control: 'text',
@@ -132,6 +146,36 @@ export default {
 			name: 'shortcut-linux',
 			control: 'text',
 			description: 'Sneltoets op Linux en ChromeOS, als die afwijkt van `shortcut`.',
+		},
+		tooltipTiming: {
+			name: 'tooltip-timing',
+			control: 'select',
+			options: ['delay', 'instant', 'never'],
+			description: 'Forwarded naar de inner nldd-tooltip `timing`. `never` onderdrukt de visuele tooltip (aria-label blijft intact). Gebruik `never` wanneer de context al duidelijk is (bv. spin-knoppen in nldd-number-field, chevron in nldd-split-button).',
+			table: {
+				defaultValue: { summary: 'delay' },
+			},
+		},
+		expanded: {
+			control: 'boolean',
+			description: 'Geeft aan dat het popover/menu uitgeklapt is. Wordt geforward als aria-expanded op de inner button en activeert de is-expanded visuele state.',
+			table: {
+				defaultValue: { summary: false },
+			},
+		},
+		loading: {
+			control: 'boolean',
+			description: 'Laad-toestand: toont een activity indicator over het verborgen icoon, zet aria-busy en blokkeert activatie (knop blijft focusbaar).',
+			table: {
+				defaultValue: { summary: false },
+			},
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde toestand',
+			table: {
+				defaultValue: { summary: false },
+			},
 		},
 		type: {
 			control: 'select',
@@ -158,114 +202,70 @@ export default {
 			mapping: { '(geen)': null, download: '', 'download="aanvraag-A-1042.pdf"': 'aanvraag-A-1042.pdf' },
 			description: 'Slaat het bestand op in plaats van het te openen (alleen met href); een waarde wordt de bestandsnaam',
 		},
-		accessibleLabel: {
-			name: 'accessible-label',
-			control: 'text',
-			description: 'Overschrijft de tekst als aria-label en title tooltip voor schermlezer-context. Gebruik als de zichtbare tekst onvoldoende context biedt (bijv. tekst "Toon", accessible-label "Toon wachtwoord"). De tekst blijft zichtbaar in lg formaat.',
-		},
-		accessibleDescription: {
-			name: 'accessible-description',
-			control: 'text',
-			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
-		},
-		accessibleDescribedBy: {
-			name: 'accessible-described-by',
-			control: false,
-			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
-		},
-		tooltipTiming: {
-			name: 'tooltip-timing',
-			control: 'select',
-			options: ['delay', 'instant', 'never'],
-			description: 'Forwarded naar de inner nldd-tooltip `timing`. `never` onderdrukt de visuele tooltip (aria-label blijft intact). Gebruik `never` wanneer de context al duidelijk is (bv. spin-knoppen in nldd-number-field, chevron in nldd-split-button).',
-			table: {
-				defaultValue: { summary: 'delay' },
-			},
-		},
-		loading: {
-			control: 'boolean',
-			description: 'Laad-toestand: toont een activity indicator over het verborgen icoon, zet aria-busy en blokkeert activatie (knop blijft focusbaar).',
-			table: {
-				defaultValue: { summary: false },
-			},
-		},
-		loadingText: {
-			name: 'loading-text',
-			control: 'text',
-			description: 'Wat de schermlezer aankondigt tijdens loading, zoals "Aan het bewaren"',
-			table: { defaultValue: { summary: 'Laden' } },
-		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde toestand',
-			table: {
-				defaultValue: { summary: false },
-			},
-		},
 	},
 	args: {
 		appearance: 'neutral-tinted',
 		size: 'md',
 		width: '',
-		hideLgText: false,
+		text: 'Annuleer',
+		icon: 'dismiss',
 		expandable: false,
-		expanded: false,
 		popupType: '',
 		popovertarget: '',
 		interestfor: '',
-		text: 'Annuleer',
-		icon: 'dismiss',
+		accessibleLabel: '',
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
+		hideLgText: false,
+		loadingText: '',
 		shortcut: '',
 		shortcutMac: '',
 		shortcutWindows: '',
 		shortcutLinux: '',
+		tooltipTiming: 'delay',
+		expanded: false,
+		loading: false,
+		disabled: false,
 		type: 'button',
 		href: '',
 		target: '',
 		download: '(geen)',
-		accessibleLabel: '',
-		accessibleDescription: '',
-		accessibleDescribedBy: '',
-		tooltipTiming: 'delay',
-		loading: false,
-		loadingText: '',
-		disabled: false,
 	},
 };
 
-const Template = ({ appearance, size, width, hideLgText, expandable, expanded, popupType, text, icon, shortcut, shortcutMac, shortcutWindows, shortcutLinux, type, href, target, download, accessibleLabel, accessibleDescription, tooltipTiming, loading, loadingText, disabled }: Record<string, any>) => html`
+const Template = ({ appearance, size, width, text, icon, expandable, popupType, accessibleLabel, accessibleDescription, hideLgText, loadingText, shortcut, shortcutMac, shortcutWindows, shortcutLinux, tooltipTiming, expanded, loading, disabled, type, href, target, download }: Record<string, any>) => html`
 	<nldd-icon-button
 		appearance=${appearance}
 		size=${size}
 		width=${width || nothing}
-		?hide-lg-text=${hideLgText}
-		icon=${icon}
 		text=${text}
+		icon=${icon}
+		?expandable=${expandable}
+		popup-type=${popupType || nothing}
+		accessible-label=${accessibleLabel || nothing}
+		accessible-description=${accessibleDescription || nothing}
+		?hide-lg-text=${hideLgText}
+		loading-text=${loadingText || nothing}
 		shortcut=${shortcut || nothing}
 		shortcut-mac=${shortcutMac || nothing}
 		shortcut-windows=${shortcutWindows || nothing}
 		shortcut-linux=${shortcutLinux || nothing}
-		popup-type=${popupType || nothing}
-		?expandable=${expandable}
+		tooltip-timing=${tooltipTiming || nothing}
 		?expanded=${expanded}
+		?loading=${loading}
+		?disabled=${disabled}
 		type=${type}
 		href=${href || nothing}
 		target=${target || nothing}
 		download=${download ?? nothing}
-		?loading=${loading}
-		loading-text=${loadingText || nothing}
-		?disabled=${disabled}
-		accessible-label=${accessibleLabel || nothing}
-		accessible-description=${accessibleDescription || nothing}
-		tooltip-timing=${tooltipTiming || nothing}
 	></nldd-icon-button>
 `;
 
 export const Standaard = {
 	render: Template,
 	args: {
-		icon: 'dismiss',
 		text: 'Annuleer',
+		icon: 'dismiss',
 	},
 };
 

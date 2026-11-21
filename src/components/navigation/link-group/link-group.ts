@@ -16,8 +16,8 @@
  *
  * @element nldd-link-group
  * @attr {'xs'|'sm'|'md'|'lg'} size - Text size, set on every link in it: 'xs' | 'sm' | 'md' | 'lg' (default: 'md')
- * @attr {'horizontal'|'vertical'} orientation - Layout direction: 'horizontal' (a row that wraps) | 'vertical' (default: 'horizontal')
  * @attr {'left'|'center'} horizontal-alignment - Alignment of the links: 'left' | 'center' (default: 'left')
+ * @attr {'horizontal'|'vertical'} orientation - Layout direction: 'horizontal' (a row that wraps) | 'vertical' (default: 'horizontal')
  * @attr {string} accessible-label - Accessible name of the nav landmark
  *
  * @slot - nldd-link elements
@@ -41,11 +41,11 @@ export class NLDDLinkGroup extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<Size>('md') })
 	size: Size = 'md';
 
-	@property({ reflect: true, converter: reflectNonDefault<Orientation>('horizontal') })
-	orientation: Orientation = 'horizontal';
-
 	@property({ attribute: 'horizontal-alignment', reflect: true, converter: reflectNonDefault<HorizontalAlignment>('left') })
 	horizontalAlignment: HorizontalAlignment = 'left';
+
+	@property({ reflect: true, converter: reflectNonDefault<Orientation>('horizontal') })
+	orientation: Orientation = 'horizontal';
 
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';

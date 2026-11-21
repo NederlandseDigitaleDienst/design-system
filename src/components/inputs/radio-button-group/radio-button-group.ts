@@ -8,12 +8,12 @@
  * @element nldd-radio-button-group
  * @keywords keuzerondjes, toggle, toggles
  * @related nldd-checkbox-group, nldd-dropdown, nldd-segmented-control, nldd-swatch-picker
- * @attr {string} name - Forwarded to all slotted nldd-radio-button-field elements
- * @attr {boolean} disabled - Disables all slotted fields
- * @attr {boolean} required - Marks the group as required
  * @attr {string} accessible-label - Accessible name for the group, set as aria-label on the group
  * @attr {string} accessible-labeled-by - Id of an external label element, set as aria-labelledby on the group
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
+ * @attr {boolean} disabled - Disables all slotted fields
+ * @attr {string} name - Forwarded to all slotted nldd-radio-button-field elements
+ * @attr {boolean} required - Marks the group as required
  *
  * @slot - Slot for nldd-radio-button-field elements
  *
@@ -37,25 +37,12 @@ export class NLDDRadioButtonGroup extends LitElement {
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
 
-	@property({ type: String })
-	name = '';
-
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
-	@property({ type: Boolean, reflect: true })
-	required = false;
-
 	/** Accessible name forwarded as aria-label to the group host. */
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
 	@property({ type: String, attribute: 'accessible-labeled-by' })
 	accessibleLabeledBy = '';
-
-	/** The name this group wrote onto its host, so it only takes back its own. */
-	private _appliedLabel: string | null = null;
-
 
 	/**
 	 * Marks the control as invalid.
@@ -68,6 +55,19 @@ export class NLDDRadioButtonGroup extends LitElement {
 	 */
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
+
+	@property({ type: String })
+	name = '';
+
+	@property({ type: Boolean, reflect: true })
+	required = false;
+
+	/** The name this group wrote onto its host, so it only takes back its own. */
+	private _appliedLabel: string | null = null;
+
 
 	private _choices = new ChoiceGroup<NLDDRadioButtonField>(this, {
 		options: () => this._getFields(),

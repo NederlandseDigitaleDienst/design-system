@@ -27,17 +27,17 @@ export default {
 	args: {
 		size: 'md',
 		centered: false,
-		length: 6,
-		format: '',
 		accessibleLabel: 'Code uit de sms',
 		accessibleDescription: '',
 		accessibleDescribedBy: '',
+		uppercase: false,
 		invalid: false,
 		readonly: false,
 		disabled: false,
 		value: '',
 		type: 'numeric',
-		uppercase: false,
+		length: 6,
+		format: '',
 		required: false,
 	},
 	argTypes: {
@@ -51,15 +51,6 @@ export default {
 			control: 'boolean',
 			description: 'Zet de vakjes in het midden van de rij',
 			table: { defaultValue: { summary: false } },
-		},
-		length: {
-			control: 'number',
-			description: 'Aantal tekens van de code',
-			table: { defaultValue: { summary: 6 } },
-		},
-		format: {
-			control: 'text',
-			description: 'Vorm van een code in groepen, zoals ###-###; elke # is een vakje en wint van length',
 		},
 		accessibleLabel: {
 			name: 'accessible-label',
@@ -75,6 +66,11 @@ export default {
 			name: 'accessible-described-by',
 			control: false,
 			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		},
+		uppercase: {
+			control: 'boolean',
+			description: 'Maakt letters hoofdletters, in de vakjes en in de waarde; alleen bij alphanumeric',
+			table: { defaultValue: { summary: false } },
 		},
 		invalid: {
 			control: 'boolean',
@@ -101,10 +97,14 @@ export default {
 			description: 'Alleen cijfers, of letters en cijfers',
 			table: { defaultValue: { summary: 'numeric' } },
 		},
-		uppercase: {
-			control: 'boolean',
-			description: 'Maakt letters hoofdletters, in de vakjes en in de waarde; alleen bij alphanumeric',
-			table: { defaultValue: { summary: false } },
+		length: {
+			control: 'number',
+			description: 'Aantal tekens van de code',
+			table: { defaultValue: { summary: 6 } },
+		},
+		format: {
+			control: 'text',
+			description: 'Vorm van een code in groepen, zoals ###-###; elke # is een vakje en wint van length',
 		},
 		required: {
 			control: 'boolean',
@@ -114,20 +114,20 @@ export default {
 	},
 };
 
-const Template = ({ size, centered, length, format, accessibleLabel, accessibleDescription, invalid, readonly, disabled, value, type, uppercase, required }: Record<string, any>) => html`
+const Template = ({ size, centered, accessibleLabel, accessibleDescription, uppercase, invalid, readonly, disabled, value, type, length, format, required }: Record<string, any>) => html`
 	<nldd-one-time-code-field
 		size=${size || nothing}
 		?centered=${centered}
-		length=${length ?? nothing}
-		format=${format || nothing}
 		accessible-label=${accessibleLabel || nothing}
 		accessible-description=${accessibleDescription || nothing}
+		?uppercase=${uppercase}
 		?invalid=${invalid}
 		?readonly=${readonly}
 		?disabled=${disabled}
 		.value=${value ?? ''}
 		type=${type || nothing}
-		?uppercase=${uppercase}
+		length=${length ?? nothing}
+		format=${format || nothing}
 		?required=${required}
 		@input=${action('input')}
 		@change=${action('change')}

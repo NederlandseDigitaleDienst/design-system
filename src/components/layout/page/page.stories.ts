@@ -43,9 +43,9 @@ export default {
 	args: {
 		background: 'inherit',
 		accessibleLabel: '',
+		landmarks: 'auto',
 		stickyHeader: false,
 		stickyFooter: false,
-		landmarks: 'auto',
 	},
 	argTypes: {
 		background: {
@@ -59,6 +59,12 @@ export default {
 			control: 'text',
 			description: 'Naam van het landmark dat deze pagina is: de regio die hij wordt naast een andere pagina, of zijn main.',
 		},
+		landmarks: {
+			control: 'select',
+			options: ['auto', 'page', 'region'],
+			description: 'Of deze pagina de landmarks van het document draagt: `auto` leidt het af uit waar de pagina staat, `page` houdt banner, main en contentinfo, `region` laat ze alle drie vallen.',
+			table: { defaultValue: { summary: 'auto' } },
+		},
 		stickyHeader: {
 			name: 'sticky-header',
 			control: 'boolean',
@@ -70,12 +76,6 @@ export default {
 			control: 'boolean',
 			description: 'Sticky footer',
 			table: { defaultValue: { summary: 'false' } },
-		},
-		landmarks: {
-			control: 'select',
-			options: ['auto', 'page', 'region'],
-			description: 'Of deze pagina de landmarks van het document draagt: `auto` leidt het af uit waar de pagina staat, `page` houdt banner, main en contentinfo, `region` laat ze alle drie vallen.',
-			table: { defaultValue: { summary: 'auto' } },
 		},
 	},
 };
@@ -128,13 +128,13 @@ const content = html`
 	</nldd-simple-section>
 `;
 
-export const Standaard = ({ background, accessibleLabel, stickyHeader, stickyFooter, landmarks }: Record<string, any>) => html`
+export const Standaard = ({ background, accessibleLabel, landmarks, stickyHeader, stickyFooter }: Record<string, any>) => html`
 	<nldd-page
 		background=${background}
 		accessible-label=${accessibleLabel || nothing}
+		landmarks=${landmarks}
 		?sticky-header=${stickyHeader}
 		?sticky-footer=${stickyFooter}
-		landmarks=${landmarks}
 		style="height: 400px;"
 	>
 		${header}

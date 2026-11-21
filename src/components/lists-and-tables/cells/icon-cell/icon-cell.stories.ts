@@ -15,25 +15,25 @@ export default {
 	component: 'nldd-icon-cell',
 	tags: ['autodocs'],
 	args: {
-		size: '24',
 		color: 'content',
+		size: '24',
 		verticalAlignment: 'center',
-		icon: 'icon-placeholder',
-		hideBelow: '',
 		hideAbove: '',
+		hideBelow: '',
+		icon: 'icon-placeholder',
 	},
 	argTypes: {
-		size: {
-			control: 'select',
-			options: ['16', '20', '24', '32'],
-			description: 'Grootte van het icoon in pixels',
-			table: { defaultValue: { summary: '24' } },
-		},
 		color: {
 			control: 'select',
 			options: ['content', 'secondary', 'accent', 'success', 'warning', 'critical'],
 			description: 'Kleurvariant van het icoon',
 			table: { defaultValue: { summary: 'content' } },
+		},
+		size: {
+			control: 'select',
+			options: ['16', '20', '24', '32'],
+			description: 'Grootte van het icoon in pixels',
+			table: { defaultValue: { summary: '24' } },
 		},
 		verticalAlignment: {
 			name: 'vertical-alignment',
@@ -42,20 +42,20 @@ export default {
 			description: 'Verticale uitlijning van het icoon',
 			table: { defaultValue: { summary: 'center' } },
 		},
-		icon: {
-			control: 'select',
-			options: ICONS,
-			description: 'Te tonen icoon',
+		hideAbove: {
+			name: 'hide-above',
+			control: 'text',
+			description: 'Verberg wanneer cells-container breder is dan deze CSS-lengte (bv. "1200px")',
 		},
 		hideBelow: {
 			name: 'hide-below',
 			control: 'text',
 			description: 'Verberg wanneer cells-container smaller is dan deze CSS-lengte (bv. "320px", "20rem")',
 		},
-		hideAbove: {
-			name: 'hide-above',
-			control: 'text',
-			description: 'Verberg wanneer cells-container breder is dan deze CSS-lengte (bv. "1200px")',
+		icon: {
+			control: 'select',
+			options: ICONS,
+			description: 'Te tonen icoon',
 		},
 	},
 };
@@ -63,12 +63,12 @@ export default {
 export const Standaard = {
 	render: (args: Record<string, any>) => html`
 		<nldd-icon-cell
-			size=${args.size}
 			color=${args.color}
+			size=${args.size}
 			vertical-alignment=${args.verticalAlignment}
-			icon=${args.icon}
-			hide-below=${args.hideBelow || nothing}
 			hide-above=${args.hideAbove || nothing}
+			hide-below=${args.hideBelow || nothing}
+			icon=${args.icon}
 		></nldd-icon-cell>
 	`,
 };

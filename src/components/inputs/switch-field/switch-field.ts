@@ -6,14 +6,14 @@
  * @element nldd-switch-field
  * @keywords toggle, toggles, schakelaar
  * @related nldd-checkbox-field
- * @attr {boolean} checked - Checked state
- * @attr {boolean} disabled - Disabled state
  * @attr {'content'} color - 'content' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.
- * @attr {string} value - Value for form submission
- * @attr {string} name - Name for form submission
  * @attr {string} label - Label text for the switch
- * @attr {boolean} required - Required state
+ * @attr {boolean} checked - Checked state
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
+ * @attr {boolean} disabled - Disabled state
+ * @attr {string} name - Name for form submission
+ * @attr {string} value - Value for form submission
+ * @attr {boolean} required - Required state
  *
  * @fires change - When checked state changes; detail: { checked: boolean, value: string }
  */
@@ -38,20 +38,6 @@ export class NLDDSwitchField extends DescribedBy(FormAssociated(LitElement)) {
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
 
-	@property({ type: Boolean, reflect: true })
-	checked = false;
-
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
-	@property({ type: String })
-	value = 'on';
-
-	/** Reflected: form association reads the host's name attribute, so setting
-	 *  the property alone must still register the field with the form. */
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	name = '';
-
 	/** 'content' draws the control and its label in the surrounding text color. */
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	color: '' | 'content' = '';
@@ -59,10 +45,8 @@ export class NLDDSwitchField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: String })
 	label = '';
 
-
 	@property({ type: Boolean, reflect: true })
-	required = false;
-
+	checked = false;
 
 	/**
 	 * Marks the control as invalid.
@@ -75,6 +59,20 @@ export class NLDDSwitchField extends DescribedBy(FormAssociated(LitElement)) {
 	 */
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
+
+	/** Reflected: form association reads the host's name attribute, so setting
+	 *  the property alone must still register the field with the form. */
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	name = '';
+
+	@property({ type: String })
+	value = 'on';
+
+	@property({ type: Boolean, reflect: true })
+	required = false;
 
 	override formValue(): FormValue {
 		return this.checked ? this.value : null;

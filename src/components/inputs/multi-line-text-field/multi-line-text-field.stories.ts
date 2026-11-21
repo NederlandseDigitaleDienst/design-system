@@ -31,15 +31,6 @@ export default {
 		rows: 3,
 		width: '',
 		placeholder: 'Schrijf hier je toelichting',
-		name: '',
-		value: '',
-		minlength: null,
-		maxlength: null,
-		required: false,
-		keyboard: undefined,
-		enterKey: undefined,
-		autocomplete: '',
-		noSpellcheck: false,
 		accessibleLabel: '',
 		accessibleDescription: '',
 		accessibleDescribedBy: '',
@@ -47,6 +38,15 @@ export default {
 		invalid: false,
 		readonly: false,
 		disabled: false,
+		name: '',
+		value: '',
+		keyboard: undefined,
+		enterKey: undefined,
+		minlength: null,
+		maxlength: null,
+		required: false,
+		autocomplete: '',
+		noSpellcheck: false,
 	},
 	argTypes: {
 		size: {
@@ -73,6 +73,21 @@ export default {
 		placeholder: {
 			control: 'text',
 			description: 'Placeholdertekst',
+		},
+		accessibleLabel: {
+			name: 'accessible-label',
+			control: 'text',
+			description: 'Toegankelijk label voor screen readers',
+		},
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
 		},
 		valid: {
 			control: 'boolean',
@@ -102,21 +117,6 @@ export default {
 			control: 'text',
 			description: 'Veldwaarde',
 		},
-		minlength: {
-			control: 'number',
-			description: 'Minimaal aantal tekens.',
-			table: { type: { summary: 'number' } },
-		},
-		maxlength: {
-			control: 'number',
-			description: 'Maximaal aantal tekens.',
-			table: { type: { summary: 'number' } },
-		},
-		required: {
-			control: 'boolean',
-			description: 'Required state',
-			table: { defaultValue: { summary: false } },
-		},
 		keyboard: {
 			control: 'select',
 			options: ['(geen)', 'none', 'text', 'decimal', 'numeric', 'tel', 'search', 'email', 'url'],
@@ -132,6 +132,21 @@ export default {
 			description: 'Wat de Enter-toets op het virtuele toetsenbord zegt (enterkeyhint)',
 			table: { defaultValue: { summary: '(geen)' } },
 		},
+		minlength: {
+			control: 'number',
+			description: 'Minimaal aantal tekens.',
+			table: { type: { summary: 'number' } },
+		},
+		maxlength: {
+			control: 'number',
+			description: 'Maximaal aantal tekens.',
+			table: { type: { summary: 'number' } },
+		},
+		required: {
+			control: 'boolean',
+			description: 'Required state',
+			table: { defaultValue: { summary: false } },
+		},
 		autocomplete: {
 			control: 'text',
 			description: 'Browser autofill hint (HTML autocomplete attribute, bv. "off")',
@@ -142,45 +157,30 @@ export default {
 			description: 'Disables browser spellchecking on the inner textarea',
 			table: { defaultValue: { summary: false } },
 		},
-		accessibleLabel: {
-			name: 'accessible-label',
-			control: 'text',
-			description: 'Toegankelijk label voor screen readers',
-		},
-		accessibleDescription: {
-			name: 'accessible-description',
-			control: 'text',
-			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
-		},
-		accessibleDescribedBy: {
-			name: 'accessible-described-by',
-			control: false,
-			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
-		},
 	},
 };
 
-const Template = ({ size, resize, rows, width, placeholder, valid, invalid, readonly, disabled, name, value, minlength, maxlength, required, keyboard, enterKey, autocomplete, accessibleLabel, accessibleDescription, noSpellcheck }: Record<string, any>) => html`
+const Template = ({ size, resize, rows, width, placeholder, accessibleLabel, accessibleDescription, valid, invalid, readonly, disabled, name, value, keyboard, enterKey, minlength, maxlength, required, autocomplete, noSpellcheck }: Record<string, any>) => html`
 	<nldd-multi-line-text-field
-		minlength=${minlength ?? nothing}
 		size=${size}
 		resize=${resize}
 		rows=${rows}
 		width=${width}
 		.placeholder=${placeholder}
+		accessible-label=${accessibleLabel || nothing}
+		accessible-description=${accessibleDescription || nothing}
 		?valid=${valid}
-		?readonly=${readonly}
 		?invalid=${invalid}
+		?readonly=${readonly}
 		?disabled=${disabled}
 		name=${name}
 		.value=${value}
-		maxlength=${maxlength ?? nothing}
 		keyboard=${keyboard || nothing}
 		enter-key=${enterKey || nothing}
+		minlength=${minlength ?? nothing}
+		maxlength=${maxlength ?? nothing}
 		?required=${required}
 		autocomplete=${autocomplete}
-		accessible-label=${accessibleLabel || nothing}
-		accessible-description=${accessibleDescription || nothing}
 		?no-spellcheck=${noSpellcheck}
 	></nldd-multi-line-text-field>
 `;

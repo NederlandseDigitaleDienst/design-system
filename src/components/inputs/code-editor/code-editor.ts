@@ -20,21 +20,21 @@
  * @element nldd-code-editor
  * @related nldd-code-viewer, nldd-text-editor
  *
- * @attr {string} value - Editor content
+ * @attr {'none'|'vertical'|'auto'} resize - 'none' (fixed) | 'vertical' (drag) | 'auto' (grow, default)
+ * @attr {number} rows - Minimum visible rows (the floor in every resize mode). Default: 6.
  * @attr {string} placeholder - Placeholder text shown while empty
- * @attr {string} input-id - Sets the id on the editable element. Set automatically by nldd-form-field.
+ * @attr {string} language - Highlight grammar (yaml, json, javascript, typescript, css, html, xml, bash, markdown, rust, gherkin, toml, sql, python). Empty disables highlighting.
+ * @attr {boolean} embedded - Drops the frame, fill, padding and focus ring, for an editor inside a composition that provides them
+ * @attr {string} accessible-label - Accessible label forwarded to the editor. Set automatically by nldd-form-field.
+ * @attr {boolean} line-numbers - Show a line-number gutter
+ * @attr {boolean} wrap - Wrap long lines instead of horizontal scroll
+ * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
+ * @attr {boolean} readonly - Readonly state (focusable and selectable, not editable)
  * @attr {boolean} disabled - Disabled state
  * @attr {string} name - Field name for form submission
- * @attr {boolean} readonly - Readonly state (focusable and selectable, not editable)
+ * @attr {string} input-id - Sets the id on the editable element. Set automatically by nldd-form-field.
+ * @attr {string} value - Editor content
  * @attr {boolean} required - Required state
- * @attr {boolean} wrap - Wrap long lines instead of horizontal scroll
- * @attr {number} rows - Minimum visible rows (the floor in every resize mode). Default: 6.
- * @attr {'none'|'vertical'|'auto'} resize - 'none' (fixed) | 'vertical' (drag) | 'auto' (grow, default)
- * @attr {boolean} embedded - Drops the frame, fill, padding and focus ring, for an editor inside a composition that provides them
- * @attr {string} language - Highlight grammar (yaml, json, javascript, typescript, css, html, xml, bash, markdown, rust, gherkin, toml, sql, python). Empty disables highlighting.
- * @attr {boolean} line-numbers - Show a line-number gutter
- * @attr {string} accessible-label - Accessible label forwarded to the editor. Set automatically by nldd-form-field.
- * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
  *
  * @fires input - When the content changes (detail: { value })
  * @fires change - When the content is committed on blur (detail: { value })
@@ -59,20 +59,20 @@ export class NLDDCodeEditor extends NLDDCodeMirrorInput {
 
 	static override styles = codeEditorStyles;
 
-	@property({ type: Boolean, reflect: true })
-	wrap = false;
-
 	@property({ reflect: true, converter: reflectNonDefault<ResizeMode>('auto') })
 	resize: ResizeMode = 'auto';
-
-	@property({ type: Boolean, reflect: true })
-	embedded = false;
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	language = '';
 
+	@property({ type: Boolean, reflect: true })
+	embedded = false;
+
 	@property({ type: Boolean, reflect: true, attribute: 'line-numbers' })
 	lineNumbers = false;
+
+	@property({ type: Boolean, reflect: true })
+	wrap = false;
 
 	@query('.code-editor')
 	private _container!: HTMLElement;

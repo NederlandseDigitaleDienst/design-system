@@ -20,14 +20,14 @@
  *
  * @element nldd-radio-button-field
  * @keywords keuzerondje, toggle, toggles
- * @attr {boolean} checked - Checked state
- * @attr {boolean} disabled - Disabled state
  * @attr {'content'} color - 'content' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.
- * @attr {string} value - Value for form submission
- * @attr {string} name - Radio group name for form submission; ties the fields of one group together. Set automatically by nldd-radio-button-group.
- * @attr {boolean} required - Required state. What it asks is whether anything in the group is checked, as a native radio does. Set automatically by nldd-radio-button-group.
  * @attr {string} label - Label text for the radio button
+ * @attr {boolean} checked - Checked state
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
+ * @attr {boolean} disabled - Disabled state
+ * @attr {string} name - Radio group name for form submission; ties the fields of one group together. Set automatically by nldd-radio-button-group.
+ * @attr {string} value - Value for form submission
+ * @attr {boolean} required - Required state. What it asks is whether anything in the group is checked, as a native radio does. Set automatically by nldd-radio-button-group.
  *
  * @fires change - When checked state changes; detail: { checked: boolean, value: string }
  */
@@ -59,24 +59,6 @@ export class NLDDRadioButtonField extends DescribedBy(FormAssociated(LitElement)
 
 
 
-	@property({ type: Boolean, reflect: true })
-	checked = false;
-
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
-	@property({ type: String })
-	value = '';
-
-	/** Set by nldd-radio-button-group. Not part of the public API.
-	 *  Reflected: form association reads the host's name attribute, and the
-	 *  group assigns the property. */
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	name = '';
-
-	@property({ type: Boolean, reflect: true })
-	required = false;
-
 	/** 'content' draws the control and its label in the surrounding text color. */
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	color: '' | 'content' = '';
@@ -84,6 +66,8 @@ export class NLDDRadioButtonField extends DescribedBy(FormAssociated(LitElement)
 	@property({ type: String })
 	label = '';
 
+	@property({ type: Boolean, reflect: true })
+	checked = false;
 
 	/**
 	 * Marks the control as invalid.
@@ -96,6 +80,21 @@ export class NLDDRadioButtonField extends DescribedBy(FormAssociated(LitElement)
 	 */
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
+
+	/** Set by nldd-radio-button-group. Not part of the public API.
+	 *  Reflected: form association reads the host's name attribute, and the
+	 *  group assigns the property. */
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	name = '';
+
+	@property({ type: String })
+	value = '';
+
+	@property({ type: Boolean, reflect: true })
+	required = false;
 
 	/** Set by nldd-radio-button-group: this field's place in the group, which it
 	 *  cannot count by itself. */

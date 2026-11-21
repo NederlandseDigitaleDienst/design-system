@@ -23,6 +23,26 @@ export default {
 			description: 'Grootte van de stepper',
 			table: { defaultValue: { summary: 'md' } },
 		},
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		},
+		invalid: {
+			control: 'boolean',
+			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
+			table: { defaultValue: { summary: false } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde toestand',
+			table: { defaultValue: { summary: false } },
+		},
 		value: {
 			control: { type: 'number' },
 			description: 'Huidige waarde',
@@ -43,41 +63,21 @@ export default {
 			description: 'Stapgrootte',
 			table: { defaultValue: { summary: 1 } },
 		},
-		invalid: {
-			control: 'boolean',
-			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
-			table: { defaultValue: { summary: false } },
-		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde toestand',
-			table: { defaultValue: { summary: false } },
-		},
-		accessibleDescription: {
-			name: 'accessible-description',
-			control: 'text',
-			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
-		},
-		accessibleDescribedBy: {
-			name: 'accessible-described-by',
-			control: false,
-			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
-		},
 	},
 	args: {
 		size: 'md',
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
+		invalid: false,
+		disabled: false,
 		value: 5,
 		min: 0,
 		max: 10,
 		step: 1,
-		invalid: false,
-		disabled: false,
-		accessibleDescription: '',
-		accessibleDescribedBy: '',
 	},
 };
 
-const Template = ({ size, value, min, max, step, invalid, disabled, accessibleDescription }: Record<string, any>) => html`
+const Template = ({ size, accessibleDescription, invalid, disabled, value, min, max, step }: Record<string, any>) => html`
 	<nldd-container
 		layout="row"
 		gap="16"
@@ -85,14 +85,14 @@ const Template = ({ size, value, min, max, step, invalid, disabled, accessibleDe
 	>
 		<nldd-text style="min-width: 2ch;" text="${value}"></nldd-text>
 		<nldd-stepper
+			size=${size}
+			accessible-description=${accessibleDescription || nothing}
+			?invalid=${invalid}
+			?disabled=${disabled}
 			value=${value}
 			min=${min}
 			max=${max}
 			step=${step}
-			?invalid=${invalid}
-			?disabled=${disabled}
-			size=${size}
-			accessible-description=${accessibleDescription || nothing}
 			@change=${(e: any) => {
 				const display = e.target.previousElementSibling;
 				if (display) display.textContent = e.detail.value;

@@ -21,12 +21,12 @@
  * @keywords select, picker, keuzelijst
  * @related nldd-combo-box, nldd-radio-button-group, nldd-segmented-control
  * @attr {'xs'|'sm'|'md'} size - Size: 'xs' | 'sm' | 'md' (default: 'md')
+ * @attr {string} width - Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container.
+ * @attr {string} accessible-label - Accessible name, forwarded as aria-label to the slotted select
+ * @attr {boolean} expanded - Reflects whether the native picker popup is open (driven internally)
  * @attr {boolean} valid - Marks the field as valid
  * @attr {boolean} invalid - Marks the field as invalid
  * @attr {boolean} disabled - Disabled state; also forwarded to the slotted select
- * @attr {boolean} expanded - Reflects whether the native picker popup is open (driven internally)
- * @attr {string} width - Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container.
- * @attr {string} accessible-label - Accessible name, forwarded as aria-label to the slotted select
  * @attr {boolean} required - Required state, handed to the slotted <select>. A `required` on the <select> itself is left alone.
  *
  * @prop {string} value - The value of the slotted select. Setting it before the select or its option is there applies it once that option arrives, unless someone picks an option first.
@@ -73,18 +73,6 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 	@property({ reflect: true, converter: reflectNonDefault<DropdownSize>('md') })
 	size: DropdownSize = 'md';
 
-	@property({ type: Boolean, reflect: true })
-	valid = false;
-
-	@property({ type: Boolean, reflect: true })
-	invalid = false;
-
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
-	@property({ type: Boolean, reflect: true })
-	expanded = false;
-
 	/** Optional fixed width (any CSS length). When unset, the field stretches to fill its container. */
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	width = '';
@@ -96,6 +84,21 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 	 */
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
+
+	@property({ type: Boolean, reflect: true })
+	expanded = false;
+
+	@property({ type: Boolean, reflect: true })
+	valid = false;
+
+	@property({ type: Boolean, reflect: true })
+	invalid = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
+
+	@property({ type: Boolean, reflect: true })
+	required = false;
 
 	private _select: HTMLSelectElement | null = null;
 
@@ -145,9 +148,6 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 		this._clearPendingValue();
 	};
 
-
-	@property({ type: Boolean, reflect: true })
-	required = false;
 
 	/** The name this wrapper wrote onto the select, so it only takes back its own. */
 	private _appliedLabel: string | null = null;

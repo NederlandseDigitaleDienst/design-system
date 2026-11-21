@@ -28,6 +28,17 @@ export default {
 			control: 'text',
 			description: 'Optionele vaste breedte (any CSS length, bv. "240px"). Leeg = stretch.',
 		},
+
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		},
 		valid: {
 			control: 'boolean',
 			description: 'Markeert het veld als geldig',
@@ -48,27 +59,16 @@ export default {
 			description: 'Verplichte staat.',
 			table: { defaultValue: { summary: false } },
 		},
-
-		accessibleDescription: {
-			name: 'accessible-description',
-			control: 'text',
-			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
-		},
-		accessibleDescribedBy: {
-			name: 'accessible-described-by',
-			control: false,
-			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
-		},
 	},
 	args: {
 		size: 'md',
 		width: '',
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
 		valid: false,
 		invalid: false,
 		disabled: false,
 		required: false,
-		accessibleDescription: '',
-		accessibleDescribedBy: '',
 	},
 };
 
@@ -80,15 +80,15 @@ const options = (selected = '') => [1, 2, 3, 4, 5, 6].map((option) => html`
 	>Optie ${option}</option>
 `);
 
-const Template = ({ size, valid, invalid, disabled, width, required, accessibleDescription }: Record<string, any>) => html`
+const Template = ({ size, width, accessibleDescription, valid, invalid, disabled, required }: Record<string, any>) => html`
 	<nldd-dropdown
 		size=${size}
+		width=${width}
+		accessible-description=${accessibleDescription || nothing}
 		?valid=${valid}
 		?invalid=${invalid}
 		?disabled=${disabled}
 		?required=${required}
-		width=${width}
-		accessible-description=${accessibleDescription || nothing}
 	>
 		<select
 			name="option"

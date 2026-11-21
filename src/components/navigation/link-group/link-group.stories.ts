@@ -20,8 +20,8 @@ export default {
 	},
 	args: {
 		size: 'md',
-		orientation: 'horizontal',
 		horizontalAlignment: 'left',
+		orientation: 'horizontal',
 		accessibleLabel: 'Over Mijn Dienst',
 	},
 	argTypes: {
@@ -31,18 +31,18 @@ export default {
 			description: 'Tekstgrootte, gezet op elke link in de groep',
 			table: { defaultValue: { summary: 'md' } },
 		},
-		orientation: {
-			control: 'select',
-			options: ['horizontal', 'vertical'],
-			description: 'Een rij die doorloopt op de volgende regel, of onder elkaar',
-			table: { defaultValue: { summary: 'horizontal' } },
-		},
 		horizontalAlignment: {
 			name: 'horizontal-alignment',
 			control: 'select',
 			options: ['left', 'center'],
 			description: 'Uitlijning van de links',
 			table: { defaultValue: { summary: 'left' } },
+		},
+		orientation: {
+			control: 'select',
+			options: ['horizontal', 'vertical'],
+			description: 'Een rij die doorloopt op de volgende regel, of onder elkaar',
+			table: { defaultValue: { summary: 'horizontal' } },
 		},
 		accessibleLabel: {
 			name: 'accessible-label',
@@ -77,14 +77,14 @@ const links = html`
 
 const Template = ({
 	size,
-	orientation,
 	horizontalAlignment,
+	orientation,
 	accessibleLabel,
 }: Record<string, unknown>) => html`
 	<nldd-link-group
 		size=${size || nothing}
-		orientation=${orientation || nothing}
 		horizontal-alignment=${horizontalAlignment || nothing}
+		orientation=${orientation || nothing}
 		accessible-label=${accessibleLabel || nothing}
 	>
 		${links}

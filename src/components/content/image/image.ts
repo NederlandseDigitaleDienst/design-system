@@ -21,30 +21,17 @@
  * @keywords afbeelding, foto
  * @related nldd-avatar
  *
- * @attr {string} src - Image URL
- * @attr {string} alt - Alt text for the image from `src`. Required unless `decorative`; slotted media carries its own.
- * @attr {string} srcset - Responsive source set
- * @attr {string} sizes - Source sizes hint
+ * @attr {'square'|'rounded'|'circle'} shape - Corner shape (default: 'square')
  * @attr {number|string|'full'} width - Display width, never wider than the parent. `full` (default) fills the parent. A number is pixels and also sets the `<img>` layout-hint width; any other CSS length (`20rem`, `50%`) only sets the width, so reserve space with `height` or `aspect-ratio`. Written as an inline `max-width` on the host, so it holds against a rule from a parent such as `nldd-rich-text`, and against one of your own.
  * @attr {number} height - Intrinsic height (for layout reservation)
- * @attr {'lazy'|'eager'} loading - Loading strategy (default: 'lazy').
- *   Lazy defers fetch until the image is near the viewport, the right
- *   choice for below-the-fold content. Set to 'eager' on images that
- *   appear in the initial viewport, especially the LCP candidate (hero
- *   illustration, top-of-list thumbnail); leaving them lazy silently
- *   regresses Core Web Vitals because the LCP fetch waits for the
- *   intersection observer. Pair with `fetchpriority="high"` on the LCP
- *   image for the strongest signal.
- * @attr {'async'|'sync'|'auto'} decoding - Decoding hint (default: 'async')
- * @attr {'high'|'low'|'auto'} fetchpriority - Fetch priority hint
+ * @attr {string} src - Image URL
+ * @attr {string} srcset - Responsive source set
+ * @attr {string} sizes - Source sizes hint
+ * @attr {string} alt - Alt text for the image from `src`. Required unless `decorative`; slotted media carries its own.
  * @attr {string} aspect-ratio - Aspect ratio in CSS form (e.g. "16/9", "1/1", "4/3").
  *   "16:9" colon notation is also accepted for convenience.
  * @attr {'cover'|'contain'|'fill'|'scale-down'|'none'} object-fit - default: 'cover'
  * @attr {'center'|'top'|'bottom'|'left'|'right'} object-position - default: 'center'
- * @attr {'square'|'rounded'|'circle'} shape - Corner shape (default: 'square')
- * @attr {string} caption - Caption text shown below the image
- * @attr {string} credit - Smaller credit/attribution text shown beside the caption
- * @attr {boolean} decorative - Decorative image: alt is forced empty + aria-hidden
  * @attr {string} lqip - Loading preview (LQIP, low-quality image placeholder) as a CSV string
  *   `"base,c1,c2,c3,c4,c5,c6"`: seven 0-255 bytes, each packing an 8-bit
  *   Oklab triplet (2 bits L, 3 bits a, 3 bits b). The first is the base
@@ -55,6 +42,19 @@
  *   with per-cell hue. Lean's original format encodes grayscale cells only,
  *   while ours encodes a color per cell so multi-color subjects survive the
  *   preview.
+ * @attr {'async'|'sync'|'auto'} decoding - Decoding hint (default: 'async')
+ * @attr {'high'|'low'|'auto'} fetchpriority - Fetch priority hint
+ * @attr {string} caption - Caption text shown below the image
+ * @attr {string} credit - Smaller credit/attribution text shown beside the caption
+ * @attr {boolean} decorative - Decorative image: alt is forced empty + aria-hidden
+ * @attr {'lazy'|'eager'} loading - Loading strategy (default: 'lazy').
+ *   Lazy defers fetch until the image is near the viewport, the right
+ *   choice for below-the-fold content. Set to 'eager' on images that
+ *   appear in the initial viewport, especially the LCP candidate (hero
+ *   illustration, top-of-list thumbnail); leaving them lazy silently
+ *   regresses Core Web Vitals because the LCP fetch waits for the
+ *   intersection observer. Pair with `fetchpriority="high"` on the LCP
+ *   image for the strongest signal.
  * @attr {object} translations - Override translation keys (e.g. the message
  *   shown when the image fails to load); unset keys fall back to Dutch.
  * @cssprop --context-image-height - Height of the image. A parent that gives the image a fixed box, such as the media area of nldd-hero, sets it to `100%`, so the image fills that box instead of taking the height of the photo
@@ -117,17 +117,8 @@ function hasAriaName(el: Element): boolean {
 export class NLDDImage extends LitElement {
 	static override styles = imageStyles;
 
-	@property({ reflect: true, converter: reflectNonDefault<string>('') })
-	src = '';
-
-	@property({ type: String })
-	alt = '';
-
-	@property({ type: String })
-	srcset = '';
-
-	@property({ type: String })
-	sizes = '';
+	@property({ reflect: true, converter: reflectNonDefault<ImageShape>('square') })
+	shape: ImageShape = 'square';
 
 	/** `'full'` (fills the parent) or a numeric pixel string like `'320'`.
 	 *  Typed as `string` because `type: String` means a `width="320"`
@@ -140,14 +131,17 @@ export class NLDDImage extends LitElement {
 	@property({ type: Number, reflect: true })
 	height?: number;
 
-	@property({ type: String })
-	loading: ImageLoading = 'lazy';
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	src = '';
 
 	@property({ type: String })
-	decoding: ImageDecoding = 'async';
+	srcset = '';
 
-	@property({ type: String, attribute: 'fetchpriority' })
-	fetchPriority?: ImageFetchPriority;
+	@property({ type: String })
+	sizes = '';
+
+	@property({ type: String })
+	alt = '';
 
 	@property({ reflect: true, attribute: 'aspect-ratio', converter: reflectNonDefault<string>('') })
 	aspectRatio = '';
@@ -158,8 +152,14 @@ export class NLDDImage extends LitElement {
 	@property({ reflect: true, attribute: 'object-position', converter: reflectNonDefault<ImageObjectPosition>('center') })
 	objectPosition: ImageObjectPosition = 'center';
 
-	@property({ reflect: true, converter: reflectNonDefault<ImageShape>('square') })
-	shape: ImageShape = 'square';
+	@property({ type: String })
+	lqip = '';
+
+	@property({ type: String })
+	decoding: ImageDecoding = 'async';
+
+	@property({ type: String, attribute: 'fetchpriority' })
+	fetchPriority?: ImageFetchPriority;
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	caption = '';
@@ -171,7 +171,7 @@ export class NLDDImage extends LitElement {
 	decorative = false;
 
 	@property({ type: String })
-	lqip = '';
+	loading: ImageLoading = 'lazy';
 
 	/** Override one or more translation keys. Unspecified keys fall back to Dutch. */
 	@property({ type: Object })

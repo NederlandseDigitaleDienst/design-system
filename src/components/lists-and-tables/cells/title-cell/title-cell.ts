@@ -25,8 +25,8 @@
  * attribute path; slotted content is rendered as-is.
  *
  * @element nldd-title-cell
- * @attr {string} size - Visual size of the title: 'display-1' to 'display-6', from large to small (unset: looks like 'display-5', and becomes 'display-6' in an `nldd-table-row`, where a title the size of the other cells reads better). Unlike nldd-title, `heading-level` does not set it: every row in a list looks the same, whatever its level
  * @attr {'content' | 'secondary' | 'accent' | 'success' | 'warning' | 'critical'} color - Text color variant (default: 'content'). `secondary` demotes the title to match the muted overline/supporting-text. `accent`, `success`, `warning` and `critical` tint all three regions so the cell reads as a coherent state.
+ * @attr {string} size - Visual size of the title: 'display-1' to 'display-6', from large to small (unset: looks like 'display-5', and becomes 'display-6' in an `nldd-table-row`, where a title the size of the other cells reads better). Unlike nldd-title, `heading-level` does not set it: every row in a list looks the same, whatever its level
  * @attr {string} width - 'full' | 'fit-content' | CSS length (e.g. '200px', '20rem'). Default: 'full'
  * @attr {string} min-width - Minimum width as CSS length (e.g. '80px', '5rem')
  * @attr {string} max-width - Maximum width as CSS length (e.g. '300px', '20rem')
@@ -84,11 +84,11 @@ export class NLDDTitleCell extends ReorderHandleMixin(RowHeaderMixin(VisibilityM
 	/** Unset looks like display-5, and like display-6 in an nldd-table-row,
 	 *  which is why it has no value of its own: the row can only tell an unset
 	 *  size from a chosen display-5 when unset is not display-5. */
-	@property({ reflect: true })
-	size?: TitleCellSize;
-
 	@property({ reflect: true, converter: reflectNonDefault<Color>('content') })
 	color: Color = 'content';
+
+	@property({ reflect: true })
+	size?: TitleCellSize;
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('full') })
 	width: string = 'full';

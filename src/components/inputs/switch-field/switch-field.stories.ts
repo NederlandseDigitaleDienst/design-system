@@ -27,14 +27,15 @@ export default {
 			control: 'text',
 			description: 'Label tekst',
 		},
-		name: {
+		accessibleDescription: {
+			name: 'accessible-description',
 			control: 'text',
-			description: 'Naam voor formulierverwerking',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
 		},
-		value: {
-			control: 'text',
-			description: 'Waarde voor formulierverwerking',
-			table: { defaultValue: { summary: 'on' } },
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
 		},
 		checked: {
 			control: 'boolean',
@@ -51,48 +52,46 @@ export default {
 			description: 'Uitgeschakelde toestand',
 			table: { defaultValue: { summary: false } },
 		},
+		name: {
+			control: 'text',
+			description: 'Naam voor formulierverwerking',
+		},
+		value: {
+			control: 'text',
+			description: 'Waarde voor formulierverwerking',
+			table: { defaultValue: { summary: 'on' } },
+		},
 		required: {
 			control: 'boolean',
 			description: 'Verplichte staat.',
 			table: { defaultValue: { summary: false } },
 		},
-
-		accessibleDescription: {
-			name: 'accessible-description',
-			control: 'text',
-			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
-		},
-		accessibleDescribedBy: {
-			name: 'accessible-described-by',
-			control: false,
-			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
-		},
 	},
 	args: {
 		color: '',
 		label: 'Switch field',
-		name: '',
-		value: 'on',
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
 		checked: false,
 		invalid: false,
 		disabled: false,
+		name: '',
+		value: 'on',
 		required: false,
-		accessibleDescription: '',
-		accessibleDescribedBy: '',
 	},
 };
 
-const Template = ({ color, label, name, value, checked, invalid, disabled, required, accessibleDescription }: Record<string, any>) => html`
+const Template = ({ color, label, accessibleDescription, checked, invalid, disabled, name, value, required }: Record<string, any>) => html`
 	<nldd-switch-field
 		color=${color || nothing}
 		label=${label}
-		name=${name || nothing}
+		accessible-description=${accessibleDescription || nothing}
 		?checked=${checked}
 		?invalid=${invalid}
-		?required=${required}
 		?disabled=${disabled}
+		name=${name || nothing}
 		value=${value}
-		accessible-description=${accessibleDescription || nothing}
+		?required=${required}
 	></nldd-switch-field>
 `;
 

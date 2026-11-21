@@ -52,17 +52,17 @@ export default {
 	tags: ['autodocs'],
 	args: {
 		width: 'fit-content',
-		href: '',
 		button: true,
 		checkbox: false,
 		disclosure: false,
 		popovertarget: '',
 		accessibleLabel: '',
+		currentType: 'page',
 		checked: false,
 		expanded: false,
 		current: false,
-		currentType: 'page',
 		disabled: false,
+		href: '',
 	},
 	argTypes: {
 		width: {
@@ -71,7 +71,6 @@ export default {
 			description: '`full` laat het segment meegroeien met de rij.',
 			table: { defaultValue: { summary: 'fit-content' } },
 		},
-		href: { control: 'text', description: 'Rendert het segment als link. Wint van `checkbox` en `button`.' },
 		button: { control: 'boolean', description: 'Rendert het segment als button. De laatste van de drie: `href` en `checkbox` winnen er allebei van.' },
 		checkbox: { control: 'boolean', description: 'Maakt het segment een role="checkbox" control. Wint van `button`, verliest van `href`.' },
 		disclosure: {
@@ -88,13 +87,6 @@ export default {
 			control: 'text',
 			description: 'Toegankelijke naam van de actie. Nodig als het segment alleen een icoon bevat, of als de tekst de actie niet beschrijft.',
 		},
-		checked: { control: 'boolean', description: 'Aangevinkt-status van een checkbox-segment' },
-		expanded: { control: 'boolean', description: 'Uitklap-status; laat weg als het segment niets openklapt' },
-		current: {
-			control: 'boolean',
-			description: 'Het huidige segment, met `aria-current` op de waarde van `current-type`. Zet het hier en niet op de rij: een gesegmenteerde rij heeft geen eigen link, en de rij leest het van z\'n segmenten en kleurt zichzelf.',
-			table: { defaultValue: { summary: false } },
-		},
 		currentType: {
 			name: 'current-type',
 			control: 'select',
@@ -102,7 +94,15 @@ export default {
 			description: 'De waarde van `aria-current` op een `current`-segment. `location` voor een inhoudsopgave, waarvan de rijen naar stukken van deze pagina wijzen.',
 			table: { defaultValue: { summary: 'page' } },
 		},
+		checked: { control: 'boolean', description: 'Aangevinkt-status van een checkbox-segment' },
+		expanded: { control: 'boolean', description: 'Uitklap-status; laat weg als het segment niets openklapt' },
+		current: {
+			control: 'boolean',
+			description: 'Het huidige segment, met `aria-current` op de waarde van `current-type`. Zet het hier en niet op de rij: een gesegmenteerde rij heeft geen eigen link, en de rij leest het van z\'n segmenten en kleurt zichzelf.',
+			table: { defaultValue: { summary: false } },
+		},
 		disabled: { control: 'boolean', description: 'Uitgeschakelde staat' },
+		href: { control: 'text', description: 'Rendert het segment als link. Wint van `checkbox` en `button`.' },
 	},
 };
 
@@ -112,16 +112,16 @@ export const Standaard = {
 			<nldd-list-item>
 				<nldd-list-item-segment
 					width=${args.width as string}
-					href=${(args.href as string) || nothing}
 					?button=${args.button}
 					?checkbox=${args.checkbox}
 					?disclosure=${args.disclosure}
 					accessible-label=${(args.accessibleLabel as string) || nothing}
+					current-type=${args.currentType === 'page' ? nothing : args.currentType}
 					?checked=${args.checked}
 					?expanded=${args.expanded}
 					?current=${args.current}
-					current-type=${args.currentType === 'page' ? nothing : args.currentType}
 					?disabled=${args.disabled}
+					href=${(args.href as string) || nothing}
 				>
 					<nldd-text-cell
 						text="Segment"

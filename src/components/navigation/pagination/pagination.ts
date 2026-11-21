@@ -5,11 +5,11 @@
  *
  * @element nldd-pagination
  * @keywords paginering
- * @attr {number} current - Currently active page (1-based)
- * @attr {number} total - Total number of pages (recommended max: 200 for compact select performance)
- * @attr {boolean} disabled - Disabled state. Avoid it where you can; the design guidelines say why.
  * @attr {boolean} centered - Centers the pagination in the container (host fills row, items grouped in the middle)
  * @attr {string} href-pattern - URL pattern with a {page} placeholder, renders links instead of buttons
+ * @attr {number} current - Currently active page (1-based)
+ * @attr {boolean} disabled - Disabled state. Avoid it where you can; the design guidelines say why.
+ * @attr {number} total - Total number of pages (recommended max: 200 for compact select performance)
  * @attr {object} translations - Translations; unspecified keys fall back to Dutch
  *
  * @fires page-change - On a page change (detail: { page: number, href?: string }). Only cancelable in href mode: preventDefault() blocks navigation (SPA).
@@ -30,21 +30,21 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 export class NLDDPagination extends LitElement {
 	static override styles = paginationStyles;
 
-	@property({ reflect: true, converter: reflectNonDefault<number>(1) })
-	current = 1;
-
-	@property({ reflect: true, converter: reflectNonDefault<number>(1) })
-	total = 1;
-
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	/** Centers the pagination in the container (host fills the row, items group in the middle). */
 	@property({ type: Boolean, reflect: true })
 	centered = false;
 
 	@property({ type: String, attribute: 'href-pattern' })
 	hrefPattern = '';
+
+	@property({ reflect: true, converter: reflectNonDefault<number>(1) })
+	current = 1;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
+
+	@property({ reflect: true, converter: reflectNonDefault<number>(1) })
+	total = 1;
 
 	@property({ type: Object })
 	translations: Partial<NLDDPaginationTranslations> = {};

@@ -76,22 +76,6 @@ export default {
 				defaultValue: { summary: '(geen)' },
 			},
 		},
-		href: {
-			control: 'text',
-			description: 'Link doel',
-		},
-		target: {
-			control: 'select',
-			options: ['(geen)', '_self', '_blank', '_parent', '_top'],
-			description: 'Link target (stelt rel automatisch bij voor _blank)',
-			table: { defaultValue: { summary: '(geen)' } },
-		},
-		download: {
-			control: 'select',
-			options: ['(geen)', 'download', 'download="aanvraag-A-1042.pdf"'],
-			mapping: { '(geen)': null, download: '', 'download="aanvraag-A-1042.pdf"': 'aanvraag-A-1042.pdf' },
-			description: 'Slaat het bestand op in plaats van het te openen (alleen met href); een waarde wordt de bestandsnaam',
-		},
 		interestfor: {
 			control: false,
 			description: 'Id van een `nldd-popover` elders op de pagina die laat zien waar de link heen gaat. Hij opent als je de aanwijzer op de link laat rusten, bij focus en bij lang drukken op touch. Een klik volgt de link gewoon. Zet de popover buiten de alinea: een `<p>` erin zou die sluiten.',
@@ -118,27 +102,40 @@ export default {
 				defaultValue: { summary: false },
 			},
 		},
+		href: {
+			control: 'text',
+			description: 'Link doel',
+		},
+		target: {
+			control: 'select',
+			options: ['(geen)', '_self', '_blank', '_parent', '_top'],
+			description: 'Link target (stelt rel automatisch bij voor _blank)',
+			table: { defaultValue: { summary: '(geen)' } },
+		},
+		download: {
+			control: 'select',
+			options: ['(geen)', 'download', 'download="aanvraag-A-1042.pdf"'],
+			mapping: { '(geen)': null, download: '', 'download="aanvraag-A-1042.pdf"': 'aanvraag-A-1042.pdf' },
+			description: 'Slaat het bestand op in plaats van het te openen (alleen met href); een waarde wordt de bestandsnaam',
+		},
 	},
 	args: {
 		size: 'md',
 		text: 'Voorwaarden voor dakisolatie',
 		startIcon: '',
 		endIcon: '',
-		href: '#',
-		target: '',
-		download: '(geen)',
 		accessibleLabel: '',
 		accessibleDescription: '',
 		accessibleDescribedBy: '',
 		disabled: false,
+		href: '#',
+		target: '',
+		download: '(geen)',
 	},
 };
 
-const Template = ({ size, text, startIcon, endIcon, href, target, download, accessibleLabel, accessibleDescription, disabled }: Record<string, any>) => html`
+const Template = ({ size, text, startIcon, endIcon, accessibleLabel, accessibleDescription, disabled, href, target, download }: Record<string, any>) => html`
 	<nldd-link
-		href=${href || nothing}
-		target=${target || nothing}
-		download=${download ?? nothing}
 		size=${size || nothing}
 		text=${text}
 		start-icon=${startIcon || nothing}
@@ -146,6 +143,9 @@ const Template = ({ size, text, startIcon, endIcon, href, target, download, acce
 		accessible-label=${accessibleLabel || nothing}
 		accessible-description=${accessibleDescription || nothing}
 		?disabled=${disabled}
+		href=${href || nothing}
+		target=${target || nothing}
+		download=${download ?? nothing}
 	></nldd-link>
 `;
 

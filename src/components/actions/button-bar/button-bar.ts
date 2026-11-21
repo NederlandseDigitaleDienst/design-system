@@ -13,8 +13,8 @@
  * @element nldd-button-bar
  * @keywords knoppenbalk
  * @related nldd-button-group, nldd-toolbar, nldd-toggle-button-group
- * @attr {'xs'|'sm'|'md'|'lg'} size - Bar size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md'). At 'lg', icon-button children stack their label below the icon (mobile action-bar style).
  * @attr {'primary'|'secondary'|'accent-filled'|'neutral-tinted'|'neutral-base'|'content-filled'|'content-tinted'} appearance - Visual style of the buttons: 'primary' | 'secondary' | 'accent-filled' | 'neutral-tinted' (default) | 'neutral-base' | 'content-filled' | 'content-tinted'. The content appearances are for a colored surface.
+ * @attr {'xs'|'sm'|'md'|'lg'} size - Bar size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md'). At 'lg', icon-button children stack their label below the icon (mobile action-bar style).
  * @attr {boolean} disabled - Disabled state
  *
  * @slot - Default slot for nldd-button, nldd-icon-button and nldd-button-bar-divider elements
@@ -61,11 +61,11 @@ function assign(el: Element, name: 'size' | 'appearance', value: string): void {
 export class NLDDButtonBar extends LitElement {
 	static override styles = buttonBarStyles;
 
-	@property({ reflect: true, converter: reflectNonDefault<Size>('md') })
-	size: Size = 'md';
-
 	@property({ reflect: true, converter: reflectNonDefault<Appearance>('neutral-tinted') })
 	appearance: Appearance = 'neutral-tinted';
+
+	@property({ reflect: true, converter: reflectNonDefault<Size>('md') })
+	size: Size = 'md';
 
 	@property({ type: Boolean, reflect: true })
 	disabled = false;

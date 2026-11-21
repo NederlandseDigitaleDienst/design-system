@@ -9,13 +9,13 @@
  * @related nldd-banner, nldd-admonition, nldd-modal-dialog
  *
  * @attr {'alert'|'success'|'loading'} variant - Semantic variant. 'alert' / 'success' force a matching icon and color; 'loading' shows an nldd-activity-indicator (a role="status" spinner announcing "Laden") in place of the icon, for an empty state that is still loading.
- * @attr {'md'|'lg'} size - Typography size: 'md' (default) keeps body-md text + body-sm supporting; 'lg' bumps both up a step.
- * @attr {string} icon - Name of the nldd-icon icon above the text; absent when not set. Ignored when variant is set.
  * @attr {'secondary'|'accent'|'critical'|'warning'|'success'} icon-color - 'secondary' | 'accent' | 'critical' | 'warning' | 'success'. Overrides the default and variant icon color.
+ * @attr {'md'|'lg'} size - Typography size: 'md' (default) keeps body-md text + body-sm supporting; 'lg' bumps both up a step.
+ * @attr {'left'|'center'} horizontal-alignment - Overrides the alignment of text, icon and actions. Unset (the default) derives it: content in the default slot means a task, which aligns left; a bare message stays centered. Centered, the actions stack at most 360px wide, even where two would fit side by side. Left-aligned, they sit in a row, each as wide as its label.
  * @attr {string} text - Main text (heading or paragraph, depending on heading-level)
  * @attr {string} supporting-text - Supporting text below the heading
  * @attr {1|2|3|4|5|6} heading-level - Renders text as h1–h6; absent renders a p
- * @attr {'left'|'center'} horizontal-alignment - Overrides the alignment of text, icon and actions. Unset (the default) derives it: content in the default slot means a task, which aligns left; a bare message stays centered. Centered, the actions stack at most 360px wide, even where two would fit side by side. Left-aligned, they sit in a row, each as wide as its label.
+ * @attr {string} icon - Name of the nldd-icon icon above the text; absent when not set. Ignored when variant is set.
  *
  * @slot - Optional custom content between text and actions. Puts no space between its children, as a sheet or card does not: the app decides the distance. Put an nldd-spacer between different components, and a group of the same, such as form fields, in an nldd-container with layout="stack" and a gap.
  * @slot actions - nldd-button elements (max 3), each with `slot="actions"`. The dialog puts them in a button group of its own, which sets the gap, the order and the stacking, so no element goes around them. A component of your own that renders a set of them returns a fragment, which adds nothing to the DOM.
@@ -42,14 +42,14 @@ export class NLDDInlineDialog extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<InlineDialogVariant | ''>('') })
 	variant: InlineDialogVariant | '' = '';
 
+	@property({ reflect: true, attribute: 'icon-color', converter: reflectNonDefault<InlineDialogIconColor | ''>('') })
+	iconColor: InlineDialogIconColor | '' = '';
+
 	@property({ reflect: true, converter: reflectNonDefault<InlineDialogSize>('md') })
 	size: InlineDialogSize = 'md';
 
-	@property({ reflect: true, converter: reflectNonDefault<string>('') })
-	icon = '';
-
-	@property({ reflect: true, attribute: 'icon-color', converter: reflectNonDefault<InlineDialogIconColor | ''>('') })
-	iconColor: InlineDialogIconColor | '' = '';
+	@property({ reflect: true, attribute: 'horizontal-alignment', converter: reflectNonDefault<InlineDialogHorizontalAlignment | ''>('') })
+	horizontalAlignment: InlineDialogHorizontalAlignment | '' = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	text = '';
@@ -60,8 +60,8 @@ export class NLDDInlineDialog extends LitElement {
 	@property({ type: Number, reflect: true, attribute: 'heading-level' })
 	headingLevel: 1 | 2 | 3 | 4 | 5 | 6 | null = null;
 
-	@property({ reflect: true, attribute: 'horizontal-alignment', converter: reflectNonDefault<InlineDialogHorizontalAlignment | ''>('') })
-	horizontalAlignment: InlineDialogHorizontalAlignment | '' = '';
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	icon = '';
 
 	@state()
 	_hasContent = false;

@@ -114,9 +114,9 @@ export const MetTitelgroep = {
 	render: (args: Record<string, any>) => html`
 		<nldd-container gap="16">
 			<nldd-toolbar
-				accessible-label="Titel links"
 				size=${args.size}
 				?show-item-labels=${args.showItemLabels}
+				accessible-label="Titel links"
 			>
 				<nldd-toolbar-item
 					slot="start"
@@ -165,9 +165,9 @@ export const MetTitelgroep = {
 				</nldd-toolbar-item>
 			</nldd-toolbar>
 			<nldd-toolbar
-				accessible-label="Titel in het midden"
 				size=${args.size}
 				?show-item-labels=${args.showItemLabels}
+				accessible-label="Titel in het midden"
 			>
 				<nldd-toolbar-item
 					slot="start"
@@ -228,9 +228,9 @@ export const TitelMetMedia = {
 			     to where this window belongs; the action beside it stays its own
 			     control. -->
 			<nldd-toolbar
-				accessible-label="Titel met icoon"
 				size=${args.size}
 				?show-item-labels=${args.showItemLabels}
+				accessible-label="Titel met icoon"
 			>
 				<nldd-toolbar-title
 					slot="start"
@@ -264,9 +264,9 @@ export const TitelMetMedia = {
 			     window, so it carries the name in its alt. An nldd-icon would not
 			     do here: an icon is decoration and says nothing. -->
 			<nldd-toolbar
-				accessible-label="Alleen een merkteken"
 				size=${args.size}
 				?show-item-labels=${args.showItemLabels}
+				accessible-label="Alleen een merkteken"
 			>
 				<nldd-toolbar-title slot="start">
 					<img
@@ -303,9 +303,9 @@ export const TitelMetActie = {
 			<!-- Short name: the title shrink-wraps (fit-content) so the xs action
 			     button sits right against it. -->
 			<nldd-toolbar
-				accessible-label="Korte naam"
 				size=${args.size}
 				?show-item-labels=${args.showItemLabels}
+				accessible-label="Korte naam"
 			>
 				<nldd-toolbar-title
 					slot="start"
@@ -351,9 +351,9 @@ export const TitelMetActie = {
 			<!-- Long name: the title text truncates at the 240px default max-width;
 			     the action button stays outside the cap and remains visible. -->
 			<nldd-toolbar
-				accessible-label="Lange naam"
 				size=${args.size}
 				?show-item-labels=${args.showItemLabels}
+				accessible-label="Lange naam"
 			>
 				<nldd-toolbar-title
 					slot="start"

@@ -52,9 +52,9 @@
  * @attr {string} sm-columns - Track list when the table is sm-wide (≤640px); falls back to `columns`
  * @attr {string} md-columns - Track list when the table is md-wide (641–1007px); falls back to `columns`
  * @attr {string} lg-columns - Track list when the table is lg-wide (≥1008px); falls back to `columns`
+ * @attr {boolean} selectable - Opt into row selection: body rows expose aria-selected (true/false). Without it, rows omit aria-selected so a non-selectable table isn't announced as selectable.
  * @attr {string} accessible-label - Accessible name for the table. Strongly recommended, because role="table" needs a name. A missing label is DEV-warned and a generic fallback name is used.
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
- * @attr {boolean} selectable - Opt into row selection: body rows expose aria-selected (true/false). Without it, rows omit aria-selected so a non-selectable table isn't announced as selectable.
  *
  * @slot header - One `<nldd-table-row slot="header">` carrying the column headers
  * @slot - The body rows (`<nldd-table-row>`)
@@ -164,18 +164,18 @@ export class NLDDTable extends LitElement {
 	@property({ reflect: true, attribute: 'lg-columns', converter: reflectNonDefault<string>('') })
 	lgColumns = '';
 
-	@property({ reflect: true, attribute: 'accessible-label', converter: reflectNonDefault<string>('') })
-	accessibleLabel = '';
-
-	@property({ type: Object })
-	translations: Partial<NLDDTableTranslations> = {};
-
 	/** Opt into row selection. When set, body rows expose aria-selected so
 	 *  assistive tech conveys the selection state; without it, rows omit the
 	 *  attribute so a non-selectable table isn't announced as selectable
 	 *  (ARIA 1.2 §6.6.5). The visual `selected` tint on a row works either way. */
 	@property({ type: Boolean, reflect: true })
 	selectable = false;
+
+	@property({ reflect: true, attribute: 'accessible-label', converter: reflectNonDefault<string>('') })
+	accessibleLabel = '';
+
+	@property({ type: Object })
+	translations: Partial<NLDDTableTranslations> = {};
 
 	private _rowsObserver?: MutationObserver;
 	/** @internal Last observed content-box width, to resolve the active track list. */

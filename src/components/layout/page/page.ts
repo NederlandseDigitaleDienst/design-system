@@ -53,9 +53,9 @@
  *
  * @attr {'inherit'|'base'|'tinted'} background - Use a gray background instead of white
  * @attr {string} accessible-label - Name of the landmark this page is: the region it becomes beside another page, or its main landmark
+ * @attr {'auto'|'page'|'region'} landmarks - Whether this page carries the document's landmarks: 'auto' (default) derives it from where the page sits, 'page' keeps banner, main and contentinfo, 'region' drops all three
  * @attr {boolean} sticky-header - Sticky header
  * @attr {boolean} sticky-footer - Sticky footer
- * @attr {'auto'|'page'|'region'} landmarks - Whether this page carries the document's landmarks: 'auto' (default) derives it from where the page sits, 'page' keeps banner, main and contentinfo, 'region' drops all three
  *
  * @slot header - Header content
  * @slot - Main content (scrollable)
@@ -150,14 +150,14 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
+	@property({ reflect: true, converter: reflectNonDefault<Landmarks>('auto') })
+	landmarks: Landmarks = 'auto';
+
 	@property({ type: Boolean, reflect: true, attribute: 'sticky-header' })
 	stickyHeader = false;
 
 	@property({ type: Boolean, reflect: true, attribute: 'sticky-footer' })
 	stickyFooter = false;
-
-	@property({ reflect: true, converter: reflectNonDefault<Landmarks>('auto') })
-	landmarks: Landmarks = 'auto';
 
 	@state()
 	_scrolled = false;

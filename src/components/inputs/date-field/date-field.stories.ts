@@ -21,7 +21,6 @@ export default {
 		},
 	},
 	args: {
-		range: false,
 		size: 'md',
 		width: '',
 		placeholder: '',
@@ -35,17 +34,13 @@ export default {
 		disabled: false,
 		name: 'date',
 		value: '',
+		range: false,
 		min: '',
 		max: '',
 		required: false,
 		autocomplete: '',
 	},
 	argTypes: {
-		range: {
-			control: 'boolean',
-			description: 'Kies een periode: twee invoervelden en een kalender in bereikmodus',
-			table: { defaultValue: { summary: false } },
-		},
 		size: {
 			control: 'select',
 			options: ['sm', 'md'],
@@ -110,6 +105,11 @@ export default {
 			control: 'text',
 			description: 'De datum als ISO (jjjj-mm-dd)',
 		},
+		range: {
+			control: 'boolean',
+			description: 'Kies een periode: twee invoervelden en een kalender in bereikmodus',
+			table: { defaultValue: { summary: false } },
+		},
 		min: {
 			control: 'text',
 			description: 'Vroegst toegestane datum als ISO (jjjj-mm-dd)',
@@ -131,11 +131,11 @@ export default {
 };
 
 const Template = ({
-	range,
 	size,
 	width,
 	placeholder,
-	accessibleLabel, accessibleDescription,
+	accessibleLabel,
+	accessibleDescription,
 	noPicker,
 	valid,
 	invalid,
@@ -143,13 +143,13 @@ const Template = ({
 	disabled,
 	name,
 	value,
+	range,
 	min,
 	max,
 	required,
 	autocomplete,
 }: Record<string, unknown>) => html`
 	<nldd-date-field
-		?range=${range}
 		size=${size || nothing}
 		width=${width || nothing}
 		placeholder=${placeholder || nothing}
@@ -157,11 +157,12 @@ const Template = ({
 		accessible-description=${accessibleDescription || nothing}
 		?no-picker=${noPicker}
 		?valid=${valid}
-		?readonly=${readonly}
 		?invalid=${invalid}
+		?readonly=${readonly}
 		?disabled=${disabled}
 		name=${name || nothing}
 		value=${value || nothing}
+		?range=${range}
 		min=${min || nothing}
 		max=${max || nothing}
 		?required=${required}

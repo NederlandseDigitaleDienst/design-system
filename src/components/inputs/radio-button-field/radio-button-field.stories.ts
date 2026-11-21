@@ -28,9 +28,16 @@ export default {
 			control: 'text',
 			description: 'Label tekst',
 		},
-		value: {
+
+		accessibleDescription: {
+			name: 'accessible-description',
 			control: 'text',
-			description: 'Waarde voor formulierverwerking',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
 		},
 		checked: {
 			control: 'boolean',
@@ -47,46 +54,39 @@ export default {
 			description: 'Uitgeschakelde toestand',
 			table: { defaultValue: { summary: false } },
 		},
+		value: {
+			control: 'text',
+			description: 'Waarde voor formulierverwerking',
+		},
 		required: {
 			control: 'boolean',
 			description: 'Verplichte staat.',
 			table: { defaultValue: { summary: false } },
 		},
-
-		accessibleDescription: {
-			name: 'accessible-description',
-			control: 'text',
-			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
-		},
-		accessibleDescribedBy: {
-			name: 'accessible-described-by',
-			control: false,
-			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
-		},
 	},
 	args: {
 		color: '',
 		label: 'Radio button field',
-		value: 'option-1',
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
 		checked: false,
 		invalid: false,
 		disabled: false,
+		value: 'option-1',
 		required: false,
-		accessibleDescription: '',
-		accessibleDescribedBy: '',
 	},
 };
 
-const Template = ({ color, label, value, checked, invalid, disabled, required, accessibleDescription }: Record<string, any>) => html`
+const Template = ({ color, label, accessibleDescription, checked, invalid, disabled, value, required }: Record<string, any>) => html`
 	<nldd-radio-button-field
 		color=${color || nothing}
 		label=${label}
+		accessible-description=${accessibleDescription || nothing}
 		?checked=${checked}
 		?invalid=${invalid}
-		?required=${required}
 		?disabled=${disabled}
 		value=${value}
-		accessible-description=${accessibleDescription || nothing}
+		?required=${required}
 	></nldd-radio-button-field>
 `;
 

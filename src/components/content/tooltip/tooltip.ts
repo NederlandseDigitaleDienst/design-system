@@ -7,14 +7,14 @@
  * @element nldd-tooltip
  * @keywords hint
  * @related nldd-popover, nldd-just-in-time-education, nldd-term
+ * @attr {'top'|'bottom'|'left'|'right'} placement - Position: 'top' | 'bottom' | 'left' | 'right' (default: 'bottom'; automatically 'top' on touch devices)
  * @attr {string} text - Tooltip text
  * @attr {string} shortcut - Keyboard shortcut hint shown after the text, e.g. 'Cmd+P'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key. Joins the description of a light-DOM trigger. Hidden on touch-only devices, where it isn't invokable.
  * @attr {string} shortcut-mac - Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`).
  * @attr {string} shortcut-windows - Override of `shortcut` on Windows (falls back to `shortcut`).
  * @attr {string} shortcut-linux - Override of `shortcut` on Linux (falls back to `shortcut`).
- * @attr {boolean} open - Forces the tooltip visible, whatever hover or focus does. Use it for programmatic feedback ("Copied", for instance). Reset it to false to restore the hover behavior.
- * @attr {'top'|'bottom'|'left'|'right'} placement - Position: 'top' | 'bottom' | 'left' | 'right' (default: 'bottom'; automatically 'top' on touch devices)
  * @attr {string} timing - When the tooltip appears on hover: 'instant' shows it right away, without a show delay or a fade, also on the way out. 'delay' (the default) shows it after the standard show delay (700ms). 'never' never shows it: hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. Focus shows it at once, except the focus a press gives a button, so a click does not flash it up.
+ * @attr {boolean} open - Forces the tooltip visible, whatever hover or focus does. Use it for programmatic feedback ("Copied", for instance). Reset it to false to restore the hover behavior.
  *
  * Escape closes a tooltip that hover or focus opened, wherever focus is: the
  * pointer can rest on a button while focus sits somewhere else (WCAG 1.4.13).
@@ -105,6 +105,9 @@ const DEFAULT_HIDE_DELAY_MS = 50;
 export class NLDDTooltip extends LitElement {
 	static override styles = tooltipStyles;
 
+	@property({ reflect: true, converter: reflectNonDefault<Placement>('bottom') })
+	placement: Placement = 'bottom';
+
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	text = '';
 
@@ -120,15 +123,12 @@ export class NLDDTooltip extends LitElement {
 	@property({ reflect: true, attribute: 'shortcut-linux', converter: reflectNonDefault<string>('') })
 	shortcutLinux = '';
 
+	@property({ reflect: true, converter: reflectNonDefault<Timing>('delay') })
+	timing: Timing = 'delay';
+
 	/** Programmatically force the tooltip visible regardless of hover/focus. */
 	@property({ type: Boolean, reflect: true })
 	open = false;
-
-	@property({ reflect: true, converter: reflectNonDefault<Placement>('bottom') })
-	placement: Placement = 'bottom';
-
-	@property({ reflect: true, converter: reflectNonDefault<Timing>('delay') })
-	timing: Timing = 'delay';
 
 	private get _effectivePlacement(): Placement {
 		return this.placement;

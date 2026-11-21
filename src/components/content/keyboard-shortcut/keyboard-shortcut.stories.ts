@@ -31,14 +31,6 @@ export default {
 		},
 	},
 	argTypes: {
-		size: {
-			control: 'select',
-			options: ['sm', 'md', 'inherit'],
-			description: "Grootte: 'sm' | 'md' | 'inherit' ('inherit' neemt de font-size van de container over en schaalt de keycaps in em)",
-			table: {
-				defaultValue: { summary: 'md' },
-			},
-		},
 		appearance: {
 			control: 'select',
 			options: ['keycap', 'text'],
@@ -55,12 +47,12 @@ export default {
 				defaultValue: { summary: 'neutral' },
 			},
 		},
-		alwaysVisible: {
-			name: 'always-visible',
-			control: 'boolean',
-			description: 'Toon ook op touch-only devices waar shortcuts niet aanroepbaar zijn',
+		size: {
+			control: 'select',
+			options: ['sm', 'md', 'inherit'],
+			description: "Grootte: 'sm' | 'md' | 'inherit' ('inherit' neemt de font-size van de container over en schaalt de keycaps in em)",
 			table: {
-				defaultValue: { summary: 'false' },
+				defaultValue: { summary: 'md' },
 			},
 		},
 		keys: {
@@ -82,29 +74,37 @@ export default {
 			control: 'text',
 			description: 'Optionele override voor Linux/ChromeOS',
 		},
+		alwaysVisible: {
+			name: 'always-visible',
+			control: 'boolean',
+			description: 'Toon ook op touch-only devices waar shortcuts niet aanroepbaar zijn',
+			table: {
+				defaultValue: { summary: 'false' },
+			},
+		},
 	},
 	args: {
-		size: 'md',
 		appearance: 'keycap',
 		color: 'neutral',
-		alwaysVisible: false,
+		size: 'md',
 		keys: 'Ctrl+K',
 		macKeys: '',
 		windowsKeys: '',
 		linuxKeys: '',
+		alwaysVisible: false,
 	},
 };
 
-const Template = ({ size, appearance, color, alwaysVisible, keys, macKeys, windowsKeys, linuxKeys }: Record<string, any>) => html`
+const Template = ({ appearance, color, size, keys, macKeys, windowsKeys, linuxKeys, alwaysVisible }: Record<string, any>) => html`
 	<nldd-keyboard-shortcut
-		size=${size}
 		appearance=${appearance}
 		color=${color || nothing}
-		?always-visible=${alwaysVisible}
+		size=${size}
 		keys=${keys}
 		mac-keys=${macKeys || nothing}
 		windows-keys=${windowsKeys || nothing}
 		linux-keys=${linuxKeys || nothing}
+		?always-visible=${alwaysVisible}
 	></nldd-keyboard-shortcut>
 `;
 

@@ -51,12 +51,12 @@
  *
  * @attr {string} [width] - Body max-width: 'full' removes the constraint; any CSS length overrides the default.
  * @attr {boolean} grow - Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow.
- * @attr {string} [sidebar-label] - Accessible name for the sidebar (the aside landmark on lg and the sheet on sm/md). Default 'Zijbalk'.
- * @attr {object} [translations] - Override translation keys (sheet title fallback, dismiss label); unset keys fall back to Dutch.
- * @attr {boolean} [no-collapse] - Opt out of the sheet: a narrow section stacks the sidebar above the main instead of collapsing. `collapsed` then stays false.
  * @attr {string} [sticky-top] - Sticky top inset on lg (CSS length; default = 16px).
  * @attr {string} [sticky-bottom] - Sticky bottom inset on lg (CSS length; default = 16px).
+ * @attr {string} [sidebar-label] - Accessible name for the sidebar (the aside landmark on lg and the sheet on sm/md). Default 'Zijbalk'.
+ * @attr {boolean} [no-collapse] - Opt out of the sheet: a narrow section stacks the sidebar above the main instead of collapsing. `collapsed` then stays false.
  * @attr {boolean} [collapsed] - Read-only, reflected: true while the sidebar is a sheet (the section is narrower than lg). Target it via CSS to reveal sheet-only chrome.
+ * @attr {object} [translations] - Override translation keys (sheet title fallback, dismiss label); unset keys fall back to Dutch.
  *
  * @slot - Main content
  * @slot sidebar - Sidebar content (sticky box when expanded, a left/bottom sheet when collapsed). The box and the sheet add no padding of their own, so wrap the content in a padded container (e.g. nldd-container) for inset spacing.
@@ -150,24 +150,24 @@ export class NLDDSidebarSection extends PageSectionMixin(LitElement) {
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	width = '';
 
-	@property({ type: String, attribute: 'sidebar-label' })
-	sidebarLabel = '';
-
-	/** Override translation keys (sheet title fallback and dismiss label); unset keys fall back to Dutch. */
-	@property({ type: Object })
-	translations: Partial<typeof nlddSidebarSectionTranslations> = {};
-
-	@property({ type: Boolean, reflect: true, attribute: 'no-collapse' })
-	noCollapse = false;
-
 	@property({ reflect: true, attribute: 'sticky-top', converter: reflectNonDefault<string>('') })
 	stickyTop = '';
 
 	@property({ reflect: true, attribute: 'sticky-bottom', converter: reflectNonDefault<string>('') })
 	stickyBottom = '';
 
+	@property({ type: String, attribute: 'sidebar-label' })
+	sidebarLabel = '';
+
+	@property({ type: Boolean, reflect: true, attribute: 'no-collapse' })
+	noCollapse = false;
+
 	@property({ type: Boolean, reflect: true })
 	collapsed = false;
+
+	/** Override translation keys (sheet title fallback and dismiss label); unset keys fall back to Dutch. */
+	@property({ type: Object })
+	translations: Partial<typeof nlddSidebarSectionTranslations> = {};
 
 	@query('.sidebar-section__sheet')
 	private _sheet?: NLDDSheet;

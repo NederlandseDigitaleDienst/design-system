@@ -32,9 +32,9 @@
  * @element nldd-validation-list
  * @keywords error message, form validation, foutmelding, validatie
  *
- * @attr {string} for - Id of the control this list is about. Not needed inside an nldd-form-field, which hands its own control over.
  * @attr {boolean} hint - Show every item before there is a verdict, as the requirements of the field. Overridable per item.
  * @attr {boolean} judging - Drop the hints, because this field has been judged. Turned on by the list itself once its control is `invalid`, and settable by hand. What turns red follows `invalid`, not this.
+ * @attr {string} for - Id of the control this list is about. Not needed inside an nldd-form-field, which hands its own control over.
  * @attr {object} translations - Override translation keys (the line the list shows when the field is invalid and no item fails); unset keys fall back to Dutch.
  *
  * @slot - nldd-validation-item elements.
@@ -50,13 +50,13 @@
  * the command ("Gebruik minimaal 8 tekens"): before a verdict it stands there as
  * what the field wants, after one as what the value does not meet.
  *
- * @attr {string} match - Regular expression the value has to contain. Not anchored, unlike the native `pattern`: `[A-Z]` means "has a capital in it". Not held against an empty value unless the field is required.
- * @attr {number} minlength - Fewest characters the value may have. Not held against an empty value unless the field is required.
- * @attr {number} maxlength - Most characters the value may have.
- * @attr {boolean} required - The value may not be empty. Without it, and without `required` on the control, an empty value passes every rule in the list, as it does for the native `pattern` and `minlength`. The control is read by its `required` property or attribute; one that only says `aria-required` needs this item.
  * @attr {boolean} hint - Show this item before there is a verdict, whatever the list says.
  * @attr {boolean} unmet - Whether the value fails this item. Managed by the list; do not set it yourself.
  * @attr {boolean} visible - Whether the item is on screen. Managed by the list.
+ * @attr {number} minlength - Fewest characters the value may have. Not held against an empty value unless the field is required.
+ * @attr {number} maxlength - Most characters the value may have.
+ * @attr {string} match - Regular expression the value has to contain. Not anchored, unlike the native `pattern`: `[A-Z]` means "has a capital in it". Not held against an empty value unless the field is required.
+ * @attr {boolean} required - The value may not be empty. Without it, and without `required` on the control, an empty value passes every rule in the list, as it does for the native `pattern` and `minlength`. The control is read by its `required` property or attribute; one that only says `aria-required` needs this item.
  *
  * @slot - The text of the requirement.
  *
@@ -100,20 +100,6 @@ interface ValidatableControl extends Element {
 export class NLDDValidationItem extends LitElement {
 	static override styles = validationItemStyles;
 
-	/** Not anchored, unlike the native `pattern`. See the note at the top. */
-	@property({ type: String })
-	match = '';
-
-	@property({ type: Number })
-	minlength?: number;
-
-	@property({ type: Number })
-	maxlength?: number;
-
-	/** Makes the field one that needs a value. See `_evaluate` on the list. */
-	@property({ type: Boolean, reflect: true })
-	required = false;
-
 	@property({ type: Boolean, reflect: true })
 	hint = false;
 
@@ -122,6 +108,20 @@ export class NLDDValidationItem extends LitElement {
 
 	@property({ type: Boolean, reflect: true })
 	visible = false;
+
+	@property({ type: Number })
+	minlength?: number;
+
+	@property({ type: Number })
+	maxlength?: number;
+
+	/** Not anchored, unlike the native `pattern`. See the note at the top. */
+	@property({ type: String })
+	match = '';
+
+	/** Makes the field one that needs a value. See `_evaluate` on the list. */
+	@property({ type: Boolean, reflect: true })
+	required = false;
 
 	/** Whether this item judges itself, or waits for the app to name it. */
 	get hasRule(): boolean {
@@ -178,10 +178,6 @@ export class NLDDValidationItem extends LitElement {
 export class NLDDValidationList extends LitElement {
 	static override styles = validationListStyles;
 
-	/** Id of the control, for a list that sits outside an nldd-form-field. */
-	@property({ type: String })
-	for = '';
-
 	@property({ type: Boolean, reflect: true })
 	hint = false;
 
@@ -211,6 +207,10 @@ export class NLDDValidationList extends LitElement {
 	 */
 	@property({ type: Boolean, reflect: true })
 	judging = false;
+
+	/** Id of the control, for a list that sits outside an nldd-form-field. */
+	@property({ type: String })
+	for = '';
 
 	/**
 	 * The control this list is about.

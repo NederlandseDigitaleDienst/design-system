@@ -88,8 +88,8 @@ export type StepBarStatus = 'past' | 'current' | 'future';
  * @attr {'past' | 'current' | 'future'} status - How far along this step is. `current` marks the step you are on (`aria-current="step"`) and the parent derives the others from it: with none marked every step is still to do, with more than one the last wins. `past` and `future` override what is derived for this step only
  * @attr {string} text - Label under the disc. Content in the default slot wins.
  * @attr {string} icon - Icon in the disc instead of the number or the check mark
- * @attr {string} href - Makes the step a link (back to a completed step, for instance)
  * @attr {boolean} button - Makes the step a button, for flows without a URL per step; ignored when `href` is set
+ * @attr {string} href - Makes the step a link (back to a completed step, for instance)
  *
  * @slot - Label. Wins over `text`.
  */
@@ -108,14 +108,14 @@ export class NLDDStepBarItem extends LitElement {
 	@property({ type: String })
 	icon = '';
 
-	@property({ reflect: true, converter: reflectNonDefault<string>('') })
-	href = '';
-
 	/** For flows without a URL per step (a process that runs inside one window). Ignored
 	 *  once `href` is set: one step is one action, and a link outranks a button
 	 *  -- the same rule as nldd-card and nldd-avatar. */
 	@property({ type: Boolean, reflect: true })
 	button = false;
+
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	href = '';
 
 	/** Set by the parent: the derived status when the item has none of its own,
 	 *  the position number, and the status text for assistive tech. */

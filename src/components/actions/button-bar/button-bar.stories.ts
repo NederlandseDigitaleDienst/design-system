@@ -40,8 +40,8 @@ export const Standaard = {
 	args: { appearance: 'neutral-tinted', size: 'md', disabled: false },
 	render: (args: Record<string, any>) => html`
 		<nldd-button-bar
-			size=${args.size}
 			appearance=${args.appearance}
+			size=${args.size}
 			?disabled=${args.disabled}
 		>
 			<nldd-icon-button
@@ -185,8 +185,8 @@ export const ZonderScheidingslijn = {
 	args: { appearance: 'neutral-tinted', size: 'md', disabled: false },
 	render: (args: Record<string, any>) => html`
 		<nldd-button-bar
-			size=${args.size}
 			appearance=${args.appearance}
+			size=${args.size}
 			?disabled=${args.disabled}
 		>
 			<nldd-button text="Knip"></nldd-button>

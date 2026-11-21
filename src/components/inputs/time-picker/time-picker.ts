@@ -16,15 +16,15 @@
  * @keywords tijd, date, datum, datetime
  * @related nldd-time-field
  *
+ * @attr {number} rows - Height of the columns in rows (default 7, minimum 3). The chosen value always sits in the middle, so an odd number shows whole rows and an even number cuts off half a row at the top and bottom.
+ * @attr {string} width - Width: `full` fills the container, or pass your own CSS length.
+ * @attr {string} accessible-label - Accessible name of the picker.
+ * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
  * @attr {string} value - The chosen time as `HH:mm` (24-hour), written exactly so: unlike `min` and `max`, it is what the picker reports back. In nldd-time-field the field writes it.
  * @attr {string} min - Earliest allowed time as `HH:mm`, read as generously as nldd-time-field reads it (`9:00` too). Also the base that `step` counts from.
  * @attr {string} max - Latest allowed time as `HH:mm`, read as generously as `min`.
  * @attr {number} step - Step in minutes (default 1). Decides which minutes are in the column.
- * @attr {number} rows - Height of the columns in rows (default 7, minimum 3). The chosen value always sits in the middle, so an odd number shows whole rows and an even number cuts off half a row at the top and bottom.
- * @attr {string} width - Width: `full` fills the container, or pass your own CSS length.
- * @attr {string} accessible-label - Accessible name of the picker.
  * @attr {object} translations - Translations; unspecified keys fall back to Dutch.
- * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
  *
  * @fires input - On every change: scrolling, the arrow keys. detail: { value } with `HH:mm`.
  * @fires change - When the choice is confirmed: a click on a value or on the selection, or Enter. detail: { value } with `HH:mm`. Scrolling only fires `input`, because otherwise a field showing the picker in a popover would commit as soon as you stopped scrolling.
@@ -117,6 +117,27 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
 
+	@property({ reflect: true, converter: reflectNonDefault<number>(7) })
+	rows = 7;
+
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	width = '';
+
+	@property({ type: String, attribute: 'accessible-label' })
+	accessibleLabel = '';
+
+	/**
+	 * Marks the control as invalid.
+	 *
+	 * Announced and not drawn. What is wrong belongs in an
+	 * nldd-validation-list, in words: a red ring around a single
+	 * checkbox or radio would say the option is wrong, while it is the question
+	 * that is unanswered. `aria-invalid` still goes on the control, because
+	 * choosing not to show something is not a reason to keep quiet about it.
+	 */
+	@property({ type: Boolean, reflect: true })
+	invalid = false;
+
 	@property({ type: String })
 	value = '';
 
@@ -128,15 +149,6 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 
 	@property({ type: Number })
 	step = 1;
-
-	@property({ reflect: true, converter: reflectNonDefault<number>(7) })
-	rows = 7;
-
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	width = '';
-
-	@property({ type: String, attribute: 'accessible-label' })
-	accessibleLabel = '';
 
 	@property({ type: Object })
 	translations: Partial<NLDDTimePickerTranslations> = {};
@@ -151,18 +163,6 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 	@state()
 	private _scrolledTo: { hours: number | null; minutes: number | null } = { hours: null, minutes: null };
 
-
-	/**
-	 * Marks the control as invalid.
-	 *
-	 * Announced and not drawn. What is wrong belongs in an
-	 * nldd-validation-list, in words: a red ring around a single
-	 * checkbox or radio would say the option is wrong, while it is the question
-	 * that is unanswered. `aria-invalid` still goes on the control, because
-	 * choosing not to show something is not a reason to keep quiet about it.
-	 */
-	@property({ type: Boolean, reflect: true })
-	invalid = false;
 
 	public _t(key: keyof NLDDTimePickerTranslations): string {
 		return translate(this.translations, nlddTimePickerTranslations, key);

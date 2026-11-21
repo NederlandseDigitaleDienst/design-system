@@ -37,8 +37,8 @@ export default {
 	},
 	args: {
 		text: 'Dossier D-318',
-		control: 'none',
 		dismissText: '',
+		control: 'none',
 		menuText: '',
 		disabled: false,
 	},
@@ -47,17 +47,17 @@ export default {
 			control: 'text',
 			description: 'Tekst van het token',
 		},
-		control: {
-			control: 'select',
-			options: ['none', 'dismiss', 'menu'],
-			description: 'Welke knop het token heeft: geen, verwijderen of een menu',
-			table: { defaultValue: { summary: 'none' } },
-		},
 		dismissText: {
 			name: 'dismiss-text',
 			control: 'text',
 			description: 'Toegankelijke naam van de verwijderknop (control="dismiss")',
 			table: { defaultValue: { summary: 'Verwijder "{text}"' } },
+		},
+		control: {
+			control: 'select',
+			options: ['none', 'dismiss', 'menu'],
+			description: 'Welke knop het token heeft: geen, verwijderen of een menu',
+			table: { defaultValue: { summary: 'none' } },
 		},
 		menuText: {
 			name: 'menu-text',
@@ -76,8 +76,8 @@ export default {
 const Template = (args: Record<string, any>) => html`
 	<nldd-token
 		text=${args.text}
-		control=${args.control}
 		dismiss-text=${args.dismissText || nothing}
+		control=${args.control}
 		menu-text=${args.menuText || nothing}
 		?disabled=${args.disabled}
 		@dismiss=${action('dismiss')}

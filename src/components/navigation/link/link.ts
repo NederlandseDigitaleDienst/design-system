@@ -52,18 +52,18 @@
  * @element nldd-link
  * @keywords koppeling
  * @related nldd-button
- * @attr {string} href - Link target
- * @attr {string} target - Link target (e.g. '_blank'); adjusts rel automatically. With '_blank' the link adds a visually hidden "opent in nieuw tabblad" announcement for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.
- * @attr {string} download - Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab.
- * @attr {string} rel - Link rel attribute; with target '_blank', 'noopener noreferrer' is added to whatever you set
  * @attr {'inherit'|'xs'|'sm'|'md'|'lg'} size - Text size: 'inherit' (the default) follows the surrounding text and lays the link out inline, so it wraps in running prose. 'xs' | 'sm' | 'md' | 'lg' pin a size and switch to inline-flex, which baseline-aligns a start or end icon with an explicit gap.
  * @attr {string} text - Link text. Content in the default slot wins.
  * @attr {string} start-icon - Icon before the text
  * @attr {string} end-icon - Icon after the text
  * @attr {string} interestfor - ID of an nldd-popover that previews where the link goes, looked up in the tree of this link. It opens on interest instead of on a click: when the pointer rests on the link, when it gets keyboard focus, and on a long press on touch. A click or a tap still follows the link. Focus stays on the link, the popover's content is read as the link's description, and Escape closes it. The pointer can move onto the popover without closing it. Information only: put no link or button in it. Keep the popover outside the paragraph: a link stands in a `<p>`, and a `<p>` of your own inside it would close that paragraph. One popover can serve several links. Keep `accessible-label` on it: it is left out while the popover describes a link.
  * @attr {string} accessible-label - Accessible label for screen readers
- * @attr {boolean} disabled - Disabled state. Avoid it where you can; the design guidelines say why.
  * @attr {boolean} no-tab - Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable.
+ * @attr {boolean} disabled - Disabled state. Avoid it where you can; the design guidelines say why.
+ * @attr {string} href - Link target
+ * @attr {string} target - Link target (e.g. '_blank'); adjusts rel automatically. With '_blank' the link adds a visually hidden "opent in nieuw tabblad" announcement for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.
+ * @attr {string} rel - Link rel attribute; with target '_blank', 'noopener noreferrer' is added to whatever you set
+ * @attr {string} download - Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab.
  * @attr {object} translations - Override translation keys (e.g. the "opent in nieuw tabblad" announcement); unset keys fall back to Dutch.
  *
  * @slot - Link text. Wins over `text`. Or an `<a>` of your own, which takes the place of the link the component draws.
@@ -96,20 +96,6 @@ export class NLDDLink extends DescribedBy(withTranslations(LitElement, nlddLinkT
 	/** @internal Whether the default slot holds text, which wins over `text`. */
 	_textSlot = new SlotContent(this);
 
-	@property({ type: String, reflect: true })
-	href: string | undefined = undefined;
-
-	@property({ type: String })
-	target: string | undefined = undefined;
-
-	/** Saves the file instead of opening it; only used when href is set. Empty
-	 *  for the name from the URL, a name to save it under. */
-	@property({ type: String })
-	download: string | undefined = undefined;
-
-	@property({ type: String })
-	rel: string | undefined = undefined;
-
 	@property({ reflect: true, converter: reflectNonDefault<Size>('inherit') })
 	size: Size = 'inherit';
 
@@ -122,11 +108,12 @@ export class NLDDLink extends DescribedBy(withTranslations(LitElement, nlddLinkT
 	@property({ type: String, attribute: 'end-icon' })
 	endIcon = '';
 
+	@property({ type: String, reflect: true })
+	interestfor: string | undefined = undefined;
+
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
 	/** Take the control out of the tab order (`tabindex="-1"`), for a control
 	 *  owned by a roving container (an `nldd-list` sets it on the rows that are
 	 *  not the current one) that manages focus itself. Still mouse- and
@@ -134,8 +121,22 @@ export class NLDDLink extends DescribedBy(withTranslations(LitElement, nlddLinkT
 	@property({ type: Boolean, reflect: true, attribute: 'no-tab' })
 	noTab = false;
 
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
+
 	@property({ type: String, reflect: true })
-	interestfor: string | undefined = undefined;
+	href: string | undefined = undefined;
+
+	@property({ type: String })
+	target: string | undefined = undefined;
+
+	@property({ type: String })
+	rel: string | undefined = undefined;
+
+	/** Saves the file instead of opening it; only used when href is set. Empty
+	 *  for the name from the URL, a name to save it under. */
+	@property({ type: String })
+	download: string | undefined = undefined;
 
 	/** Wiring for the popover `interestfor` names: opens it on hover, focus
 	 *  and long press. */

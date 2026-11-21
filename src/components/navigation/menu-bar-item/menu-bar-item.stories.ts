@@ -13,24 +13,24 @@ export default {
 	component: 'nldd-menu-bar-item',
 	tags: ['autodocs'],
 	args: {
-		expandable: false,
+		compact: false,
 		iconOnly: false,
 		text: 'Aanvragen',
 		icon: '',
-		href: '',
-		current: false,
-		contentPriority: '',
-		compact: false,
+		expandable: false,
 		accessibleLabel: '',
+		contentPriority: '',
+		current: false,
 		disabled: false,
+		href: '',
 	},
 	argTypes: {
-		expandable: { control: 'boolean', description: 'Toon disclosure icon', table: { defaultValue: { summary: false } } },
+		compact: { control: 'boolean', description: 'Activeert content-priority gedrag (gezet door parent)', table: { defaultValue: { summary: false } } },
 		iconOnly: { name: 'icon-only', control: 'boolean', description: 'Verberg tekst visueel (altijd)', table: { defaultValue: { summary: false } } },
 		text: { control: 'text', description: 'Tekst van het item' },
 		icon: { control: 'select', options: ['(geen)', ...ICONS], mapping: { '(geen)': '' }, description: 'Icon naam (nldd-icon)', table: { defaultValue: { summary: '(geen)' } } },
-		href: { control: 'text', description: 'Optionele link URL' },
-		current: { control: 'boolean', description: 'Markeer als actief/huidig', table: { defaultValue: { summary: false } } },
+		expandable: { control: 'boolean', description: 'Toon disclosure icon', table: { defaultValue: { summary: false } } },
+		accessibleLabel: { name: 'accessible-label', control: 'text', description: 'Toegankelijk label voor screen readers' },
 		contentPriority: {
 			name: 'content-priority',
 			control: 'select',
@@ -39,35 +39,35 @@ export default {
 			description: 'Bepaalt wat zichtbaar blijft in compact modus',
 			table: { defaultValue: { summary: '(geen)' } },
 		},
-		compact: { control: 'boolean', description: 'Activeert content-priority gedrag (gezet door parent)', table: { defaultValue: { summary: false } } },
-		accessibleLabel: { name: 'accessible-label', control: 'text', description: 'Toegankelijk label voor screen readers' },
+		current: { control: 'boolean', description: 'Markeer als actief/huidig', table: { defaultValue: { summary: false } } },
 		disabled: { control: 'boolean', description: 'Schakel interactie uit', table: { defaultValue: { summary: false } } },
+		href: { control: 'text', description: 'Optionele link URL' },
 	},
 };
 
 const Template = ({
-	expandable,
+	compact,
 	iconOnly,
 	text,
 	icon,
-	href,
-	current,
-	contentPriority,
-	compact,
+	expandable,
 	accessibleLabel,
+	contentPriority,
+	current,
 	disabled,
+	href,
 }: Record<string, unknown>) => html`
 	<nldd-menu-bar-item
+		?compact=${compact}
+		?icon-only=${iconOnly}
 		text=${text || nothing}
 		icon=${icon || nothing}
-		href=${href || nothing}
-		?current=${current}
 		?expandable=${expandable}
-		?icon-only=${iconOnly}
-		content-priority=${contentPriority || nothing}
-		?compact=${compact}
 		accessible-label=${accessibleLabel || nothing}
+		content-priority=${contentPriority || nothing}
+		?current=${current}
 		?disabled=${disabled}
+		href=${href || nothing}
 	></nldd-menu-bar-item>
 `;
 
@@ -103,9 +103,9 @@ export const AlsLink = {
 export const AlleenIcoon = {
 	render: Template,
 	args: {
+		iconOnly: true,
 		text: 'Zoeken',
 		icon: 'magnifier',
-		iconOnly: true,
 	},
 };
 
@@ -113,10 +113,10 @@ export const ContentPriorityIcon = {
 	name: 'Content-priority icon',
 	render: Template,
 	args: {
+		compact: true,
 		text: 'Zoeken',
 		icon: 'magnifier',
 		contentPriority: 'icon',
-		compact: true,
 	},
 };
 
@@ -124,10 +124,10 @@ export const ContentPriorityText = {
 	name: 'Content-priority text',
 	render: Template,
 	args: {
+		compact: true,
 		text: 'Mijn account',
 		icon: 'person',
 		contentPriority: 'text',
-		compact: true,
 	},
 };
 

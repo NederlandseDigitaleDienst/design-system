@@ -71,7 +71,6 @@
  *
  * @attr {'flat'|'tight'|'snug'|'loose'} spacing - Spacing between elements: 'flat' | 'tight' | 'snug' (default) | 'loose'
  * @attr {boolean} centered - Centers the main column inside the container; without it, content is left-aligned
- * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  * @attr {boolean} hyphens - Opt-in automatic hyphenation for running text (p,
  *   li, dd). Needs a correct
  *   `lang` on the page (`lang="nl"` on `<html>`, for instance): without
@@ -82,6 +81,7 @@
  *   attribute, but only a word of at least 12 letters, as in `nldd-title`, so
  *   a short word moves to the next line whole. A soft hyphen (`&shy;`) adds
  *   a place to break of your own.
+ * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  * @accepts p, h1, h2, h3, h4, h5, h6, a, strong, b, em, i, u, s, del, ins, code, kbd, samp, var, small, mark, q, cite, abbr, sub, sup, br, span, ul, ol, li, dl, dt, dd, blockquote, pre, figure, figcaption, img, picture, source, table, thead, tbody, tfoot, tr, th, td, caption, hr, div, section, details, summary, video, iframe
  */
 import { LitElement } from 'lit';
@@ -122,11 +122,11 @@ export class NLDDRichText extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	centered = false;
 
-	@property({ type: Object })
-	translations: Partial<NLDDRichTextTranslations> = {};
-
 	@property({ type: Boolean, reflect: true })
 	hyphens = false;
+
+	@property({ type: Object })
+	translations: Partial<NLDDRichTextTranslations> = {};
 
 	public _t(key: keyof NLDDRichTextTranslations): string {
 		return translate(this.translations, nlddRichTextTranslations, key);

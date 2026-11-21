@@ -24,20 +24,20 @@
  *
  * @element nldd-radio-button
  * @keywords keuzerondje, toggle, toggles
- * @attr {boolean} checked - Checked state
- * @attr {boolean} disabled - Disabled state
  * @attr {'content'} color - 'content' draws the control in the color of the text around it, with the mark in the surface color (`--context-background-color`). A colored surface of your own sets that variable. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.
- * @attr {boolean} no-tab - Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable.
+ * @attr {string} accessible-label - Accessible label, set as aria-label on this element: it is the radio.
  * @attr {boolean} decorative - Renders the shape only: no role, no focus, no
  *   name/value, nothing announced. For a control that owns the state elsewhere,
  *   such as a list row or an nldd-radio-button-field that is itself the radio;
  *   putting a second radio in there would nest a control inside a control.
- * @attr {boolean} required - Required state. What it asks is whether anything in the group is checked, as a native radio does.
- * @attr {string} name - Radio group name for form submission; ties the buttons of one group together
- * @attr {string} value - Value submitted with the form when this radio button is checked
- * @attr {string} accessible-label - Accessible label, set as aria-label on this element: it is the radio.
+ * @attr {boolean} no-tab - Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable.
+ * @attr {boolean} checked - Checked state
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
  *   Note: aria-labelledby is not supported as IDREF resolution cannot cross shadow DOM boundaries.
+ * @attr {boolean} disabled - Disabled state
+ * @attr {string} name - Radio group name for form submission; ties the buttons of one group together
+ * @attr {string} value - Value submitted with the form when this radio button is checked
+ * @attr {boolean} required - Required state. What it asks is whether anything in the group is checked, as a native radio does.
  *
  * @fires change - When checked state changes; detail: { checked: boolean, value: string, name: string }
  */
@@ -67,37 +67,6 @@ export class NLDDRadioButton extends DescribedBy(FormAssociated(LitElement)) {
 
 
 
-	@property({ type: Boolean, reflect: true })
-	checked = false;
-
-	@property({ type: Boolean, reflect: true })
-	decorative = false;
-
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-	/** Take the control out of the tab order (`tabindex="-1"`), for a control
-	 *  owned by a roving container (an `nldd-list` sets it on the rows that are
-	 *  not the current one) that manages focus itself. Still mouse- and
-	 *  script-focusable. */
-	@property({ type: Boolean, reflect: true, attribute: 'no-tab' })
-	noTab = false;
-
-
-	@property({ type: Boolean, reflect: true })
-	required = false;
-
-	/** Set by nldd-radio-button-field, which is the radio and holds the focus,
-	 *  while the shape it rings is drawn here. No attribute: the styles read it
-	 *  as `:state(focus-ring)`. */
-	@property({ attribute: false })
-	focusRing = false;
-
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	name = '';
-
-	@property({ type: String })
-	value = '';
-
 	/** 'content' draws the control in the surrounding text color. */
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	color: '' | 'content' = '';
@@ -105,6 +74,18 @@ export class NLDDRadioButton extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
+	@property({ type: Boolean, reflect: true })
+	decorative = false;
+
+	/** Take the control out of the tab order (`tabindex="-1"`), for a control
+	 *  owned by a roving container (an `nldd-list` sets it on the rows that are
+	 *  not the current one) that manages focus itself. Still mouse- and
+	 *  script-focusable. */
+	@property({ type: Boolean, reflect: true, attribute: 'no-tab' })
+	noTab = false;
+
+	@property({ type: Boolean, reflect: true })
+	checked = false;
 
 	/**
 	 * Marks the control as invalid.
@@ -117,6 +98,24 @@ export class NLDDRadioButton extends DescribedBy(FormAssociated(LitElement)) {
 	 */
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
+
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	name = '';
+
+	@property({ type: String })
+	value = '';
+
+	@property({ type: Boolean, reflect: true })
+	required = false;
+
+	/** Set by nldd-radio-button-field, which is the radio and holds the focus,
+	 *  while the shape it rings is drawn here. No attribute: the styles read it
+	 *  as `:state(focus-ring)`. */
+	@property({ attribute: false })
+	focusRing = false;
 
 	/** Its place among the radio buttons that share its name, and whether any of
 	 *  them is checked. */

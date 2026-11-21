@@ -29,11 +29,6 @@ export default {
 			description: 'Grootte van de switch',
 			table: { defaultValue: { summary: 'sm' } },
 		},
-		checked: {
-			control: 'boolean',
-			description: 'Aangevinkte toestand',
-			table: { defaultValue: { summary: false } },
-		},
 		accessibleLabel: {
 			name: 'accessible-label',
 			control: 'text',
@@ -48,6 +43,11 @@ export default {
 			name: 'accessible-described-by',
 			control: false,
 			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		},
+		checked: {
+			control: 'boolean',
+			description: 'Aangevinkte toestand',
+			table: { defaultValue: { summary: false } },
 		},
 		invalid: {
 			control: 'boolean',
@@ -69,26 +69,26 @@ export default {
 	args: {
 		color: '',
 		size: 'sm',
-		checked: false,
 		accessibleLabel: 'Switch',
 		accessibleDescription: '',
 		accessibleDescribedBy: '',
+		checked: false,
 		invalid: false,
 		disabled: false,
 		required: false,
 	},
 };
 
-const Template = ({ color, size, checked, accessibleLabel, accessibleDescription, invalid, disabled, required }: Record<string, any>) => html`
+const Template = ({ color, size, accessibleLabel, accessibleDescription, checked, invalid, disabled, required }: Record<string, any>) => html`
 	<nldd-switch
 		color=${color || nothing}
-		?checked=${checked}
-		?invalid=${invalid}
-		?required=${required}
-		?disabled=${disabled}
 		size=${size}
 		accessible-label=${accessibleLabel || nothing}
 		accessible-description=${accessibleDescription || nothing}
+		?checked=${checked}
+		?invalid=${invalid}
+		?disabled=${disabled}
+		?required=${required}
 	></nldd-switch>
 `;
 

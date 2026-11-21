@@ -18,27 +18,27 @@
  * @element nldd-combo-box
  * @keywords autocomplete, typeahead, select, keuzelijst, suggesties
  * @related nldd-dropdown, nldd-token-field, nldd-search-field
- * @attr {string} value - The selected form value
+ * @attr {'sm'|'md'} size - Size: 'sm' | 'md' (default: 'md')
+ * @attr {string} width - Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container.
  * @attr {string} text - The text shown in the input. May differ from `value` (e.g. value="nl" → text="Nederland"). Set this when pre-populating an existing record. If left empty and `value` matches a slotted menu item, the matching item's `text` is used automatically.
  * @attr {string} placeholder - Placeholder text for the input
- * @attr {'sm'|'md'} size - Size: 'sm' | 'md' (default: 'md')
+ * @attr {string} accessible-label - Accessible label forwarded as aria-label to the input. Required for screen reader accessibility.
+ * @attr {boolean} no-filter - Leaves the options as they are while typing, for a list your server already filtered per keystroke. Without it the field hides options that do not contain the typed text, which also hides a server match on, say, an e-mail address.
+ * @attr {number} max-items - Maximum visible items before scrolling (default: 8)
  * @attr {boolean} valid - Marks the field as valid
  * @attr {boolean} invalid - Marks the field as invalid
- * @attr {boolean} disabled - Disabled state
  * @attr {boolean} readonly - Read-only state: the value stays readable, selectable and in the tab order, but the menu does not open and there is nothing to clear. The input drops its combobox role and the aria that goes with it, so assistive technology is not told about a list it cannot open. Use this where the value belongs to the record rather than to the form, e.g. the product an asset is an instance of.
- * @attr {boolean} allow-custom - Allow committing free-typed values that match no option (Enter/blur). Default false: only menu options are accepted. Typing an option's label in full picks that option, ignoring case and the spaces around it; with two such labels, the first one.
- * @attr {boolean} no-filter - Leaves the options as they are while typing, for a list your server already filtered per keystroke. Without it the field hides options that do not contain the typed text, which also hides a server match on, say, an e-mail address.
+ * @attr {boolean} disabled - Disabled state
  * @attr {string} name - Input name for form submission
- * @attr {string} autocomplete - Browser autofill hint. Default 'off' to prevent the native autofill panel from competing with the menu dropdown. Set to a valid token (e.g. 'country', 'organization') when browser autofill is desired.
- * @attr {string} accessible-label - Accessible label forwarded as aria-label to the input. Required for screen reader accessibility.
- * @attr {number} max-items - Maximum visible items before scrolling (default: 8)
- * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
- * @attr {boolean} no-spellcheck - Disables browser spellchecking on the inner input
- * @attr {string} width - Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container.
- * @attr {boolean} required - Required state
- * @attr {string} pattern - Regular expression the value has to match, as the native `pattern`.
+ * @attr {string} value - The selected form value
  * @attr {number} minlength - Fewest characters the value may have.
  * @attr {number} maxlength - Most characters the value may have.
+ * @attr {string} pattern - Regular expression the value has to match, as the native `pattern`.
+ * @attr {boolean} allow-custom - Allow committing free-typed values that match no option (Enter/blur). Default false: only menu options are accepted. Typing an option's label in full picks that option, ignoring case and the spaces around it; with two such labels, the first one.
+ * @attr {boolean} required - Required state
+ * @attr {string} autocomplete - Browser autofill hint. Default 'off' to prevent the native autofill panel from competing with the menu dropdown. Set to a valid token (e.g. 'country', 'organization') when browser autofill is desired.
+ * @attr {boolean} no-spellcheck - Disables browser spellchecking on the inner input
+ * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  *
  * @note Free-text values: only when `allow-custom` is set. Then a typed value that
  *       matches no menu option is emitted as-is via the `change` event on Enter or blur
@@ -112,8 +112,12 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 
 
 
-	@property({ type: String })
-	value = '';
+	@property({ reflect: true, converter: reflectNonDefault<ComboBoxSize>('md') })
+	size: ComboBoxSize = 'md';
+
+	/** Optional fixed width (any CSS length). When unset, the field stretches to fill its container. */
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	width = '';
 
 	/**
 	 * The text shown in the input. May differ from `value` (the form-submission value).
@@ -132,8 +136,16 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	placeholder = '';
 
-	@property({ reflect: true, converter: reflectNonDefault<ComboBoxSize>('md') })
-	size: ComboBoxSize = 'md';
+	@property({ type: String, attribute: 'accessible-label' })
+	accessibleLabel = '';
+
+	/** Leaves the options as they are while typing: the list was filtered already, by a server. */
+	@property({ type: Boolean, reflect: true, attribute: 'no-filter' })
+	noFilter = false;
+
+	/** Maximum number of visible menu items before scrolling. Defaults to 8. */
+	@property({ type: Number, attribute: 'max-items' })
+	maxItems = 8;
 
 	@property({ type: Boolean, reflect: true })
 	valid = false;
@@ -142,10 +154,28 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 	invalid = false;
 
 	@property({ type: Boolean, reflect: true })
-	disabled = false;
+	readonly = false;
 
 	@property({ type: Boolean, reflect: true })
-	readonly = false;
+	disabled = false;
+
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	name = '';
+
+	@property({ type: String })
+	value = '';
+
+	/** Fewest characters the value may have, as the native `minlength`. */
+	@property({ type: Number, reflect: true })
+	minlength?: number;
+
+	/** Most characters the value may have, as the native `maxlength`. */
+	@property({ type: Number, reflect: true })
+	maxlength?: number;
+
+	/** Regular expression the value has to match, as the native `pattern`. */
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	pattern = '';
 
 	/** Allow committing free-typed values that don't match any menu option (on
 	 *  Enter or blur). Default false: the input only accepts menu options, and a
@@ -153,12 +183,8 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true, attribute: 'allow-custom' })
 	allowCustom = false;
 
-	/** Leaves the options as they are while typing: the list was filtered already, by a server. */
-	@property({ type: Boolean, reflect: true, attribute: 'no-filter' })
-	noFilter = false;
-
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	name = '';
+	@property({ type: Boolean, reflect: true })
+	required = false;
 
 	/** Browser autofill hint. Use AutoFill tokens (e.g. 'country', 'organization')
 	 *  or 'off' to disable. Default 'off' to prevent the native autofill panel
@@ -166,22 +192,11 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: String })
 	autocomplete: AutoFill | (string & {}) = 'off';
 
-	/** Maximum number of visible menu items before scrolling. Defaults to 8. */
-	@property({ type: Number, attribute: 'max-items' })
-	maxItems = 8;
-
-	@property({ type: String, attribute: 'accessible-label' })
-	accessibleLabel = '';
-
-	@property({ type: Object })
-	translations: Partial<NLDDComboBoxTranslations> = {};
-
 	@property({ type: Boolean, reflect: true, attribute: 'no-spellcheck' })
 	noSpellcheck = false;
 
-	/** Optional fixed width (any CSS length). When unset, the field stretches to fill its container. */
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	width = '';
+	@property({ type: Object })
+	translations: Partial<NLDDComboBoxTranslations> = {};
 
 	@state()
 	_isOpen = false;
@@ -211,21 +226,6 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 
 	// — i18n ——————————————————————————————————————————————————————————————————
 
-
-	@property({ type: Boolean, reflect: true })
-	required = false;
-
-	/** Regular expression the value has to match, as the native `pattern`. */
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	pattern = '';
-
-	/** Fewest characters the value may have, as the native `minlength`. */
-	@property({ type: Number, reflect: true })
-	minlength?: number;
-
-	/** Most characters the value may have, as the native `maxlength`. */
-	@property({ type: Number, reflect: true })
-	maxlength?: number;
 
 	public _t(key: keyof NLDDComboBoxTranslations): string {
 		return translate(this.translations, nlddComboBoxTranslations, key);

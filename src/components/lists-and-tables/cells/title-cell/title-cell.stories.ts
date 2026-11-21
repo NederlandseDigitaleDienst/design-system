@@ -16,34 +16,34 @@ export default {
 	component: 'nldd-title-cell',
 	tags: ['autodocs'],
 	args: {
-		size: '',
 		color: 'content',
+		size: '',
 		width: '',
 		minWidth: '',
 		maxWidth: '',
 		minHeight: '',
 		horizontalAlignment: 'left',
 		verticalAlignment: 'center',
+		hideAbove: '',
+		hideBelow: '',
 		text: 'Titelcel',
 		supportingText: '',
 		overline: '',
 		headingLevel: undefined,
-		hideBelow: '',
-		hideAbove: '',
 	},
 	argTypes: {
+		color: {
+			control: 'select',
+			options: ['content', 'secondary', 'accent', 'success', 'warning', 'critical'],
+			description: 'Tekstkleurvariant. `secondary` maakt de titel rustiger; `accent`, `success`, `warning` en `critical` kleuren alle drie de gebieden.',
+			table: { defaultValue: { summary: 'content' } },
+		},
 		size: {
 			control: 'select',
 			options: ['(auto)', 'display-1', 'display-2', 'display-3', 'display-4', 'display-5', 'display-6'],
 			mapping: { '(auto)': '' },
 			description: 'Visuele grootte van de titel. Zonder is hij `display-5`, en `display-6` in een tabelrij.',
 			table: { defaultValue: { summary: '(auto)' } },
-		},
-		color: {
-			control: 'select',
-			options: ['content', 'secondary', 'accent', 'success', 'warning', 'critical'],
-			description: 'Tekstkleurvariant. `secondary` maakt de titel rustiger; `accent`, `success`, `warning` en `critical` kleuren alle drie de gebieden.',
-			table: { defaultValue: { summary: 'content' } },
 		},
 		width: {
 			control: 'text',
@@ -79,6 +79,16 @@ export default {
 			description: 'Verticale uitlijning van de cel',
 			table: { defaultValue: { summary: 'center' } },
 		},
+		hideAbove: {
+			name: 'hide-above',
+			control: 'text',
+			description: 'Verberg wanneer cells-container breder is dan deze CSS-lengte (bv. "1200px")',
+		},
+		hideBelow: {
+			name: 'hide-below',
+			control: 'text',
+			description: 'Verberg wanneer cells-container smaller is dan deze CSS-lengte (bv. "320px", "20rem")',
+		},
 		text: {
 			control: 'text',
 			description: 'Titeltekst. Ondersteunt **vet**-markeringen. Valt terug op de default-slot als deze leeg is.',
@@ -100,33 +110,23 @@ export default {
 			description: 'Heading-niveau (1–6). Zonder waarde wordt een &lt;p&gt; gerenderd.',
 			table: { defaultValue: { summary: '(geen)' } },
 		},
-		hideBelow: {
-			name: 'hide-below',
-			control: 'text',
-			description: 'Verberg wanneer cells-container smaller is dan deze CSS-lengte (bv. "320px", "20rem")',
-		},
-		hideAbove: {
-			name: 'hide-above',
-			control: 'text',
-			description: 'Verberg wanneer cells-container breder is dan deze CSS-lengte (bv. "1200px")',
-		},
 	},
 };
 
 export const Standaard = {
 	render: (args: Record<string, any>) => html`
 		<nldd-title-cell
-			size=${args.size || nothing}
 			color=${args.color}
+			size=${args.size || nothing}
 			width=${args.width || nothing}
 			horizontal-alignment=${args.horizontalAlignment}
 			vertical-alignment=${args.verticalAlignment}
+			hide-above=${args.hideAbove || nothing}
+			hide-below=${args.hideBelow || nothing}
 			text=${args.text}
 			supporting-text=${args.supportingText}
 			overline=${args.overline}
 			heading-level=${args.headingLevel ?? nothing}
-			hide-below=${args.hideBelow || nothing}
-			hide-above=${args.hideAbove || nothing}
 		></nldd-title-cell>
 	`,
 };

@@ -32,23 +32,23 @@
  * @element nldd-split-button
  * @keywords dropdown button, knop
  * @related nldd-button, nldd-menu
- * @attr {'xs'|'sm'|'md'|'lg'} size - Button size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md')
  * @attr {'primary'|'secondary'|'accent-filled'|'neutral-tinted'|'neutral-base'|'content-filled'|'content-tinted'} appearance - Visual style: 'primary' | 'secondary' | 'accent-filled' | 'neutral-tinted' (default) | 'neutral-base' | 'content-filled' | 'content-tinted'. 'primary' is 'accent-filled' and 'secondary' is 'neutral-tinted'. The content appearances are for a colored surface and take their colors from --context-content-color. There are no transparent appearances: the split button needs a surface of its own to show it is one control.
- * @attr {boolean} disabled - Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why.
- * @attr {boolean} loading - Loading state of the main action, as on nldd-button. The chevron stays available.
- * @attr {string} loading-text - What the screen reader announces while `loading` is on, as on nldd-button.
+ * @attr {'xs'|'sm'|'md'|'lg'} size - Button size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md')
  * @attr {string} width - Width mode: 'full' (stretches to container) or any CSS length; the main action button fills the available space
  * @attr {string} text - Button text for the primary action
  * @attr {string} icon - Icon name shown before the text on the primary action button
- * @attr {'button'|'submit'|'reset'} type - What the main action does in a form: 'button' (default) | 'submit' | 'reset'. Ignored when `href` is set.
- * @attr {string} form - Id of the form the main action submits or resets, for a split button outside it. Takes an `nldd-form` as well as a plain `<form>`, as on nldd-button.
- * @attr {string} href - Turns the main action into a link, as on nldd-button.
- * @attr {string} download - Saves the file `href` points at instead of opening it, as on nldd-button. Only used with `href`.
  * @attr {string} popovertarget - ID of an `nldd-menu` or `nldd-popover` elsewhere in this tree that the chevron opens, for an overlay that cannot be a child. A slotted overlay wins.
+ * @attr {string} loading-text - What the screen reader announces while `loading` is on, as on nldd-button.
  * @attr {string} shortcut - Keyboard shortcut hint for the primary action, shown right after its text, e.g. 'Cmd+S'. Forwarded to the inner nldd-button; display only, wire up the handling in your app.
  * @attr {string} shortcut-mac - Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`).
  * @attr {string} shortcut-windows - Override of `shortcut` on Windows (falls back to `shortcut`).
  * @attr {string} shortcut-linux - Override of `shortcut` on Linux (falls back to `shortcut`).
+ * @attr {boolean} loading - Loading state of the main action, as on nldd-button. The chevron stays available.
+ * @attr {boolean} disabled - Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why.
+ * @attr {string} form - Id of the form the main action submits or resets, for a split button outside it. Takes an `nldd-form` as well as a plain `<form>`, as on nldd-button.
+ * @attr {'button'|'submit'|'reset'} type - What the main action does in a form: 'button' (default) | 'submit' | 'reset'. Ignored when `href` is set.
+ * @attr {string} href - Turns the main action into a link, as on nldd-button.
+ * @attr {string} download - Saves the file `href` points at instead of opening it, as on nldd-button. Only used with `href`.
  * @attr {object} translations - Translations; unset keys fall back to Dutch
  *
  * @slot popup - The `nldd-menu` or `nldd-popover` the chevron opens.
@@ -93,22 +93,11 @@ export class NLDDSplitButton extends LitElement {
 	static formAssociated = true;
 	private _internals = internalsOf(this);
 
-	@property({ reflect: true, converter: reflectNonDefault<Size>('md') })
-	size: Size = 'md';
-
 	@property({ reflect: true, converter: reflectNonDefault<SplitButtonAppearance>('neutral-tinted') })
 	appearance: SplitButtonAppearance = 'neutral-tinted';
 
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
-	/** Loading state of the main action. The chevron stays available. */
-	@property({ type: Boolean, reflect: true })
-	loading = false;
-
-	/** What the screen reader announces while `loading` is on. */
-	@property({ attribute: 'loading-text' })
-	loadingText = '';
+	@property({ reflect: true, converter: reflectNonDefault<Size>('md') })
+	size: Size = 'md';
 
 	/** Width mode: 'full' (stretch to container) or any CSS length. The main action button fills the available space. */
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
@@ -122,25 +111,13 @@ export class NLDDSplitButton extends LitElement {
 	@property({ type: String })
 	icon = '';
 
-	/** What the main action does in a form. Ignored when `href` is set. */
-	@property({ reflect: true, converter: reflectNonDefault<'button' | 'submit' | 'reset'>('button') })
-	type: 'button' | 'submit' | 'reset' = 'button';
-
-	/** Turns the main action into a link. */
-	@property()
-	href?: string;
-
-	/** Saves the file `href` points at instead of opening it. */
-	@property()
-	download?: string;
-
 	/** ID of an overlay elsewhere in this tree that the chevron opens. */
 	@property()
 	popovertarget?: string;
 
-	/** Direct reference to that overlay, for one in another tree. */
-	@property({ attribute: false })
-	popoverTargetElement: Element | null = null;
+	/** What the screen reader announces while `loading` is on. */
+	@property({ attribute: 'loading-text' })
+	loadingText = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	shortcut = '';
@@ -153,6 +130,29 @@ export class NLDDSplitButton extends LitElement {
 
 	@property({ reflect: true, attribute: 'shortcut-linux', converter: reflectNonDefault<string>('') })
 	shortcutLinux = '';
+
+	/** Loading state of the main action. The chevron stays available. */
+	@property({ type: Boolean, reflect: true })
+	loading = false;
+
+	/** Direct reference to that overlay, for one in another tree. */
+	@property({ attribute: false })
+	popoverTargetElement: Element | null = null;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
+
+	/** What the main action does in a form. Ignored when `href` is set. */
+	@property({ reflect: true, converter: reflectNonDefault<'button' | 'submit' | 'reset'>('button') })
+	type: 'button' | 'submit' | 'reset' = 'button';
+
+	/** Turns the main action into a link. */
+	@property()
+	href?: string;
+
+	/** Saves the file `href` points at instead of opening it. */
+	@property()
+	download?: string;
 
 	@property({ type: Object })
 	translations: Partial<NLDDSplitButtonTranslations> = {};

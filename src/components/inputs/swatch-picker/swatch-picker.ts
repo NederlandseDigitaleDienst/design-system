@@ -36,13 +36,13 @@
  * @element nldd-swatch-picker-item
  * @attr {'lintblauw'|'donkerblauw'|'hemelblauw'|'lichtblauw'|'paars'|'violet'|'robijnrood'|'roze'|'rood'|'oranje'|'donkergeel'|'geel'|'donkerbruin'|'bruin'|'donkergroen'|'groen'|'mosgroen'|'mintgroen'} color - Category color: 'lintblauw' | 'donkerblauw' | 'hemelblauw' | 'lichtblauw' | 'paars' | 'violet' | 'robijnrood' | 'roze' | 'rood' | 'oranje' | 'donkergeel' | 'geel' | 'donkerbruin' | 'bruin' | 'donkergroen' | 'groen' | 'mosgroen' | 'mintgroen'. Brings its name along, so `text` is optional.
  * @attr {string} custom-color - Any CSS color of your own (e.g. '#7a1f3d' or 'var(--brand-color)'), for a color outside the categories. Needs `text`.
+ * @attr {'xs'|'sm'|'md'} size - Swatch size: 'xs' | 'sm' | 'md' (set by the picker, default: 'md')
+ * @attr {string} text - Name of the swatch, for screen readers and the tooltip. Overrides the name of a category `color`.
  * @attr {string} image - URL of an image that fills the swatch, for a pattern or a material. Needs `text`.
  * @attr {string} image-srcset - Sources of the image at other pixel densities, with x descriptors (e.g. '/oak.jpg 1x, /oak@2x.jpg 2x'). The swatch has a fixed size, so there are no widths to choose from.
- * @attr {string} text - Name of the swatch, for screen readers and the tooltip. Overrides the name of a category `color`.
  * @attr {boolean} selected - Whether this swatch is chosen (set by the picker)
  * @attr {boolean} disabled - Disabled state
  * @attr {string} value - Value for this swatch
- * @attr {'xs'|'sm'|'md'} size - Swatch size: 'xs' | 'sm' | 'md' (set by the picker, default: 'md')
  * @attr {object} translations - Override translation keys (the names of the category colors); unset keys fall back to Dutch.
  */
 import { LitElement } from 'lit';
@@ -81,14 +81,18 @@ export class NLDDSwatchPickerItem extends withTranslations(LitElement, nlddSwatc
 	@property({ reflect: true, attribute: 'custom-color', converter: reflectNonDefault<string>('') })
 	customColor = '';
 
+	/** Set by nldd-swatch-picker. Not part of the public API. */
+	@property({ reflect: true, converter: reflectNonDefault<SwatchPickerSize>('md') })
+	size: SwatchPickerSize = 'md';
+
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	text = '';
+
 	@property({ type: String })
 	image = '';
 
 	@property({ type: String, attribute: 'image-srcset' })
 	imageSrcset = '';
-
-	@property({ reflect: true, converter: reflectNonDefault<string>('') })
-	text = '';
 
 	@property({ type: Boolean, reflect: true })
 	selected = false;
@@ -98,10 +102,6 @@ export class NLDDSwatchPickerItem extends withTranslations(LitElement, nlddSwatc
 
 	@property({ type: String })
 	value = '';
-
-	/** Set by nldd-swatch-picker. Not part of the public API. */
-	@property({ reflect: true, converter: reflectNonDefault<SwatchPickerSize>('md') })
-	size: SwatchPickerSize = 'md';
 
 	/** Set by nldd-swatch-picker: this swatch's place in the group, which it
 	 *  cannot count by itself. */

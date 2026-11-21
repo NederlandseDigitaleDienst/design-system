@@ -22,10 +22,10 @@
  * @related nldd-document-tab-bar, nldd-segmented-control, nldd-menu-bar
  * @attr {'icon-and-text'|'text'|'icon'} variant - Visual mode: 'icon-and-text' | 'text' | 'icon'. When unset, the variant is inferred from each item's content. Drives the layout at every size.
  * @attr {'md'|'lg'} size - Size: 'md' | 'lg' (default: 'md'). 'lg' enlarges the touch target; the per-variant layout is preserved (icon-and-text stacks the icon over the text, text renders large text, icon renders a larger icon-only control).
- * @attr {boolean} navigation - Renders a nav landmark instead of tablist; use for href-based items that navigate between routes
- * @attr {boolean} disabled - Disables the whole bar: dims it, blocks pointer interaction, and takes the tabs out of the tab order. Avoid it where you can; the design guidelines say why.
  * @attr {boolean} centered - Centers the tabs in the container (host fills the row, tabs group in the middle)
+ * @attr {boolean} navigation - Renders a nav landmark instead of tablist; use for href-based items that navigate between routes
  * @attr {string} accessible-label - Accessible name for the navigation region; defaults to 'Tabs'
+ * @attr {boolean} disabled - Disables the whole bar: dims it, blocks pointer interaction, and takes the tabs out of the tab order. Avoid it where you can; the design guidelines say why.
  * @attr {object} translations - Override translation keys (e.g. the overflow button label); unset keys fall back to Dutch.
  *
  * @slot - nldd-tab-bar-item elements
@@ -35,13 +35,13 @@
  * ---
  *
  * @element nldd-tab-bar-item
- * @attr {boolean} current - The item you are on. A tab bar switching content manages it itself and renders it as `aria-selected`; a `navigation` bar leaves it to the consumer, since it follows the route, and renders it as `aria-current="page"`. Unlike a list row, which separates `current` from `selected` because it can be both at once, a tab bar has exactly one active item.
- * @attr {string} text - Tab text; also used as accessible name for icon-only items
- * @attr {string} href - Optional link URL; renders an anchor instead of a button
  * @attr {'icon-and-text'|'text'|'icon'} variant - Forces this presentation on this item, over the one from nldd-tab-bar
- * @attr {string} icon - Icon name for nldd-icon; an icon in the icon slot wins. The icon and icon-and-text variants fall back to a placeholder icon when neither is provided.
  * @attr {'md'|'lg'} size - Size: 'md' (default) | 'lg'. Set by nldd-tab-bar from its own size; 'lg' enlarges the touch target while keeping the variant layout.
+ * @attr {string} text - Tab text; also used as accessible name for icon-only items
+ * @attr {string} icon - Icon name for nldd-icon; an icon in the icon slot wins. The icon and icon-and-text variants fall back to a placeholder icon when neither is provided.
  * @attr {string} controls - Id of the element this tab shows, looked up in the tab's own tree. The tab announces it as the content it controls (`aria-controls`). Give that element `role="tabpanel"` and an `aria-labelledby` with the id of this item, which names it after the tab. No effect in a `navigation` bar.
+ * @attr {boolean} current - The item you are on. A tab bar switching content manages it itself and renders it as `aria-selected`; a `navigation` bar leaves it to the consumer, since it follows the route, and renders it as `aria-current="page"`. Unlike a list row, which separates `current` from `selected` because it can be both at once, a tab bar has exactly one active item.
+ * @attr {string} href - Optional link URL; renders an anchor instead of a button
  * @prop {Element | null} controlsElement - The element this tab shows, for where an id does not reach: content in another shadow root, or content a framework renders after the tab (`controls` is looked up when the page loads and on every update of the tab, such as when it becomes current). Wins over `controls`. Browsers without element references (`ariaControlsElements`) get no relation.
  *
  * @slot icon - Icon content, such as an `<img>`. Wins over `icon`. The overflow menu shows a copy, made again each time the menu opens, so a new `src` shows there too.
@@ -71,13 +71,12 @@ import { deferFocus } from '../../../utilities/defer-focus.js';
 export class NLDDTabBarItem extends LitElement {
 	static override styles = tabBarItemStyles;
 
-	/** The item you are on. `aria-selected` in a tab bar that switches content,
-	 *  `aria-current="page"` in a `navigation` bar. */
-	@property({ type: Boolean, reflect: true })
-	current = false;
+	/** Set by nldd-tab-bar. Sizes the variant-driven layout: 'md' (default) or 'lg' (larger touch target). */
+	@property({ reflect: true, converter: reflectNonDefault<'md' | 'lg'>('md') })
+	size: 'md' | 'lg' = 'md';
 
-	@property({ type: String })
-	href = '';
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	text = '';
 
 	/** Set by nldd-tab-bar. Not part of the public API, so no attribute. */
 	@property({ attribute: false })
@@ -88,9 +87,6 @@ export class NLDDTabBarItem extends LitElement {
 	// call in updated() which writes the resolved value to the same attribute.
 	private _authorVariant: 'icon-and-text' | 'text' | 'icon' | '' = '';
 
-	@property({ reflect: true, converter: reflectNonDefault<string>('') })
-	text = '';
-
 	/** Icon name for nldd-icon. The icon and icon-and-text variants show a
 	 *  placeholder icon when no icon (attribute or slot) is provided. */
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
@@ -100,13 +96,17 @@ export class NLDDTabBarItem extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	controls = '';
 
+	/** The item you are on. `aria-selected` in a tab bar that switches content,
+	 *  `aria-current="page"` in a `navigation` bar. */
+	@property({ type: Boolean, reflect: true })
+	current = false;
+
 	/** The element this tab shows, for where an id does not reach. Wins over `controls`. */
 	@property({ attribute: false })
 	controlsElement: Element | null = null;
 
-	/** Set by nldd-tab-bar. Sizes the variant-driven layout: 'md' (default) or 'lg' (larger touch target). */
-	@property({ reflect: true, converter: reflectNonDefault<'md' | 'lg'>('md') })
-	size: 'md' | 'lg' = 'md';
+	@property({ type: String })
+	href = '';
 
 	get _effectiveVariant(): 'icon-and-text' | 'text' | 'icon' {
 		if (this._authorVariant) return this._authorVariant;
@@ -282,10 +282,6 @@ function unobserveSize(target: Element, bar: NLDDTabBar): void {
 export class NLDDTabBar extends withTranslations(LitElement, nlddTabBarTranslations) {
 	static override styles = tabBarStyles;
 
-	/** Centers the tabs in the container (host fills the row, tabs group in the middle). */
-	@property({ type: Boolean, reflect: true })
-	centered = false;
-
 	@property({ reflect: true, converter: reflectNonDefault<'icon-and-text' | 'text' | 'icon' | ''>('') })
 	variant: 'icon-and-text' | 'text' | 'icon' | '' = '';
 
@@ -293,16 +289,20 @@ export class NLDDTabBar extends withTranslations(LitElement, nlddTabBarTranslati
 	@property({ reflect: true, converter: reflectNonDefault<'md' | 'lg'>('md') })
 	size: 'md' | 'lg' = 'md';
 
+	/** Centers the tabs in the container (host fills the row, tabs group in the middle). */
+	@property({ type: Boolean, reflect: true })
+	centered = false;
+
 	@property({ type: Boolean, reflect: true })
 	navigation = false;
+
+	@property({ type: String, attribute: 'accessible-label' })
+	accessibleLabel = '';
 
 	/** Disables the whole bar: the CSS dims it and blocks pointer-events, and every
 	 *  tab is taken out of the tab order and made inert (propagated to the items). */
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
-
-	@property({ type: String, attribute: 'accessible-label' })
-	accessibleLabel = '';
 
 	// Tracks whether the author provided an explicit accessible label
 	private _hasCustomLabel = false;

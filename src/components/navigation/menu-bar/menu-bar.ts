@@ -8,9 +8,9 @@
  * @element nldd-menu-bar
  * @keywords menubalk
  * @related nldd-tab-bar, nldd-top-navigation-bar
- * @attr {string} overflow-text - Text for the overflow button (default through i18n)
- * @attr {string} accessible-label - aria-label for the nav landmark
  * @attr {boolean} compact - Propagates the compact attribute to slotted items (activates content priority)
+ * @attr {string} accessible-label - aria-label for the nav landmark
+ * @attr {string} overflow-text - Text for the overflow button (default through i18n)
  *
  * @slot - nldd-menu-bar-item elements
  */
@@ -60,14 +60,14 @@ const sizeObserver = sharedResizeObserver<NLDDMenuBar>(bars => bars.forEach(bar 
 export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTranslations) {
 	static override styles = menuBarStyles;
 
-	@property({ reflect: true, attribute: 'overflow-text', converter: reflectNonDefault<string>('') })
-	overflowText = '';
+	@property({ type: Boolean, reflect: true })
+	compact = false;
 
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
-	@property({ type: Boolean, reflect: true })
-	compact = false;
+	@property({ reflect: true, attribute: 'overflow-text', converter: reflectNonDefault<string>('') })
+	overflowText = '';
 
 	// ## Internal references
 

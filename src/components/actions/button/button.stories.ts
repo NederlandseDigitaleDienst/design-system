@@ -63,15 +63,6 @@ export default {
 				defaultValue: { summary: 'md' },
 			},
 		},
-		horizontalAlignment: {
-			name: 'horizontal-alignment',
-			control: 'select',
-			options: ['left', 'center', 'right'],
-			description: 'Horizontale uitlijning van de content. Vooral zichtbaar bij width="full" of een vaste breedte.',
-			table: {
-				defaultValue: { summary: 'center' },
-			},
-		},
 		width: {
 			control: 'text',
 			description: 'Width mode: "full" (stretches to container) or any CSS length (e.g. "240px")',
@@ -81,36 +72,14 @@ export default {
 			control: 'text',
 			description: 'Maximale breedte (CSS-lengte, bijv. "320px"). Combineert met width="full": de knop volgt de container tot aan die grens. Tekst die niet past wordt afgekapt met een ellipsis.',
 		},
-		expandable: {
-			name: 'expandable',
-			control: 'boolean',
-			description: 'Voegt een chevron toe om aan te geven dat deze knop een menu of popover opent',
-			table: {
-				defaultValue: { summary: false },
-			},
-		},
-		expanded: {
-			control: 'boolean',
-			description: 'Geeft aan dat het popover/menu uitgeklapt is. Wordt geforward als aria-expanded op de inner button en activeert de is-expanded visuele state.',
-			table: {
-				defaultValue: { summary: false },
-			},
-		},
-		popupType: {
-			name: 'popup-type',
+		horizontalAlignment: {
+			name: 'horizontal-alignment',
 			control: 'select',
-			options: ['(geen)', 'menu', 'listbox', 'dialog', 'tree', 'grid'],
-			mapping: { '(geen)': '' },
-			description: 'Type popup-container dat deze knop opent. Zet aria-haspopup op de inner button en zorgt dat aria-expanded altijd aanwezig is (true/false) zodat screenreaders de popup-staat kennen.',
-			table: { defaultValue: { summary: '(geen)' } },
-		},
-		popovertarget: {
-			control: false,
-			description: 'Id van een `nldd-menu` of `nldd-popover` elders op de pagina dat deze knop opent. De knop zet het ook naast zich neer, dus het overlay heeft geen `anchor` nodig. Een overlay in de `popup`-slot wint.',
-		},
-		interestfor: {
-			control: false,
-			description: 'Id van een `nldd-popover` elders op de pagina die deze knop beschrijft en opent bij interesse, zoals de `interest`-slot: als je de aanwijzer op de knop laat rusten, bij focus en bij lang drukken op touch. Voor een popover die meer knoppen delen, of een knop in een `<p>`. Een popover in de `interest`-slot wint.',
+			options: ['left', 'center', 'right'],
+			description: 'Horizontale uitlijning van de content. Vooral zichtbaar bij width="full" of een vaste breedte.',
+			table: {
+				defaultValue: { summary: 'center' },
+			},
 		},
 		text: {
 			control: 'text',
@@ -120,12 +89,6 @@ export default {
 			name: 'supporting-text',
 			control: 'text',
 			description: 'Ondersteunende tekst: onder de tekst (md/lg) of erachter (sm/xs), in een secundaire kleur. Telt mee in de toegankelijke naam.',
-		},
-		singleLine: {
-			name: 'single-line',
-			control: 'boolean',
-			description: 'Knipt overlopende tekst af met ellipsis in plaats van te wrappen. Vereist dat de knop (of een ancestor) een max-width oplegt.',
-			table: { defaultValue: { summary: false } },
 		},
 		startIcon: {
 			name: 'start-icon',
@@ -147,6 +110,51 @@ export default {
 				defaultValue: { summary: '(geen)' },
 			},
 		},
+		expandable: {
+			name: 'expandable',
+			control: 'boolean',
+			description: 'Voegt een chevron toe om aan te geven dat deze knop een menu of popover opent',
+			table: {
+				defaultValue: { summary: false },
+			},
+		},
+		popupType: {
+			name: 'popup-type',
+			control: 'select',
+			options: ['(geen)', 'menu', 'listbox', 'dialog', 'tree', 'grid'],
+			mapping: { '(geen)': '' },
+			description: 'Type popup-container dat deze knop opent. Zet aria-haspopup op de inner button en zorgt dat aria-expanded altijd aanwezig is (true/false) zodat screenreaders de popup-staat kennen.',
+			table: { defaultValue: { summary: '(geen)' } },
+		},
+		popovertarget: {
+			control: false,
+			description: 'Id van een `nldd-menu` of `nldd-popover` elders op de pagina dat deze knop opent. De knop zet het ook naast zich neer, dus het overlay heeft geen `anchor` nodig. Een overlay in de `popup`-slot wint.',
+		},
+		interestfor: {
+			control: false,
+			description: 'Id van een `nldd-popover` elders op de pagina die deze knop beschrijft en opent bij interesse, zoals de `interest`-slot: als je de aanwijzer op de knop laat rusten, bij focus en bij lang drukken op touch. Voor een popover die meer knoppen delen, of een knop in een `<p>`. Een popover in de `interest`-slot wint.',
+		},
+		accessibleLabel: {
+			name: 'accessible-label',
+			control: 'text',
+			description: 'Toegankelijk label voor screen readers',
+		},
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		},
+		loadingText: {
+			name: 'loading-text',
+			control: 'text',
+			description: 'Wat de schermlezer aankondigt tijdens loading, zoals "Aan het bewaren"',
+			table: { defaultValue: { summary: 'Laden' } },
+		},
 		shortcut: {
 			control: 'text',
 			description: 'Sneltoets direct achter de tekst, bijvoorbeeld `Ctrl+S`. Alleen voor de paar hoofdacties van een scherm. Alleen weergave: de toets zelf koppel je in je app.',
@@ -165,6 +173,33 @@ export default {
 			name: 'shortcut-linux',
 			control: 'text',
 			description: 'Sneltoets op Linux en ChromeOS, als die afwijkt van `shortcut`.',
+		},
+		singleLine: {
+			name: 'single-line',
+			control: 'boolean',
+			description: 'Knipt overlopende tekst af met ellipsis in plaats van te wrappen. Vereist dat de knop (of een ancestor) een max-width oplegt.',
+			table: { defaultValue: { summary: false } },
+		},
+		expanded: {
+			control: 'boolean',
+			description: 'Geeft aan dat het popover/menu uitgeklapt is. Wordt geforward als aria-expanded op de inner button en activeert de is-expanded visuele state.',
+			table: {
+				defaultValue: { summary: false },
+			},
+		},
+		loading: {
+			control: 'boolean',
+			description: 'Laad-toestand: toont een activity indicator over de verborgen content, zet aria-busy en blokkeert activatie (knop blijft focusbaar).',
+			table: {
+				defaultValue: { summary: false },
+			},
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde toestand',
+			table: {
+				defaultValue: { summary: false },
+			},
 		},
 		type: {
 			control: 'select',
@@ -191,103 +226,68 @@ export default {
 			mapping: { '(geen)': null, download: '', 'download="aanvraag-A-1042.pdf"': 'aanvraag-A-1042.pdf' },
 			description: 'Slaat het bestand op in plaats van het te openen (alleen met href); een waarde wordt de bestandsnaam',
 		},
-		accessibleLabel: {
-			name: 'accessible-label',
-			control: 'text',
-			description: 'Toegankelijk label voor screen readers',
-		},
-		accessibleDescription: {
-			name: 'accessible-description',
-			control: 'text',
-			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
-		},
-		accessibleDescribedBy: {
-			name: 'accessible-described-by',
-			control: false,
-			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
-		},
-		loading: {
-			control: 'boolean',
-			description: 'Laad-toestand: toont een activity indicator over de verborgen content, zet aria-busy en blokkeert activatie (knop blijft focusbaar).',
-			table: {
-				defaultValue: { summary: false },
-			},
-		},
-		loadingText: {
-			name: 'loading-text',
-			control: 'text',
-			description: 'Wat de schermlezer aankondigt tijdens loading, zoals "Aan het bewaren"',
-			table: { defaultValue: { summary: 'Laden' } },
-		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde toestand',
-			table: {
-				defaultValue: { summary: false },
-			},
-		},
 	},
 	args: {
 		appearance: 'neutral-tinted',
 		size: 'md',
-		horizontalAlignment: 'center',
 		width: '',
 		maxWidth: '',
+		horizontalAlignment: 'center',
+		text: 'Bewaar',
+		supportingText: '',
+		startIcon: '',
+		endIcon: '',
 		expandable: false,
-		expanded: false,
 		popupType: '',
 		popovertarget: '',
 		interestfor: '',
-		text: 'Bewaar',
-		supportingText: '',
-		singleLine: false,
-		startIcon: '',
-		endIcon: '',
+		accessibleLabel: '',
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
+		loadingText: '',
 		shortcut: '',
 		shortcutMac: '',
 		shortcutWindows: '',
 		shortcutLinux: '',
+		singleLine: false,
+		expanded: false,
+		loading: false,
+		disabled: false,
 		type: 'button',
 		href: '',
 		target: '',
 		download: '(geen)',
-		accessibleLabel: '',
-		accessibleDescription: '',
-		accessibleDescribedBy: '',
-		loading: false,
-		loadingText: '',
-		disabled: false,
 	},
 };
 
-const Template = ({ appearance, size, horizontalAlignment, width, maxWidth, expandable, expanded, popupType, text, supportingText, singleLine, startIcon, endIcon, shortcut, shortcutMac, shortcutWindows, shortcutLinux, type, href, target, download, accessibleLabel, accessibleDescription, loading, loadingText, disabled }: Record<string, any>) => html`
+const Template = ({ appearance, size, width, maxWidth, horizontalAlignment, text, supportingText, startIcon, endIcon, expandable, popupType, accessibleLabel, accessibleDescription, loadingText, shortcut, shortcutMac, shortcutWindows, shortcutLinux, singleLine, expanded, loading, disabled, type, href, target, download }: Record<string, any>) => html`
 	<nldd-button
 		appearance=${appearance}
 		size=${size}
-		horizontal-alignment=${horizontalAlignment}
 		width=${width || nothing}
 		max-width=${maxWidth || nothing}
-		type=${type}
+		horizontal-alignment=${horizontalAlignment}
 		text=${text}
 		supporting-text=${supportingText || nothing}
-		href=${href || nothing}
-		target=${target || nothing}
-		download=${download ?? nothing}
 		start-icon=${startIcon || nothing}
 		end-icon=${endIcon || nothing}
+		?expandable=${expandable}
+		popup-type=${popupType || nothing}
+		accessible-label=${accessibleLabel || nothing}
+		accessible-description=${accessibleDescription || nothing}
+		loading-text=${loadingText || nothing}
 		shortcut=${shortcut || nothing}
 		shortcut-mac=${shortcutMac || nothing}
 		shortcut-windows=${shortcutWindows || nothing}
 		shortcut-linux=${shortcutLinux || nothing}
-		popup-type=${popupType || nothing}
-		accessible-label=${accessibleLabel || nothing}
-		accessible-description=${accessibleDescription || nothing}
-		?expandable=${expandable}
-		?expanded=${expanded}
 		?single-line=${singleLine}
+		?expanded=${expanded}
 		?loading=${loading}
-		loading-text=${loadingText || nothing}
 		?disabled=${disabled}
+		type=${type}
+		href=${href || nothing}
+		target=${target || nothing}
+		download=${download ?? nothing}
 	></nldd-button>
 `;
 

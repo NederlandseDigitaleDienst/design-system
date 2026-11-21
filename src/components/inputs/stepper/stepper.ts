@@ -5,16 +5,16 @@
  *
  * @element nldd-stepper
  * @related nldd-number-field
+ * @attr {'xs'|'sm'|'md'} size - Size: 'xs' | 'sm' | 'md' (default: 'md')
+ * @attr {string} accessible-label - Accessible name for the spinbutton; falls back to a generic label
+ * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
+ * @attr {boolean} disabled - Disabled state
+ * @attr {string} name - Name for form submission; the value is submitted under this name
  * @attr {number} value - Current value
  * @attr {number} min - Minimum value (default: 0)
  * @attr {number} max - Maximum value (default: Infinity)
  * @attr {number} step - Step size (default: 1)
- * @attr {boolean} disabled - Disabled state
- * @attr {'xs'|'sm'|'md'} size - Size: 'xs' | 'sm' | 'md' (default: 'md')
- * @attr {string} name - Name for form submission; the value is submitted under this name
- * @attr {string} accessible-label - Accessible name for the spinbutton; falls back to a generic label
  * @attr {object} translations - Translations; unspecified keys fall back to Dutch
- * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
  *
  * @fires change - When the value changes; detail: { value: number }
  */
@@ -48,26 +48,8 @@ export class NLDDStepper extends DescribedBy(FormAssociated(LitElement)) {
 
 
 
-	@property({ type: Number })
-	value = 0;
-
-	@property({ type: Number })
-	min = 0;
-
-	@property({ type: Number })
-	max = Infinity;
-
-	@property({ type: Number })
-	step = 1;
-
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	@property({ reflect: true, converter: reflectNonDefault<StepperSize>('md') })
 	size: StepperSize = 'md';
-
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	name = '';
 
 	/**
 	 * Accessible name for the spinbutton. Without one it falls back to a generic
@@ -76,11 +58,6 @@ export class NLDDStepper extends DescribedBy(FormAssociated(LitElement)) {
 	 */
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
-
-	/** Override one or more translation keys. Unspecified keys fall back to Dutch. */
-	@property({ type: Object })
-	translations: Partial<NLDDStepperTranslations> = {};
-
 
 	/**
 	 * Marks the control as invalid.
@@ -94,6 +71,27 @@ export class NLDDStepper extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
+
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	name = '';
+
+	@property({ type: Number })
+	value = 0;
+
+	@property({ type: Number })
+	min = 0;
+
+	@property({ type: Number })
+	max = Infinity;
+
+	@property({ type: Number })
+	step = 1;
+
+	/** Override one or more translation keys. Unspecified keys fall back to Dutch. */
+	@property({ type: Object })
+	translations: Partial<NLDDStepperTranslations> = {};
 
 	override formValue(): FormValue {
 		return String(this.value);

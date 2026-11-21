@@ -6,34 +6,34 @@
  * @related nldd-button
  * @attr {'primary'|'secondary'|'destructive'|'accent-filled'|'accent-transparent'|'neutral-tinted'|'neutral-base'|'neutral-transparent'|'critical-tinted'|'critical-transparent'|'content-filled'|'content-tinted'} appearance - Visual style, color included: 'primary' | 'secondary' | 'destructive' | 'accent-filled' | 'accent-transparent' | 'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'critical-tinted' | 'critical-transparent' | 'content-filled' | 'content-tinted'. The content appearances take their colors from --context-content-color, for buttons on colored surfaces; content-filled uses the surface color (--context-background-color) for its icon.
  * @attr {'xs'|'sm'|'md'|'lg'} size - Button size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md')
- * @attr {boolean} hide-lg-text - In lg size, hides the text label and enlarges the icon by one step (28px)
- * @attr {boolean} loading - Loading state (default: false). Shows an activity indicator over the visually hidden icon, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled). Meant for an action that has to wait for the server, such as sending an application. For most actions, show the result right away and confirm in the background, as the design guidelines describe.
- * @attr {string} loading-text - What the screen reader announces while `loading` is on, for a button that does more than load: "Aan het bewaren". Leave it out and the activity indicator says its translated "Laden".
- * @attr {boolean} disabled - Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why.
- * @attr {boolean} no-tab - Takes the button out of the tab order (tabindex="-1"), for a control owned by a roving container (an nldd-token in nldd-token-field, a button in a row of an nldd-list) that manages focus itself. Still mouse- and script-focusable.
- * @attr {'button'|'submit'|'reset'} type - Button type for form submission: 'button' | 'submit' | 'reset' (ignored when href is set)
- * @attr {boolean} expandable - Whether the button opens a menu or popover and shows chevron next to the icon
- * @attr {boolean} expanded - Whether the popover/menu controlled by this button is currently open. Forwarded as aria-expanded on the inner button; toggles the is-expanded visual state.
- * @attr {'menu'|'listbox'|'dialog'|'tree'|'grid'} popup-type - Type of popup container this button opens: 'menu' | 'listbox' | 'dialog' | 'tree' | 'grid'. Sets aria-haspopup on the inner button and forces aria-expanded to always be present (true/false) so screen readers know the popup state. An nldd-menu or nldd-popover in the `popup` slot, or anchored to this button, sets it itself from the first render; set it only for another kind of popup.
  * @attr {string} width - Width mode: 'full' (stretches to container) or any CSS length (e.g. '240px')
  * @attr {string} text - Button text, used as aria-label and shown below the icon in lg size
  * @attr {string} icon - Icon name for the nldd-icon element. Defaults to a placeholder icon when neither this attribute nor the icon slot is set.
+ * @attr {boolean} expandable - Whether the button opens a menu or popover and shows chevron next to the icon
+ * @attr {'menu'|'listbox'|'dialog'|'tree'|'grid'} popup-type - Type of popup container this button opens: 'menu' | 'listbox' | 'dialog' | 'tree' | 'grid'. Sets aria-haspopup on the inner button and forces aria-expanded to always be present (true/false) so screen readers know the popup state. An nldd-menu or nldd-popover in the `popup` slot, or anchored to this button, sets it itself from the first render; set it only for another kind of popup.
+ * @attr {string} popovertarget - ID of a popover element to toggle, looked up in the tree of this button; the inner <button> gets the element. An nldd-menu or nldd-popover it points at is also positioned against this control, so it needs no `anchor`.
+ * @attr {string} interestfor - ID of an nldd-popover that describes this button and opens on interest, as the `interest` slot does, for a popover that stands elsewhere: one shared by several controls, or a button in a `<p>`, where markup of your own in the button would break the paragraph. Looked up in the tree of this button. A popover in the `interest` slot wins. Keep `accessible-label` on that popover: it names the popover where it stands, and is left out while it describes this button.
  * @attr {string} accessible-label - Accessible label for screen readers. Overrides text as aria-label and title tooltip. Use when the visible text alone lacks context for screen readers (e.g. text "Toon", accessible-label "Toon wachtwoord"). The text is still shown visually in lg size regardless.
- * @attr {string} tooltip-timing - Forwarded to the inner nldd-tooltip's `timing`: 'delay' (the default, a 700 ms show-delay), 'instant', or 'never' (suppress the visual tooltip; screen readers still get the aria-label). Use 'never' when the surrounding context already explains the button (e.g. spin buttons in nldd-number-field, the chevron in nldd-split-button).
+ * @attr {boolean} hide-lg-text - In lg size, hides the text label and enlarges the icon by one step (28px)
+ * @attr {string} loading-text - What the screen reader announces while `loading` is on, for a button that does more than load: "Aan het bewaren". Leave it out and the activity indicator says its translated "Laden".
  * @attr {string} shortcut - Keyboard shortcut hint shown in the tooltip after the text, e.g. 'Alt+P'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up the handling in your app. Part of the accessible name ("Presentatiemodus Alt P"), as in nldd-menu-item. Hidden on touch-only devices, where it isn't invokable.
  * @attr {string} shortcut-mac - Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`).
  * @attr {string} shortcut-windows - Override of `shortcut` on Windows (falls back to `shortcut`).
  * @attr {string} shortcut-linux - Override of `shortcut` on Linux (falls back to `shortcut`).
+ * @attr {boolean} no-tab - Takes the button out of the tab order (tabindex="-1"), for a control owned by a roving container (an nldd-token in nldd-token-field, a button in a row of an nldd-list) that manages focus itself. Still mouse- and script-focusable.
+ * @attr {string} tooltip-timing - Forwarded to the inner nldd-tooltip's `timing`: 'delay' (the default, a 700 ms show-delay), 'instant', or 'never' (suppress the visual tooltip; screen readers still get the aria-label). Use 'never' when the surrounding context already explains the button (e.g. spin buttons in nldd-number-field, the chevron in nldd-split-button).
+ * @attr {boolean} expanded - Whether the popover/menu controlled by this button is currently open. Forwarded as aria-expanded on the inner button; toggles the is-expanded visual state.
+ * @attr {boolean} loading - Loading state (default: false). Shows an activity indicator over the visually hidden icon, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled). Meant for an action that has to wait for the server, such as sending an application. For most actions, show the result right away and confirm in the background, as the design guidelines describe.
+ * @attr {boolean} disabled - Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why.
+ * @attr {'button'|'submit'|'reset'} type - Button type for form submission: 'button' | 'submit' | 'reset' (ignored when href is set)
  * @attr {string} href - When set, renders an <a> element instead of <button>
  * @attr {string} target - Link target (e.g. '_blank'); only used when href is set. With '_blank' the "opens in new tab" announcement is folded into the aria-label for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.
- * @attr {string} download - Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab.
  * @attr {string} rel - Link rel attribute, used with href; with target '_blank', 'noopener noreferrer' is added to whatever you set
- * @attr {object} translations - Override translation keys (e.g. the "opens in new tab" announcement); unset keys fall back to Dutch.
- * @attr {string} popovertarget - ID of a popover element to toggle, looked up in the tree of this button; the inner <button> gets the element. An nldd-menu or nldd-popover it points at is also positioned against this control, so it needs no `anchor`.
+ * @attr {string} download - Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab.
  *
  * @slot icon - Slot for a custom icon (e.g. custom SVG). Wins over `icon`; falls back to a placeholder icon when neither is set.
  * @slot popup - A single `nldd-menu` or `nldd-popover` this button invokes. Slotting it auto-anchors the overlay to the button and toggles it on click (no id/anchor wiring). The overlay syncs `expanded` and `aria-haspopup` back onto the button. Add `expandable` for the disclosure chevron. Mirrors nldd-split-button; manual `popovertarget` wiring keeps working without a slotted overlay.
- * @attr {string} interestfor - ID of an nldd-popover that describes this button and opens on interest, as the `interest` slot does, for a popover that stands elsewhere: one shared by several controls, or a button in a `<p>`, where markup of your own in the button would break the paragraph. Looked up in the tree of this button. A popover in the `interest` slot wins. Keep `accessible-label` on that popover: it names the popover where it stands, and is left out while it describes this button.
+ * @attr {object} translations - Override translation keys (e.g. the "opens in new tab" announcement); unset keys fall back to Dutch.
  * @slot interest - A single `nldd-popover` that describes this button and opens on interest instead of on a click: when the pointer rests on the button, when it gets keyboard focus, and on a long press on touch. It takes the place of the button's own tooltip, so let it say what the button does where the icon does not. The button keeps its own click. Focus stays on the button, the popover's content is read as the button's description (after `accessible-label`, which stays its name), and Escape closes it. Information only: put no link or button in it. The popover needs no `accessible-label` here.
  *
  * @example
@@ -98,50 +98,25 @@ export class NLDDIconButton extends DescribedBy(withTranslations(LitElement, nld
 	@property({ reflect: true, converter: reflectNonDefault<Size>('md') })
 	size: Size = 'md';
 
-	/** In lg size, hides the text label and enlarges the icon by one step (28px). */
-	@property({ type: Boolean, reflect: true, attribute: 'hide-lg-text' })
-	hideLgText = false;
+	/** Width mode: 'full' (stretch to container) or any CSS length. */
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	width = '';
 
-	/**
-	 * Loading state. Shows an activity indicator centered over the (visually
-	 * hidden) icon, marks the inner control `aria-busy="true"` and blocks
-	 * activation, without dropping the control from the tab order (unlike
-	 * `disabled`).
-	 *
-	 * Activation is blocked by stopping the click (as `disabled` does), so a
-	 * `click` listener delegated on an ancestor receives nothing while loading.
-	 */
-	@property({ type: Boolean, reflect: true })
-	loading = false;
+	/** Button text, used as aria-label and shown below the icon in lg size. */
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	text = '';
 
-	/** What the screen reader announces while loading. Empty falls back to the activity indicator's "Laden". */
-	@property({ attribute: 'loading-text' })
-	loadingText = '';
+	@property({ type: String })
+	icon = '';
 
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
+	@property({ type: Boolean, reflect: true, attribute: 'expandable' })
+	expandable = false;
 
-	/** Removes the per-appearance highlight border (e.g. when nldd-button-bar draws a single group border instead). */
 	/** Set by a group that draws one border around its controls, such as
 	 *  nldd-button-bar: drops this control's own highlight border. No attribute:
 	 *  the styles read it as `:state(no-highlight-border)`. */
 	@property({ attribute: false })
 	noHighlightBorder = false;
-
-	@property({ reflect: true, converter: reflectNonDefault<ButtonType>('button') })
-	type: ButtonType = 'button';
-
-	@property({ type: Boolean, reflect: true, attribute: 'expandable' })
-	expandable = false;
-
-	@property({ type: Boolean, reflect: true })
-	expanded = false;
-
-	/** Take the button out of the tab order (`tabindex="-1"`), for a control owned by
-	 *  a roving container (e.g. an `nldd-token` in `nldd-token-field`) that manages
-	 *  focus itself. Still mouse- and script-focusable. */
-	@property({ type: Boolean, reflect: true, attribute: 'no-tab' })
-	noTab = false;
 
 	/**
 	 * Type of popup container this button opens. Sets `aria-haspopup` on the
@@ -151,15 +126,31 @@ export class NLDDIconButton extends DescribedBy(withTranslations(LitElement, nld
 	@property({ type: String, reflect: true, attribute: 'popup-type' })
 	popupType?: PopupType;
 
-	/** Width mode: 'full' (stretch to container) or any CSS length. */
-	@property({ reflect: true, converter: reflectNonDefault<string>('') })
-	width = '';
-
 	@property({ type: String })
 	popovertarget: string | undefined = undefined;
 
 	@property({ type: String, reflect: true })
 	interestfor: string | undefined = undefined;
+
+	/** Take the button out of the tab order (`tabindex="-1"`), for a control owned by
+	 *  a roving container (e.g. an `nldd-token` in `nldd-token-field`) that manages
+	 *  focus itself. Still mouse- and script-focusable. */
+	@property({ type: String, attribute: 'accessible-label' })
+	accessibleLabel = '';
+
+	/** In lg size, hides the text label and enlarges the icon by one step (28px). */
+	@property({ type: Boolean, reflect: true, attribute: 'hide-lg-text' })
+	hideLgText = false;
+
+	/** What the screen reader announces while loading. Empty falls back to the activity indicator's "Laden". */
+	@property({ attribute: 'loading-text' })
+	loadingText = '';
+
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	shortcut = '';
+
+	@property({ reflect: true, attribute: 'shortcut-mac', converter: reflectNonDefault<string>('') })
+	shortcutMac = '';
 
 	/**
 	 * Direct element reference to the popover this button invokes: the IDL-only
@@ -183,36 +174,44 @@ export class NLDDIconButton extends DescribedBy(withTranslations(LitElement, nld
 	@property({ attribute: false })
 	popoverTargetAction: 'toggle' | 'show' | 'hide' = 'toggle';
 
-	/** Button text, used as aria-label and shown below the icon in lg size. */
-	@property({ reflect: true, converter: reflectNonDefault<string>('') })
-	text = '';
+	@property({ reflect: true, attribute: 'shortcut-windows', converter: reflectNonDefault<string>('') })
+	shortcutWindows = '';
 
 	/** Icon name for the nldd-icon element. An icon in the icon slot wins; with
 	 *  neither, a placeholder icon shows. */
-	@property({ type: String })
-	icon = '';
+	@property({ reflect: true, attribute: 'shortcut-linux', converter: reflectNonDefault<string>('') })
+	shortcutLinux = '';
 
 	/** Accessible label for screen readers. Overrides text as aria-label and title tooltip.
 	 *  The text is still shown visually in lg size regardless. */
-	@property({ type: String, attribute: 'accessible-label' })
-	accessibleLabel = '';
+	@property({ type: Boolean, reflect: true, attribute: 'no-tab' })
+	noTab = false;
 
 	/** Forwarded to the inner nldd-tooltip's `timing`. Use `'never'` to
 	 * suppress the visual tooltip; aria-label still describes the button. */
 	@property({ reflect: true, attribute: 'tooltip-timing', converter: reflectNonDefault<'delay' | 'instant' | 'never'>('delay') })
 	tooltipTiming: 'delay' | 'instant' | 'never' = 'delay';
 
-	@property({ reflect: true, converter: reflectNonDefault<string>('') })
-	shortcut = '';
+	@property({ type: Boolean, reflect: true })
+	expanded = false;
 
-	@property({ reflect: true, attribute: 'shortcut-mac', converter: reflectNonDefault<string>('') })
-	shortcutMac = '';
+	/**
+	 * Loading state. Shows an activity indicator centered over the (visually
+	 * hidden) icon, marks the inner control `aria-busy="true"` and blocks
+	 * activation, without dropping the control from the tab order (unlike
+	 * `disabled`).
+	 *
+	 * Activation is blocked by stopping the click (as `disabled` does), so a
+	 * `click` listener delegated on an ancestor receives nothing while loading.
+	 */
+	@property({ type: Boolean, reflect: true })
+	loading = false;
 
-	@property({ reflect: true, attribute: 'shortcut-windows', converter: reflectNonDefault<string>('') })
-	shortcutWindows = '';
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
-	@property({ reflect: true, attribute: 'shortcut-linux', converter: reflectNonDefault<string>('') })
-	shortcutLinux = '';
+	@property({ reflect: true, converter: reflectNonDefault<ButtonType>('button') })
+	type: ButtonType = 'button';
 
 	/** When set, renders an <a> element instead of <button>. */
 	@property({ type: String, reflect: true })
@@ -224,15 +223,15 @@ export class NLDDIconButton extends DescribedBy(withTranslations(LitElement, nld
 
 	/** Saves the file instead of opening it; only used when href is set. Empty
 	 *  for the name from the URL, a name to save it under. */
-	@property({ type: String })
-	download: string | undefined = undefined;
-
 	/**
 	 * Link rel attribute. Only used when href is set.
 	 * With target '_blank', 'noopener noreferrer' is added to it.
 	 */
 	@property({ type: String })
 	rel: string | undefined = undefined;
+
+	@property({ type: String })
+	download: string | undefined = undefined;
 
 	/** Whether an icon is present via attribute or slot. */
 	private get _hasIcon(): boolean {

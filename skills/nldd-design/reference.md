@@ -58,35 +58,35 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 | --- | --- | --- |
 | `appearance` | `'primary'\|'secondary'\|'destructive'\|'accent-filled'\|'accent-transparent'\|'neutral-tinted'\|'neutral-base'\|'neutral-transparent'\|'critical-tinted'\|'critical-transparent'\|'content-filled'\|'content-tinted'` | Visual style, color included: 'primary' \| 'secondary' \| 'destructive' \| 'accent-filled' \| 'accent-transparent' \| 'neutral-tinted' \| 'neutral-base' \| 'neutral-transparent' \| 'critical-tinted' \| 'critical-transparent' \| 'content-filled' \| 'content-tinted'. The content appearances take their colors from --context-content-color, for buttons on colored surfaces; content-filled uses the surface color (--context-background-color) as the label color, so a colored surface of your own sets that variable. |
 | `size` | `'xs'\|'sm'\|'md'\|'lg'` | Button size: 'xs' \| 'sm' \| 'md' \| 'lg' (default: 'md'). 'lg' uses larger text and 24px start/end icons. |
-| `horizontal-alignment` | `'left'\|'center'\|'right'` | Horizontal alignment of the button content: 'left' \| 'center' \| 'right' (default: unset, centered). Most visible with width="full" or a fixed width. |
-| `loading` | `boolean` | Loading state (default: false). Shows an activity indicator over the visually hidden content, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled). The content stays laid out, so the button keeps its width. Meant for an action that has to wait for the server, such as sending an application. For most actions, show the result right away and confirm in the background, as the design guidelines describe. |
-| `loading-text` | `string` | What the screen reader announces while `loading` is on, for a button that does more than load: "Aan het bewaren". Leave it out and the activity indicator says its translated "Laden". |
-| `disabled` | `boolean` | Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why. |
-| `type` | `'button'\|'submit'\|'reset'` | Button type for form submission: 'button' \| 'submit' \| 'reset' (ignored when href is set) |
-| `popovertarget` | `string` | ID of a popover element this button invokes, looked up in the tree of this button; the inner button gets the element. Use the popoverTargetElement property instead when the popover lives in another tree. An nldd-menu or nldd-popover it points at is also positioned against this control, so it needs no `anchor`. |
-| `expandable` | `boolean` | Whether the button has a icon to indicate it opens a menu or popover |
-| `expanded` | `boolean` | Whether the popover/menu controlled by this button is currently open. Forwarded as aria-expanded on the inner button; toggles the is-expanded visual state. |
-| `popup-type` | `'menu'\|'listbox'\|'dialog'\|'tree'\|'grid'` | Type of popup container this button opens: 'menu' \| 'listbox' \| 'dialog' \| 'tree' \| 'grid'. Sets aria-haspopup on the inner button and forces aria-expanded to always be present (true/false) so screen readers know the popup state. An nldd-menu or nldd-popover in the `popup` slot, or anchored to this button, sets it itself from the first render; set it only for another kind of popup. |
-| `form` | `string` | Id of the form this button submits or resets, for a button that sits outside it. Takes an `nldd-form` as well as a plain `<form>`. Without it the button acts on the form it stands in. The id is looked up in the button's own root, as the platform does it: a button inside a shadow tree does not reach a form in the document around it. An id that finds nothing, or an `nldd-form` that has not rendered its form yet, says so in development rather than letting the click do nothing. |
 | `width` | `string` | Width mode: 'full' (stretches to container) or any CSS length (e.g. '240px') |
 | `max-width` | `string` | Caps the width at this CSS length (e.g. '320px'). Combines with `width="full"`: the button follows its container up to the cap. A label that doesn't fit is truncated with an ellipsis, because a cap only means something if the content respects it. |
+| `horizontal-alignment` | `'left'\|'center'\|'right'` | Horizontal alignment of the button content: 'left' \| 'center' \| 'right' (default: unset, centered). Most visible with width="full" or a fixed width. |
 | `text` | `string` | Button text |
 | `supporting-text` | `string` | Supporting text shown below the text (md/lg) or after it (sm/xs), in a secondary color. Part of the accessible name (unless `accessible-label` is set, which replaces the whole accessible name). |
-| `single-line` | `boolean` | When true, truncates overflowing text with an ellipsis instead of letting it wrap. Requires the button (or an ancestor) to constrain the width. |
-| `no-tab` | `boolean` | Takes the button out of the tab order (tabindex="-1"), for a control owned by a roving container (e.g. a button in a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable. |
 | `start-icon` | `string` | Icon name for the start icon (before text) |
 | `end-icon` | `string` | Icon name for the end icon (after text) |
+| `expandable` | `boolean` | Whether the button has a icon to indicate it opens a menu or popover |
+| `popup-type` | `'menu'\|'listbox'\|'dialog'\|'tree'\|'grid'` | Type of popup container this button opens: 'menu' \| 'listbox' \| 'dialog' \| 'tree' \| 'grid'. Sets aria-haspopup on the inner button and forces aria-expanded to always be present (true/false) so screen readers know the popup state. An nldd-menu or nldd-popover in the `popup` slot, or anchored to this button, sets it itself from the first render; set it only for another kind of popup. |
+| `popovertarget` | `string` | ID of a popover element this button invokes, looked up in the tree of this button; the inner button gets the element. Use the popoverTargetElement property instead when the popover lives in another tree. An nldd-menu or nldd-popover it points at is also positioned against this control, so it needs no `anchor`. |
+| `interestfor` | `string` | ID of an nldd-popover that describes this button and opens on interest, as the `interest` slot does, for a popover that stands elsewhere: one shared by several controls, or a button in a `<p>`, where markup of your own in the button would break the paragraph. Looked up in the tree of this button. A popover in the `interest` slot wins. Keep `accessible-label` on that popover: it names the popover where it stands, and is left out while it describes this button. |
 | `accessible-label` | `string` | Accessible label for the button, overrides text for screen readers |
+| `loading-text` | `string` | What the screen reader announces while `loading` is on, for a button that does more than load: "Aan het bewaren". Leave it out and the activity indicator says its translated "Laden". |
 | `shortcut` | `string` | Keyboard shortcut hint shown right after the text, e.g. 'Cmd+S'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up the handling in your app. Part of the accessible name, as in nldd-menu-item. Hidden on touch-only devices, where it isn't invokable. Keep it for the few main actions of a screen (save, search); a hint on every button is noise. |
 | `shortcut-mac` | `string` | Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`). |
 | `shortcut-windows` | `string` | Override of `shortcut` on Windows (falls back to `shortcut`). |
 | `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
+| `no-tab` | `boolean` | Takes the button out of the tab order (tabindex="-1"), for a control owned by a roving container (e.g. a button in a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable. |
+| `single-line` | `boolean` | When true, truncates overflowing text with an ellipsis instead of letting it wrap. Requires the button (or an ancestor) to constrain the width. |
+| `expanded` | `boolean` | Whether the popover/menu controlled by this button is currently open. Forwarded as aria-expanded on the inner button; toggles the is-expanded visual state. |
+| `loading` | `boolean` | Loading state (default: false). Shows an activity indicator over the visually hidden content, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled). The content stays laid out, so the button keeps its width. Meant for an action that has to wait for the server, such as sending an application. For most actions, show the result right away and confirm in the background, as the design guidelines describe. |
+| `disabled` | `boolean` | Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why. |
+| `form` | `string` | Id of the form this button submits or resets, for a button that sits outside it. Takes an `nldd-form` as well as a plain `<form>`. Without it the button acts on the form it stands in. The id is looked up in the button's own root, as the platform does it: a button inside a shadow tree does not reach a form in the document around it. An id that finds nothing, or an `nldd-form` that has not rendered its form yet, says so in development rather than letting the click do nothing. |
+| `type` | `'button'\|'submit'\|'reset'` | Button type for form submission: 'button' \| 'submit' \| 'reset' (ignored when href is set) |
 | `href` | `string` | When set, renders an <a> element instead of <button> |
 | `target` | `string` | Link target (e.g. '_blank'); only used when href is set. With '_blank' the button adds a visually hidden "opens in new tab" announcement for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. |
-| `download` | `string` | Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab. |
 | `rel` | `string` | Link rel attribute, used with href; with target '_blank', 'noopener noreferrer' is added to whatever you set |
+| `download` | `string` | Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab. |
 | `translations` | `object` | Override translation keys (e.g. the "opens in new tab" announcement); unset keys fall back to Dutch. |
-| `interestfor` | `string` | ID of an nldd-popover that describes this button and opens on interest, as the `interest` slot does, for a popover that stands elsewhere: one shared by several controls, or a button in a `<p>`, where markup of your own in the button would break the paragraph. Looked up in the tree of this button. A popover in the `interest` slot wins. Keep `accessible-label` on that popover: it names the popover where it stands, and is left out while it describes this button. |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -124,8 +124,8 @@ A horizontal container for grouping buttons with a neutral background. Automatic
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `size` | `'xs'\|'sm'\|'md'\|'lg'` | Bar size: 'xs' \| 'sm' \| 'md' \| 'lg' (default: 'md'). At 'lg', icon-button children stack their label below the icon (mobile action-bar style). |
 | `appearance` | `'primary'\|'secondary'\|'accent-filled'\|'neutral-tinted'\|'neutral-base'\|'content-filled'\|'content-tinted'` | Visual style of the buttons: 'primary' \| 'secondary' \| 'accent-filled' \| 'neutral-tinted' (default) \| 'neutral-base' \| 'content-filled' \| 'content-tinted'. The content appearances are for a colored surface. |
+| `size` | `'xs'\|'sm'\|'md'\|'lg'` | Bar size: 'xs' \| 'sm' \| 'md' \| 'lg' (default: 'md'). At 'lg', icon-button children stack their label below the icon (mobile action-bar style). |
 | `disabled` | `boolean` | Disabled state |
 
 **Slots**
@@ -161,8 +161,8 @@ A container for grouping related buttons together, in a row or stacked. `auto`, 
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `size` | `'sm'\|'md'` | Button group size, set on every button in it: 'sm' \| 'md' (default: 'md') |
-| `orientation` | `'auto'\|'horizontal'\|'vertical'` | Layout direction: 'auto' \| 'horizontal' \| 'vertical' (default: 'auto') |
 | `width` | `string` | 'full': the buttons fill the row in equal shares, and a button that does not fit moves to a line of its own (default: unset, each button as wide as its label) |
+| `orientation` | `'auto'\|'horizontal'\|'vertical'` | Layout direction: 'auto' \| 'horizontal' \| 'vertical' (default: 'auto') |
 
 **Slots**
 
@@ -200,31 +200,31 @@ A container for grouping related buttons together, in a row or stacked. `auto`, 
 | --- | --- | --- |
 | `appearance` | `'primary'\|'secondary'\|'destructive'\|'accent-filled'\|'accent-transparent'\|'neutral-tinted'\|'neutral-base'\|'neutral-transparent'\|'critical-tinted'\|'critical-transparent'\|'content-filled'\|'content-tinted'` | Visual style, color included: 'primary' \| 'secondary' \| 'destructive' \| 'accent-filled' \| 'accent-transparent' \| 'neutral-tinted' \| 'neutral-base' \| 'neutral-transparent' \| 'critical-tinted' \| 'critical-transparent' \| 'content-filled' \| 'content-tinted'. The content appearances take their colors from --context-content-color, for buttons on colored surfaces; content-filled uses the surface color (--context-background-color) for its icon. |
 | `size` | `'xs'\|'sm'\|'md'\|'lg'` | Button size: 'xs' \| 'sm' \| 'md' \| 'lg' (default: 'md') |
-| `hide-lg-text` | `boolean` | In lg size, hides the text label and enlarges the icon by one step (28px) |
-| `loading` | `boolean` | Loading state (default: false). Shows an activity indicator over the visually hidden icon, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled). Meant for an action that has to wait for the server, such as sending an application. For most actions, show the result right away and confirm in the background, as the design guidelines describe. |
-| `loading-text` | `string` | What the screen reader announces while `loading` is on, for a button that does more than load: "Aan het bewaren". Leave it out and the activity indicator says its translated "Laden". |
-| `disabled` | `boolean` | Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why. |
-| `no-tab` | `boolean` | Takes the button out of the tab order (tabindex="-1"), for a control owned by a roving container (an nldd-token in nldd-token-field, a button in a row of an nldd-list) that manages focus itself. Still mouse- and script-focusable. |
-| `type` | `'button'\|'submit'\|'reset'` | Button type for form submission: 'button' \| 'submit' \| 'reset' (ignored when href is set) |
-| `expandable` | `boolean` | Whether the button opens a menu or popover and shows chevron next to the icon |
-| `expanded` | `boolean` | Whether the popover/menu controlled by this button is currently open. Forwarded as aria-expanded on the inner button; toggles the is-expanded visual state. |
-| `popup-type` | `'menu'\|'listbox'\|'dialog'\|'tree'\|'grid'` | Type of popup container this button opens: 'menu' \| 'listbox' \| 'dialog' \| 'tree' \| 'grid'. Sets aria-haspopup on the inner button and forces aria-expanded to always be present (true/false) so screen readers know the popup state. An nldd-menu or nldd-popover in the `popup` slot, or anchored to this button, sets it itself from the first render; set it only for another kind of popup. |
 | `width` | `string` | Width mode: 'full' (stretches to container) or any CSS length (e.g. '240px') |
 | `text` | `string` | Button text, used as aria-label and shown below the icon in lg size |
 | `icon` | `string` | Icon name for the nldd-icon element. Defaults to a placeholder icon when neither this attribute nor the icon slot is set. |
+| `expandable` | `boolean` | Whether the button opens a menu or popover and shows chevron next to the icon |
+| `popup-type` | `'menu'\|'listbox'\|'dialog'\|'tree'\|'grid'` | Type of popup container this button opens: 'menu' \| 'listbox' \| 'dialog' \| 'tree' \| 'grid'. Sets aria-haspopup on the inner button and forces aria-expanded to always be present (true/false) so screen readers know the popup state. An nldd-menu or nldd-popover in the `popup` slot, or anchored to this button, sets it itself from the first render; set it only for another kind of popup. |
+| `popovertarget` | `string` | ID of a popover element to toggle, looked up in the tree of this button; the inner <button> gets the element. An nldd-menu or nldd-popover it points at is also positioned against this control, so it needs no `anchor`. |
+| `interestfor` | `string` | ID of an nldd-popover that describes this button and opens on interest, as the `interest` slot does, for a popover that stands elsewhere: one shared by several controls, or a button in a `<p>`, where markup of your own in the button would break the paragraph. Looked up in the tree of this button. A popover in the `interest` slot wins. Keep `accessible-label` on that popover: it names the popover where it stands, and is left out while it describes this button. |
 | `accessible-label` | `string` | Accessible label for screen readers. Overrides text as aria-label and title tooltip. Use when the visible text alone lacks context for screen readers (e.g. text "Toon", accessible-label "Toon wachtwoord"). The text is still shown visually in lg size regardless. |
-| `tooltip-timing` | `string` | Forwarded to the inner nldd-tooltip's `timing`: 'delay' (the default, a 700 ms show-delay), 'instant', or 'never' (suppress the visual tooltip; screen readers still get the aria-label). Use 'never' when the surrounding context already explains the button (e.g. spin buttons in nldd-number-field, the chevron in nldd-split-button). |
+| `hide-lg-text` | `boolean` | In lg size, hides the text label and enlarges the icon by one step (28px) |
+| `loading-text` | `string` | What the screen reader announces while `loading` is on, for a button that does more than load: "Aan het bewaren". Leave it out and the activity indicator says its translated "Laden". |
 | `shortcut` | `string` | Keyboard shortcut hint shown in the tooltip after the text, e.g. 'Alt+P'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up the handling in your app. Part of the accessible name ("Presentatiemodus Alt P"), as in nldd-menu-item. Hidden on touch-only devices, where it isn't invokable. |
 | `shortcut-mac` | `string` | Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`). |
 | `shortcut-windows` | `string` | Override of `shortcut` on Windows (falls back to `shortcut`). |
 | `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
+| `no-tab` | `boolean` | Takes the button out of the tab order (tabindex="-1"), for a control owned by a roving container (an nldd-token in nldd-token-field, a button in a row of an nldd-list) that manages focus itself. Still mouse- and script-focusable. |
+| `tooltip-timing` | `string` | Forwarded to the inner nldd-tooltip's `timing`: 'delay' (the default, a 700 ms show-delay), 'instant', or 'never' (suppress the visual tooltip; screen readers still get the aria-label). Use 'never' when the surrounding context already explains the button (e.g. spin buttons in nldd-number-field, the chevron in nldd-split-button). |
+| `expanded` | `boolean` | Whether the popover/menu controlled by this button is currently open. Forwarded as aria-expanded on the inner button; toggles the is-expanded visual state. |
+| `loading` | `boolean` | Loading state (default: false). Shows an activity indicator over the visually hidden icon, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled). Meant for an action that has to wait for the server, such as sending an application. For most actions, show the result right away and confirm in the background, as the design guidelines describe. |
+| `disabled` | `boolean` | Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why. |
+| `type` | `'button'\|'submit'\|'reset'` | Button type for form submission: 'button' \| 'submit' \| 'reset' (ignored when href is set) |
 | `href` | `string` | When set, renders an <a> element instead of <button> |
 | `target` | `string` | Link target (e.g. '_blank'); only used when href is set. With '_blank' the "opens in new tab" announcement is folded into the aria-label for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. |
-| `download` | `string` | Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab. |
 | `rel` | `string` | Link rel attribute, used with href; with target '_blank', 'noopener noreferrer' is added to whatever you set |
+| `download` | `string` | Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab. |
 | `translations` | `object` | Override translation keys (e.g. the "opens in new tab" announcement); unset keys fall back to Dutch. |
-| `popovertarget` | `string` | ID of a popover element to toggle, looked up in the tree of this button; the inner <button> gets the element. An nldd-menu or nldd-popover it points at is also positioned against this control, so it needs no `anchor`. |
-| `interestfor` | `string` | ID of an nldd-popover that describes this button and opens on interest, as the `interest` slot does, for a popover that stands elsewhere: one shared by several controls, or a button in a `<p>`, where markup of your own in the button would break the paragraph. Looked up in the tree of this button. A popover in the `interest` slot wins. Keep `accessible-label` on that popover: it names the popover where it stands, and is left out while it describes this button. |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -265,16 +265,16 @@ A floating menu component using the Popover API. Positioned relative to an ancho
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `variant` | `'menu'\|'listbox'\|'navigation'` | What the menu is (default 'menu'). `menu` is a menu of actions: `role="menu"` with menu items, for things you do. `listbox` is the popup of a combobox: `role="listbox"` with options, focus stays in the field. `navigation` is a submenu in a site navigation: a list of links (`role="list"`, each item a list item around a real link), because a screen reader treats a menu as an application and reads a list of links as what it is. Every item takes an `href`. Tab reaches each link, the arrow keys, Home and End move between them, Escape closes and returns focus to the trigger, and the menu closes when focus leaves it. The trigger says `aria-expanded` and promises no menu. Checkbox and radio items, shortcuts and `filter()` belong to actions and warn in development here. A submenu of a navigation menu is a navigation menu too. The variant sets `role="listitem"` on its items and groups, and takes it off again when it changes back, also where you had set that role yourself. |
-| `no-blink` | `boolean` | Closes the menu at once after a choice, without the blink. For a menu whose choice shows at once next to it, such as a token that writes the value it holds: the blink would confirm what is already in view, while the anchor changes under it. A submenu follows the menu it opens from. |
 | `width` | `string` | Explicit width, pinned exactly. Without it the menu sizes to its content between a minimum and a viewport-aware maximum (min(100vw - inset, 640px)). |
-| `accessible-label` | `string` | Name of the menu or listbox for assistive technology, on the element that has the role. Without it the menu takes the name of its anchor (the `accessible-label`, `aria-label`, `text` or text of the button or field it hangs off), and a submenu the text of the item that opens it, so a listbox under a search field is "Zoeken" rather than nameless (WCAG 4.1.2). The list of an nldd-combo-box or nldd-token-field takes the name of the field. |
-| `anchor` | `string` | ID of the anchor element. Positions the menu against it AND makes it a toggle: the menu listens on document click and opens/closes itself when the click lands on the anchor. Use this for a trigger that is not an nldd component, such as a plain `<button>`. An nldd-button, nldd-icon-button, nldd-split-button or nldd-list-item-segment needs no anchor: put the menu in its `popup` slot, or point its `popovertarget` at the menu, and it anchors and opens the menu itself. For a menu you open yourself (a type-ahead under a text field, say), set the `anchorElement` property instead. It positions the same way, without the toggle. |
 | `placement` | `'top'\|'top-start'\|'top-end'\|'bottom'\|'bottom-start'\|'bottom-end'\|'left'\|'left-start'\|'left-end'\|'right'\|'right-start'\|'right-end'` | Side of the anchor it opens on, and how it lines up there (default: 'bottom-start') |
+| `accessible-label` | `string` | Name of the menu or listbox for assistive technology, on the element that has the role. Without it the menu takes the name of its anchor (the `accessible-label`, `aria-label`, `text` or text of the button or field it hangs off), and a submenu the text of the item that opens it, so a listbox under a search field is "Zoeken" rather than nameless (WCAG 4.1.2). The list of an nldd-combo-box or nldd-token-field takes the name of the field. |
 | `max-items` | `number` | Maximum number of visible items before scrolling. Sets --_menu-max-items internally. Default: 0 (no limit). |
 | `empty-text` | `string` | Text of the default empty-state dialog. Falls back to Dutch i18n "Geen opties beschikbaar". |
 | `empty-supporting-text` | `string` | Supporting text of the default empty-state dialog. |
-| `translations` | `object` | Override one or more translation keys. |
+| `anchor` | `string` | ID of the anchor element. Positions the menu against it AND makes it a toggle: the menu listens on document click and opens/closes itself when the click lands on the anchor. Use this for a trigger that is not an nldd component, such as a plain `<button>`. An nldd-button, nldd-icon-button, nldd-split-button or nldd-list-item-segment needs no anchor: put the menu in its `popup` slot, or point its `popovertarget` at the menu, and it anchors and opens the menu itself. For a menu you open yourself (a type-ahead under a text field, say), set the `anchorElement` property instead. It positions the same way, without the toggle. |
+| `no-blink` | `boolean` | Closes the menu at once after a choice, without the blink. For a menu whose choice shows at once next to it, such as a token that writes the value it holds: the blink would confirm what is already in view, while the anchor changes under it. A submenu follows the menu it opens from. |
 | `filterFn` | `Function` | Custom filter function (query, item) => boolean. |
+| `translations` | `object` | Override one or more translation keys. |
 
 **Slots**
 
@@ -340,18 +340,18 @@ A single item within an nldd-menu.
 | `icon` | `string` | Icon name rendered before the text. An icon in the `icon` slot takes its place. |
 | `shortcut` | `string` | Keyboard shortcut hint shown on the right, e.g. 'Cmd+E'. Display only (rendered via nldd-keyboard-shortcut). It does not bind the key, so wire up the handling in your app. Hidden on touch-only devices, where it isn't invokable. |
 | `shortcut-mac` | `string` | / shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`). |
+| `query` | `string` | Query substring to bold-highlight in text. Set by menu's filter(); also settable by consumers. |
+| `query-mark-mode` | `'match'\|'predictive'` | 'match' \| 'predictive' (default: 'predictive'). See text-cell for details. |
+| `aliases` | `string` | Space-separated alternative search terms. |
+| `selected` | `boolean` | Selected state for checkbox and radio types. |
+| `disabled` | `boolean` | Disabled state. |
+| `form` | `string` | Id of the form a `submit` item submits, for an item that does not stand in it, which a menu usually does not. Takes an `nldd-form` as well as a plain `<form>`, looked up in the item's own root. |
+| `value` | `string` | A value of the item's own, read off the item in a `select` handler. The default filter matches on it as well as on `text` and `aliases`. Not a form value: this component is not form-associated. |
+| `type` | `'button'\|'submit'\|'checkbox'\|'radio'` | Item type: 'button' \| 'submit' \| 'checkbox' \| 'radio'. Default: 'button'. A 'submit' item submits its form when chosen, always after `select`, so a logout or delete can be a POST without script: the form it stands in, or the one `form` names. Like a native button, it looks only in its own tree: a menu in a shadow root does not reach a form outside it. To stop it, cancel the form's `submit` event, which runs validation first. One checkbox or radio item gives every item in its menu the check-mark column, so the text of the whole menu starts at one line, as in a native menu. Submenus decide for themselves. |
 | `href` | `string` | Optional link target. A plain button item with an href renders as an `<a>` so it is a real link (middle-click, open in new tab, copy link). Space chooses it like any other item, except in a `navigation` menu, where Space scrolls the page as on any link. Ignored for submenu openers, checkbox/radio items, and while disabled. |
 | `target` | `string` | Where an item with an `href` opens (e.g. '_blank'); adjusts rel automatically. With '_blank' the item adds a visually hidden "opent in nieuw tabblad" for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply. |
 | `rel` | `string` | Link rel of an item with an `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set. |
 | `translations` | `object` | Override translation keys (the new-tab and other-website announcements); unset keys fall back to Dutch. |
-| `type` | `'button'\|'submit'\|'checkbox'\|'radio'` | Item type: 'button' \| 'submit' \| 'checkbox' \| 'radio'. Default: 'button'. A 'submit' item submits its form when chosen, always after `select`, so a logout or delete can be a POST without script: the form it stands in, or the one `form` names. Like a native button, it looks only in its own tree: a menu in a shadow root does not reach a form outside it. To stop it, cancel the form's `submit` event, which runs validation first. One checkbox or radio item gives every item in its menu the check-mark column, so the text of the whole menu starts at one line, as in a native menu. Submenus decide for themselves. |
-| `form` | `string` | Id of the form a `submit` item submits, for an item that does not stand in it, which a menu usually does not. Takes an `nldd-form` as well as a plain `<form>`, looked up in the item's own root. |
-| `selected` | `boolean` | Selected state for checkbox and radio types. |
-| `disabled` | `boolean` | Disabled state. |
-| `value` | `string` | A value of the item's own, read off the item in a `select` handler. The default filter matches on it as well as on `text` and `aliases`. Not a form value: this component is not form-associated. |
-| `aliases` | `string` | Space-separated alternative search terms. |
-| `query` | `string` | Query substring to bold-highlight in text. Set by menu's filter(); also settable by consumers. |
-| `query-mark-mode` | `'match'\|'predictive'` | 'match' \| 'predictive' (default: 'predictive'). See text-cell for details. |
 
 **Slots**
 
@@ -387,23 +387,23 @@ A split button combines a primary action with a chevron that opens its alternati
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `size` | `'xs'\|'sm'\|'md'\|'lg'` | Button size: 'xs' \| 'sm' \| 'md' \| 'lg' (default: 'md') |
 | `appearance` | `'primary'\|'secondary'\|'accent-filled'\|'neutral-tinted'\|'neutral-base'\|'content-filled'\|'content-tinted'` | Visual style: 'primary' \| 'secondary' \| 'accent-filled' \| 'neutral-tinted' (default) \| 'neutral-base' \| 'content-filled' \| 'content-tinted'. 'primary' is 'accent-filled' and 'secondary' is 'neutral-tinted'. The content appearances are for a colored surface and take their colors from --context-content-color. There are no transparent appearances: the split button needs a surface of its own to show it is one control. |
-| `disabled` | `boolean` | Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why. |
-| `loading` | `boolean` | Loading state of the main action, as on nldd-button. The chevron stays available. |
-| `loading-text` | `string` | What the screen reader announces while `loading` is on, as on nldd-button. |
+| `size` | `'xs'\|'sm'\|'md'\|'lg'` | Button size: 'xs' \| 'sm' \| 'md' \| 'lg' (default: 'md') |
 | `width` | `string` | Width mode: 'full' (stretches to container) or any CSS length; the main action button fills the available space |
 | `text` | `string` | Button text for the primary action |
 | `icon` | `string` | Icon name shown before the text on the primary action button |
-| `type` | `'button'\|'submit'\|'reset'` | What the main action does in a form: 'button' (default) \| 'submit' \| 'reset'. Ignored when `href` is set. |
-| `form` | `string` | Id of the form the main action submits or resets, for a split button outside it. Takes an `nldd-form` as well as a plain `<form>`, as on nldd-button. |
-| `href` | `string` | Turns the main action into a link, as on nldd-button. |
-| `download` | `string` | Saves the file `href` points at instead of opening it, as on nldd-button. Only used with `href`. |
 | `popovertarget` | `string` | ID of an `nldd-menu` or `nldd-popover` elsewhere in this tree that the chevron opens, for an overlay that cannot be a child. A slotted overlay wins. |
+| `loading-text` | `string` | What the screen reader announces while `loading` is on, as on nldd-button. |
 | `shortcut` | `string` | Keyboard shortcut hint for the primary action, shown right after its text, e.g. 'Cmd+S'. Forwarded to the inner nldd-button; display only, wire up the handling in your app. |
 | `shortcut-mac` | `string` | Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`). |
 | `shortcut-windows` | `string` | Override of `shortcut` on Windows (falls back to `shortcut`). |
 | `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
+| `loading` | `boolean` | Loading state of the main action, as on nldd-button. The chevron stays available. |
+| `disabled` | `boolean` | Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why. |
+| `form` | `string` | Id of the form the main action submits or resets, for a split button outside it. Takes an `nldd-form` as well as a plain `<form>`, as on nldd-button. |
+| `type` | `'button'\|'submit'\|'reset'` | What the main action does in a form: 'button' (default) \| 'submit' \| 'reset'. Ignored when `href` is set. |
+| `href` | `string` | Turns the main action into a link, as on nldd-button. |
+| `download` | `string` | Saves the file `href` points at instead of opening it, as on nldd-button. Only used with `href`. |
 | `translations` | `object` | Translations; unset keys fall back to Dutch |
 
 **Slots**
@@ -474,18 +474,18 @@ One control in an nldd-toolbar, with its alternative for the overflow menu.
 
 | Attribute | Type | Description |
 | --- | --- | --- |
+| `size` | `'sm'\|'md'\|'lg'` | Set by nldd-toolbar, not a consumer attribute: mirrors the toolbar's size (default: 'md') onto the item host, so size-dependent styling can key off it. |
+| `show-item-labels` | `boolean` | Set by nldd-toolbar, not a consumer attribute: mirrors the toolbar's show-item-labels, so the item renders its label below the control. |
 | `width` | `string` | Fluid width: a percentage (e.g. '40%') or any CSS length (e.g. '240px'). Setting it (or min-width or max-width) makes the item fluid so it grows to fill the available space. |
 | `min-width` | `string` | Minimum (fluid) width as a CSS length (e.g. '240px'). Setting it also makes the item fluid. |
 | `max-width` | `string` | Maximum (fluid) width as a CSS length (e.g. '480px'). Setting it also makes the item fluid. |
-| `label` | `string` | Text label shown below the item when the toolbar has show-item-labels. |
-| `priority` | `number` | Overflow order: items with a lower priority move into the overflow menu first (default 0). Items sharing a priority overflow together, regardless of position. |
-| `size` | `'sm'\|'md'\|'lg'` | Set by nldd-toolbar, not a consumer attribute: mirrors the toolbar's size (default: 'md') onto the item host, so size-dependent styling can key off it. |
-| `show-item-labels` | `boolean` | Set by nldd-toolbar, not a consumer attribute: mirrors the toolbar's show-item-labels, so the item renders its label below the control. |
 | `fluid` | `boolean` | Set by nldd-toolbar, not a consumer attribute: marks an item that grows or shrinks to fill space. Toggled synchronously during measurement, so it can appear or disappear between layout frames, so do not style against it. It is not reflected as a JS property, so read it with hasAttribute('fluid'). |
 | `solo-fluid` | `boolean` | Set by nldd-toolbar, not a consumer attribute: the sole fluid item, allowed to shrink below its content. Same synchronous-toggle and property-read caveats as fluid. |
-| `hidden` | `boolean` | Set by nldd-toolbar, not a consumer attribute, when the item moves into the overflow menu. Same synchronous-toggle caveat. |
 | `shrinkable` | `boolean` | Set by nldd-toolbar, not a consumer attribute: the item holds a control that overflows by itself (nldd-tab-bar), so it gets the width that control wants with everything shown. Same synchronous-toggle caveat. |
+| `label` | `string` | Text label shown below the item when the toolbar has show-item-labels. |
+| `priority` | `number` | Overflow order: items with a lower priority move into the overflow menu first (default 0). Items sharing a priority overflow together, regardless of position. |
 | `shrunk` | `boolean` | Set by nldd-toolbar, not a consumer attribute: a shrinkable item narrowed down to what its control needs at least, before it would move into the overflow menu. Same synchronous-toggle caveat. |
+| `hidden` | `boolean` | Set by nldd-toolbar, not a consumer attribute, when the item moves into the overflow menu. Same synchronous-toggle caveat. |
 
 **Slots**
 
@@ -506,13 +506,13 @@ The title of an nldd-toolbar, with optional media before it and an action after 
 
 | Attribute | Type | Description |
 | --- | --- | --- |
+| `size` | `'sm'\|'md'\|'lg'` | Set by nldd-toolbar, not a consumer attribute: mirrors the toolbar's size (default: 'md'), which sets the title group height and, at 'sm', the title and supporting-text fonts. |
 | `width` | `string` | Preferred (fluid) width as a CSS length or percentage; the title grows toward it and shrinks to min-width. |
 | `min-width` | `string` | Minimum width as a CSS length (default: the width of its own text, up to `max-width`). Items move into the overflow menu before the title gets narrower than this; only when no item is left to move does the title truncate below it. Set `0` to let the title shrink first. |
 | `max-width` | `string` | Maximum width as a CSS length (default: '240px'); the title text truncates with an ellipsis beyond it. The cap is lifted while the title is the sole toolbar element (it then stretches to fill the row). |
 | `align` | `'left'\|'center'` | Text alignment: 'left' \| 'center' (default: 'left'). |
 | `text` | `string` | Title text. |
 | `supporting-text` | `string` | Secondary supporting text shown below the title. |
-| `size` | `'sm'\|'md'\|'lg'` | Set by nldd-toolbar, not a consumer attribute: mirrors the toolbar's size (default: 'md'), which sets the title group height and, at 'sm', the title and supporting-text fonts. |
 | `href` | `string` | Makes the mark and the name one link, for the place this window belongs to (usually the app's own start). The `action` slot stays outside it: a control inside a link is a control you cannot reach without following the link. |
 | `target` | `string` | Where the link opens; only meaningful with `href`. `_blank` adds rel="noopener noreferrer" and a visually hidden "opens in a new tab" announcement. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. |
 | `translations` | `object` | Override translation keys (the new-tab announcement); unset keys fall back to Dutch. |
@@ -633,21 +633,21 @@ Shows one person or organization as a compact, round (person) or rounded (organi
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `type` | `string` | `person` (circle, person icon) or `organization` (rounded, building icon); default `person` |
-| `size` | `string` | `full` (the default) scales with the container, like nldd-icon; or a fixed size in px (spacer-aligned: 16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96). The initials and the icon scale along |
 | `color` | `string` | `neutral` (the default, a neutral fill) or `content` (fill in the content color: the `--context-content-color` a surface, a button or a selected row sets; text in the contrast color, so the avatar can replace an icon in a button for instance) |
+| `size` | `string` | `full` (the default) scales with the container, like nldd-icon; or a fixed size in px (spacer-aligned: 16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96). The initials and the icon scale along |
 | `icon-aligned` | `boolean` | Shrinks the visible shape to 5/6 of the host, centered, so the avatar aligns optically with an icon on the same grid (an icon glyph has built-in margin) |
-| `name` | `string` | Name of the person or organization; supplies the derived initials and the accessible label |
+| `icon` | `string` | Overrides the type-dependent fallback icon |
 | `initials` | `string` | Explicit initials, at most 4 characters, such as `KvK` or `LVVN` (overrides what is derived from `name`; also for organization acronyms). Four characters read well from 40px; below that use a shorter form |
 | `src` | `string` | Image source; falls back to initials or icon when it fails to load |
 | `srcset` | `string` | Responsive source set for the image (the component sets `sizes` itself) |
-| `icon` | `string` | Overrides the type-dependent fallback icon |
+| `button` | `boolean` | Makes the avatar a button; ignored when `href` is set |
 | `accessible-label` | `string` | Name of the link or button; without it `name` is used |
 | `decorative` | `boolean` | Hides the avatar from assistive software (use when the name already stands beside it as text) |
-| `tooltip-timing` | `string` | When the name appears as a tooltip on hover or focus: `delay` (the default, after 700ms), `instant`, or `never`. An avatar shows no text, so without a tooltip the name is readable by assistive software only. A `decorative` avatar shows none regardless: there the name already stands beside it as text |
-| `href` | `string` | Makes the avatar a link to this URL; the shape itself becomes the link, so the hit area and the focus ring follow it. As a link or a button the avatar needs size 24 or larger (WCAG 2.5.8) |
 | `no-tab` | `boolean` | Takes the control out of the tab order (tabindex="-1"), for an avatar that is a link or a button inside a roving container (a row of an nldd-list). Does nothing on a decorative avatar. |
-| `button` | `boolean` | Makes the avatar a button; ignored when `href` is set |
+| `tooltip-timing` | `string` | When the name appears as a tooltip on hover or focus: `delay` (the default, after 700ms), `instant`, or `never`. An avatar shows no text, so without a tooltip the name is readable by assistive software only. A `decorative` avatar shows none regardless: there the name already stands beside it as text |
+| `name` | `string` | Name of the person or organization; supplies the derived initials and the accessible label |
+| `type` | `string` | `person` (circle, person icon) or `organization` (rounded, building icon); default `person` |
+| `href` | `string` | Makes the avatar a link to this URL; the shape itself becomes the link, so the hit area and the focus ring follow it. As a link or a button the avatar needs size 24 or larger (WCAG 2.5.8) |
 | `target` | `string` | Link target for href (e.g. '_blank'); completes rel and announces "Opens in a new tab". An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. |
 | `rel` | `string` | Link rel for href; with target '_blank', 'noopener noreferrer' is added to whatever you set |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
@@ -696,10 +696,10 @@ Shows a quote with an optional source attribution. The quote is at most 30em wid
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `size` | `string` | Size of the quote: 'md' (default) or 'lg', for a quote that stands out on its own, such as on a landing page. Only the quote grows; the attribution and the border stay as they are |
-| `cite` | `string` | URL of the source (forwarded to the <blockquote> element) |
 | `sm-custom-size` | `string` | A size of your own for the quote at sm, any CSS length (e.g. '32px', '2rem', 'clamp(1.5rem, 4vw, 3rem)'), for a quote that stands out on its own, such as on a landing page. For a larger quote, try `size="lg"` first. Set per breakpoint on purpose: a breakpoint without one keeps the size from `size`, so a quote made large for a wide screen never breaks a narrow one. Never smaller than the size from `size` at the same breakpoint: a smaller value shows at that size, and a fixed length that is smaller says so in development (a relative value, such as vw, em or a percentage, is not checked there; the floor still holds). Only the quote grows, with its line height and the space between paragraphs; the attribution and the border stay as they are. An invalid value falls back to `size` |
 | `md-custom-size` | `string` | The same, at md |
 | `lg-custom-size` | `string` | The same, at lg |
+| `cite` | `string` | URL of the source (forwarded to the <blockquote> element) |
 
 **Slots**
 
@@ -730,12 +730,12 @@ A read-only block of code/text built on a non-editable CodeMirror 6 view. Visual
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `appearance` | `'box-tinted'\|'box-base'\|'simple'` | Visual style. The two `box` values are a framed card with rounded corners, padding, fill, and a 1px border ring, and differ in which surface they fill with; `box-tinted` is the default. `simple` drops the entire frame. Use it when embedding inside a parent surface. |
+| `max-height` | `string` | Tallest the block may get, as a CSS length (e.g. '400px', '50vh'). Beyond it the content scrolls vertically. Unset means no cap. |
 | `language` | `string` | Grammar to highlight with. Empty disables highlighting. |
 | `diff` | `boolean` | The content is a unified diff: shown with line colors, old and new line numbers, and the changed words marked. |
-| `line-numbers` | `boolean` | Shows a column with the number of each line, the same column a diff has. Screen readers skip it and a copy leaves it out. No effect with `diff`, which numbers its lines itself. |
 | `no-copy` | `boolean` | Hide the copy-to-clipboard button (shown by default). |
+| `line-numbers` | `boolean` | Shows a column with the number of each line, the same column a diff has. Screen readers skip it and a copy leaves it out. No effect with `diff`, which numbers its lines itself. |
 | `wrap` | `boolean` | Wrap long lines instead of horizontal scroll |
-| `max-height` | `string` | Tallest the block may get, as a CSS length (e.g. '400px', '50vh'). Beyond it the content scrolls vertically. Unset means no cap. |
 | `translations` | `object` | Override translation keys (e.g. the copy button labels and the scroll-region label); unset keys fall back to Dutch. |
 
 **Slots**
@@ -761,11 +761,11 @@ A customizable icon component that renders SVG icons from a predefined library. 
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `icon` | `string` | The name of the icon to display. The same attribute every other component that renders an icon takes. Prefer an alias that names what the icon means here (`microphone-off`, `info`, `new-account`) over the name of the drawing; both show the same icon. |
-| `size` | `string` | `full` (the default) fills the container. `inherit` sizes the icon to the surrounding text (1em) and drops it onto that text's own line, for an icon set in a line of running text. Or a fixed spacer-aligned size in px (16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96). |
 | `color` | `string` | Functional (`content`, the default, `secondary`, `accent`, `critical`, `warning`, `success`, the colors the surface passes on as `--context-content-*`) or rijkskleur (`lintblauw`, `donkerblauw`, `hemelblauw`, `lichtblauw`, `paars`, `violet`, `robijnrood`, `roze`, `rood`, `oranje`, `donkergeel`, `geel`, `donkerbruin`, `bruin`, `donkergroen`, `groen`, `mosgroen`, `mintgroen`). |
 | `custom-color` | `string` | A color of its own, as any CSS color value ('#a90061', 'oklch(0.6 0.2 20)', 'var(--brand-cable-blue)'). For a color the design system cannot know. It wins over `color`. |
+| `size` | `string` | `full` (the default) fills the container. `inherit` sizes the icon to the surrounding text (1em) and drops it onto that text's own line, for an icon set in a line of running text. Or a fixed spacer-aligned size in px (16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96). |
 | `tile` | `boolean` | Draw the icon on a tile, a filled square. `color` and `custom-color` then paint the tile and the glyph takes the contrasting color, and `size` measures the tile: the glyph is four fifths of it. The corner is `--semantics-tiles-corner-radius`, a fifth of the tile, as on an organization `nldd-avatar`. |
+| `icon` | `string` | The name of the icon to display. The same attribute every other component that renders an icon takes. Prefer an alias that names what the icon means here (`microphone-off`, `info`, `new-account`) over the name of the drawing; both show the same icon. |
 
 ### `<nldd-identity>`
 
@@ -817,23 +817,23 @@ Wraps a native `<img>` with design-system styling: corner radius variants, aspec
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `src` | `string` | Image URL |
-| `alt` | `string` | Alt text for the image from `src`. Required unless `decorative`; slotted media carries its own. |
-| `srcset` | `string` | Responsive source set |
-| `sizes` | `string` | Source sizes hint |
+| `shape` | `'square'\|'rounded'\|'circle'` | Corner shape (default: 'square') |
 | `width` | `number\|string\|'full'` | Display width, never wider than the parent. `full` (default) fills the parent. A number is pixels and also sets the `<img>` layout-hint width; any other CSS length (`20rem`, `50%`) only sets the width, so reserve space with `height` or `aspect-ratio`. Written as an inline `max-width` on the host, so it holds against a rule from a parent such as `nldd-rich-text`, and against one of your own. |
 | `height` | `number` | Intrinsic height (for layout reservation) |
-| `loading` | `'lazy'\|'eager'` | Loading strategy (default: 'lazy'). Lazy defers fetch until the image is near the viewport, the right choice for below-the-fold content. Set to 'eager' on images that appear in the initial viewport, especially the LCP candidate (hero illustration, top-of-list thumbnail); leaving them lazy silently regresses Core Web Vitals because the LCP fetch waits for the intersection observer. Pair with `fetchpriority="high"` on the LCP image for the strongest signal. |
-| `decoding` | `'async'\|'sync'\|'auto'` | Decoding hint (default: 'async') |
-| `fetchpriority` | `'high'\|'low'\|'auto'` | Fetch priority hint |
+| `src` | `string` | Image URL |
+| `srcset` | `string` | Responsive source set |
+| `sizes` | `string` | Source sizes hint |
+| `alt` | `string` | Alt text for the image from `src`. Required unless `decorative`; slotted media carries its own. |
 | `aspect-ratio` | `string` | Aspect ratio in CSS form (e.g. "16/9", "1/1", "4/3"). "16:9" colon notation is also accepted for convenience. |
 | `object-fit` | `'cover'\|'contain'\|'fill'\|'scale-down'\|'none'` | default: 'cover' |
 | `object-position` | `'center'\|'top'\|'bottom'\|'left'\|'right'` | default: 'center' |
-| `shape` | `'square'\|'rounded'\|'circle'` | Corner shape (default: 'square') |
+| `lqip` | `string` | Loading preview (LQIP, low-quality image placeholder) as a CSV string `"base,c1,c2,c3,c4,c5,c6"`: seven 0-255 bytes, each packing an 8-bit Oklab triplet (2 bits L, 3 bits a, 3 bits b). The first is the base color shown outside the cell gradients; the other six are per-cell colors in row-major 3×2 order. Generate via the encoder in `lqip-encoder.ts` or via the LQIP-encoder example on `/componenten/image/`. Extends Lean Rada's CSS-only LQIP (https://leanrada.com/notes/css-only-lqip/) with per-cell hue. Lean's original format encodes grayscale cells only, while ours encodes a color per cell so multi-color subjects survive the preview. |
+| `decoding` | `'async'\|'sync'\|'auto'` | Decoding hint (default: 'async') |
+| `fetchpriority` | `'high'\|'low'\|'auto'` | Fetch priority hint |
 | `caption` | `string` | Caption text shown below the image |
 | `credit` | `string` | Smaller credit/attribution text shown beside the caption |
 | `decorative` | `boolean` | Decorative image: alt is forced empty + aria-hidden |
-| `lqip` | `string` | Loading preview (LQIP, low-quality image placeholder) as a CSV string `"base,c1,c2,c3,c4,c5,c6"`: seven 0-255 bytes, each packing an 8-bit Oklab triplet (2 bits L, 3 bits a, 3 bits b). The first is the base color shown outside the cell gradients; the other six are per-cell colors in row-major 3×2 order. Generate via the encoder in `lqip-encoder.ts` or via the LQIP-encoder example on `/componenten/image/`. Extends Lean Rada's CSS-only LQIP (https://leanrada.com/notes/css-only-lqip/) with per-cell hue. Lean's original format encodes grayscale cells only, while ours encodes a color per cell so multi-color subjects survive the preview. |
+| `loading` | `'lazy'\|'eager'` | Loading strategy (default: 'lazy'). Lazy defers fetch until the image is near the viewport, the right choice for below-the-fold content. Set to 'eager' on images that appear in the initial viewport, especially the LCP candidate (hero illustration, top-of-list thumbnail); leaving them lazy silently regresses Core Web Vitals because the LCP fetch waits for the intersection observer. Pair with `fetchpriority="high"` on the LCP image for the strongest signal. |
 | `translations` | `object` | Override translation keys (e.g. the message shown when the image fails to load); unset keys fall back to Dutch. |
 
 **Slots**
@@ -867,14 +867,14 @@ Shows a key combination (such as Cmd+K or Ctrl+Shift+P) in one combined containe
 
 | Attribute | Type | Description |
 | --- | --- | --- |
+| `appearance` | `string` | 'keycap' (default) shows each key as a keycap with a fill and a highlight edge, side by side without a '+'. 'text' shows the keys as plain text: lighter, for inline use such as in a menu item. As text the keys are joined by '+' (Ctrl+K), except on macOS. |
+| `color` | `string` | 'neutral' (default) uses the component colors of its own. 'content' lets the keys and separators follow the content color of the context, with a translucent contrast fill and highlight edge. Useful on a filled surface color or a highlighted row. |
+| `size` | `'sm'\|'md'\|'inherit'` | Size: 'sm' \| 'md' \| 'inherit' (default: 'md'). 'inherit' takes the font-size from the container; with keycaps they then scale along in em. |
 | `keys` | `string` | Keys separated by '+' (e.g. 'Cmd+K' or 'Ctrl+Shift+P'). End with '++' for a literal '+' key: 'Ctrl++' becomes 'Ctrl' + '+' ('Ctrl+++' works too). For more complex cases, such as a combo with several '+' keys, use the default slot with your own <kbd> elements instead of the keys attribute. |
 | `mac-keys` | `string` | Optional override for macOS (iPhone/iPad/iPod included). |
 | `windows-keys` | `string` | Optional override for Windows. |
 | `linux-keys` | `string` | Optional override for Linux/ChromeOS. |
-| `size` | `'sm'\|'md'\|'inherit'` | Size: 'sm' \| 'md' \| 'inherit' (default: 'md'). 'inherit' takes the font-size from the container; with keycaps they then scale along in em. |
-| `appearance` | `string` | 'keycap' (default) shows each key as a keycap with a fill and a highlight edge, side by side without a '+'. 'text' shows the keys as plain text: lighter, for inline use such as in a menu item. As text the keys are joined by '+' (Ctrl+K), except on macOS. |
 | `always-visible` | `boolean` | Show on touch-only devices too, where shortcuts cannot be invoked. |
-| `color` | `string` | 'neutral' (default) uses the component colors of its own. 'content' lets the keys and separators follow the content color of the context, with a translucent contrast fill and highlight edge. Useful on a filled surface color or a highlighted row. |
 | `debug-os` | `'mac'\|'windows'\|'linux'\|'other'` | Development aid: overrides the OS detection for this instance, so you can show several platform variants side by side in documentation. Not meant for production use; leave it empty (default) so the real OS detection applies. |
 
 **Slots**
@@ -903,8 +903,8 @@ A container for rich text content that automatically applies responsive typograp
 | --- | --- | --- |
 | `spacing` | `'flat'\|'tight'\|'snug'\|'loose'` | Spacing between elements: 'flat' \| 'tight' \| 'snug' (default) \| 'loose' |
 | `centered` | `boolean` | Centers the main column inside the container; without it, content is left-aligned |
-| `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 | `hyphens` | `boolean` | Opt-in automatic hyphenation for running text (p, li, dd). Needs a correct `lang` on the page (`lang="nl"` on `<html>`, for instance): without language information the browser does not hyphenate. An `overflow-wrap: break-word` safety net on headings, p and li is always on, independent of this attribute, so a word wider than the column breaks instead of overflowing. Headings are hyphenated regardless of this attribute, but only a word of at least 12 letters, as in `nldd-title`, so a short word moves to the next line whole. A soft hyphen (`&shy;`) adds a place to break of your own. |
+| `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 
 **Plain HTML it styles:** `<p>`, `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>`, `<h6>`, `<a>`, `<strong>`, `<b>`, `<em>`, `<i>`, `<u>`, `<s>`, `<del>`, `<ins>`, `<code>`, `<kbd>`, `<samp>`, `<var>`, `<small>`, `<mark>`, `<q>`, `<cite>`, `<abbr>`, `<sub>`, `<sup>`, `<br>`, `<span>`, `<ul>`, `<ol>`, `<li>`, `<dl>`, `<dt>`, `<dd>`, `<blockquote>`, `<pre>`, `<figure>`, `<figcaption>`, `<img>`, `<picture>`, `<source>`, `<table>`, `<thead>`, `<tbody>`, `<tfoot>`, `<tr>`, `<th>`, `<td>`, `<caption>`, `<hr>`, `<div>`, `<section>`, `<details>`, `<summary>`, `<video>`, `<iframe>`. `nldd lint --pure` reports plain HTML only where no component styles it.
 
@@ -963,8 +963,8 @@ A term in running text with an explanation behind it, such as a legal term from 
 | `definition` | `string` | The definition, as plain text. The term shows it in a popover of its own, named after the term. Ignored when `popovertarget` is set. |
 | `source` | `string` | Where the definition comes from, such as a glossary or an article of law, as plain text. Shown under the definition in the term's own popover. Ignored when `popovertarget` is set. |
 | `source-href` | `string` | Link for `source`. Without `source` it has no effect. |
-| `translations` | `object` | Override translation keys (the label before the source). |
 | `popovertarget` | `string` | ID of an nldd-popover with the definition, looked up in the tree of this term. Positioned against the term when it opens, so it needs no `anchor`, and it can be shared by every term for the same concept. Wins over `definition`. |
+| `translations` | `object` | Override translation keys (the label before the source). |
 
 **Slots**
 
@@ -993,13 +993,13 @@ One run of body text at a size from the type scale. It is what you reach for whe
 
 | Attribute | Type | Description |
 | --- | --- | --- |
+| `color` | `'content'\|'secondary'\|'accent'\|'success'\|'warning'\|'critical'` | Text color: 'content' (the default) \| 'secondary' \| 'accent' \| 'success' \| 'warning' \| 'critical'. Each follows the surface the text sits on, through the `--context-content-*` it passes on; an area of your own that sets `color` sets `--context-content-color` too. |
 | `size` | `'xxs'\|'xs'\|'sm'\|'md'\|'lg'\|'display-6'\|'display-5'\|'display-4'\|'display-3'\|'display-2'\|'display-1'` | Text size: 'xxs' \| 'xs' \| 'sm' \| 'md' \| 'lg' on the body scale (default: 'md'), or 'display-6' to 'display-1' for large letters that are not a heading, from small to large |
 | `sm-custom-size` | `string` | A size of your own at sm, any CSS length (e.g. '56px', '3.5rem', 'clamp(3rem, 8vw, 7rem)'), for a statement larger than `display-1`. A var() works when the variable holds a length; one that is not defined leaves the text without its size, the floor included. Set per breakpoint on purpose: a breakpoint without one keeps the size from `size`, so text made large for a wide screen never breaks a narrow one. Never smaller than `display-1` at the same breakpoint: a smaller value shows as `display-1`, and a fixed length that is smaller says so in development (a relative value, such as vw, em or a percentage, is not checked there; the floor still holds). Takes the weight, typeface and line height of `display-1`. An invalid value falls back to `size` |
 | `md-custom-size` | `string` | The same, at md |
 | `lg-custom-size` | `string` | The same, at lg |
 | `weight` | `'regular'\|'medium'\|'bold'` | Font weight: 'regular' \| 'medium' \| 'bold' (default: 'regular'). With 'bold' a slotted `<strong>` no longer stands out: there is nothing bolder in the scale. |
 | `line-height` | `'flat'\|'tight'\|'snug'\|'loose'` | Line height: 'flat' \| 'tight' \| 'snug' \| 'loose' (default: 'snug') |
-| `color` | `'content'\|'secondary'\|'accent'\|'success'\|'warning'\|'critical'` | Text color: 'content' (the default) \| 'secondary' \| 'accent' \| 'success' \| 'warning' \| 'critical'. Each follows the surface the text sits on, through the `--context-content-*` it passes on; an area of your own that sets `color` sets `--context-content-color` too. |
 | `horizontal-alignment` | `'left'\|'center'\|'right'` | Alignment of the text within the block: 'left' \| 'center' \| 'right' (default: 'left'). Aligns the words; `horizontal-alignment` on nldd-container moves the box. |
 | `text` | `string` | The text, when it is plain text. The component draws it as a `<p>`. Content in the slot wins. |
 
@@ -1083,13 +1083,13 @@ A self-contained piece of data the user is handling: a person in an address fiel
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `text` | `string` | Token text. Content in the default slot wins. |
-| `control` | `'none' \| 'dismiss' \| 'menu'` | Control type (default: 'none') |
 | `dismiss-text` | `string` | Accessible label for the dismiss button. Unset, it names the token: `Verwijder "{text}"`, so a row of tokens does not read as a row of identical buttons. |
+| `control` | `'none' \| 'dismiss' \| 'menu'` | Control type (default: 'none') |
 | `menu-text` | `string` | Accessible label for the menu button. Unset, it is `Toon opties voor "{text}"`. |
-| `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 | `roving` | `boolean` | Inside a roving-focus container (e.g. nldd-token-field): the host is the single tab stop, so the trailing control is not separately tabbable. |
 | `expanded` | `boolean` | Reflects whether the token's menu or popover is open (control="menu"); managed by the token. |
 | `disabled` | `boolean` | Disabled state. Avoid it where you can; the design guidelines say why. |
+| `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 
 **Slots**
 
@@ -1116,14 +1116,14 @@ A wrapper that shows a tooltip on hover or focus of its child element. It uses `
 
 | Attribute | Type | Description |
 | --- | --- | --- |
+| `placement` | `'top'\|'bottom'\|'left'\|'right'` | Position: 'top' \| 'bottom' \| 'left' \| 'right' (default: 'bottom'; automatically 'top' on touch devices) |
 | `text` | `string` | Tooltip text |
 | `shortcut` | `string` | Keyboard shortcut hint shown after the text, e.g. 'Cmd+P'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key. Joins the description of a light-DOM trigger. Hidden on touch-only devices, where it isn't invokable. |
 | `shortcut-mac` | `string` | Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`). |
 | `shortcut-windows` | `string` | Override of `shortcut` on Windows (falls back to `shortcut`). |
 | `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
-| `open` | `boolean` | Forces the tooltip visible, whatever hover or focus does. Use it for programmatic feedback ("Copied", for instance). Reset it to false to restore the hover behavior. |
-| `placement` | `'top'\|'bottom'\|'left'\|'right'` | Position: 'top' \| 'bottom' \| 'left' \| 'right' (default: 'bottom'; automatically 'top' on touch devices) |
 | `timing` | `string` | When the tooltip appears on hover: 'instant' shows it right away, without a show delay or a fade, also on the way out. 'delay' (the default) shows it after the standard show delay (700ms). 'never' never shows it: hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. Focus shows it at once, except the focus a press gives a button, so a click does not flash it up. |
+| `open` | `boolean` | Forces the tooltip visible, whatever hover or focus does. Use it for programmatic feedback ("Copied", for instance). Reset it to false to restore the hover behavior. |
 
 **Slots**
 
@@ -1244,11 +1244,11 @@ A field around one input: its label, supporting label, optional badge, validatio
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `label-alignment` | `'top'\|'right'\|'left'` | 'top' (default) \| 'right' \| 'left'. A value of its own always wins over the inherited form-label-alignment. |
+| `form-label-alignment` | `string` | Set by a wrapping nldd-form as a fallback. Do not set it yourself in consumer code. |
 | `label` | `string` | Field label text. Omit for no-label layout. Supports **bold** markdown syntax, for the word to type in a confirmation; the accessible name of the control takes the text without the markers. |
 | `supporting-label` | `string` | Short supporting text below the label. Same typography as optional badge. Supports **bold** markdown syntax. |
 | `optional` | `boolean` | Shows an optional badge next to the label. |
 | `translations` | `object` | Override translation keys, such as the text of the optional badge; unset keys fall back to Dutch |
-| `form-label-alignment` | `string` | Set by a wrapping nldd-form as a fallback. Do not set it yourself in consumer code. |
 
 **Slots**
 
@@ -1291,13 +1291,13 @@ One requirement of a value, with the rule that checks it. Give every item an id 
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `match` | `string` | Regular expression the value has to contain. Not anchored, unlike the native `pattern`: `[A-Z]` means "has a capital in it". Not held against an empty value unless the field is required. |
-| `minlength` | `number` | Fewest characters the value may have. Not held against an empty value unless the field is required. |
-| `maxlength` | `number` | Most characters the value may have. |
-| `required` | `boolean` | The value may not be empty. Without it, and without `required` on the control, an empty value passes every rule in the list, as it does for the native `pattern` and `minlength`. The control is read by its `required` property or attribute; one that only says `aria-required` needs this item. |
 | `hint` | `boolean` | Show this item before there is a verdict, whatever the list says. |
 | `unmet` | `boolean` | Whether the value fails this item. Managed by the list; do not set it yourself. |
 | `visible` | `boolean` | Whether the item is on screen. Managed by the list. |
+| `minlength` | `number` | Fewest characters the value may have. Not held against an empty value unless the field is required. |
+| `maxlength` | `number` | Most characters the value may have. |
+| `match` | `string` | Regular expression the value has to contain. Not anchored, unlike the native `pattern`: `[A-Z]` means "has a capital in it". Not held against an empty value unless the field is required. |
+| `required` | `boolean` | The value may not be empty. Without it, and without `required` on the control, an empty value passes every rule in the list, as it does for the native `pattern` and `minlength`. The control is read by its `required` property or attribute; one that only says `aria-required` needs this item. |
 
 **Slots**
 
@@ -1320,9 +1320,9 @@ Nederlandse Digitale Dienst Validation List (Lit + TypeScript) Everything a valu
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `for` | `string` | Id of the control this list is about. Not needed inside an nldd-form-field, which hands its own control over. |
 | `hint` | `boolean` | Show every item before there is a verdict, as the requirements of the field. Overridable per item. |
 | `judging` | `boolean` | Drop the hints, because this field has been judged. Turned on by the list itself once its control is `invalid`, and settable by hand. What turns red follows `invalid`, not this. |
+| `for` | `string` | Id of the control this list is about. Not needed inside an nldd-form-field, which hands its own control over. |
 | `translations` | `object` | Override translation keys (the line the list shows when the field is invalid and no item fails); unset keys fall back to Dutch. |
 
 **Slots**
@@ -1348,17 +1348,17 @@ Nederlandse Digitale Dienst Validation List (Lit + TypeScript) Everything a valu
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `checked` | `boolean` | Checked state |
-| `disabled` | `boolean` | Disabled state |
 | `color` | `'content'` | 'content' draws the control in the color of the text around it, with the mark in the surface color (`--context-background-color`). A colored surface of your own sets that variable. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent. |
-| `no-tab` | `boolean` | Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable. |
-| `decorative` | `boolean` | Renders the box without the input: no focus, no name/value, nothing announced. For a control that owns the state elsewhere, such as a list row that is itself the checkbox; putting a real input in there would nest a control inside a control. |
-| `indeterminate` | `boolean` | Indeterminate state (takes precedence over checked visually) |
-| `value` | `string` | Value for form submission |
-| `name` | `string` | Name for form submission |
 | `accessible-label` | `string` | Accessible label forwarded as aria-label to the native input. |
-| `required` | `boolean` | Required state |
+| `decorative` | `boolean` | Renders the box without the input: no focus, no name/value, nothing announced. For a control that owns the state elsewhere, such as a list row that is itself the checkbox; putting a real input in there would nest a control inside a control. |
+| `no-tab` | `boolean` | Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable. |
+| `checked` | `boolean` | Checked state |
+| `indeterminate` | `boolean` | Indeterminate state (takes precedence over checked visually) |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. Note: aria-labelledby is not supported as IDREF resolution cannot cross shadow DOM boundaries. |
+| `disabled` | `boolean` | Disabled state |
+| `name` | `string` | Name for form submission |
+| `value` | `string` | Value for form submission |
+| `required` | `boolean` | Required state |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -1388,15 +1388,15 @@ A checkbox with an inline label for use in forms. Options that belong under this
 
 | Attribute | Type | Description |
 | --- | --- | --- |
+| `color` | `'content'` | 'content' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside. |
+| `label` | `string` | Label text for the checkbox |
 | `checked` | `boolean` | Checked state |
 | `indeterminate` | `boolean` | Indeterminate state |
-| `disabled` | `boolean` | Disabled state |
-| `color` | `'content'` | 'content' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside. |
-| `value` | `string` | Value for form submission |
-| `name` | `string` | Name for form submission |
-| `label` | `string` | Label text for the checkbox |
-| `required` | `boolean` | Required state. In an nldd-checkbox-group, set by the group, it asks for at least one checked box in the group, not for this one. |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
+| `disabled` | `boolean` | Disabled state |
+| `name` | `string` | Name for form submission |
+| `value` | `string` | Value for form submission |
+| `required` | `boolean` | Required state. In an nldd-checkbox-group, set by the group, it asks for at least one checked box in the group, not for this one. |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -1424,12 +1424,12 @@ Groups nldd-checkbox-field elements as nldd-radio-button-group groups radio butt
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `name` | `string` | Forwarded to all nldd-checkbox-field elements in the group; clearing it leaves them the name they had |
-| `disabled` | `boolean` | Disables all fields in the group |
-| `required` | `boolean` | At least one box in the group has to be checked. Set on every field in the group, nested ones included, whether it is on or off: in a group, the group decides. |
 | `accessible-label` | `string` | Accessible name for the group, set as aria-label on the group |
 | `accessible-labeled-by` | `string` | Id of an external label element, set as aria-labelledby on the group |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
+| `disabled` | `boolean` | Disables all fields in the group |
+| `name` | `string` | Forwarded to all nldd-checkbox-field elements in the group; clearing it leaves them the name they had |
+| `required` | `boolean` | At least one box in the group has to be checked. Set on every field in the group, nested ones included, whether it is on or off: in a group, the group decides. |
 
 **Slots**
 
@@ -1460,21 +1460,21 @@ A monospace editor for code, YAML, JSON and other technical content, built on Co
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `value` | `string` | Editor content |
+| `resize` | `'none'\|'vertical'\|'auto'` | 'none' (fixed) \| 'vertical' (drag) \| 'auto' (grow, default) |
+| `rows` | `number` | Minimum visible rows (the floor in every resize mode). Default: 6. |
 | `placeholder` | `string` | Placeholder text shown while empty |
-| `input-id` | `string` | Sets the id on the editable element. Set automatically by nldd-form-field. |
+| `language` | `string` | Highlight grammar (yaml, json, javascript, typescript, css, html, xml, bash, markdown, rust, gherkin, toml, sql, python). Empty disables highlighting. |
+| `embedded` | `boolean` | Drops the frame, fill, padding and focus ring, for an editor inside a composition that provides them |
+| `accessible-label` | `string` | Accessible label forwarded to the editor. Set automatically by nldd-form-field. |
+| `line-numbers` | `boolean` | Show a line-number gutter |
+| `wrap` | `boolean` | Wrap long lines instead of horizontal scroll |
+| `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
+| `readonly` | `boolean` | Readonly state (focusable and selectable, not editable) |
 | `disabled` | `boolean` | Disabled state |
 | `name` | `string` | Field name for form submission |
-| `readonly` | `boolean` | Readonly state (focusable and selectable, not editable) |
+| `input-id` | `string` | Sets the id on the editable element. Set automatically by nldd-form-field. |
+| `value` | `string` | Editor content |
 | `required` | `boolean` | Required state |
-| `wrap` | `boolean` | Wrap long lines instead of horizontal scroll |
-| `rows` | `number` | Minimum visible rows (the floor in every resize mode). Default: 6. |
-| `resize` | `'none'\|'vertical'\|'auto'` | 'none' (fixed) \| 'vertical' (drag) \| 'auto' (grow, default) |
-| `embedded` | `boolean` | Drops the frame, fill, padding and focus ring, for an editor inside a composition that provides them |
-| `language` | `string` | Highlight grammar (yaml, json, javascript, typescript, css, html, xml, bash, markdown, rust, gherkin, toml, sql, python). Empty disables highlighting. |
-| `line-numbers` | `boolean` | Show a line-number gutter |
-| `accessible-label` | `string` | Accessible label forwarded to the editor. Set automatically by nldd-form-field. |
-| `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -1502,27 +1502,27 @@ A text input with autocomplete dropdown via nldd-menu. Add a slotted nldd-menu w
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `value` | `string` | The selected form value |
+| `size` | `'sm'\|'md'` | Size: 'sm' \| 'md' (default: 'md') |
+| `width` | `string` | Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container. |
 | `text` | `string` | The text shown in the input. May differ from `value` (e.g. value="nl" → text="Nederland"). Set this when pre-populating an existing record. If left empty and `value` matches a slotted menu item, the matching item's `text` is used automatically. |
 | `placeholder` | `string` | Placeholder text for the input |
-| `size` | `'sm'\|'md'` | Size: 'sm' \| 'md' (default: 'md') |
+| `accessible-label` | `string` | Accessible label forwarded as aria-label to the input. Required for screen reader accessibility. |
+| `no-filter` | `boolean` | Leaves the options as they are while typing, for a list your server already filtered per keystroke. Without it the field hides options that do not contain the typed text, which also hides a server match on, say, an e-mail address. |
+| `max-items` | `number` | Maximum visible items before scrolling (default: 8) |
 | `valid` | `boolean` | Marks the field as valid |
 | `invalid` | `boolean` | Marks the field as invalid |
-| `disabled` | `boolean` | Disabled state |
 | `readonly` | `boolean` | Read-only state: the value stays readable, selectable and in the tab order, but the menu does not open and there is nothing to clear. The input drops its combobox role and the aria that goes with it, so assistive technology is not told about a list it cannot open. Use this where the value belongs to the record rather than to the form, e.g. the product an asset is an instance of. |
-| `allow-custom` | `boolean` | Allow committing free-typed values that match no option (Enter/blur). Default false: only menu options are accepted. Typing an option's label in full picks that option, ignoring case and the spaces around it; with two such labels, the first one. |
-| `no-filter` | `boolean` | Leaves the options as they are while typing, for a list your server already filtered per keystroke. Without it the field hides options that do not contain the typed text, which also hides a server match on, say, an e-mail address. |
+| `disabled` | `boolean` | Disabled state |
 | `name` | `string` | Input name for form submission |
-| `autocomplete` | `string` | Browser autofill hint. Default 'off' to prevent the native autofill panel from competing with the menu dropdown. Set to a valid token (e.g. 'country', 'organization') when browser autofill is desired. |
-| `accessible-label` | `string` | Accessible label forwarded as aria-label to the input. Required for screen reader accessibility. |
-| `max-items` | `number` | Maximum visible items before scrolling (default: 8) |
-| `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
-| `no-spellcheck` | `boolean` | Disables browser spellchecking on the inner input |
-| `width` | `string` | Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container. |
-| `required` | `boolean` | Required state |
-| `pattern` | `string` | Regular expression the value has to match, as the native `pattern`. |
+| `value` | `string` | The selected form value |
 | `minlength` | `number` | Fewest characters the value may have. |
 | `maxlength` | `number` | Most characters the value may have. |
+| `pattern` | `string` | Regular expression the value has to match, as the native `pattern`. |
+| `allow-custom` | `boolean` | Allow committing free-typed values that match no option (Enter/blur). Default false: only menu options are accepted. Typing an option's label in full picks that option, ignoring case and the spaces around it; with two such labels, the first one. |
+| `required` | `boolean` | Required state |
+| `autocomplete` | `string` | Browser autofill hint. Default 'off' to prevent the native autofill panel from competing with the menu dropdown. Set to a valid token (e.g. 'country', 'organization') when browser autofill is desired. |
+| `no-spellcheck` | `boolean` | Disables browser spellchecking on the inner input |
+| `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -1551,23 +1551,23 @@ A text field for a date, with an optional calendar in a popover. The value is al
 
 | Attribute | Type | Description |
 | --- | --- | --- |
+| `size` | `'md'\|'sm'` | 'md' (default) \| 'sm'. Set automatically by nldd-form-field. |
+| `width` | `string` | Width. By default exactly wide enough for a date plus the icons; 'full' fills the container; 'fit-content' drops the room for the validation icon and grows again as soon as the field turns valid or invalid; or pass your own CSS length. |
+| `placeholder` | `string` | Placeholder text. Do not put a format here; use the supporting label of nldd-form-field for that. |
+| `accessible-label` | `string` | Accessible label for the internal input. Set automatically by nldd-form-field. |
+| `no-picker` | `boolean` | Hides the calendar button. It is shown by default. |
+| `valid` | `boolean` | Marks the field as valid. |
+| `invalid` | `boolean` | Marks the field as invalid. |
+| `readonly` | `boolean` | Read-only state. |
+| `disabled` | `boolean` | Disabled state. |
+| `name` | `string` | Name for form submission. |
+| `input-id` | `string` | Sets the id on the internal input. Set automatically by nldd-form-field. |
 | `value` | `string` | The date as ISO (yyyy-mm-dd). With `range` an ISO 8601 interval: `yyyy-mm-dd/yyyy-mm-dd`. Empty when there is no valid date. |
 | `range` | `boolean` | Pick a period: two inputs and a calendar in range mode. |
 | `min` | `string` | Earliest allowed date as ISO (yyyy-mm-dd). |
 | `max` | `string` | Latest allowed date as ISO (yyyy-mm-dd). |
-| `no-picker` | `boolean` | Hides the calendar button. It is shown by default. |
-| `placeholder` | `string` | Placeholder text. Do not put a format here; use the supporting label of nldd-form-field for that. |
-| `input-id` | `string` | Sets the id on the internal input. Set automatically by nldd-form-field. |
-| `size` | `'md'\|'sm'` | 'md' (default) \| 'sm'. Set automatically by nldd-form-field. |
-| `invalid` | `boolean` | Marks the field as invalid. |
-| `valid` | `boolean` | Marks the field as valid. |
-| `disabled` | `boolean` | Disabled state. |
-| `readonly` | `boolean` | Read-only state. |
 | `required` | `boolean` | Required state. |
-| `name` | `string` | Name for form submission. |
 | `autocomplete` | `string` | Autocomplete hint, for example 'bday'. |
-| `accessible-label` | `string` | Accessible label for the internal input. Set automatically by nldd-form-field. |
-| `width` | `string` | Width. By default exactly wide enough for a date plus the icons; 'full' fills the container; 'fit-content' drops the room for the validation icon and grows again as soon as the field turns valid or invalid; or pass your own CSS length. |
 | `translations` | `object` | Translations; unspecified keys fall back to Dutch. |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
@@ -1597,18 +1597,18 @@ A calendar for picking a date or a period. The component works on its own (inlin
 
 | Attribute | Type | Description |
 | --- | --- | --- |
+| `width` | `string` | Width: `full` (fills the container) or a CSS length (e.g. `560px`). Empty (default) is the intrinsic width of seven day cells; the cells stretch along with the width you pass. |
+| `accessible-label` | `string` | Accessible name of the calendar. |
+| `week-numbers` | `boolean` | Shows ISO week numbers in a column on the left. |
+| `first-day-of-week` | `number` | First day of the week, 0 is Sunday. Default 1 (Monday). |
+| `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
 | `value` | `string` | The chosen date as ISO (yyyy-mm-dd). Only without `range`. |
 | `start` | `string` | Start of the period as ISO. Only with `range`. |
 | `end` | `string` | End of the period as ISO. Only with `range`. |
 | `range` | `boolean` | Pick a period instead of a single date. |
 | `min` | `string` | Earliest allowed date: ISO, or `today` with an offset (`today-18y`). |
 | `max` | `string` | Latest allowed date: ISO, or `today` with an offset (`today+1y`). |
-| `first-day-of-week` | `number` | First day of the week, 0 is Sunday. Default 1 (Monday). |
-| `week-numbers` | `boolean` | Shows ISO week numbers in a column on the left. |
-| `width` | `string` | Width: `full` (fills the container) or a CSS length (e.g. `560px`). Empty (default) is the intrinsic width of seven day cells; the cells stretch along with the width you pass. |
-| `accessible-label` | `string` | Accessible name of the calendar. |
 | `translations` | `object` | Translations; unspecified keys fall back to Dutch. |
-| `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -1638,12 +1638,12 @@ A visual wrapper around a native `<select>` element. The consumer provides a nat
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `size` | `'xs'\|'sm'\|'md'` | Size: 'xs' \| 'sm' \| 'md' (default: 'md') |
+| `width` | `string` | Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container. |
+| `accessible-label` | `string` | Accessible name, forwarded as aria-label to the slotted select |
+| `expanded` | `boolean` | Reflects whether the native picker popup is open (driven internally) |
 | `valid` | `boolean` | Marks the field as valid |
 | `invalid` | `boolean` | Marks the field as invalid |
 | `disabled` | `boolean` | Disabled state; also forwarded to the slotted select |
-| `expanded` | `boolean` | Reflects whether the native picker popup is open (driven internally) |
-| `width` | `string` | Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container. |
-| `accessible-label` | `string` | Accessible name, forwarded as aria-label to the slotted select |
 | `required` | `boolean` | Required state, handed to the slotted <select>. A `required` on the <select> itself is left alone. |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
@@ -1674,15 +1674,15 @@ A file picker that reads as one control. Empty, the whole tinted surface is one 
 | --- | --- | --- |
 | `variant` | `string` | 'control' (default): a row the height of a field. 'area': a tall surface with the upload icon and the accepted types when empty, and the file icon, name and buttons stacked once chosen; both states keep the same height |
 | `size` | `'md'\|'sm'` | Field size: 'md' (default) \| 'sm'. Set automatically by nldd-form-field. |
-| `accept` | `string` | Comma-separated list of accepted file types, forwarded to the input (e.g. ".pdf,image/*") |
-| `multiple` | `boolean` | Allows choosing more than one file, and dropping a folder |
-| `directory` | `boolean` | Offers a folder beside files, since one dialog picks either: choosing and changing open a menu with both, and an area shows a button for each. Takes several files, as `multiple` does |
 | `accessible-label` | `string` | Accessible label forwarded to the inner input. Set automatically by nldd-form-field. |
-| `input-id` | `string` | Sets the id on the native input. Set automatically by nldd-form-field. |
 | `valid` | `boolean` | Marks the field as valid; shows a check icon on the right, like nldd-dropdown |
 | `invalid` | `boolean` | Marks the field as invalid; shows an alert icon on the right, like nldd-dropdown |
 | `disabled` | `boolean` | Disabled state |
 | `name` | `string` | Name for form submission |
+| `input-id` | `string` | Sets the id on the native input. Set automatically by nldd-form-field. |
+| `accept` | `string` | Comma-separated list of accepted file types, forwarded to the input (e.g. ".pdf,image/*") |
+| `multiple` | `boolean` | Allows choosing more than one file, and dropping a folder |
+| `directory` | `boolean` | Offers a folder beside files, since one dialog picks either: choosing and changing open a menu with both, and an area shows a button for each. Takes several files, as `multiple` does |
 | `required` | `boolean` | Marks the field required (invalid while no file is chosen) |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
@@ -1709,26 +1709,26 @@ A file picker that reads as one control. Empty, the whole tinted surface is one 
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `value` | `string` | The textarea value |
-| `placeholder` | `string` | Placeholder text |
-| `input-id` | `string` | Sets the id on the native textarea. Set automatically by nldd-form-field. |
 | `size` | `'md'\|'sm'` | 'md' (default) \| 'sm'. Set automatically by nldd-form-field. |
-| `invalid` | `boolean` | Marks the field as invalid |
+| `resize` | `'none'\|'vertical'\|'auto'` | 'none' \| 'vertical' \| 'auto' (default). 'auto' grows with content (native field-sizing), no manual handle. |
+| `rows` | `number` | Initial visible rows (minimum height). Default: 3. |
+| `width` | `string` | Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container. |
+| `placeholder` | `string` | Placeholder text |
+| `accessible-label` | `string` | Accessible label forwarded to the inner textarea. Set automatically by nldd-form-field. |
 | `valid` | `boolean` | Marks the field as valid |
+| `invalid` | `boolean` | Marks the field as invalid |
+| `readonly` | `boolean` | Readonly state |
 | `disabled` | `boolean` | Disabled state |
 | `name` | `string` | Textarea name for form submission |
-| `readonly` | `boolean` | Readonly state |
-| `required` | `boolean` | Required state |
-| `autocomplete` | `string` | Autocomplete hint |
+| `input-id` | `string` | Sets the id on the native textarea. Set automatically by nldd-form-field. |
+| `value` | `string` | The textarea value |
 | `keyboard` | `'none'\|'text'\|'decimal'\|'numeric'\|'tel'\|'search'\|'email'\|'url'` | Which virtual keyboard a phone or tablet raises, forwarded as `inputmode`: 'none' \| 'text' \| 'decimal' \| 'numeric' \| 'tel' \| 'search' \| 'email' \| 'url'. It changes nothing about what the field accepts, and nothing at all on a desktop. |
 | `enter-key` | `'enter'\|'done'\|'go'\|'next'\|'previous'\|'search'\|'send'` | What the Enter key of the virtual keyboard says, forwarded as `enterkeyhint`: 'enter' \| 'done' \| 'go' \| 'next' \| 'previous' \| 'search' \| 'send'. In a field where Enter starts a new line, leave it alone. |
-| `rows` | `number` | Initial visible rows (minimum height). Default: 3. |
-| `resize` | `'none'\|'vertical'\|'auto'` | 'none' \| 'vertical' \| 'auto' (default). 'auto' grows with content (native field-sizing), no manual handle. |
-| `accessible-label` | `string` | Accessible label forwarded to the inner textarea. Set automatically by nldd-form-field. |
-| `no-spellcheck` | `boolean` | Disables browser spellchecking on the inner textarea |
-| `width` | `string` | Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container. |
 | `minlength` | `number` | Fewest characters the value may have. |
 | `maxlength` | `number` | Most characters the value may have. |
+| `required` | `boolean` | Required state |
+| `autocomplete` | `string` | Autocomplete hint |
+| `no-spellcheck` | `boolean` | Disables browser spellchecking on the inner textarea |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -1761,19 +1761,19 @@ A numeric input field with decrement and increment buttons.
 
 | Attribute | Type | Description |
 | --- | --- | --- |
+| `size` | `'sm'\|'md'` | Size: 'sm' \| 'md' (default: 'md') |
+| `width` | `string` | Width mode: 'full' (stretches to container) or any CSS length (e.g. '240px') |
+| `accessible-label` | `string` | Accessible label (aria-label) forwarded to the native input |
+| `hide-spin-buttons` | `boolean` | When set, hides the decrement and increment buttons |
+| `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
+| `disabled` | `boolean` | Disabled state |
+| `name` | `string` | Name for form submission |
 | `value` | `number` | Current value. Leave it out for an empty field, which submits an empty string and takes `min` and `max` as no reason to be invalid: only `required` asks for a value, as with a native number input. As a property, `null` is empty. In an empty field + and - are both enabled, and start at 0, or at the nearer end of the range when 0 lies outside it (`min="1"` starts at 1). |
 | `min` | `number` | Minimum value (default: -Infinity) |
 | `max` | `number` | Maximum value (default: Infinity) |
 | `step` | `number` | Step size (default: 1) |
-| `size` | `'sm'\|'md'` | Size: 'sm' \| 'md' (default: 'md') |
-| `disabled` | `boolean` | Disabled state |
 | `required` | `boolean` | A value has to be filled in. An empty field is then invalid. |
-| `name` | `string` | Name for form submission |
 | `translations` | `object` | Translations; unspecified keys fall back to Dutch |
-| `width` | `string` | Width mode: 'full' (stretches to container) or any CSS length (e.g. '240px') |
-| `hide-spin-buttons` | `boolean` | When set, hides the decrement and increment buttons |
-| `accessible-label` | `string` | Accessible label (aria-label) forwarded to the native input |
-| `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -1804,17 +1804,17 @@ A field for a code someone receives once and types over: by text message, by ema
 | --- | --- | --- |
 | `size` | `'sm'\|'md'\|'lg'` | 'sm' \| 'md' (default) \| 'lg'. 'lg' has boxes 56px tall with larger characters, for a page where the code is the only thing to do, such as signing in. Where the boxes do not fit the width, the field steps down a size, to md and then sm: a code never wraps onto a second line. Where not even sm fits, the field shows the code in a text field of its own size. |
 | `centered` | `boolean` | Puts the boxes in the middle of the row, as on a sign-in page where the code is the only field. The field keeps the full width of the row, so it still sees when the boxes no longer fit and steps down a size; centering it from outside, with the alignment of its parent, would shrink it to its boxes and take that away. |
-| `length` | `number` | How many characters the code has (default: 6). |
-| `format` | `string` | The shape of a code that is printed in groups, such as '###-###' or '#### ####': each `#` is a box, anything else a separator you see but a screen reader does not hear. The number of `#` is then the length, so `format` wins over `length`. The value never holds a separator: '123-234' is submitted as '123234'. Leave it out for a code without groups, as most codes from a text message are. |
 | `accessible-label` | `string` | Accessible label forwarded to the inner input. Set automatically by nldd-form-field. |
+| `uppercase` | `boolean` | Turns letters into capitals as they are typed or pasted, in the boxes and in the value. Only with `type="alphanumeric"`, and only for a code where case does not matter, as with most activation codes. Leave it off for a code that tells "a" from "A", such as some recovery codes: a value turned into capitals would no longer match. |
 | `invalid` | `boolean` | Marks the field as invalid |
 | `readonly` | `boolean` | Readonly state |
 | `disabled` | `boolean` | Disabled state |
-| `input-id` | `string` | Sets the id on the native input. Set automatically by nldd-form-field. |
 | `name` | `string` | Input name for form submission |
+| `input-id` | `string` | Sets the id on the native input. Set automatically by nldd-form-field. |
 | `value` | `string` | The code |
 | `type` | `'numeric'\|'alphanumeric'` | What the code holds: 'numeric' (default, digits only, raises the number keyboard) \| 'alphanumeric' (letters and digits) |
-| `uppercase` | `boolean` | Turns letters into capitals as they are typed or pasted, in the boxes and in the value. Only with `type="alphanumeric"`, and only for a code where case does not matter, as with most activation codes. Leave it off for a code that tells "a" from "A", such as some recovery codes: a value turned into capitals would no longer match. |
+| `length` | `number` | How many characters the code has (default: 6). |
+| `format` | `string` | The shape of a code that is printed in groups, such as '###-###' or '#### ####': each `#` is a box, anything else a separator you see but a screen reader does not hear. The number of `#` is then the length, so `format` wins over `length`. The value never holds a separator: '123-234' is submitted as '123234'. Leave it out for a code without groups, as most codes from a text message are. |
 | `required` | `boolean` | Required state. A code that is not complete counts as invalid too. |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
@@ -1846,24 +1846,24 @@ A password input field with visibility toggle and validation states.
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `value` | `string` | The input value |
-| `placeholder` | `string` | Placeholder text |
-| `input-id` | `string` | Sets the id on the native input. Set automatically by nldd-form-field. |
 | `size` | `'md'\|'sm'` | 'md' (default) \| 'sm'. Set automatically by nldd-form-field. |
+| `width` | `string` | Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container. |
+| `placeholder` | `string` | Placeholder text |
+| `accessible-label` | `string` | Accessible label forwarded to the inner input. Set automatically by nldd-form-field. |
 | `valid` | `boolean` | Marks the field as valid |
 | `invalid` | `boolean` | Marks the field as invalid |
-| `disabled` | `boolean` | Disabled state |
 | `masked` | `boolean` | Whether the password is masked (default: true) |
-| `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 | `readonly` | `boolean` | Readonly state |
-| `required` | `boolean` | Required state |
+| `disabled` | `boolean` | Disabled state |
 | `name` | `string` | Input name for form submission |
-| `autocomplete` | `string` | Autocomplete hint |
-| `accessible-label` | `string` | Accessible label forwarded to the inner input. Set automatically by nldd-form-field. |
-| `width` | `string` | Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container. |
-| `pattern` | `string` | Regular expression the value has to match, as the native `pattern`. |
+| `input-id` | `string` | Sets the id on the native input. Set automatically by nldd-form-field. |
+| `value` | `string` | The input value |
 | `minlength` | `number` | Fewest characters the value may have. |
 | `maxlength` | `number` | Most characters the value may have. |
+| `pattern` | `string` | Regular expression the value has to match, as the native `pattern`. |
+| `required` | `boolean` | Required state |
+| `autocomplete` | `string` | Autocomplete hint |
+| `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -1888,16 +1888,16 @@ WAI-ARIA: put the buttons of one group in a container with role="radiogroup" and
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `checked` | `boolean` | Checked state |
-| `disabled` | `boolean` | Disabled state |
 | `color` | `'content'` | 'content' draws the control in the color of the text around it, with the mark in the surface color (`--context-background-color`). A colored surface of your own sets that variable. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent. |
-| `no-tab` | `boolean` | Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable. |
+| `accessible-label` | `string` | Accessible label, set as aria-label on this element: it is the radio. |
 | `decorative` | `boolean` | Renders the shape only: no role, no focus, no name/value, nothing announced. For a control that owns the state elsewhere, such as a list row or an nldd-radio-button-field that is itself the radio; putting a second radio in there would nest a control inside a control. |
-| `required` | `boolean` | Required state. What it asks is whether anything in the group is checked, as a native radio does. |
+| `no-tab` | `boolean` | Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable. |
+| `checked` | `boolean` | Checked state |
+| `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. Note: aria-labelledby is not supported as IDREF resolution cannot cross shadow DOM boundaries. |
+| `disabled` | `boolean` | Disabled state |
 | `name` | `string` | Radio group name for form submission; ties the buttons of one group together |
 | `value` | `string` | Value submitted with the form when this radio button is checked |
-| `accessible-label` | `string` | Accessible label, set as aria-label on this element: it is the radio. |
-| `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. Note: aria-labelledby is not supported as IDREF resolution cannot cross shadow DOM boundaries. |
+| `required` | `boolean` | Required state. What it asks is whether anything in the group is checked, as a native radio does. |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -1922,14 +1922,14 @@ A radio button with an inline label. Use inside nldd-radio-button-group, which s
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `checked` | `boolean` | Checked state |
-| `disabled` | `boolean` | Disabled state |
 | `color` | `'content'` | 'content' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside. |
-| `value` | `string` | Value for form submission |
-| `name` | `string` | Radio group name for form submission; ties the fields of one group together. Set automatically by nldd-radio-button-group. |
-| `required` | `boolean` | Required state. What it asks is whether anything in the group is checked, as a native radio does. Set automatically by nldd-radio-button-group. |
 | `label` | `string` | Label text for the radio button |
+| `checked` | `boolean` | Checked state |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
+| `disabled` | `boolean` | Disabled state |
+| `name` | `string` | Radio group name for form submission; ties the fields of one group together. Set automatically by nldd-radio-button-group. |
+| `value` | `string` | Value for form submission |
+| `required` | `boolean` | Required state. What it asks is whether anything in the group is checked, as a native radio does. Set automatically by nldd-radio-button-group. |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -1955,12 +1955,12 @@ Groups nldd-radio-button-field elements, handles keyboard navigation, and forwar
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `name` | `string` | Forwarded to all slotted nldd-radio-button-field elements |
-| `disabled` | `boolean` | Disables all slotted fields |
-| `required` | `boolean` | Marks the group as required |
 | `accessible-label` | `string` | Accessible name for the group, set as aria-label on the group |
 | `accessible-labeled-by` | `string` | Id of an external label element, set as aria-labelledby on the group |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
+| `disabled` | `boolean` | Disables all slotted fields |
+| `name` | `string` | Forwarded to all slotted nldd-radio-button-field elements |
+| `required` | `boolean` | Marks the group as required |
 
 **Slots**
 
@@ -2001,16 +2001,16 @@ A search input with a leading search icon, an optional dismiss button, and an op
 | `shortcut-mac` | `string` | Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`). |
 | `shortcut-windows` | `string` | Override of `shortcut` on Windows (falls back to `shortcut`). |
 | `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
-| `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
 | `disabled` | `boolean` | Disabled state |
 | `name` | `string` | Input name for form submission |
 | `value` | `string` | The search value |
-| `required` | `boolean` | Required state |
 | `minlength` | `number` | Fewest characters the value may have. |
 | `maxlength` | `number` | Most characters the value may have. |
 | `pattern` | `string` | Regular expression the value has to match, as the native `pattern`. |
+| `required` | `boolean` | Required state |
 | `no-spellcheck` | `boolean` | Disables browser spellchecking on the inner input |
+| `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -2037,18 +2037,18 @@ A horizontal group of mutually exclusive (radio) or multi-select (checkbox) opti
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `value` | `string` | Selected value for radio type |
+| `variant` | `'text'\|'icon'\|'icon-and-text'` | Content type for all items: 'text' \| 'icon' \| 'icon-and-text' (default: 'text') |
 | `appearance` | `'neutral-tinted'\|'neutral-base'` | Visual style, color included: 'neutral-tinted' \| 'neutral-base' (default: 'neutral-tinted'). neutral-base is for a tinted surface. For a quiet row without a track, use nldd-toggle-button-group with type="radio" and a transparent appearance. |
 | `size` | `'sm'\|'md'\|'lg'` | Control size: 'sm' \| 'md' \| 'lg' (default: 'md') |
-| `type` | `'radio'\|'checkbox'` | Selection mode: 'radio' \| 'checkbox' (default: 'radio'). |
-| `variant` | `'text'\|'icon'\|'icon-and-text'` | Content type for all items: 'text' \| 'icon' \| 'icon-and-text' (default: 'text') |
-| `disabled` | `boolean` | Disabled state for all items |
 | `width` | `string` | Width mode: 'full' (stretches to container), 'fit-content' (per-item content size), or any CSS length (e.g. '240px') |
-| `name` | `string` | Name for form submission |
 | `accessible-label` | `string` | Accessible name for the group, set as aria-label |
 | `accessible-labeled-by` | `string` | Id of an external label element, set as aria-labelledby on the group |
-| `required` | `boolean` | Marks the group as required. Enforced in radio mode; in checkbox mode only announced. |
 | `invalid` | `boolean` | Marks the group as invalid. Announced with aria-invalid; nothing is drawn for it. |
+| `disabled` | `boolean` | Disabled state for all items |
+| `name` | `string` | Name for form submission |
+| `value` | `string` | Selected value for radio type |
+| `type` | `'radio'\|'checkbox'` | Selection mode: 'radio' \| 'checkbox' (default: 'radio'). |
+| `required` | `boolean` | Marks the group as required. Enforced in radio mode; in checkbox mode only announced. |
 
 **Slots**
 
@@ -2072,20 +2072,20 @@ A horizontal group of mutually exclusive (radio) or multi-select (checkbox) opti
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `value` | `string` | Value for this item |
-| `selected` | `boolean` | Whether this item is selected (set by parent) |
-| `disabled` | `boolean` | Disabled state |
+| `variant` | `'text'\|'icon'\|'icon-and-text'` | Content type: 'text' \| 'icon' \| 'icon-and-text' (default: 'text'). Set by nldd-segmented-control. |
+| `appearance` | `'neutral-tinted'\|'neutral-base'` | Visual style: 'neutral-tinted' \| 'neutral-base' (default: 'neutral-tinted'). Set by nldd-segmented-control. |
+| `size` | `'sm'\|'md'\|'lg'` | Control size: 'sm' \| 'md' \| 'lg' (default: 'md'). Set by nldd-segmented-control. |
 | `text` | `string` | Text label (shown for variant "text" and "icon-and-text"; used as aria-label and tooltip for variant "icon") |
 | `icon` | `string` | Icon name for nldd-icon |
 | `shortcut` | `string` | Keyboard shortcut hint shown in the tooltip, e.g. 'Cmd+B'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up the handling in your app. Part of the accessible name ("Vet Cmd B"), as in nldd-menu-item. Hidden on touch-only devices, where it isn't invokable. |
 | `shortcut-mac` | `string` | Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`). |
 | `shortcut-windows` | `string` | Override of `shortcut` on Windows (falls back to `shortcut`). |
 | `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
-| `appearance` | `'neutral-tinted'\|'neutral-base'` | Visual style: 'neutral-tinted' \| 'neutral-base' (default: 'neutral-tinted'). Set by nldd-segmented-control. |
-| `size` | `'sm'\|'md'\|'lg'` | Control size: 'sm' \| 'md' \| 'lg' (default: 'md'). Set by nldd-segmented-control. |
-| `variant` | `'text'\|'icon'\|'icon-and-text'` | Content type: 'text' \| 'icon' \| 'icon-and-text' (default: 'text'). Set by nldd-segmented-control. |
-| `input-type` | `'radio'\|'checkbox'` | Selection mode: 'radio' \| 'checkbox' (default: 'radio'). In radio mode the item is the radio itself, in checkbox mode it renders a native checkbox. Set by nldd-segmented-control. |
+| `selected` | `boolean` | Whether this item is selected (set by parent) |
+| `disabled` | `boolean` | Disabled state |
 | `group-name` | `string` | Name of the group for form submission, put on the native checkbox. Set by nldd-segmented-control. |
+| `value` | `string` | Value for this item |
+| `input-type` | `'radio'\|'checkbox'` | Selection mode: 'radio' \| 'checkbox' (default: 'radio'). In radio mode the item is the radio itself, in checkbox mode it renders a native checkbox. Set by nldd-segmented-control. |
 | `required` | `boolean` | Required state of the native checkbox. In radio mode the group carries the constraint. |
 
 **Slots**
@@ -2113,11 +2113,10 @@ A value picked along a track, by dragging its thumb, pressing the track or with 
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `size` | `'xs'\|'sm'\|'md'` | Slider size: 'xs' \| 'sm' \| 'md' (default: 'md'), with the height of the other controls of that size. Set automatically by nldd-form-field. |
-| `range` | `boolean` | Picks a range, with a thumb for each end: `start-value` and `end-value` in place of `value` |
-| `histogram` | `string` | Counts drawn as bars above the track, one per bucket of (max - min) / n, comma- or space-separated; as a property, an array of numbers. The bars within the chosen value or range are colored. |
 | `start-icon` | `string` | Icon at the start of the track, such as a quiet speaker for a volume. A click on it moves the value a tenth of the range down (not in a range). |
 | `end-icon` | `string` | Icon at the end of the track. A click on it moves the value a tenth of the range up (not in a range). |
 | `accessible-label` | `string` | Accessible name; a range adds "minimum" and "maximum" to it for its thumbs. Set automatically by nldd-form-field. |
+| `histogram` | `string` | Counts drawn as bars above the track, one per bucket of (max - min) / n, comma- or space-separated; as a property, an array of numbers. The bars within the chosen value or range are colored. |
 | `tooltip-timing` | `string` | When the value shows above the thumb: 'instant' (the default: on hover, keyboard focus and while dragging) or 'never', for a slider whose value shows elsewhere, such as in fields above it |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
 | `disabled` | `boolean` | Disabled state |
@@ -2125,6 +2124,7 @@ A value picked along a track, by dragging its thumb, pressing the track or with 
 | `value` | `number` | The value (default: the middle between min and max) |
 | `start-value` | `number` | The start of a range (default: min) |
 | `end-value` | `number` | The end of a range (default: max) |
+| `range` | `boolean` | Picks a range, with a thumb for each end: `start-value` and `end-value` in place of `value` |
 | `min` | `number` | Smallest value (default: 0) |
 | `max` | `number` | Largest value (default: 100) |
 | `step` | `number` | Step between values (default: 1) |
@@ -2149,16 +2149,16 @@ A numeric control with increment and decrement buttons.
 
 | Attribute | Type | Description |
 | --- | --- | --- |
+| `size` | `'xs'\|'sm'\|'md'` | Size: 'xs' \| 'sm' \| 'md' (default: 'md') |
+| `accessible-label` | `string` | Accessible name for the spinbutton; falls back to a generic label |
+| `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
+| `disabled` | `boolean` | Disabled state |
+| `name` | `string` | Name for form submission; the value is submitted under this name |
 | `value` | `number` | Current value |
 | `min` | `number` | Minimum value (default: 0) |
 | `max` | `number` | Maximum value (default: Infinity) |
 | `step` | `number` | Step size (default: 1) |
-| `disabled` | `boolean` | Disabled state |
-| `size` | `'xs'\|'sm'\|'md'` | Size: 'xs' \| 'sm' \| 'md' (default: 'md') |
-| `name` | `string` | Name for form submission; the value is submitted under this name |
-| `accessible-label` | `string` | Accessible name for the spinbutton; falls back to a generic label |
 | `translations` | `object` | Translations; unspecified keys fall back to Dutch |
-| `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -2218,13 +2218,13 @@ A row of swatches to choose one from: a color, or an image of a pattern or a mat
 | --- | --- | --- |
 | `color` | `'lintblauw'\|'donkerblauw'\|'hemelblauw'\|'lichtblauw'\|'paars'\|'violet'\|'robijnrood'\|'roze'\|'rood'\|'oranje'\|'donkergeel'\|'geel'\|'donkerbruin'\|'bruin'\|'donkergroen'\|'groen'\|'mosgroen'\|'mintgroen'` | Category color: 'lintblauw' \| 'donkerblauw' \| 'hemelblauw' \| 'lichtblauw' \| 'paars' \| 'violet' \| 'robijnrood' \| 'roze' \| 'rood' \| 'oranje' \| 'donkergeel' \| 'geel' \| 'donkerbruin' \| 'bruin' \| 'donkergroen' \| 'groen' \| 'mosgroen' \| 'mintgroen'. Brings its name along, so `text` is optional. |
 | `custom-color` | `string` | Any CSS color of your own (e.g. '#7a1f3d' or 'var(--brand-color)'), for a color outside the categories. Needs `text`. |
+| `size` | `'xs'\|'sm'\|'md'` | Swatch size: 'xs' \| 'sm' \| 'md' (set by the picker, default: 'md') |
+| `text` | `string` | Name of the swatch, for screen readers and the tooltip. Overrides the name of a category `color`. |
 | `image` | `string` | URL of an image that fills the swatch, for a pattern or a material. Needs `text`. |
 | `image-srcset` | `string` | Sources of the image at other pixel densities, with x descriptors (e.g. '/oak.jpg 1x, /oak@2x.jpg 2x'). The swatch has a fixed size, so there are no widths to choose from. |
-| `text` | `string` | Name of the swatch, for screen readers and the tooltip. Overrides the name of a category `color`. |
 | `selected` | `boolean` | Whether this swatch is chosen (set by the picker) |
 | `disabled` | `boolean` | Disabled state |
 | `value` | `string` | Value for this swatch |
-| `size` | `'xs'\|'sm'\|'md'` | Swatch size: 'xs' \| 'sm' \| 'md' (set by the picker, default: 'md') |
 | `translations` | `object` | Override translation keys (the names of the category colors); unset keys fall back to Dutch. |
 
 ### `<nldd-switch>`
@@ -2244,16 +2244,16 @@ A toggle control for on/off settings. Prefer nldd-switch-field for labeled usage
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `checked` | `boolean` | Whether the switch is on/off |
-| `disabled` | `boolean` | Disabled state |
 | `color` | `'content'` | 'content' draws the control in the color of the text around it, with the mark in the surface color (`--context-background-color`). A colored surface of your own sets that variable. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent. |
-| `no-tab` | `boolean` | Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable. |
 | `size` | `'xs'\|'sm'` | Switch size: 'xs' \| 'sm' (default: 'sm') |
+| `accessible-label` | `string` | Accessible label forwarded as aria-label to the native input. Required when using nldd-switch without nldd-switch-field. |
+| `no-tab` | `boolean` | Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable. |
+| `checked` | `boolean` | Whether the switch is on/off |
+| `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
+| `disabled` | `boolean` | Disabled state |
 | `name` | `string` | Name for form submission; nothing is submitted when the switch is off |
 | `value` | `string` | Value submitted with the form when the switch is on (default: 'on') |
-| `accessible-label` | `string` | Accessible label forwarded as aria-label to the native input. Required when using nldd-switch without nldd-switch-field. |
 | `required` | `boolean` | Required state |
-| `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -2280,14 +2280,14 @@ A switch toggle with an inline label for use in forms.
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `checked` | `boolean` | Checked state |
-| `disabled` | `boolean` | Disabled state |
 | `color` | `'content'` | 'content' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside. |
-| `value` | `string` | Value for form submission |
-| `name` | `string` | Name for form submission |
 | `label` | `string` | Label text for the switch |
-| `required` | `boolean` | Required state |
+| `checked` | `boolean` | Checked state |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
+| `disabled` | `boolean` | Disabled state |
+| `name` | `string` | Name for form submission |
+| `value` | `string` | Value for form submission |
+| `required` | `boolean` | Required state |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -2320,23 +2320,23 @@ A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the 
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `value` | `string` | Editor content (markdown). A value the app sets is kept as it is: the editor keeps the numbers of a numbered list in sequence while the user edits that list, not when the value is set. Only the part that differs changes, so the caret and the selection stay with their text, and the change stays out of the undo history. |
+| `resize` | `'none'\|'vertical'\|'auto'` | 'none' (fixed) \| 'vertical' (drag) \| 'auto' (grow, default) |
+| `rows` | `number` | Minimum visible rows (the floor in every resize mode). Default: 6. |
 | `placeholder` | `string` | Placeholder text shown while empty |
-| `input-id` | `string` | Sets the id on the editable element. Set automatically by nldd-form-field. |
+| `embedded` | `boolean` | Drops the frame, fill, padding and focus ring, for an editor inside a composition that provides them |
+| `accessible-label` | `string` | Accessible label forwarded to the editor. Set automatically by nldd-form-field. |
+| `wrap` | `boolean` | Wrap long lines (default true; prose wraps) |
+| `syntax` | `string` | 'hidden' (default) or 'visible'. 'visible': every formatting mark stays in view, dimmed, a bullet as the character you typed (`-`, `*` or `+`), for people who write markdown. 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A bullet reads as a dot, and shows its character on the line the caret is on. A quote reads as a line on the left per level, at the level the result gives each line, as in nldd-rich-text, with the spaces after a `>` beyond the first hidden and a missing one made room for, so every level is the same step; with the caret anywhere in it, its `>` marks and spaces show instead. A `---` line reads as a divider until the caret is on it, and a code block loses its closing ``` line until the caret is in it, since its own tint and edge already say what it is. Its opening line stays as the head of the block, with only the backticks hidden: the language as a label on the left, the copy button on the right. The numbers of a numbered list stay, in the color of the text: they are content. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way. |
+| `annotatable` | `boolean` | Enable the annotation overlay (off by default). Annotations only render when this is set. |
+| `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
+| `readonly` | `boolean` | Readonly state (focusable and selectable, not editable) |
 | `disabled` | `boolean` | Disabled state |
 | `name` | `string` | Field name for form submission |
-| `readonly` | `boolean` | Readonly state (focusable and selectable, not editable) |
+| `input-id` | `string` | Sets the id on the editable element. Set automatically by nldd-form-field. |
+| `value` | `string` | Editor content (markdown). A value the app sets is kept as it is: the editor keeps the numbers of a numbered list in sequence while the user edits that list, not when the value is set. Only the part that differs changes, so the caret and the selection stay with their text, and the change stays out of the undo history. |
 | `required` | `boolean` | Required state |
 | `no-spellcheck` | `boolean` | Turns spellchecking off. It is on by default, like the other text fields, and leaves out what is not running text: inline code and code blocks, the address of a link and a bare URL (the link text is checked), and mentions. Autocorrect and autocapitalize follow the user's own settings, as in the other fields, also with `no-spellcheck`. Two limits come from the browser: text that was already there is checked once you edit near it, not when the editor opens (the editor lives in a shadow root; Firefox only checks around the caret), and markup that changes how a line is built, such as starting a list item, hides the underlines on that line until you type on. |
-| `wrap` | `boolean` | Wrap long lines (default true; prose wraps) |
-| `rows` | `number` | Minimum visible rows (the floor in every resize mode). Default: 6. |
-| `resize` | `'none'\|'vertical'\|'auto'` | 'none' (fixed) \| 'vertical' (drag) \| 'auto' (grow, default) |
-| `embedded` | `boolean` | Drops the frame, fill, padding and focus ring, for an editor inside a composition that provides them |
-| `syntax` | `string` | 'hidden' (default) or 'visible'. 'visible': every formatting mark stays in view, dimmed, a bullet as the character you typed (`-`, `*` or `+`), for people who write markdown. 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A bullet reads as a dot, and shows its character on the line the caret is on. A quote reads as a line on the left per level, at the level the result gives each line, as in nldd-rich-text, with the spaces after a `>` beyond the first hidden and a missing one made room for, so every level is the same step; with the caret anywhere in it, its `>` marks and spaces show instead. A `---` line reads as a divider until the caret is on it, and a code block loses its closing ``` line until the caret is in it, since its own tint and edge already say what it is. Its opening line stays as the head of the block, with only the backticks hidden: the language as a label on the left, the copy button on the right. The numbers of a numbered list stay, in the color of the text: they are content. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way. |
-| `accessible-label` | `string` | Accessible label forwarded to the editor. Set automatically by nldd-form-field. |
-| `annotatable` | `boolean` | Enable the annotation overlay (off by default). Annotations only render when this is set. |
 | `translations` | `object` | Override the editor's assistive-tech strings (the open-in-new-tab link badge, the annotation count badge, the label of a task's box and the copy button of a code block). Unset keys fall back to Dutch. |
-| `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
 | `text-editor-command` | `string` | The command a control runs on its editor: a name from `runCommand()`, with an argument after a colon (`setHeading:2`, `setList:task`). On an nldd-toggle-button, nldd-button, nldd-icon-button, `<button>` or nldd-menu-item, also in a toolbar's overflow menu. On an nldd-segmented-control the command takes the value of the chosen item: `text-editor-command="setList"` with items `none`, `bullet`, `ordered` and `task`, where a second click on the list that is on turns it off. Works inside the editor (its `toolbar` slot) or inside an element with `text-editor-for`. The editor sets `selected` and `disabled` on it, so do not set those yourself. Disabled: undo and redo without history, indent and outdent where the list item cannot move, copy and cut without a selection, the inline formats in code and the block formats in a code block, and everything but copy in a read-only editor. `setHeading` steps out of a code block first, so "Paragraaf" is the way out. |
 | `text-editor-for` | `string` | Set on any element that holds controls for an editor elsewhere on the page, such as an nldd-toolbar in a bar of the page: the editor's id. Its controls with `text-editor-command` drive that editor. The id is looked up in the document, not in a shadow root. |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
@@ -2375,26 +2375,26 @@ A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the 
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `value` | `string` | The input value |
-| `placeholder` | `string` | Placeholder text |
-| `input-id` | `string` | Sets the id on the native input. Set automatically by nldd-form-field. |
 | `size` | `'md'\|'sm'` | 'md' (default) \| 'sm'. Set automatically by nldd-form-field. |
-| `invalid` | `boolean` | Marks the field as invalid |
+| `width` | `string` | Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container. |
+| `placeholder` | `string` | Placeholder text |
+| `accessible-label` | `string` | Accessible label forwarded to the inner input. Set automatically by nldd-form-field. |
 | `valid` | `boolean` | Marks the field as valid |
+| `invalid` | `boolean` | Marks the field as invalid |
+| `readonly` | `boolean` | Readonly state |
 | `disabled` | `boolean` | Disabled state |
+| `name` | `string` | Input name for form submission |
+| `input-id` | `string` | Sets the id on the native input. Set automatically by nldd-form-field. |
+| `value` | `string` | The input value |
 | `type` | `'text'\|'email'\|'tel'\|'url'` | Input type: 'text' \| 'email' \| 'tel' \| 'url' |
 | `keyboard` | `'none'\|'text'\|'decimal'\|'numeric'\|'tel'\|'search'\|'email'\|'url'` | Which virtual keyboard a phone or tablet raises, forwarded as `inputmode`: 'none' \| 'text' \| 'decimal' \| 'numeric' \| 'tel' \| 'search' \| 'email' \| 'url'. It changes nothing about what the field accepts, and nothing at all on a desktop. Reach for it where the value is digits but not a quantity you would step (a house number, a postcode, a rack unit): 'numeric'. The keyboard for 'tel', 'email' and 'url' already follows from `type`. |
 | `enter-key` | `'enter'\|'done'\|'go'\|'next'\|'previous'\|'search'\|'send'` | What the Enter key of the virtual keyboard says, forwarded as `enterkeyhint`: 'enter' \| 'done' \| 'go' \| 'next' \| 'previous' \| 'search' \| 'send'. It only labels the key; what Enter does is still up to the form, and on a desktop it changes nothing. |
-| `name` | `string` | Input name for form submission |
-| `readonly` | `boolean` | Readonly state |
-| `required` | `boolean` | Required state |
-| `autocomplete` | `string` | Autocomplete hint |
-| `accessible-label` | `string` | Accessible label forwarded to the inner input. Set automatically by nldd-form-field. |
-| `no-spellcheck` | `boolean` | Disables browser spellchecking on the inner input |
-| `width` | `string` | Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container. |
-| `pattern` | `string` | Regular expression the value has to match, as the native `pattern`. |
 | `minlength` | `number` | Fewest characters the value may have. |
 | `maxlength` | `number` | Most characters the value may have. |
+| `pattern` | `string` | Regular expression the value has to match, as the native `pattern`. |
+| `required` | `boolean` | Required state |
+| `autocomplete` | `string` | Autocomplete hint |
+| `no-spellcheck` | `boolean` | Disables browser spellchecking on the inner input |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -2427,23 +2427,23 @@ A text field for a time. The value is always 24-hour `HH:mm`, which is how Dutch
 
 | Attribute | Type | Description |
 | --- | --- | --- |
+| `size` | `'md'\|'sm'` | 'md' (default) \| 'sm'. Set automatically by nldd-form-field. |
+| `width` | `string` | Width. By default exactly wide enough for a time plus the validation icon; 'full' fills the container; 'fit-content' drops the room for the validation icon and grows again as soon as the field turns valid or invalid; or pass your own CSS length. |
+| `placeholder` | `string` | Placeholder text. Do not put a format here; use the supporting label of nldd-form-field for that. |
+| `accessible-label` | `string` | Accessible label for the internal input. Set automatically by nldd-form-field. |
+| `no-picker` | `boolean` | Hides the picker button. It is shown by default. |
+| `valid` | `boolean` | Marks the field as valid. |
+| `invalid` | `boolean` | Marks the field as invalid. |
+| `readonly` | `boolean` | Read-only state. |
+| `disabled` | `boolean` | Disabled state. |
+| `name` | `string` | Name for form submission. |
+| `input-id` | `string` | Sets the id on the internal input. Set automatically by nldd-form-field. |
 | `value` | `string` | The time as `HH:mm` (24-hour). Empty when there is no valid time. |
 | `min` | `string` | Earliest allowed time as `HH:mm`. Also the base that `step` counts from. |
 | `max` | `string` | Latest allowed time as `HH:mm`. |
 | `step` | `number` | Step in minutes (default 1). Decides which times are valid, what rounding snaps to, and how far the arrow keys jump. |
-| `no-picker` | `boolean` | Hides the picker button. It is shown by default. |
-| `placeholder` | `string` | Placeholder text. Do not put a format here; use the supporting label of nldd-form-field for that. |
-| `input-id` | `string` | Sets the id on the internal input. Set automatically by nldd-form-field. |
-| `size` | `'md'\|'sm'` | 'md' (default) \| 'sm'. Set automatically by nldd-form-field. |
-| `invalid` | `boolean` | Marks the field as invalid. |
-| `valid` | `boolean` | Marks the field as valid. |
-| `disabled` | `boolean` | Disabled state. |
-| `readonly` | `boolean` | Read-only state. |
 | `required` | `boolean` | Required state. |
-| `name` | `string` | Name for form submission. |
 | `autocomplete` | `string` | Autocomplete hint. |
-| `accessible-label` | `string` | Accessible label for the internal input. Set automatically by nldd-form-field. |
-| `width` | `string` | Width. By default exactly wide enough for a time plus the validation icon; 'full' fills the container; 'fit-content' drops the room for the validation icon and grows again as soon as the field turns valid or invalid; or pass your own CSS length. |
 | `translations` | `object` | Translations; unspecified keys fall back to Dutch. |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
@@ -2477,15 +2477,15 @@ Two columns, hours and minutes, that slide like a wheel past the selection in th
 
 | Attribute | Type | Description |
 | --- | --- | --- |
+| `rows` | `number` | Height of the columns in rows (default 7, minimum 3). The chosen value always sits in the middle, so an odd number shows whole rows and an even number cuts off half a row at the top and bottom. |
+| `width` | `string` | Width: `full` fills the container, or pass your own CSS length. |
+| `accessible-label` | `string` | Accessible name of the picker. |
+| `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
 | `value` | `string` | The chosen time as `HH:mm` (24-hour), written exactly so: unlike `min` and `max`, it is what the picker reports back. In nldd-time-field the field writes it. |
 | `min` | `string` | Earliest allowed time as `HH:mm`, read as generously as nldd-time-field reads it (`9:00` too). Also the base that `step` counts from. |
 | `max` | `string` | Latest allowed time as `HH:mm`, read as generously as `min`. |
 | `step` | `number` | Step in minutes (default 1). Decides which minutes are in the column. |
-| `rows` | `number` | Height of the columns in rows (default 7, minimum 3). The chosen value always sits in the middle, so an odd number shows whole rows and an even number cuts off half a row at the top and bottom. |
-| `width` | `string` | Width: `full` fills the container, or pass your own CSS length. |
-| `accessible-label` | `string` | Accessible name of the picker. |
 | `translations` | `object` | Translations; unspecified keys fall back to Dutch. |
-| `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -2517,26 +2517,26 @@ A selectable button that toggles between selected and unselected. Available as a
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `type` | `'button' \| 'checkbox' \| 'radio'` | What the button is: a button with aria-pressed, a native checkbox, or a radio (default: 'button') |
+| `variant` | `'text' \| 'icon' \| 'icon-and-text'` | What renders: text, icon, or both. Unset → auto-detect from text/icon attributes. |
 | `appearance` | `'neutral-tinted' \| 'neutral-base' \| 'neutral-transparent' \| 'accent-transparent'` | Visual style, color included (default: 'neutral-tinted'). Selected is filled in each of them; the transparent ones are for a toggle among transparent buttons, and with a selected-icon they stay quiet when on. |
 | `size` | `'xs' \| 'sm' \| 'md' \| 'lg'` | Button size (default: 'md') |
-| `selected` | `boolean` | Selected state |
-| `disabled` | `boolean` | Disabled state |
-| `no-tab` | `boolean` | Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable. |
-| `value` | `string` | Value for form submission (checkbox/radio) |
-| `name` | `string` | Name for form submission (checkbox/radio) |
 | `text` | `string` | Button text |
 | `icon` | `string` | Icon name for nldd-icon |
 | `selected-icon` | `string` | Icon shown instead of `icon` while selected, such as `check-mark` for `plus` or `heart-filled` for `heart`. The appearances with a surface fill it when on, as without one. The transparent appearances have no surface to fill: with a selected-icon they stay quiet when on and the change of shape says it is on; without one, or with `variant="text"` where the icon does not render, they fill, so the state always shows. |
-| `variant` | `'text' \| 'icon' \| 'icon-and-text'` | What renders: text, icon, or both. Unset → auto-detect from text/icon attributes. |
+| `interestfor` | `string` | ID of an nldd-popover that describes this button and opens on interest, as the `interest` slot does, for a popover that stands elsewhere: one shared by several buttons, such as who reacted in a row of reactions. Looked up in the tree of this button. A popover in the `interest` slot wins. Keep `accessible-label` on that popover: it names the popover where it stands, and is left out while it describes this button. |
 | `accessible-label` | `string` | Accessible label; required for icon-only usage |
 | `shortcut` | `string` | Keyboard shortcut hint shown in the tooltip, e.g. 'Cmd+B'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up the handling in your app. Part of the accessible name ("Vet Cmd B"), as in nldd-menu-item. Hidden on touch-only devices, where it isn't invokable. |
 | `shortcut-mac` | `string` | Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`). |
 | `shortcut-windows` | `string` | Override of `shortcut` on Windows (falls back to `shortcut`). |
 | `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
-| `required` | `boolean` | Required state. Set by nldd-toggle-button-group. |
+| `no-tab` | `boolean` | Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable. |
+| `selected` | `boolean` | Selected state |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
-| `interestfor` | `string` | ID of an nldd-popover that describes this button and opens on interest, as the `interest` slot does, for a popover that stands elsewhere: one shared by several buttons, such as who reacted in a row of reactions. Looked up in the tree of this button. A popover in the `interest` slot wins. Keep `accessible-label` on that popover: it names the popover where it stands, and is left out while it describes this button. |
+| `disabled` | `boolean` | Disabled state |
+| `name` | `string` | Name for form submission (checkbox/radio) |
+| `value` | `string` | Value for form submission (checkbox/radio) |
+| `type` | `'button' \| 'checkbox' \| 'radio'` | What the button is: a button with aria-pressed, a native checkbox, or a radio (default: 'button') |
+| `required` | `boolean` | Required state. Set by nldd-toggle-button-group. |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
 
@@ -2568,15 +2568,15 @@ Groups nldd-toggle-button elements and manages selection, keyboard navigation, a
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `type` | `'button' \| 'checkbox' \| 'radio'` | Selection mode (default: 'checkbox') |
-| `name` | `string` | Forwarded to all buttons |
 | `appearance` | `'neutral-tinted' \| 'neutral-base' \| 'neutral-transparent' \| 'accent-transparent'` | Forwarded to all buttons (default: 'neutral-tinted') |
 | `size` | `'xs' \| 'sm' \| 'md'` | Forwarded to all buttons (default: 'md') |
-| `disabled` | `boolean` | Disables all buttons |
 | `accessible-label` | `string` | Accessible name for the group (aria-label) |
 | `accessible-labeled-by` | `string` | ID of an external label element (aria-labelledby) |
-| `required` | `boolean` | Marks the group as required. Enforced in radio mode; in checkbox mode only announced. |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
+| `disabled` | `boolean` | Disables all buttons |
+| `name` | `string` | Forwarded to all buttons |
+| `type` | `'button' \| 'checkbox' \| 'radio'` | Selection mode (default: 'checkbox') |
+| `required` | `boolean` | Marks the group as required. Enforced in radio mode; in checkbox mode only announced. |
 
 **Slots**
 
@@ -2602,21 +2602,21 @@ A multi-select input that looks like a normal input field: chosen values show as
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `values` | `string` | Initial token values as a comma-separated string (e.g. "nl, be, de"). Not reflected; the live value is the `.values` array property. Values can't contain commas. |
 | `placeholder` | `string` | Placeholder shown in the input |
-| `type` | `string` | Input type forwarded to the inner input (e.g. 'email') |
-| `autocomplete` | `string` | Autocomplete hint forwarded to the inner input |
 | `accessible-label` | `string` | Accessible label forwarded as aria-label to the input |
-| `allow-custom` | `boolean` | Allow free-typed values (not just menu options). Typing an option's label in full adds that option, with its value, ignoring case and the spaces around it; with two such labels, the first one. |
 | `no-filter` | `boolean` | Leaves the options as they are while typing, for a list your server already filtered per keystroke. Without it the field hides options that do not contain the typed text, which also hides a server match on, say, an e-mail address. |
+| `token-control` | `string` | Trailing control per token: 'dismiss' (default, a ✕ that removes it) or 'menu' (a ⌄ opening a per-token action menu supplied by the template prototypes) |
 | `valid` | `boolean` | Marks the field valid (shows the valid icon) |
 | `invalid` | `boolean` | Marks the field invalid (shows the invalid icon) |
-| `no-spellcheck` | `boolean` | Disables browser spellchecking on the inner input |
 | `readonly` | `boolean` | Readonly: static tokens, no input/picker, read-only surface |
-| `required` | `boolean` | Marks the field required (invalid when it has no tokens) |
 | `disabled` | `boolean` | Disabled state |
-| `token-control` | `string` | Trailing control per token: 'dismiss' (default, a ✕ that removes it) or 'menu' (a ⌄ opening a per-token action menu supplied by the template prototypes) |
 | `name` | `string` | Name for form submission |
+| `values` | `string` | Initial token values as a comma-separated string (e.g. "nl, be, de"). Not reflected; the live value is the `.values` array property. Values can't contain commas. |
+| `type` | `string` | Input type forwarded to the inner input (e.g. 'email') |
+| `allow-custom` | `boolean` | Allow free-typed values (not just menu options). Typing an option's label in full adds that option, with its value, ignoring case and the spaces around it; with two such labels, the first one. |
+| `required` | `boolean` | Marks the field required (invalid when it has no tokens) |
+| `autocomplete` | `string` | Autocomplete hint forwarded to the inner input |
+| `no-spellcheck` | `boolean` | Disables browser spellchecking on the inner input |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
@@ -2719,13 +2719,13 @@ A visually bounded card with optional header, body and footer sections. The card
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `background` | `'base'\|'tinted'\|'accent-tinted'` | Surface color of the card: `base` (default) on a plain page background, `tinted` when the card should stand out against a base surface, `accent-tinted` for a tint of the theme's accent with the contrast of `tinted` |
+| `button` | `boolean` | Makes the whole card a button; ignored when `href` is set |
 | `accessible-label` | `string` | Accessible name of the card; with `href`/`button` it names the link or button, otherwise the card region |
-| `translations` | `object` | Override translation keys (e.g. the "opent in nieuw tabblad" announcement) |
 | `href` | `string` | Makes the whole card a link to this URL (empty = no link) |
 | `target` | `string` | Link target for href (e.g. '_blank'); adjusts rel automatically and adds an "opent in nieuw tabblad" announcement for '_blank'. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. |
-| `download` | `string` | Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab. |
 | `rel` | `string` | Link rel for href; with target '_blank', 'noopener noreferrer' is added to whatever you set |
-| `button` | `boolean` | Makes the whole card a button; ignored when `href` is set |
+| `download` | `string` | Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab. |
+| `translations` | `object` | Override translation keys (e.g. the "opent in nieuw tabblad" announcement) |
 
 **Slots**
 
@@ -2760,9 +2760,9 @@ A container for displaying collections of items. Supports grid, stack, lanes and
 | `md-gap` | `string` | Gap at md, overriding `gap` there |
 | `lg-gap` | `string` | Gap at lg, overriding `gap` there |
 | `max-items` | `number` | Number of visible items per page (default: 24) |
-| `translations` | `object` | Translation overrides; unset keys fall back to Dutch. Available keys: 'components.collection.previous-action', 'components.collection.next-action', 'components.collection.load-more-action' |
 | `show-load-more` | `boolean` | Show load-more button in grid/stack (default: false) |
 | `lazy-load` | `boolean` | Automatically load more items when the button becomes visible |
+| `translations` | `object` | Translation overrides; unset keys fall back to Dutch. Available keys: 'components.collection.previous-action', 'components.collection.next-action', 'components.collection.load-more-action' |
 
 **Slots**
 
@@ -2800,7 +2800,6 @@ A simple layout primitive: pick a layout mode, give it a gap, optionally align c
 | `md-order` | `number` | Position of this child at md |
 | `lg-order` | `number` | Position of this child at lg |
 | `layout` | `'stack'\|'row'\|'wrap'\|'grid'\|'columns'\|'lanes'` | 'stack' \| 'row' \| 'wrap' \| 'grid' \| 'columns' \| 'lanes' (default: 'stack') |
-| `list` | `boolean` | Makes the children a list for assistive technology: `role="list"` on the container and `role="listitem"` on each child, so a screen reader says how many there are and lets you skip them (WCAG 1.3.1). For a row of tags or a group of cards or tiles that are alike. A child with a role of its own keeps it. Nothing changes visually. |
 | `column-count` | `number` | Force N columns (1-8) for layout=grid/columns/lanes |
 | `sm-column-count` | `number` | Column count when this container is sm-wide |
 | `md-column-count` | `number` | Column count when this container is md-wide |
@@ -2841,9 +2840,10 @@ A simple layout primitive: pick a layout mode, give it a gap, optionally align c
 | `lg-padding-right` | `string` | Padding right at lg |
 | `lg-padding-bottom` | `string` | Padding bottom at lg |
 | `lg-padding-left` | `string` | Padding left at lg |
-| `hide-on` | `'touch'\|'pointer'` | 'touch' \| 'pointer'. Takes the container and all it holds away, for screen readers as well, on a device that only has touch (`touch`) or on one with a mouse or trackpad (`pointer`), the same test that hides keyboard shortcuts. For what only works with one of the two, such as a setting about hover. Not for content: what one visitor gets, the other should get too. |
 | `horizontal-alignment` | `'left'\|'center'\|'right'` | 'left' \| 'center' \| 'right' |
 | `vertical-alignment` | `'top'\|'center'\|'bottom'` | 'top' \| 'center' \| 'bottom' |
+| `hide-on` | `'touch'\|'pointer'` | 'touch' \| 'pointer'. Takes the container and all it holds away, for screen readers as well, on a device that only has touch (`touch`) or on one with a mouse or trackpad (`pointer`), the same test that hides keyboard shortcuts. For what only works with one of the two, such as a setting about hover. Not for content: what one visitor gets, the other should get too. |
+| `list` | `boolean` | Makes the children a list for assistive technology: `role="list"` on the container and `role="listitem"` on each child, so a screen reader says how many there are and lets you skip them (WCAG 1.3.1). For a row of tags or a group of cards or tiles that are alike. A child with a role of its own keeps it. Nothing changes visually. |
 
 **Slots**
 
@@ -2930,21 +2930,21 @@ The section that says what a page is for: it names the main goal of what you can
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `background` | `'inherit'\|'base'\|'tinted'` | Surface behind the hero (section API) |
-| `width` | `string` | Body max-width; 'full' removes the bound (section API) |
-| `grow` | `boolean` | Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow. |
-| `padding-block` | `string` | Block padding override, also per edge and responsive (section API) |
+| `main-background` | `'accent'\|'base'` | Surface color of the panel: 'accent' (default), the accent color of the theme, or 'base', the base surface |
 | `corner` | `string` | Rounds one corner of the media area, in the shape language of the Rijkshuisstijl: 'top-left' \| 'top-right' \| 'bottom-left' \| 'bottom-right', or empty (or 'auto') to let the hero choose a corner the panel leaves free. With media it applies with `layout="contained"` and the panel in a corner or along a side; with overlap or a centered panel the hero stays rectangular and says so in development. The panel stands against the edge of the image, so a `main-width` in percent (33.33%, 50%) is a share of the image, and gets a corner at half the radius, the one pointing into the image, with more padding along its two sides so the content keeps its distance to the curve. A panel along the same edge as the rounded corner of the image stops before the curve, at the panel's padding from it; a panel along a full side, a `main-width="full"` strip and the panel on mobile stay square. On mobile a bottom corner moves to the top, and the panel stands under the image, as wide as it, instead of overlapping it. Without media the panel is the whole hero: the corner applies in every layout and position, at half the radius, and the hero chooses top-right, or top-left for a panel on the right. The radius comes from the ribbon width: 1.5X on sm, 2X on md and lg, and is never more than a third of the shortest side of the area it rounds, so a low hero keeps a corner rather than a drop. Says so in development when the chosen corner sits under the panel, or with `width="full"` |
 | `layout` | `'contained'\|'overlap'` | How the panel relates to the image (default: 'overlap'). 'contained' keeps it on the image, in any of the eight positions; 'overlap' lets it fall `overlap-size` over the bottom of the image and run on below as far as its content needs, so the image keeps its height whatever the content. In 'overlap' the image has a fixed height (320px on md, 400px on lg) unless `media-height` or `media-aspect-ratio` is set, and only the horizontal side of `main-position` counts. A panel shorter than `overlap-size` ends inside the image and says so in development |
-| `main-background` | `'accent'\|'base'` | Surface color of the panel: 'accent' (default), the accent color of the theme, or 'base', the base surface |
+| `width` | `string` | Body max-width; 'full' removes the bound (section API) |
+| `grow` | `boolean` | Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow. |
 | `main-width` | `string` | Width of the panel (default: 'auto'). 'auto' follows the content, between 480px and 640px and never wider than the image allows: a short title gets a narrow panel, a paragraph runs on to a readable line length. 'full' makes a strip across the whole image, at the top or the bottom, and is ignored with 'left'/'right'. Any CSS width (e.g. '560px', '60%') sets it exactly on md and lg, still never wider than the image allows; an invalid value falls back to 'auto' |
-| `main-position` | `'top-left'\|'top-center'\|'top-right'\|'bottom-left'\|'bottom-center'\|'bottom-right'\|'left'\|'right'` | Position of the text panel (default: 'bottom-left'); 'left'/'right' span the full height |
 | `overlap-size` | `string` | With layout="overlap": how far the panel falls over the bottom of the image, any CSS length (default: 160px). The overlap stays the same whatever the height of the image; a panel shorter than this ends inside the image |
-| `media-aspect-ratio` | `string` | Aspect ratio of the media area (CSS form, '16/9' or '16:9'); default '21/9'. On md/lg it sets the height of the hero, on sm the height of the media area |
-| `media-height` | `string` | Fixed height of the media area, any CSS length (e.g. '320px', '40vh'); wins over media-aspect-ratio. An invalid value falls back to the ratio |
+| `padding-block` | `string` | Block padding override, also per edge and responsive (section API) |
+| `main-position` | `'top-left'\|'top-center'\|'top-right'\|'bottom-left'\|'bottom-center'\|'bottom-right'\|'left'\|'right'` | Position of the text panel (default: 'bottom-left'); 'left'/'right' span the full height |
 | `media-src` | `string` | Source of the media area (an alternative to the media slot); ignored as soon as the media slot is filled |
 | `media-srcset` | `string` | Responsive source set for media-src |
 | `media-sizes` | `string` | Source sizes hint for media-src |
 | `media-alt` | `string` | Alt text for media-src; empty means decorative |
+| `media-aspect-ratio` | `string` | Aspect ratio of the media area (CSS form, '16/9' or '16:9'); default '21/9'. On md/lg it sets the height of the hero, on sm the height of the media area |
+| `media-height` | `string` | Fixed height of the media area, any CSS length (e.g. '320px', '40vh'); wins over media-aspect-ratio. An invalid value falls back to the ratio |
 | `height` | `string` | — |
 | `padding-top` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | — |
 | `padding-bottom` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | — |
@@ -2981,8 +2981,8 @@ Columns side by side, with items you move between them. Kanban is Japanese for a
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `accessible-label` | `string` | Accessible name of the board (default: "Bord") |
 | `height` | `string` | Fixed height as a CSS length (e.g. '480px'): every column takes it, and scrolls its items once they do not fit. To fill a page or a pane, set the height in your layout instead (flex, or `height: 100%`) |
+| `accessible-label` | `string` | Accessible name of the board (default: "Bord") |
 | `readonly` | `boolean` | Items cannot be dragged or moved with the keyboard; they still work, and `moveItem()` still moves |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 
@@ -3048,9 +3048,9 @@ A four-column layout with a primary sidebar, secondary sidebar, main content are
 | --- | --- | --- |
 | `inspector-as-sheet` | `boolean` | Always show the inspector as a sheet regardless of available space |
 | `primary-sidebar-as-sheet` | `boolean` | Always show the primary sidebar as a sheet, keeping main visible at full width |
+| `inspector-auto-hidden` | `boolean` | Inspector hidden to free up space for other panes (read-only, set by the split view) |
 | `inspector-accessible-label` | `string` | Accessible name for the inspector sheet dialog (default: 'Details') |
 | `primary-sidebar-accessible-label` | `string` | Accessible name for the primary sidebar sheet dialog (default: 'Navigatie') |
-| `inspector-auto-hidden` | `boolean` | Inspector hidden to free up space for other panes (read-only, set by the split view) |
 | `empty` | `boolean` | This pane says nothing is chosen yet, such as "Kies een dossier". Stacked, the view shows the pane before it instead. Set it on the element in `main` or `secondary-sidebar`. |
 
 **Slots**
@@ -3190,9 +3190,9 @@ A page layout with optional sticky header and footer. Without sticky-header, the
 | --- | --- | --- |
 | `background` | `'inherit'\|'base'\|'tinted'` | Use a gray background instead of white |
 | `accessible-label` | `string` | Name of the landmark this page is: the region it becomes beside another page, or its main landmark |
+| `landmarks` | `'auto'\|'page'\|'region'` | Whether this page carries the document's landmarks: 'auto' (default) derives it from where the page sits, 'page' keeps banner, main and contentinfo, 'region' drops all three |
 | `sticky-header` | `boolean` | Sticky header |
 | `sticky-footer` | `boolean` | Sticky footer |
-| `landmarks` | `'auto'\|'page'\|'region'` | Whether this page carries the document's landmarks: 'auto' (default) derives it from where the page sits, 'page' keeps banner, main and contentinfo, 'region' drops all three |
 
 **Slots**
 
@@ -3307,19 +3307,19 @@ A non-modal floating panel anchored to a trigger element. Built on the native Po
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `width` | `string` | Width as a CSS length (default: 320px). A content-based size (`fit-content`, `min-content`, `max-content`, `auto`) is refused: the popover is an inline-size container so slotted components can adapt to it, and its width cannot then come from that same content. Such a value is ignored, with a warning in DEV. |
-| `md-title-bar` | `boolean` | Keeps an nldd-top-title-bar in the popover on md and up, where it is hidden by default. For a bar whose dismiss button does what nothing else in the popover does. |
 | `sm-full-height` | `boolean` | On an sm viewport (where the popover renders as a bottom sheet) fills the whole available height instead of shrinking to its content. No effect on md and up (anchored mode). Opt-in for content-heavy cases such as search results or long detail views; content-sized is the default, following the Apple and Material convention. |
-| `anchor` | `string` | ID of the trigger element, used for positioning |
+| `centered` | `boolean` | Centers both axes on the viewport. Overridable per axis: `centered top="0"` is centered horizontally, aligned to the top. Mirrors CSS `place-items: center` with `align-items`/`justify-items` overrides. |
 | `placement` | `'top'\|'top-start'\|'top-end'\|'bottom'\|'bottom-start'\|'bottom-end'\|'left'\|'left-start'\|'left-end'\|'right'\|'right-start'\|'right-end'` | Side of the anchor it opens on, and how it lines up there (default: 'bottom-start') |
 | `top` | `string` | CSS top position. When set (on its own, or together with other edge attributes or `centered`) Floating UI's anchor positioning is skipped and the popover stands free on the screen. The `anchor` is still needed for the ARIA link on the trigger. No effect on sm, where the bottom sheet wins. |
 | `right` | `string` | CSS right position. See `top` for the semantics. |
 | `bottom` | `string` | CSS bottom position. See `top` for the semantics. |
 | `left` | `string` | CSS left position. See `top` for the semantics. |
-| `centered` | `boolean` | Centers both axes on the viewport. Overridable per axis: `centered top="0"` is centered horizontally, aligned to the top. Mirrors CSS `place-items: center` with `align-items`/`justify-items` overrides. |
 | `accessible-label` | `string` | (required) Accessible name (aria-label). Falls back to the i18n default ('Popover') when unset. Always give a unique, describing name. |
 | `role` | `string` | ARIA role (default: 'dialog'). For informational content (a tooltip callout, a rich-text help panel) without a dialog interaction pattern, set `role="region"`. For menu-style triggers, `role="menu"` plus `aria-haspopup="menu"` on the anchor. The popover never overwrites a role that was set explicitly. |
-| `translations` | `object` | Override translation keys; unset keys fall back to the Dutch default. |
+| `md-title-bar` | `boolean` | Keeps an nldd-top-title-bar in the popover on md and up, where it is hidden by default. For a bar whose dismiss button does what nothing else in the popover does. |
+| `anchor` | `string` | ID of the trigger element, used for positioning |
 | `open` | `boolean` | Whether the popover is open. Set it to open or close the popover, as an alternative to show() and hide(); opening needs an anchor, and without one it stays unset. The popover clears it itself when it closes another way (Escape, a click outside), so bind it together with the close event. |
+| `translations` | `object` | Override translation keys; unset keys fall back to the Dutch default. |
 
 **Slots**
 
@@ -3463,12 +3463,12 @@ A page section with a left sidebar alongside the main content. - **Wide (section
 | `sidebar-section-only` | `'collapsed'\|'expanded'` | Set on anything inside the section, at any depth: shows that element only while the sidebar is a sheet (`collapsed`), such as the button that opens it, or only while it is a box beside the main (`expanded`), such as a heading the sheet's title bar repeats. Put it on an nldd-spacer next to such an element too, so the space goes with it. |
 | `width` | `string` | Body max-width: 'full' removes the constraint; any CSS length overrides the default. |
 | `grow` | `boolean` | Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow. |
-| `sidebar-label` | `string` | Accessible name for the sidebar (the aside landmark on lg and the sheet on sm/md). Default 'Zijbalk'. |
-| `translations` | `object` | Override translation keys (sheet title fallback, dismiss label); unset keys fall back to Dutch. |
-| `no-collapse` | `boolean` | Opt out of the sheet: a narrow section stacks the sidebar above the main instead of collapsing. `collapsed` then stays false. |
 | `sticky-top` | `string` | Sticky top inset on lg (CSS length; default = 16px). |
 | `sticky-bottom` | `string` | Sticky bottom inset on lg (CSS length; default = 16px). |
+| `sidebar-label` | `string` | Accessible name for the sidebar (the aside landmark on lg and the sheet on sm/md). Default 'Zijbalk'. |
+| `no-collapse` | `boolean` | Opt out of the sheet: a narrow section stacks the sidebar above the main instead of collapsing. `collapsed` then stays false. |
 | `collapsed` | `boolean` | Read-only, reflected: true while the sidebar is a sheet (the section is narrower than lg). Target it via CSS to reveal sheet-only chrome. |
+| `translations` | `object` | Override translation keys (sheet title fallback, dismiss label); unset keys fall back to Dutch. |
 | `background` | `'base' \| 'inherit' \| 'tinted'` | — |
 | `height` | `string` | — |
 | `padding-block` | `'0' \| '10' \| '12' \| '16' \| '2' \| '20' \| '24' \| '28' \| '32' \| '4' \| '40' \| '44' \| '48' \| '56' \| '6' \| '64' \| '8' \| '80' \| '96'` | — |
@@ -3674,15 +3674,15 @@ A floating window based on the native <dialog> element, positionable through CSS
 | `scheme` | `'inherit'\|'light'\|'dark'` | Color scheme (default 'inherit'). |
 | `width` | `string` | CSS width (default: 640px) |
 | `height` | `string` | CSS height (default: content height) |
+| `centered` | `boolean` | Centers both axes on the viewport. Overridable per axis: `centered top="0"` is horizontally centered, top aligned. Mirrors CSS `place-items: center` with `align-items`/`justify-items` overrides. |
 | `top` | `string` | CSS top position of the top edge (e.g. '0', '100px') |
 | `right` | `string` | CSS right value |
 | `bottom` | `string` | CSS bottom value |
 | `left` | `string` | CSS left position of the left edge |
-| `centered` | `boolean` | Centers both axes on the viewport. Overridable per axis: `centered top="0"` is horizontally centered, top aligned. Mirrors CSS `place-items: center` with `align-items`/`justify-items` overrides. |
 | `accessible-label` | `string` | Accessible name (aria-label). Unset, the window takes the text of the nldd-top-title-bar inside it, and without one the i18n default ('Venster'). Each window needs a unique, descriptive name, from either. |
-| `translations` | `object` | Override translation keys; unset keys fall back to the Dutch default. |
 | `no-light-dismiss` | `boolean` | A click on the backdrop does not close the window. For windows where dismissing by accident costs work: a process of several steps, a form with filled-in fields. Escape and the dismiss button keep working. |
 | `open` | `boolean` | Whether the window is open. Set it to open or close the window, as an alternative to show() and hide(). The window clears it itself when it closes another way (Escape, the backdrop, the close button of its title bar), so bind it together with the close event. |
+| `translations` | `object` | Override translation keys; unset keys fall back to the Dutch default. |
 
 **Slots**
 
@@ -3736,9 +3736,9 @@ A single entry in an `nldd-breadcrumbs` list. Renders as a link when `href` is s
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `href` | `string` | Link target. Ignored when `current` is set. |
-| `current` | `boolean` | Marks this item as the current page (renders as plain text + `aria-current="page"`). Typical use is on the last item. |
 | `text` | `string` | Item label. Content in the default slot wins. |
+| `current` | `boolean` | Marks this item as the current page (renders as plain text + `aria-current="page"`). Typical use is on the last item. |
+| `href` | `string` | Link target. Ignored when `current` is set. |
 
 **Slots**
 
@@ -3762,9 +3762,9 @@ A horizontal tab bar for document tabs with an automatic overflow button and an 
 
 | Attribute | Type | Description |
 | --- | --- | --- |
+| `navigation` | `boolean` | Renders a nav landmark instead of tablist; use when items have hrefs |
 | `accessible-label` | `string` | Accessible name for the navigation landmark |
 | `translations` | `object` | Translation overrides; unset keys fall back to Dutch. Available keys: 'components.document-tab-bar.show-more-tabs-action' (default: 'Toon meer tabbladen') |
-| `navigation` | `boolean` | Renders a nav landmark instead of tablist; use when items have hrefs |
 
 **Slots**
 
@@ -3788,11 +3788,11 @@ A horizontal tab bar for document tabs with an automatic overflow button and an 
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `selected` | `boolean` | Selected state (managed by nldd-document-tab-bar) |
 | `text` | `string` | Primary text |
-| `supporting-text` | `string` | Supporting text |
 | `short-text` | `string` | Short primary text (visible below 200px width) |
+| `supporting-text` | `string` | Supporting text |
 | `short-supporting-text` | `string` | Short supporting text (visible below 200px width) |
+| `selected` | `boolean` | Selected state (managed by nldd-document-tab-bar) |
 | `href` | `string` | Optional link URL; renders an anchor instead of a div |
 
 **Events**
@@ -3830,18 +3830,18 @@ Hyperlink component with two modes: 1. **Standalone (sized)**: set `size="xs"|"s
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `href` | `string` | Link target |
-| `target` | `string` | Link target (e.g. '_blank'); adjusts rel automatically. With '_blank' the link adds a visually hidden "opent in nieuw tabblad" announcement for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. |
-| `download` | `string` | Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab. |
-| `rel` | `string` | Link rel attribute; with target '_blank', 'noopener noreferrer' is added to whatever you set |
 | `size` | `'inherit'\|'xs'\|'sm'\|'md'\|'lg'` | Text size: 'inherit' (the default) follows the surrounding text and lays the link out inline, so it wraps in running prose. 'xs' \| 'sm' \| 'md' \| 'lg' pin a size and switch to inline-flex, which baseline-aligns a start or end icon with an explicit gap. |
 | `text` | `string` | Link text. Content in the default slot wins. |
 | `start-icon` | `string` | Icon before the text |
 | `end-icon` | `string` | Icon after the text |
 | `interestfor` | `string` | ID of an nldd-popover that previews where the link goes, looked up in the tree of this link. It opens on interest instead of on a click: when the pointer rests on the link, when it gets keyboard focus, and on a long press on touch. A click or a tap still follows the link. Focus stays on the link, the popover's content is read as the link's description, and Escape closes it. The pointer can move onto the popover without closing it. Information only: put no link or button in it. Keep the popover outside the paragraph: a link stands in a `<p>`, and a `<p>` of your own inside it would close that paragraph. One popover can serve several links. Keep `accessible-label` on it: it is left out while the popover describes a link. |
 | `accessible-label` | `string` | Accessible label for screen readers |
-| `disabled` | `boolean` | Disabled state. Avoid it where you can; the design guidelines say why. |
 | `no-tab` | `boolean` | Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable. |
+| `disabled` | `boolean` | Disabled state. Avoid it where you can; the design guidelines say why. |
+| `href` | `string` | Link target |
+| `target` | `string` | Link target (e.g. '_blank'); adjusts rel automatically. With '_blank' the link adds a visually hidden "opent in nieuw tabblad" announcement for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. |
+| `rel` | `string` | Link rel attribute; with target '_blank', 'noopener noreferrer' is added to whatever you set |
+| `download` | `string` | Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab. |
 | `translations` | `object` | Override translation keys (e.g. the "opent in nieuw tabblad" announcement); unset keys fall back to Dutch. |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
@@ -3865,8 +3865,8 @@ A set of related `nldd-link` elements, such as the links under the name of a ser
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `size` | `'xs'\|'sm'\|'md'\|'lg'` | Text size, set on every link in it: 'xs' \| 'sm' \| 'md' \| 'lg' (default: 'md') |
-| `orientation` | `'horizontal'\|'vertical'` | Layout direction: 'horizontal' (a row that wraps) \| 'vertical' (default: 'horizontal') |
 | `horizontal-alignment` | `'left'\|'center'` | Alignment of the links: 'left' \| 'center' (default: 'left') |
+| `orientation` | `'horizontal'\|'vertical'` | Layout direction: 'horizontal' (a row that wraps) \| 'vertical' (default: 'horizontal') |
 | `accessible-label` | `string` | Accessible name of the nav landmark |
 
 **Slots**
@@ -3893,9 +3893,9 @@ Horizontal row of nldd-menu-bar-item elements with automatic overflow detection.
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `overflow-text` | `string` | Text for the overflow button (default through i18n) |
-| `accessible-label` | `string` | aria-label for the nav landmark |
 | `compact` | `boolean` | Propagates the compact attribute to slotted items (activates content priority) |
+| `accessible-label` | `string` | aria-label for the nav landmark |
+| `overflow-text` | `string` | Text for the overflow button (default through i18n) |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 
 **Slots**
@@ -3924,20 +3924,20 @@ Interactive building block for use in a menu bar. Renders as an <a> (with href) 
 
 | Attribute | Type | Description |
 | --- | --- | --- |
+| `compact` | `boolean` | Activates content-priority behavior (set by the parent nldd-menu-bar) |
+| `icon-only` | `boolean` | Hide the text visually (always). The text then shows as a tooltip on hover and focus. |
 | `text` | `string` | Text of the item |
-| `current` | `boolean` | Mark as the active or current item |
-| `current-type` | `string` | aria-current value when current is true ('page', 'step', 'location', 'true'). Default: 'page' |
-| `href` | `string` | Optional link URL. Without href it renders as a button. |
 | `icon` | `string` | Optional icon name (nldd-icon) |
 | `expandable` | `boolean` | Show the disclosure icon and open the slotted `<nldd-menu>` on click. The control then says `aria-haspopup="menu"`, except for a menu with `variant="navigation"`: that is a list of links, so the control only says `aria-expanded`. |
-| `icon-only` | `boolean` | Hide the text visually (always). The text then shows as a tooltip on hover and focus. |
-| `content-priority` | `'icon'\|'text'` | Decides what stays visible in compact mode: 'icon' hides the text, 'text' hides the icon. A bar is compact on a narrow screen and also at 200% zoom on a desktop, so with 'icon' the text is gone there too and shows as a tooltip instead. |
-| `compact` | `boolean` | Activates content-priority behavior (set by the parent nldd-menu-bar) |
-| `disabled` | `boolean` | Turn interaction off. Avoid it where you can; the design guidelines say why. |
-| `accessible-label` | `string` | Override aria-label |
 | `haspopup` | `string` | aria-haspopup value (e.g. "menu", "dialog") |
-| `open` | `boolean` | Whether the linked popover or menu is open |
+| `accessible-label` | `string` | Override aria-label |
+| `current-type` | `string` | aria-current value when current is true ('page', 'step', 'location', 'true'). Default: 'page' |
+| `content-priority` | `'icon'\|'text'` | Decides what stays visible in compact mode: 'icon' hides the text, 'text' hides the icon. A bar is compact on a narrow screen and also at 200% zoom on a desktop, so with 'icon' the text is gone there too and shows as a tooltip instead. |
 | `expanded` | `boolean` | Whether the matching popover is open; sets aria-expanded on the button when expandable or haspopup is set. Tracked automatically for a slotted `<nldd-menu>`. |
+| `open` | `boolean` | Whether the linked popover or menu is open |
+| `current` | `boolean` | Mark as the active or current item |
+| `disabled` | `boolean` | Turn interaction off. Avoid it where you can; the design guidelines say why. |
+| `href` | `string` | Optional link URL. Without href it renders as a button. |
 
 **Slots**
 
@@ -3962,11 +3962,11 @@ A pagination control for navigating between pages of content.
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `current` | `number` | Currently active page (1-based) |
-| `total` | `number` | Total number of pages (recommended max: 200 for compact select performance) |
-| `disabled` | `boolean` | Disabled state. Avoid it where you can; the design guidelines say why. |
 | `centered` | `boolean` | Centers the pagination in the container (host fills row, items grouped in the middle) |
 | `href-pattern` | `string` | URL pattern with a {page} placeholder, renders links instead of buttons |
+| `current` | `number` | Currently active page (1-based) |
+| `disabled` | `boolean` | Disabled state. Avoid it where you can; the design guidelines say why. |
+| `total` | `number` | Total number of pages (recommended max: 200 for compact select performance) |
 | `translations` | `object` | Translations; unspecified keys fall back to Dutch |
 
 **Events**
@@ -4024,10 +4024,10 @@ A horizontal navigation bar with mutually exclusive tabs. Exports both NLDDTabBa
 | --- | --- | --- |
 | `variant` | `'icon-and-text'\|'text'\|'icon'` | Visual mode: 'icon-and-text' \| 'text' \| 'icon'. When unset, the variant is inferred from each item's content. Drives the layout at every size. |
 | `size` | `'md'\|'lg'` | Size: 'md' \| 'lg' (default: 'md'). 'lg' enlarges the touch target; the per-variant layout is preserved (icon-and-text stacks the icon over the text, text renders large text, icon renders a larger icon-only control). |
-| `navigation` | `boolean` | Renders a nav landmark instead of tablist; use for href-based items that navigate between routes |
-| `disabled` | `boolean` | Disables the whole bar: dims it, blocks pointer interaction, and takes the tabs out of the tab order. Avoid it where you can; the design guidelines say why. |
 | `centered` | `boolean` | Centers the tabs in the container (host fills the row, tabs group in the middle) |
+| `navigation` | `boolean` | Renders a nav landmark instead of tablist; use for href-based items that navigate between routes |
 | `accessible-label` | `string` | Accessible name for the navigation region; defaults to 'Tabs' |
+| `disabled` | `boolean` | Disables the whole bar: dims it, blocks pointer interaction, and takes the tabs out of the tab order. Avoid it where you can; the design guidelines say why. |
 | `translations` | `object` | Override translation keys (e.g. the overflow button label); unset keys fall back to Dutch. |
 
 **Slots**
@@ -4055,13 +4055,13 @@ A horizontal navigation bar with mutually exclusive tabs. Exports both NLDDTabBa
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `current` | `boolean` | The item you are on. A tab bar switching content manages it itself and renders it as `aria-selected`; a `navigation` bar leaves it to the consumer, since it follows the route, and renders it as `aria-current="page"`. Unlike a list row, which separates `current` from `selected` because it can be both at once, a tab bar has exactly one active item. |
-| `text` | `string` | Tab text; also used as accessible name for icon-only items |
-| `href` | `string` | Optional link URL; renders an anchor instead of a button |
 | `variant` | `'icon-and-text'\|'text'\|'icon'` | Forces this presentation on this item, over the one from nldd-tab-bar |
-| `icon` | `string` | Icon name for nldd-icon; an icon in the icon slot wins. The icon and icon-and-text variants fall back to a placeholder icon when neither is provided. |
 | `size` | `'md'\|'lg'` | Size: 'md' (default) \| 'lg'. Set by nldd-tab-bar from its own size; 'lg' enlarges the touch target while keeping the variant layout. |
+| `text` | `string` | Tab text; also used as accessible name for icon-only items |
+| `icon` | `string` | Icon name for nldd-icon; an icon in the icon slot wins. The icon and icon-and-text variants fall back to a placeholder icon when neither is provided. |
 | `controls` | `string` | Id of the element this tab shows, looked up in the tab's own tree. The tab announces it as the content it controls (`aria-controls`). Give that element `role="tabpanel"` and an `aria-labelledby` with the id of this item, which names it after the tab. No effect in a `navigation` bar. |
+| `current` | `boolean` | The item you are on. A tab bar switching content manages it itself and renders it as `aria-selected`; a `navigation` bar leaves it to the consumer, since it follows the route, and renders it as `aria-current="page"`. Unlike a list row, which separates `current` from `selected` because it can be both at once, a tab bar has exactly one active item. |
+| `href` | `string` | Optional link URL; renders an anchor instead of a button |
 
 **Slots**
 
@@ -4102,6 +4102,7 @@ The top bar of a page: a logo bar with the Rijkslogo and an optional wordmark, a
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `no-logo` | `boolean` | Hides the whole logo bar, wordmark included. |
+| `width` | `string` | Limits the bar content to a max-width so it lines up with the page sections. 'full' fills the entire width, or pass your own CSS length. |
 | `logo-title` | `string` | Title of the wordmark next to the logo. Without it the logo stands alone. |
 | `logo-subtitle` | `string` | Subtitle under the wordmark title. Only visible when there is a wordmark. |
 | `logo-supporting-text-1` | `string` | First supporting line under the wordmark title. Only visible when there is a wordmark. |
@@ -4109,9 +4110,8 @@ The top bar of a page: a logo bar with the Rijkslogo and an optional wordmark, a
 | `logo-href` | `string` | URL for the logo and wordmark. Without it they are not a link but an image with an accessible label. Leave it out when `website-href` already goes to the same page: two links to the start page side by side are two tab stops and the same link twice in a screen reader's list of links. |
 | `website-title` | `string` | Name of the website or application, above the menu bar. Empty leaves the title line out. On a narrow screen, where it has a line of its own, a long name wraps; on md and lg it sits beside the menu on one line, so keep it short enough to fit there. |
 | `website-href` | `string` | URL for the website title. Without it the title stays plain text. |
-| `back-href` | `string` | URL of the back button. Without it a click fires the `back-click` event, so the consumer navigates itself. |
 | `back-text` | `string` | Text of the back button. The button appears as soon as back-text or back-href is set; without text it falls back to the translation ("Terug"). |
-| `width` | `string` | Limits the bar content to a max-width so it lines up with the page sections. 'full' fills the entire width, or pass your own CSS length. |
+| `back-href` | `string` | URL of the back button. Without it a click fires the `back-click` event, so the consumer navigates itself. |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 
 **Slots**
@@ -4147,10 +4147,10 @@ A toolbar for page and container headings with optional navigation and action bu
 | `text` | `string` | Title of the bar, rendered as the heading in the title group. One line, cut off with an ellipsis when it does not fit; see above for a title that can run long. |
 | `supporting-text` | `string` | Text under the title. |
 | `heading-level` | `1\|2\|3\|4\|5\|6` | Heading level of the title: 1–6 (default: 1). Lower it where the bar is not the top of the page, such as a pane beside content that already has its h1. |
-| `collapse-anchor` | `string` | Id of the element whose top edge triggers the compact state on scroll. Without it the state is static (see above). |
 | `back-text` | `string` | Text of the back button and its accessible name. Empty hides the back button (and the divider). |
 | `back-href` | `string` | URL for the back button; renders a link and suppresses the `back` event. |
 | `dismiss-text` | `string` | Text of the dismiss button. Empty hides that button. |
+| `collapse-anchor` | `string` | Id of the element whose top edge triggers the compact state on scroll. Without it the state is static (see above). |
 
 **Slots**
 
@@ -4180,11 +4180,11 @@ Layout placeholder that fills its parent and centers an indeterminate activity i
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `size` | `string` | Circle diameter on the icon scale: 16,20,24,28,32,40,44,48,56,64,80,96 (default '32') |
-| `show-text` | `boolean` | Show the label under the indicator (default false; the label still feeds the accessible name) |
 | `text` | `string` | Label text. Falls back to the translated "Laden" when unset. |
+| `no-backdrop` | `boolean` | Overlay mode dims and blurs the wrapped content with a frosted backdrop by default; set this to show only the indicator panel without dimming. No effect in standalone mode. |
+| `show-text` | `boolean` | Show the label under the indicator (default false; the label still feeds the accessible name) |
 | `timing` | `'delay'\|'instant'` | 'delay' (the default) waits 1000ms before showing (anti-flash); 'instant' shows immediately (the fade-in still plays). |
 | `complete` | `boolean` | Mark the loader as finished while keeping the element mounted; clears aria-busy and hides the indicator. |
-| `no-backdrop` | `boolean` | Overlay mode dims and blurs the wrapped content with a frosted backdrop by default; set this to show only the indicator panel without dimming. No effect in standalone mode. |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 
 **Slots**
@@ -4210,9 +4210,9 @@ Shows the state of something, or how much of it there is: a status, a number of 
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `size` | `'sm'\|'md'` | Size: 'sm' \| 'md' (default: 'md') |
 | `color` | `'critical'\|'accent'\|'neutral'\|'warning'\|'success'\|'content'` | The meaning of the badge, the same set as nldd-status-bar, or 'content' to fill in the content color around it: the `--context-content-color` a surface, a button or a selected row sets. Default: 'critical'. A badge is a signal, not a category, so it has no Rijkshuisstijl colors: the theme picks the accent, and `custom-color` takes any other. Another value falls back to 'accent' and says so in development. |
 | `custom-color` | `string` | A color of its own, as any CSS color value ('#a90061', 'oklch(0.6 0.2 20)', 'var(--brand-cable-blue)'). For a color the design system cannot know: the jacket of a cable, a color someone picked. It wins over `color`. Whatever it paints, the text and icon on top become white or black, whichever contrasts. The text on it is black or white, picked on the relative luminance of the fill, so it clears 4.5:1 whatever color you hand it. |
+| `size` | `'sm'\|'md'` | Size: 'sm' \| 'md' (default: 'md') |
 | `pulse` | `boolean` | Grows a ring out of the badge and fades it, for something happening right now (a live connection, an outage). Respects `prefers-reduced-motion`. |
 | `text` | `string` | Text (takes precedence over number) |
 | `number` | `number` | Numeric value. Shortened when it is over max |
@@ -4236,10 +4236,10 @@ An inline notification with a tinted background per variant. Use for persistent,
 | --- | --- | --- |
 | `variant` | `'neutral'\|'accent'\|'success'\|'warning'\|'critical'` | Color and default icon (default: 'neutral') |
 | `size` | `'sm'\|'md'` | Banner size (default: 'md'). 'sm' tightens the padding to 8px, drops the icon to 24px and uses a smaller dismiss button, for a bar that sits between chrome and content rather than a standalone page-level notice. The typography is unchanged. |
-| `icon` | `string` | Icon override. Default per variant: neutral → info-circle-filled, accent → info-circle-filled, success → check-mark-circle-filled, warning → exclamation-triangle-filled, critical → exclamation-circle-filled |
 | `text` | `string` | Main text (heading or paragraph, depending on heading-level) |
 | `supporting-text` | `string` | Supporting text below the heading |
 | `heading-level` | `1\|2\|3\|4\|5\|6` | Renders text as h1–h6; absent renders a p |
+| `icon` | `string` | Icon override. Default per variant: neutral → info-circle-filled, accent → info-circle-filled, success → check-mark-circle-filled, warning → exclamation-triangle-filled, critical → exclamation-circle-filled |
 | `dismissible` | `boolean` | Show a close button in the top-right; emits `dismiss` when clicked |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 
@@ -4273,13 +4273,13 @@ An inline status component for empty state, confirmations and feedback. Fills th
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `variant` | `'alert'\|'success'\|'loading'` | Semantic variant. 'alert' / 'success' force a matching icon and color; 'loading' shows an nldd-activity-indicator (a role="status" spinner announcing "Laden") in place of the icon, for an empty state that is still loading. |
-| `size` | `'md'\|'lg'` | Typography size: 'md' (default) keeps body-md text + body-sm supporting; 'lg' bumps both up a step. |
-| `icon` | `string` | Name of the nldd-icon icon above the text; absent when not set. Ignored when variant is set. |
 | `icon-color` | `'secondary'\|'accent'\|'critical'\|'warning'\|'success'` | 'secondary' \| 'accent' \| 'critical' \| 'warning' \| 'success'. Overrides the default and variant icon color. |
+| `size` | `'md'\|'lg'` | Typography size: 'md' (default) keeps body-md text + body-sm supporting; 'lg' bumps both up a step. |
+| `horizontal-alignment` | `'left'\|'center'` | Overrides the alignment of text, icon and actions. Unset (the default) derives it: content in the default slot means a task, which aligns left; a bare message stays centered. Centered, the actions stack at most 360px wide, even where two would fit side by side. Left-aligned, they sit in a row, each as wide as its label. |
 | `text` | `string` | Main text (heading or paragraph, depending on heading-level) |
 | `supporting-text` | `string` | Supporting text below the heading |
 | `heading-level` | `1\|2\|3\|4\|5\|6` | Renders text as h1–h6; absent renders a p |
-| `horizontal-alignment` | `'left'\|'center'` | Overrides the alignment of text, icon and actions. Unset (the default) derives it: content in the default slot means a task, which aligns left; a bare message stays centered. Centered, the actions stack at most 360px wide, even where two would fit side by side. Left-aligned, they sit in a row, each as wide as its label. |
+| `icon` | `string` | Name of the nldd-icon icon above the text; absent when not set. Ignored when variant is set. |
 
 **Slots**
 
@@ -4300,13 +4300,13 @@ A guided-discovery coach mark. Put a control (nldd-search-field, for instance) i
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `active` | `boolean` | Show the coach mark. Driven by the app; false by default. |
+| `placement` | `'auto'\|'top'\|'bottom'\|'left'\|'right'` | 'auto' \| 'top' \| 'bottom' \| 'left' \| 'right' (default 'auto'). |
 | `text` | `string` | Title of the callout. |
 | `supporting-text` | `string` | Supporting text under the title. |
-| `placement` | `'auto'\|'top'\|'bottom'\|'left'\|'right'` | 'auto' \| 'top' \| 'bottom' \| 'left' \| 'right' (default 'auto'). |
-| `dismissable` | `boolean` | Show the dismiss button and allow closing with one click or key press outside the coach mark. False by default: the consumer then manages closing itself. |
-| `arrow-length` | `string` | Arrow length, and therefore the distance between card and control, as a CSS length (e.g. `333px`, `30vh`). Empty = the DS default; anything under 40px is clamped. |
 | `no-arrow` | `boolean` | Hide the arrow; the card then sits close against the control. |
+| `arrow-length` | `string` | Arrow length, and therefore the distance between card and control, as a CSS length (e.g. `333px`, `30vh`). Empty = the DS default; anything under 40px is clamped. |
+| `dismissable` | `boolean` | Show the dismiss button and allow closing with one click or key press outside the coach mark. False by default: the consumer then manages closing itself. |
+| `active` | `boolean` | Show the coach mark. Driven by the app; false by default. |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 
 **Slots**
@@ -4383,9 +4383,9 @@ A short message that arrives over the interface and leaves on its own: a save th
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `variant` | `'neutral'\|'accent'\|'success'\|'warning'\|'critical'` | What kind of message this is; sets the icon color and the ARIA role (default: 'neutral') |
-| `icon` | `string` | Icon override. Default per variant: neutral → info-circle-filled, accent → info-circle-filled, success → check-mark-circle-filled, warning → exclamation-triangle-filled, critical → exclamation-circle-filled |
 | `text` | `string` | The message |
 | `supporting-text` | `string` | A second line under the message |
+| `icon` | `string` | Icon override. Default per variant: neutral → info-circle-filled, accent → info-circle-filled, success → check-mark-circle-filled, warning → exclamation-triangle-filled, critical → exclamation-circle-filled |
 | `duration` | `number` | Milliseconds before it leaves once it is front of the deck (default: 10000). `0` keeps it until dismissed, which is what `critical` does regardless. |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 
@@ -4418,16 +4418,16 @@ Exports both NLDDProgressBar and NLDDProgressBarSegmentIndicator. A progress bar
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `variant` | `'progress'\|'distribution'` | Semantics for ARIA and visualization (default: 'progress') |
-| `max` | `number` | Total value (default: 100) |
-| `value` | `number` | Single-segment shorthand (ignored when segment children are present) |
 | `color` | `string` | Color for the single-segment shorthand (default: 'accent') |
 | `size` | `'sm'\|'md'\|'lg'` | Height of the bar (default: 'md') |
 | `text` | `string` | Label above the bar (left) |
+| `accessible-label` | `string` | Full override of aria-valuetext |
+| `value-text` | `string` | Full override of the displayed value |
 | `value-format` | `'percentage'\|'absolute'\|'fraction'` | Format for the displayed value (default: 'percentage') |
 | `value-display` | `'inline'\|'tooltip'\|'none'` | Where the value shows: inline in the caption, in a tooltip on the bar, or hidden (default: 'inline') |
-| `value-text` | `string` | Full override of the displayed value |
-| `accessible-label` | `string` | Full override of aria-valuetext |
 | `indeterminate` | `boolean` | Shows a sliding indicator animation (only without segments) |
+| `value` | `number` | Single-segment shorthand (ignored when segment children are present) |
+| `max` | `number` | Total value (default: 100) |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 
 **Slots**
@@ -4442,10 +4442,10 @@ Exports both NLDDProgressBar and NLDDProgressBarSegmentIndicator. A progress bar
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `value` | `number` | Share of the parent's total (default 0; <=0 hides segment) |
 | `color` | `string` | Color. Semantic (neutral, accent, success, warning, critical) or a Rijkskleur. Default 'accent'. With more than one segment, give each a Rijkskleur (or success, warning and critical where they mean that): `accent` can turn near-black or match another segment in a theme, and `neutral` disappears against the track. |
-| `name` | `string` | Name for screenreader text (optional) |
 | `tooltip-text` | `string` | Override of the auto-generated tooltip text |
+| `name` | `string` | Name for screenreader text (optional) |
+| `value` | `number` | Share of the parent's total (default 0; <=0 hides segment) |
 
 ### `<nldd-progress-circle>`
 
@@ -4460,16 +4460,16 @@ Exports both NLDDProgressCircle and NLDDProgressCircleSegmentIndicator. A circul
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `variant` | `'progress'\|'distribution'` | Semantics for ARIA and gap behavior (default: 'progress') |
-| `max` | `number` | Total value (default: 100) |
-| `value` | `number` | Single-segment shorthand (ignored when segment children exist) |
 | `color` | `string` | Color. Semantic (neutral, accent, success, warning, critical) or a Rijkskleur. Default 'accent'. |
 | `size` | `string` | Circle diameter in px. Matches nldd-icon sizes: 16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96 (default: '28') |
 | `text` | `string` | Label below the circle |
+| `accessible-label` | `string` | Full override of aria-valuetext |
+| `value-text` | `string` | Full override of the displayed value (inline + tooltip) |
 | `value-format` | `'percentage'\|'absolute'\|'fraction'` | Format of the displayed value (default: 'percentage') |
 | `value-display` | `'inline'\|'tooltip'\|'none'` | Where the value shows: inline below the label, in a tooltip, or hidden (default: 'tooltip') |
-| `value-text` | `string` | Full override of the displayed value (inline + tooltip) |
-| `accessible-label` | `string` | Full override of aria-valuetext |
 | `indeterminate` | `boolean` | Renders the rotating elastic arc animation |
+| `value` | `number` | Single-segment shorthand (ignored when segment children exist) |
+| `max` | `number` | Total value (default: 100) |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 
 **Slots**
@@ -4484,9 +4484,9 @@ Exports both NLDDProgressCircle and NLDDProgressCircleSegmentIndicator. A circul
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `value` | `number` | Share of the parent's total (default 0; <=0 hides segment) |
 | `color` | `string` | Color (semantic or Rijkskleur). Default 'accent'. With more than one segment, give each a Rijkskleur (or success, warning and critical where they mean that): `accent` can turn near-black or match another segment in a theme, and `neutral` disappears against the track. |
 | `name` | `string` | Optional name used in the combined tooltip + screenreader text |
+| `value` | `number` | Share of the parent's total (default 0; <=0 hides segment) |
 
 ### `<nldd-status-bar>`
 
@@ -4506,10 +4506,10 @@ A narrow, page-wide status bar (24px) with a deep background color per variant. 
 | --- | --- | --- |
 | `variant` | `'neutral'\|'accent'\|'success'\|'warning'\|'critical'` | Color of the bar (default: 'neutral') |
 | `text` | `string` | The status text (one line; truncated with an ellipsis) |
+| `button` | `boolean` | Makes the whole bar a button; ignored when href is set |
 | `href` | `string` | Makes the whole bar a link (renders an <a>) |
 | `target` | `string` | Link target (e.g. '_blank'); only used with href |
 | `rel` | `string` | Link rel, used with href; with target '_blank', 'noopener noreferrer' is added to whatever you set |
-| `button` | `boolean` | Makes the whole bar a button; ignored when href is set |
 
 ### `<nldd-step-bar>`
 
@@ -4555,8 +4555,8 @@ One step in an `nldd-step-bar`. `status="current"` marks the step you are on; th
 | `status` | `'past' \| 'current' \| 'future'` | How far along this step is. `current` marks the step you are on (`aria-current="step"`) and the parent derives the others from it: with none marked every step is still to do, with more than one the last wins. `past` and `future` override what is derived for this step only |
 | `text` | `string` | Label under the disc. Content in the default slot wins. |
 | `icon` | `string` | Icon in the disc instead of the number or the check mark |
-| `href` | `string` | Makes the step a link (back to a completed step, for instance) |
 | `button` | `boolean` | Makes the step a button, for flows without a URL per step; ignored when `href` is set |
+| `href` | `string` | Makes the step a link (back to a completed step, for instance) |
 
 **Slots**
 
@@ -4638,8 +4638,8 @@ A cell component for displaying icons in lists with configurable alignment and s
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `size` | `'16'\|'20'\|'24'\|'32'` | Size: '16' \| '20' \| '24' \| '32' (default: '24') |
 | `color` | `'content' \| 'secondary' \| 'accent' \| 'success' \| 'warning' \| 'critical'` | Color variant of the icon (default: 'content') |
+| `size` | `'16'\|'20'\|'24'\|'32'` | Size: '16' \| '20' \| '24' \| '32' (default: '24') |
 | `vertical-alignment` | `'top'\|'center'\|'bottom'` | Vertical alignment: 'top' \| 'center' \| 'bottom' (default: 'center') |
 | `icon` | `string` | Icon name (renders `<nldd-icon>`). Content in the default slot wins. |
 | `disclosure` | `boolean` | Marks this icon as the chevron of a row or segment that opens and closes: the row turns it with `expanded`. |
@@ -4688,12 +4688,12 @@ A container for `nldd-list-item` elements. The `type` attribute switches the lis
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `appearance` | `'simple'\|'box-tinted'\|'box-base'` | Visual style (default 'simple'): `simple` is a plain vertical strip with no chrome, the two `box` values a framed card with rounded corners, fill and inset border ring. `box-tinted` for a list on a plain page, `box-base` for one on an already-tinted parent (the border ring gets +2 palette steps so it still reads against a card-on-card) |
-| `type` | `'list'\|'navigation'\|'listbox'\|'tree'\|'form'\|'radiogroup'` | A11y role and behavior (default 'list'). See the docblock above. |
 | `dividers` | `'always'\|'on-touch'\|'never'` | When to draw the lines between the items (default 'always'). `on-touch` draws them only where the primary input is touch, under `(pointer: coarse)`: a pointer has the hover highlight to tell one row from the next and a finger has nothing, so the line earns its place in the one case and is clutter in the other. `never` hides them everywhere |
 | `height` | `string` | Listbox only: caps the options' scroll region at this CSS length (e.g. '320px'). Unset means no cap. |
-| `accessible-label` | `string` | Accessible name: of the list in `type="list"`, of the search field in `type="listbox"`, and of the navigation landmark in `type="navigation"`, so several navigation lists on a page can be told apart. Falls back to the i18n default. An `aria-label` or `aria-labelledby` set on the element itself wins. |
-| `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 | `reorderable` | `boolean` | Enables drag-to-reorder and pushes `reorderable` onto the items. Only valid with `type="list"`; there the arrow keys move rows instead of focus. |
+| `accessible-label` | `string` | Accessible name: of the list in `type="list"`, of the search field in `type="listbox"`, and of the navigation landmark in `type="navigation"`, so several navigation lists on a page can be told apart. Falls back to the i18n default. An `aria-label` or `aria-labelledby` set on the element itself wins. |
+| `type` | `'list'\|'navigation'\|'listbox'\|'tree'\|'form'\|'radiogroup'` | A11y role and behavior (default 'list'). See the docblock above. |
+| `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 
 **Slots**
 
@@ -4748,22 +4748,22 @@ A row within an `nldd-list`. Renders as a link when `href` is set, as a checkbox
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `size` | `'sm'\|'md'` | Row size (default: 'md'). Pushed onto the cells whose `size` means the same scale (nldd-text-cell, nldd-reorder-handle-cell), so it is written once per row instead of once per cell. A size set on the cell itself wins. Cells where `size` means something else (pixels on nldd-icon-cell / nldd-spacer-cell, a heading scale on nldd-title-cell) are left alone. |
-| `href` | `string` | Renders the item as an `<a>` with this URL. Wins over `checkbox` and `button`; without any of the three the item is a plain container with no action. |
-| `target` | `string` | Link target forwarded to the `<a>` (e.g. '_blank'); only applies with `href`. With '_blank' a visually hidden "opens in new tab" announcement is added for assistive technology. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. |
-| `download` | `string` | Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab. |
-| `rel` | `string` | Link rel forwarded to the `<a>`, only with `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set |
 | `button` | `boolean` | Renders the item as a `<button>`. Last of the three: `href` and `checkbox` both win over it. |
 | `checkbox` | `boolean` | Makes the whole row a `role="checkbox"` control. Wins over `button`, loses to `href`. |
 | `radio` | `boolean` | Makes the whole row one radio of a group: the action becomes a `role="radio"` button carrying `aria-checked`, and activation sets `checked` (never clears it) and fires `change`. Put the rows in an `nldd-list type="radiogroup"`, which is what makes them a set. Wins over `button`, loses to `href` and `checkbox`. The arrow keys move focus without checking, where a native radio group and `nldd-radio-button-group` check as they go: a row can carry more than a label, so stepping past one should not commit it. |
 | `expandable` | `boolean` | The row opens something, also while it is closed: without `expanded` it says "collapsed" instead of nothing. This is how markup writes a closed disclosure, since an attribute can only be there or not. A row with children in a tree already is one. |
-| `accessible-label` | `string` | Accessible name of the row's action (its link, button, checkbox or radio), for a row whose text does not say enough on its own. It replaces the content of the whole row for assistive technology, the supporting text and a status included, so set it only when the row has no text of its own, or put everything that matters in it. Start it with the row's visible title, so voice control finds the row by the words on screen (WCAG 2.5.3); development warns when it does not. The hint for another website or a new tab is added to it. |
 | `reorderable` | `boolean` | Set by the parent `nldd-list` when its own `reorderable` is on (with `type="list"`); consumers do not set this. Serves as a CSS hook for drag handle visibility. |
+| `accessible-label` | `string` | Accessible name of the row's action (its link, button, checkbox or radio), for a row whose text does not say enough on its own. It replaces the content of the whole row for assistive technology, the supporting text and a status included, so set it only when the row has no text of its own, or put everything that matters in it. Start it with the row's visible title, so voice control finds the row by the words on screen (WCAG 2.5.3); development warns when it does not. The hint for another website or a new tab is added to it. |
+| `current-type` | `'page'\|'step'\|'location'\|'date'\|'time'\|'true'` | The `aria-current` value a `current` or `selected` row puts on its action in a `navigation` parent (default 'page'). Use 'location' for a table of contents, whose rows point at sections of the page you are on. |
 | `selected` | `boolean` | Marks the item as selected: it is one of the rows you picked. Selection is consumer-managed; the list never sets it. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value; in a `listbox` parent it drives `aria-selected`. |
 | `checked` | `boolean` | Checked state of a `checkbox` or `radio` row. A checkbox row toggles it on activation, a radio row only ever sets it |
 | `expanded` | `boolean` | Disclosure state. Drives the `children` group's visibility AND supplies `aria-expanded`, to the row's own control when the row is interactive, or to the segment marked `disclosure`. Written once either way; the item DEV-warns when there is nowhere for it to live. |
 | `current` | `boolean` | Marks the item as the one you are on: the page a menu row points at, the record a list has open. Exactly one row in a list carries it, where `selected` may be on many. It paints like `selected` at rest, a quiet fill on purpose: the page itself says where you are, in its title, heading and breadcrumb, so the fill is an extra that should not pull attention from the content, and an automated check that flags its contrast is expected. The fill alone stays under 3:1 (1.3:1 in light, 1.5:1 in dark), so a WCAG audit fails 1.4.1 and 1.4.11 on it unless the place also shows another way, such as in the page title or the breadcrumb. A table of contents that follows the scroll, as in the content page pattern, has no such other sign: expect the finding there, and name it as a deviation in the accessibility statement. It takes the highlighted fill while focus is anywhere in the row, including inside a nested `nldd-list-item-segment`, which is what a segmented row needs: the focus never reaches the row's own control, because there is none. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value. On a segmented row set it on the segment that holds the link instead: the row reads `current` off its own segments and paints itself, so it is written once, where `aria-current` belongs. |
-| `current-type` | `'page'\|'step'\|'location'\|'date'\|'time'\|'true'` | The `aria-current` value a `current` or `selected` row puts on its action in a `navigation` parent (default 'page'). Use 'location' for a table of contents, whose rows point at sections of the page you are on. |
 | `disabled` | `boolean` | Switches the row's own control off: a `button` or `checkbox` row stops responding and dims, a `href` row gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). A row without a control of its own has nothing to switch off, and segments carry their own `disabled`. The arrow keys skip a disabled row. |
+| `href` | `string` | Renders the item as an `<a>` with this URL. Wins over `checkbox` and `button`; without any of the three the item is a plain container with no action. |
+| `target` | `string` | Link target forwarded to the `<a>` (e.g. '_blank'); only applies with `href`. With '_blank' a visually hidden "opens in new tab" announcement is added for assistive technology. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. |
+| `rel` | `string` | Link rel forwarded to the `<a>`, only with `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set |
+| `download` | `string` | Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab. |
 | `divider-start` | `boolean` | The divider starts at this cell instead of at the row's first text or title cell. On the leading cell it restores the full-width line. |
 | `divider-end` | `boolean` | The divider stops after this cell. With several markers the line runs from the first start to the last end. |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
@@ -4801,22 +4801,22 @@ A segment inside an `nldd-list-item`: it groups a run of cells and makes just th
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `width` | `'fit-content'\|'full'` | `full` lets the segment grow to fill the row (default: 'fit-content') |
-| `href` | `string` | Renders the segment as an `<a>` with this URL. Wins over `checkbox` and `button`. |
-| `target` | `string` | Link target forwarded to the `<a>`; only applies with `href`. With '_blank' a visually hidden "opent in nieuw tabblad" announcement is added. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. With `accessible-label` the hint goes into the label. |
-| `download` | `string` | Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab. |
-| `rel` | `string` | Link rel forwarded to the `<a>`, only with `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set |
 | `button` | `boolean` | Renders the segment as a `<button>`. Last of the three: `href` and `checkbox` both win over it. |
 | `checkbox` | `boolean` | Makes the segment a `role="checkbox"` control. Wins over `button`, loses to `href`. |
-| `disclosure` | `boolean` | Marks the segment as the row's disclosure control: `aria-expanded` comes from the parent item's `expanded`, so the state lives in one place. A slotted `nldd-icon-cell` rotates a quarter turn while the row is open |
 | `expandable` | `boolean` | The segment opens something, also while it is closed: without `expanded` it says "collapsed" instead of nothing. This is how markup writes a closed disclosure, since an attribute can only be there or not. |
-| `accessible-label` | `string` | Accessible name for the control. Set it when the segment holds only an icon, or when the cell text does not describe the action. |
-| `checked` | `boolean` | Checked state of a `checkbox` segment; it toggles on activation |
-| `expanded` | `boolean` | Disclosure state, reflected as `aria-expanded` on the control, and painted: the segment stays lit a step above hover for as long as what it opened is on screen, so a menu reads as hanging off this row rather than floating over the list. Set it on the segment that opens something (a tree row's chevron, a menu). Leave it off entirely when the segment discloses nothing: an absent attribute emits no aria-expanded. |
+| `disclosure` | `boolean` | Marks the segment as the row's disclosure control: `aria-expanded` comes from the parent item's `expanded`, so the state lives in one place. A slotted `nldd-icon-cell` rotates a quarter turn while the row is open |
 | `popup-type` | `'menu'\|'listbox'\|'dialog'\|'tree'\|'grid'` | Type of popup this segment opens: 'menu' \| 'listbox' \| 'dialog' \| 'tree' \| 'grid'. Becomes aria-haspopup on the control and makes aria-expanded permanent, so a row of identical "more" segments says what it opens before anything is open. An nldd-menu or nldd-popover anchored here sets it itself from the first render. |
 | `popovertarget` | `string` | ID of a popover this segment toggles, looked up in the tree of the segment; the inner button gets the element. The IDL counterparts `popoverTargetElement` and `popoverTargetAction` work across shadow boundaries, as on nldd-icon-button. An nldd-menu or nldd-popover it points at is also positioned against this control, so it needs no `anchor`. |
-| `current` | `boolean` | Marks the segment as the current one, with `aria-current` set to `current-type`. The row it sits in paints itself as the current row from it, so on a segmented row this is the only place it has to be set. |
+| `accessible-label` | `string` | Accessible name for the control. Set it when the segment holds only an icon, or when the cell text does not describe the action. |
 | `current-type` | `'page'\|'step'\|'location'\|'date'\|'time'\|'true'` | The `aria-current` value of a `current` segment (default 'page'). Use 'location' for a table of contents, whose rows point at sections of the page you are on. |
+| `checked` | `boolean` | Checked state of a `checkbox` segment; it toggles on activation |
+| `expanded` | `boolean` | Disclosure state, reflected as `aria-expanded` on the control, and painted: the segment stays lit a step above hover for as long as what it opened is on screen, so a menu reads as hanging off this row rather than floating over the list. Set it on the segment that opens something (a tree row's chevron, a menu). Leave it off entirely when the segment discloses nothing: an absent attribute emits no aria-expanded. |
+| `current` | `boolean` | Marks the segment as the current one, with `aria-current` set to `current-type`. The row it sits in paints itself as the current row from it, so on a segmented row this is the only place it has to be set. |
 | `disabled` | `boolean` | Switches the segment off: a `button` or `checkbox` segment stops responding and dims, a `href` segment gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). The arrow keys skip a row whose only segment is off. |
+| `href` | `string` | Renders the segment as an `<a>` with this URL. Wins over `checkbox` and `button`. |
+| `target` | `string` | Link target forwarded to the `<a>`; only applies with `href`. With '_blank' a visually hidden "opent in nieuw tabblad" announcement is added. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. With `accessible-label` the hint goes into the label. |
+| `rel` | `string` | Link rel forwarded to the `<a>`, only with `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set |
+| `download` | `string` | Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab. |
 | `divider-start` | `boolean` | The row's divider starts at this cell instead of at its first text or title cell. |
 | `divider-end` | `boolean` | The row's divider stops after this cell. |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
@@ -4878,11 +4878,11 @@ A cell that draws steps under each other in an `nldd-list`: a vertical track wit
 | `level` | `'major' \| 'minor' \| 'none'` | What stands in the lane: a whole dot (`major`, the default), a smaller one for a row that belongs under the one above it (`minor`), or nothing at all (`none`) for a row that carries what a step holds rather than being a step. A `none` row keeps its `size` and its `status`, so it stays in the same lane and the track runs on in the right color |
 | `status` | `'past' \| 'current' \| 'future'` | How far along this row is (default 'past'); the same values as `nldd-step-bar-item`. It colors the dot and the track around it: covered above where you are, still ahead below |
 | `size` | `'sm' \| 'md'` | How wide the lane is and so how big the dot: `sm` (default, 16px) for steps without a number, `md` (24px) where a number or an icon has to fit. Every row in one list takes the same size, or the track jumps |
-| `vertical-alignment` | `'top' \| 'center' \| 'bottom'` | Where the dot stands in the row (default 'center'). `top` puts it against the row's top padding and `bottom` against its bottom padding, as a whole dot would stand, so a `minor` dot lines up with a `major` one. To line it up with what stands beside it, such as the first line of a text cell or a title, use `marker-offset`. The track runs to the middle of the dot either way, so consecutive rows still connect |
-| `marker-offset` | `string` | How far below the top of the row's content the middle of the dot stands, as a CSS length or a percentage of the content's height: `0%` is its top, `50%` its middle and `100%` its bottom. For a row whose first line is not as high as a whole dot, such as a large title beside it: half the height of that line puts the dot beside it. Measured after the row's padding, so it stays right when `size` changes that padding. Prefer `rem` over `px`, so the dot moves along when someone sets a larger font size in the browser. Wins over `vertical-alignment`; an invalid value falls back to it and says so in development |
-| `direction` | `'down' \| 'up'` | The direction the timeline moves forward in: `down` (default) puts the past above, `up` below. Only the current step has half a track, so this only has an effect there |
-| `position` | `'first' \| 'between' \| 'last' \| 'only'` | Place of the row in the list as it stands on screen (default 'between'): decides whether the line continues above the dot, below it, or on both sides. `first` is the top row and only has a line below, `last` the bottom row and only has a line above, also with `direction="up"`: position is about where the row stands, `direction` about which way time runs. `only` is the single row in the series and gets a line on neither side: a track of one dot leads nowhere. On a `level="none"` row, which is nothing but line, `only` leaves it out altogether: the track ends above it |
 | `line` | `'auto' \| 'top' \| 'bottom' \| 'both' \| 'none'` | Which halves of the track you have covered, when `status` and `direction` get it wrong (default 'auto', which is what those two say). The halves you name are drawn as covered and the other one as still ahead, so `none` covers neither. Which halves are drawn at all stays with `position`, except that naming a half draws it: `line="both"` on a `first` row draws one above too. A row that opens a group of its own is the case for `both`, since the going carries on below it. A `level="none"` row has one line rather than two halves, and no point where a fill could change over, so there the status colors the whole of it and `line` overrules the whole of it. On a `current` row that leans the way the timeline runs: what belongs to a point usually comes after it, so going `down` the stretch reads as still ahead and going `up` as behind you |
+| `vertical-alignment` | `'top' \| 'center' \| 'bottom'` | Where the dot stands in the row (default 'center'). `top` puts it against the row's top padding and `bottom` against its bottom padding, as a whole dot would stand, so a `minor` dot lines up with a `major` one. To line it up with what stands beside it, such as the first line of a text cell or a title, use `marker-offset`. The track runs to the middle of the dot either way, so consecutive rows still connect |
+| `direction` | `'down' \| 'up'` | The direction the timeline moves forward in: `down` (default) puts the past above, `up` below. Only the current step has half a track, so this only has an effect there |
+| `marker-offset` | `string` | How far below the top of the row's content the middle of the dot stands, as a CSS length or a percentage of the content's height: `0%` is its top, `50%` its middle and `100%` its bottom. For a row whose first line is not as high as a whole dot, such as a large title beside it: half the height of that line puts the dot beside it. Measured after the row's padding, so it stays right when `size` changes that padding. Prefer `rem` over `px`, so the dot moves along when someone sets a larger font size in the browser. Wins over `vertical-alignment`; an invalid value falls back to it and says so in development |
+| `position` | `'first' \| 'between' \| 'last' \| 'only'` | Place of the row in the list as it stands on screen (default 'between'): decides whether the line continues above the dot, below it, or on both sides. `first` is the top row and only has a line below, `last` the bottom row and only has a line above, also with `direction="up"`: position is about where the row stands, `direction` about which way time runs. `only` is the single row in the series and gets a line on neither side: a track of one dot leads nowhere. On a `level="none"` row, which is nothing but line, `only` leaves it out altogether: the track ends above it |
 | `text` | `string` | Number or short text in the dot |
 | `icon` | `string` | Icon name in the dot; wins over `text` |
 | `reorder-handle` | `boolean` | Makes this cell the grip that drags its row in a `reorderable` nldd-list. The cell shows only while the row is `reorderable`. |
@@ -4918,9 +4918,9 @@ Exports both NLDDTable and NLDDTableRow. A data table presented as a boxed surfa
 | `sm-columns` | `string` | Track list when the table is sm-wide (≤640px); falls back to `columns` |
 | `md-columns` | `string` | Track list when the table is md-wide (641–1007px); falls back to `columns` |
 | `lg-columns` | `string` | Track list when the table is lg-wide (≥1008px); falls back to `columns` |
+| `selectable` | `boolean` | Opt into row selection: body rows expose aria-selected (true/false). Without it, rows omit aria-selected so a non-selectable table isn't announced as selectable. |
 | `accessible-label` | `string` | Accessible name for the table. Strongly recommended, because role="table" needs a name. A missing label is DEV-warned and a generic fallback name is used. |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
-| `selectable` | `boolean` | Opt into row selection: body rows expose aria-selected (true/false). Without it, rows omit aria-selected so a non-selectable table isn't announced as selectable. |
 
 **Slots**
 
@@ -4961,8 +4961,8 @@ A cell component for displaying text content in lists with configurable alignmen
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `size` | `'sm'\|'md'` | Cell size: 'sm' \| 'md' (default: 'md') |
 | `color` | `'content'\|'secondary'\|'accent'\|'success'\|'warning'\|'critical'` | Text color variant: 'content' (the default) \| 'secondary' \| 'accent' \| 'success' \| 'warning' \| 'critical'. All variants other than those two apply to all three text fields so the cell reads as a coherent state. |
+| `size` | `'sm'\|'md'` | Cell size: 'sm' \| 'md' (default: 'md') |
 | `width` | `string` | 'full' \| 'fit-content' \| CSS length (e.g. '200px', '20rem'). Default: 'full' |
 | `min-width` | `string` | Minimum width as CSS length (e.g. '80px', '5rem') |
 | `max-width` | `string` | Maximum width as CSS length (e.g. '200px', '20rem') |
@@ -5005,8 +5005,8 @@ A cell component for displaying a title with optional overline and supporting te
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `size` | `string` | Visual size of the title: 'display-1' to 'display-6', from large to small (unset: looks like 'display-5', and becomes 'display-6' in an `nldd-table-row`, where a title the size of the other cells reads better). Unlike nldd-title, `heading-level` does not set it: every row in a list looks the same, whatever its level |
 | `color` | `'content' \| 'secondary' \| 'accent' \| 'success' \| 'warning' \| 'critical'` | Text color variant (default: 'content'). `secondary` demotes the title to match the muted overline/supporting-text. `accent`, `success`, `warning` and `critical` tint all three regions so the cell reads as a coherent state. |
+| `size` | `string` | Visual size of the title: 'display-1' to 'display-6', from large to small (unset: looks like 'display-5', and becomes 'display-6' in an `nldd-table-row`, where a title the size of the other cells reads better). Unlike nldd-title, `heading-level` does not set it: every row in a list looks the same, whatever its level |
 | `width` | `string` | 'full' \| 'fit-content' \| CSS length (e.g. '200px', '20rem'). Default: 'full' |
 | `min-width` | `string` | Minimum width as CSS length (e.g. '80px', '5rem') |
 | `max-width` | `string` | Maximum width as CSS length (e.g. '300px', '20rem') |

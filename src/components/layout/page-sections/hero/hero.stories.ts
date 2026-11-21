@@ -37,20 +37,27 @@ export default {
 		},
 	},
 	args: {
+		mainBackground: 'accent',
 		corner: null,
 		layout: 'overlap',
-		mainBackground: 'accent',
 		mainWidth: 'auto',
-		mainPosition: 'bottom-left',
 		overlapSize: '',
-		mediaAspectRatio: '',
-		mediaHeight: '',
+		mainPosition: 'bottom-left',
 		mediaSrc: MEDIA,
 		mediaSrcset: '',
 		mediaSizes: '',
 		mediaAlt: '',
+		mediaAspectRatio: '',
+		mediaHeight: '',
 	},
 	argTypes: {
+		mainBackground: {
+			name: 'main-background',
+			control: 'select',
+			options: ['accent', 'base'],
+			description: 'Vlakkleur van het paneel: accent, de kleur van het thema, of base',
+			table: { defaultValue: { summary: 'accent' } },
+		},
 		corner: {
 			control: 'select',
 			options: ['(geen)', 'auto', 'top-left', 'top-right', 'bottom-left', 'bottom-right'],
@@ -64,25 +71,11 @@ export default {
 			description: 'Hoe het vlak zich tot de afbeelding verhoudt: overlap laat het overlap-size over de onderrand vallen en eronder doorlopen, contained houdt het op de afbeelding',
 			table: { defaultValue: { summary: 'overlap' } },
 		},
-		mainBackground: {
-			name: 'main-background',
-			control: 'select',
-			options: ['accent', 'base'],
-			description: 'Vlakkleur van het paneel: accent, de kleur van het thema, of base',
-			table: { defaultValue: { summary: 'accent' } },
-		},
 		mainWidth: {
 			name: 'main-width',
 			control: 'text',
 			description: 'Breedte van het paneel: auto volgt de inhoud tussen 480 en 640px, full maakt een strook over de hele afbeelding (genegeerd bij left/right), een CSS-breedte (bv. 560px) zet hem precies',
 			table: { defaultValue: { summary: 'auto' } },
-		},
-		mainPosition: {
-			name: 'main-position',
-			control: 'select',
-			options: ['bottom-left', 'bottom-center', 'bottom-right', 'top-left', 'top-center', 'top-right', 'left', 'right'],
-			description: 'Positie van het tekstpaneel',
-			table: { defaultValue: { summary: 'bottom-left' } },
 		},
 		overlapSize: {
 			name: 'overlap-size',
@@ -90,18 +83,12 @@ export default {
 			description: 'Alleen bij layout="overlap": hoe ver het vlak over de onderrand van de afbeelding valt, elke CSS-lengte',
 			table: { defaultValue: { summary: '160px' } },
 		},
-		mediaAspectRatio: {
-			name: 'media-aspect-ratio',
+		mainPosition: {
+			name: 'main-position',
 			control: 'select',
-			options: ['21/9', '16/9', '3/2'],
-			mapping: { '21/9': '' },
-			description: 'Aspect ratio van het mediavlak; bepaalt op md/lg de hoogte van de hero',
-			table: { defaultValue: { summary: '21/9' } },
-		},
-		mediaHeight: {
-			name: 'media-height',
-			control: 'text',
-			description: 'Vaste hoogte van het mediavlak, elke CSS-lengte (bijv. 320px of 40vh); wint van media-aspect-ratio',
+			options: ['bottom-left', 'bottom-center', 'bottom-right', 'top-left', 'top-center', 'top-right', 'left', 'right'],
+			description: 'Positie van het tekstpaneel',
+			table: { defaultValue: { summary: 'bottom-left' } },
 		},
 		mediaSrc: {
 			name: 'media-src',
@@ -123,24 +110,37 @@ export default {
 			control: 'text',
 			description: 'Alt-tekst voor media-src; leeg = decoratief',
 		},
+		mediaAspectRatio: {
+			name: 'media-aspect-ratio',
+			control: 'select',
+			options: ['21/9', '16/9', '3/2'],
+			mapping: { '21/9': '' },
+			description: 'Aspect ratio van het mediavlak; bepaalt op md/lg de hoogte van de hero',
+			table: { defaultValue: { summary: '21/9' } },
+		},
+		mediaHeight: {
+			name: 'media-height',
+			control: 'text',
+			description: 'Vaste hoogte van het mediavlak, elke CSS-lengte (bijv. 320px of 40vh); wint van media-aspect-ratio',
+		},
 	},
 };
 
 const Template = (args: Record<string, any>) => html`
 	<nldd-page>
 		<nldd-hero
+			main-background=${args.mainBackground}
 			corner=${args.corner ?? nothing}
 			layout=${args.layout === 'overlap' ? nothing : args.layout}
-			main-background=${args.mainBackground}
 			main-width=${args.mainWidth === 'auto' ? nothing : args.mainWidth}
-			main-position=${args.mainPosition}
 			overlap-size=${args.overlapSize || nothing}
-			media-aspect-ratio=${args.mediaAspectRatio || nothing}
-			media-height=${args.mediaHeight || nothing}
+			main-position=${args.mainPosition}
 			media-src=${args.mediaSrc || nothing}
 			media-srcset=${args.mediaSrcset || nothing}
 			media-sizes=${args.mediaSizes || nothing}
 			media-alt=${args.mediaAlt || nothing}
+			media-aspect-ratio=${args.mediaAspectRatio || nothing}
+			media-height=${args.mediaHeight || nothing}
 		>
 			<nldd-title
 				size="display-2"
@@ -345,7 +345,7 @@ export const AllePosities = {
  * `overlap-size` om te zien waar het omslaat.
  */
 export const Overlap = {
-	args: { overlapSize: '', mainPosition: 'bottom-left', mainWidth: 'auto' },
+	args: { mainWidth: 'auto', overlapSize: '', mainPosition: 'bottom-left' },
 	render: (args: Record<string, any>) => html`
 		<nldd-page>
 			<!-- nldd-lint-disable-next-line page-content-goes-in-section -- Shows the variants together; a page has one hero. -->
@@ -356,9 +356,9 @@ export const Overlap = {
 					['Weinig tekst', null],
 				].map(([title, body]) => html`
 					<nldd-hero
-						main-position=${args.mainPosition}
 						main-width=${args.mainWidth === 'auto' ? nothing : args.mainWidth}
 						overlap-size=${args.overlapSize || nothing}
+						main-position=${args.mainPosition}
 					>
 						<img
 							slot="media"

@@ -39,19 +39,19 @@ export default {
 	],
 	args: {
 		size: 'md',
-		range: false,
-		histogram: '',
 		startIcon: '',
 		endIcon: '',
 		accessibleLabel: 'Volume',
 		accessibleDescription: '',
 		accessibleDescribedBy: '',
+		histogram: '',
 		tooltipTiming: 'instant',
 		invalid: false,
 		disabled: false,
 		value: 40,
 		startValue: undefined,
 		endValue: undefined,
+		range: false,
 		min: 0,
 		max: 100,
 		step: 1,
@@ -62,15 +62,6 @@ export default {
 			options: ['xs', 'sm', 'md'],
 			description: 'Maat van de slider',
 			table: { defaultValue: { summary: 'md' } },
-		},
-		range: {
-			control: 'boolean',
-			description: 'Kiest een bereik, met een thumb voor elk uiteinde',
-			table: { defaultValue: { summary: false } },
-		},
-		histogram: {
-			control: 'text',
-			description: 'Aantallen als balken boven de baan, één per vak, gescheiden door komma\'s (bijv. `2, 4, 7, 12`)',
 		},
 		startIcon: {
 			name: 'start-icon',
@@ -102,6 +93,10 @@ export default {
 			name: 'accessible-described-by',
 			control: false,
 			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		},
+		histogram: {
+			control: 'text',
+			description: 'Aantallen als balken boven de baan, één per vak, gescheiden door komma\'s (bijv. `2, 4, 7, 12`)',
 		},
 		tooltipTiming: {
 			name: 'tooltip-timing',
@@ -136,6 +131,11 @@ export default {
 			description: 'Het eind van een bereik (met `range`)',
 			table: { defaultValue: { summary: 'max' } },
 		},
+		range: {
+			control: 'boolean',
+			description: 'Kiest een bereik, met een thumb voor elk uiteinde',
+			table: { defaultValue: { summary: false } },
+		},
 		min: {
 			control: 'number',
 			description: 'Kleinste waarde',
@@ -158,18 +158,18 @@ export const Standaard = {
 	render: (args: Record<string, any>) => html`
 		<nldd-slider
 			size=${args.size}
-			?range=${args.range}
-			histogram=${args.histogram || nothing}
 			start-icon=${args.startIcon || nothing}
 			end-icon=${args.endIcon || nothing}
 			accessible-label=${args.accessibleLabel || nothing}
 			accessible-description=${args.accessibleDescription || nothing}
+			histogram=${args.histogram || nothing}
 			tooltip-timing=${args.tooltipTiming}
 			?invalid=${args.invalid}
 			?disabled=${args.disabled}
 			value=${args.value}
 			start-value=${args.startValue ?? nothing}
 			end-value=${args.endValue ?? nothing}
+			?range=${args.range}
 			min=${args.min}
 			max=${args.max}
 			step=${args.step}

@@ -28,13 +28,13 @@ export default {
 		level: 'major',
 		status: 'current',
 		size: 'md',
+		line: 'auto',
 		verticalAlignment: 'center',
-		markerOffset: '',
 		direction: 'down',
+		markerOffset: '',
 		position: 'between',
 		text: '2',
 		icon: '',
-		line: 'auto',
 	},
 	argTypes: {
 		level: {
@@ -55,6 +55,12 @@ export default {
 			description: 'Hoe breed de baan is en dus hoe groot de stip: sm (16px) voor een tijdlijn van gebeurtenissen, md (24px) waar een cijfer of icoon in moet passen',
 			table: { defaultValue: { summary: 'sm' } },
 		},
+		line: {
+			control: 'select',
+			options: ['auto', 'top', 'bottom', 'both', 'none'],
+			description: 'Het spoor rond de stip, als status, direction en position het samen mis hebben. De genoemde helften worden getekend als afgelegd, de rest wordt niet getekend. Een half spoor, boven afgelegd en onder open, is waar auto voor is',
+			table: { defaultValue: { summary: 'auto' } },
+		},
 		verticalAlignment: {
 			name: 'vertical-alignment',
 			control: 'select',
@@ -62,28 +68,22 @@ export default {
 			description: 'Waar de stip in de rij staat. top zet hem tegen de bovenste padding van de rij, bottom tegen de onderste, zoals een hele stip zou staan, dus een minor-stip lijnt uit met een major. Om uit te lijnen met wat ernaast staat, zoals de eerste regel van een tekstcel, gebruik je marker-offset. Het spoor loopt altijd tot het midden van de stip',
 			table: { defaultValue: { summary: 'center' } },
 		},
-		markerOffset: {
-			name: 'marker-offset',
-			control: 'text',
-			description: 'Hoe ver onder de bovenkant van de inhoud het midden van de stip staat, als CSS-lengte of als percentage van de hoogte van de inhoud: 0% is de bovenkant, 50% het midden en 100% de onderkant. Voor een rij waarvan de eerste regel hoger is dan een stip, zoals naast een grote titel: de helft van die regel zet de stip ernaast. Gemeten na de padding van de rij. Gebruik rem in plaats van px, zodat de stip meeschuift als iemand de lettergrootte van de browser groter zet. Wint van vertical-alignment',
-		},
 		direction: {
 			control: 'select',
 			options: ['down', 'up'],
 			description: 'Richting waarin de tijdlijn vooruit loopt; alleen de huidige stap heeft een half spoor, dus alleen daar doet het iets',
 			table: { defaultValue: { summary: 'down' } },
 		},
+		markerOffset: {
+			name: 'marker-offset',
+			control: 'text',
+			description: 'Hoe ver onder de bovenkant van de inhoud het midden van de stip staat, als CSS-lengte of als percentage van de hoogte van de inhoud: 0% is de bovenkant, 50% het midden en 100% de onderkant. Voor een rij waarvan de eerste regel hoger is dan een stip, zoals naast een grote titel: de helft van die regel zet de stip ernaast. Gemeten na de padding van de rij. Gebruik rem in plaats van px, zodat de stip meeschuift als iemand de lettergrootte van de browser groter zet. Wint van vertical-alignment',
+		},
 		position: {
 			control: 'select',
 			options: ['first', 'between', 'last', 'only'],
 			description: 'Plek van de rij in de lijst op het scherm; bepaalt waar de lijn doorloopt. first is de bovenste rij (alleen een lijn eronder), last de onderste (alleen een lijn erboven), ook bij direction up',
 			table: { defaultValue: { summary: 'between' } },
-		},
-		line: {
-			control: 'select',
-			options: ['auto', 'top', 'bottom', 'both', 'none'],
-			description: 'Het spoor rond de stip, als status, direction en position het samen mis hebben. De genoemde helften worden getekend als afgelegd, de rest wordt niet getekend. Een half spoor, boven afgelegd en onder open, is waar auto voor is',
-			table: { defaultValue: { summary: 'auto' } },
 		},
 		text: {
 			control: 'text',
@@ -106,14 +106,14 @@ export const Standaard = {
 		>
 			<nldd-list-item>
 			<nldd-step-cell
+				level=${args.level}
 				status=${args.status}
 				size=${args.size}
-				level=${args.level}
-				vertical-alignment=${args.verticalAlignment === 'center' ? nothing : args.verticalAlignment}
-				marker-offset=${args.markerOffset || nothing}
-				direction=${args.direction}
-				position=${args.position}
 				line=${args.line}
+				vertical-alignment=${args.verticalAlignment === 'center' ? nothing : args.verticalAlignment}
+				direction=${args.direction}
+				marker-offset=${args.markerOffset || nothing}
+				position=${args.position}
 				text=${args.text}
 				icon=${args.icon}
 			></nldd-step-cell>

@@ -6,19 +6,19 @@
  * @element nldd-number-field
  * @keywords getal
  * @related nldd-slider, nldd-stepper
+ * @attr {'sm'|'md'} size - Size: 'sm' | 'md' (default: 'md')
+ * @attr {string} width - Width mode: 'full' (stretches to container) or any CSS length (e.g. '240px')
+ * @attr {string} accessible-label - Accessible label (aria-label) forwarded to the native input
+ * @attr {boolean} hide-spin-buttons - When set, hides the decrement and increment buttons
+ * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
+ * @attr {boolean} disabled - Disabled state
+ * @attr {string} name - Name for form submission
  * @attr {number} value - Current value. Leave it out for an empty field, which submits an empty string and takes `min` and `max` as no reason to be invalid: only `required` asks for a value, as with a native number input. As a property, `null` is empty. In an empty field + and - are both enabled, and start at 0, or at the nearer end of the range when 0 lies outside it (`min="1"` starts at 1).
  * @attr {number} min - Minimum value (default: -Infinity)
  * @attr {number} max - Maximum value (default: Infinity)
  * @attr {number} step - Step size (default: 1)
- * @attr {'sm'|'md'} size - Size: 'sm' | 'md' (default: 'md')
- * @attr {boolean} disabled - Disabled state
  * @attr {boolean} required - A value has to be filled in. An empty field is then invalid.
- * @attr {string} name - Name for form submission
  * @attr {object} translations - Translations; unspecified keys fall back to Dutch
- * @attr {string} width - Width mode: 'full' (stretches to container) or any CSS length (e.g. '240px')
- * @attr {boolean} hide-spin-buttons - When set, hides the decrement and increment buttons
- * @attr {string} accessible-label - Accessible label (aria-label) forwarded to the native input
- * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
  *
  * @fires input - When the value changes (typing, +/- button, or on-commit correction); not for typing that reads as the same number, such as `1.0` after `1`. detail: { value: number | null }, null when the field is empty
  * @fires change - When the value is committed (blur/Enter or +/- button), clamped to [min, max]; an emptied field, or text that is no number (such as `-` or `1e`), commits as empty: null. From empty, + and - start at 0, or at the nearer end of the range when 0 lies outside it. When the committed value differs from the typed value, a matching input event is fired immediately before this one. detail: { value: number | null }
@@ -73,6 +73,38 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 	static blocksImplicitSubmission = true;
 
 
+	@property({ reflect: true, converter: reflectNonDefault<NumberFieldSize>('md') })
+	size: NumberFieldSize = 'md';
+
+	/** Width mode: 'full' (stretch to container) or any CSS length. */
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	width = '';
+
+	/** Accessible label forwarded as aria-label to the native input. */
+	@property({ type: String, attribute: 'accessible-label' })
+	accessibleLabel = '';
+
+	@property({ type: Boolean, reflect: true, attribute: 'hide-spin-buttons' })
+	hideSpinButtons = false;
+
+	/**
+	 * Marks the control as invalid.
+	 *
+	 * Announced and not drawn. What is wrong belongs in an
+	 * nldd-validation-list, in words: a red ring around a single
+	 * checkbox or radio would say the option is wrong, while it is the question
+	 * that is unanswered. `aria-invalid` still goes on the control, because
+	 * choosing not to show something is not a reason to keep quiet about it.
+	 */
+	@property({ type: Boolean, reflect: true })
+	invalid = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
+
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	name = '';
+
 	/** The value, or null for an empty field. An empty or unreadable attribute is empty too. */
 	@property({ converter: emptyOrNumber })
 	value: number | null = null;
@@ -86,46 +118,13 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Number })
 	step = 1;
 
-	@property({ reflect: true, converter: reflectNonDefault<NumberFieldSize>('md') })
-	size: NumberFieldSize = 'md';
-
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	/** A value has to be filled in. An empty field is then invalid. */
 	@property({ type: Boolean, reflect: true })
 	required = false;
 
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	name = '';
-
-	/** Width mode: 'full' (stretch to container) or any CSS length. */
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	width = '';
-
-	@property({ type: Boolean, reflect: true, attribute: 'hide-spin-buttons' })
-	hideSpinButtons = false;
-
-	/** Accessible label forwarded as aria-label to the native input. */
-	@property({ type: String, attribute: 'accessible-label' })
-	accessibleLabel = '';
-
 	/** Override one or more translation keys. Unspecified keys fall back to Dutch. */
 	@property({ type: Object })
 	translations: Partial<NLDDNumberFieldTranslations> = {};
-
-
-	/**
-	 * Marks the control as invalid.
-	 *
-	 * Announced and not drawn. What is wrong belongs in an
-	 * nldd-validation-list, in words: a red ring around a single
-	 * checkbox or radio would say the option is wrong, while it is the question
-	 * that is unanswered. `aria-invalid` still goes on the control, because
-	 * choosing not to show something is not a reason to keep quiet about it.
-	 */
-	@property({ type: Boolean, reflect: true })
-	invalid = false;
 
 	/** The value last committed or set from outside: what `change` compares with.
 	 *  Typing already moves `value`, so comparing with that would leave a typed

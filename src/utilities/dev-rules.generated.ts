@@ -1336,9 +1336,9 @@ export const devRules: DevRule[] = [
 		"context": "nldd-admonition[variant]:not([variant=\"accent\"], [variant=\"critical\"], [variant=\"neutral\"], [variant=\"success\"], [variant=\"warning\"])"
 	},
 	{
-		"id": "invalid-value-avatar-type",
-		"message": "`type` on nldd-avatar takes: organization, person.",
-		"context": "nldd-avatar[type]:not([type=\"organization\"], [type=\"person\"])"
+		"id": "invalid-value-avatar-color",
+		"message": "`color` on nldd-avatar takes: content, neutral.",
+		"context": "nldd-avatar[color]:not([color=\"content\"], [color=\"neutral\"])"
 	},
 	{
 		"id": "invalid-value-avatar-size",
@@ -1346,24 +1346,24 @@ export const devRules: DevRule[] = [
 		"context": "nldd-avatar[size]:not([size=\"16\"], [size=\"20\"], [size=\"24\"], [size=\"28\"], [size=\"32\"], [size=\"40\"], [size=\"44\"], [size=\"48\"], [size=\"56\"], [size=\"64\"], [size=\"80\"], [size=\"96\"], [size=\"full\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
-		"id": "invalid-value-avatar-color",
-		"message": "`color` on nldd-avatar takes: content, neutral.",
-		"context": "nldd-avatar[color]:not([color=\"content\"], [color=\"neutral\"])"
-	},
-	{
 		"id": "invalid-value-avatar-tooltip-timing",
 		"message": "`tooltip-timing` on nldd-avatar takes: delay, instant, never.",
 		"context": "nldd-avatar[tooltip-timing]:not([tooltip-timing=\"delay\"], [tooltip-timing=\"instant\"], [tooltip-timing=\"never\"])"
 	},
 	{
-		"id": "invalid-value-badge-size",
-		"message": "`size` on nldd-badge takes: md, sm.",
-		"context": "nldd-badge[size]:not([size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+		"id": "invalid-value-avatar-type",
+		"message": "`type` on nldd-avatar takes: organization, person.",
+		"context": "nldd-avatar[type]:not([type=\"organization\"], [type=\"person\"])"
 	},
 	{
 		"id": "invalid-value-badge-color",
 		"message": "`color` on nldd-badge takes: accent, content, critical, neutral, success, warning.",
 		"context": "nldd-badge[color]:not([color=\"accent\"], [color=\"content\"], [color=\"critical\"], [color=\"neutral\"], [color=\"success\"], [color=\"warning\"])"
+	},
+	{
+		"id": "invalid-value-badge-size",
+		"message": "`size` on nldd-badge takes: md, sm.",
+		"context": "nldd-badge[size]:not([size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
 		"id": "invalid-value-banner-variant",
@@ -1416,14 +1416,14 @@ export const devRules: DevRule[] = [
 		"context": "nldd-button[type]:not([type=\"button\"], [type=\"reset\"], [type=\"submit\"])"
 	},
 	{
-		"id": "invalid-value-button-bar-size",
-		"message": "`size` on nldd-button-bar takes: lg, md, sm, xs.",
-		"context": "nldd-button-bar[size]:not([size=\"lg\"], [size=\"md\"], [size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
-	},
-	{
 		"id": "invalid-value-button-bar-appearance",
 		"message": "`appearance` on nldd-button-bar takes: accent-filled, content-filled, content-tinted, neutral-base, neutral-tinted, primary, secondary.",
 		"context": "nldd-button-bar[appearance]:not([appearance=\"accent-filled\"], [appearance=\"content-filled\"], [appearance=\"content-tinted\"], [appearance=\"neutral-base\"], [appearance=\"neutral-tinted\"], [appearance=\"primary\"], [appearance=\"secondary\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
+		"id": "invalid-value-button-bar-size",
+		"message": "`size` on nldd-button-bar takes: lg, md, sm, xs.",
+		"context": "nldd-button-bar[size]:not([size=\"lg\"], [size=\"md\"], [size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
 		"id": "invalid-value-button-group-size",
@@ -1431,14 +1431,14 @@ export const devRules: DevRule[] = [
 		"context": "nldd-button-group[size]:not([size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
-		"id": "invalid-value-button-group-orientation",
-		"message": "`orientation` on nldd-button-group takes: auto, horizontal, vertical.",
-		"context": "nldd-button-group[orientation]:not([orientation=\"auto\"], [orientation=\"horizontal\"], [orientation=\"vertical\"])"
-	},
-	{
 		"id": "invalid-value-button-group-width",
 		"message": "`width` on nldd-button-group takes: full.",
 		"context": "nldd-button-group[width]:not([width=\"\"], [width=\"full\"])"
+	},
+	{
+		"id": "invalid-value-button-group-orientation",
+		"message": "`orientation` on nldd-button-group takes: auto, horizontal, vertical.",
+		"context": "nldd-button-group[orientation]:not([orientation=\"auto\"], [orientation=\"horizontal\"], [orientation=\"vertical\"])"
 	},
 	{
 		"id": "invalid-value-card-background",
@@ -1509,11 +1509,6 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-container-layout",
 		"message": "`layout` on nldd-container takes: columns, grid, lanes, row, stack, wrap.",
 		"context": "nldd-container[layout]:not([layout=\"columns\"], [layout=\"grid\"], [layout=\"lanes\"], [layout=\"row\"], [layout=\"stack\"], [layout=\"wrap\"])"
-	},
-	{
-		"id": "invalid-value-container-hide-on",
-		"message": "`hide-on` on nldd-container takes: pointer, touch.",
-		"context": "nldd-container[hide-on]:not([hide-on=\"\"], [hide-on=\"pointer\"], [hide-on=\"touch\"])"
 	},
 	{
 		"id": "invalid-value-container-gap",
@@ -1686,6 +1681,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-container[vertical-alignment]:not([vertical-alignment=\"bottom\"], [vertical-alignment=\"center\"], [vertical-alignment=\"top\"])"
 	},
 	{
+		"id": "invalid-value-container-hide-on",
+		"message": "`hide-on` on nldd-container takes: pointer, touch.",
+		"context": "nldd-container[hide-on]:not([hide-on=\"\"], [hide-on=\"pointer\"], [hide-on=\"touch\"])"
+	},
+	{
 		"id": "invalid-value-date-field-size",
 		"message": "`size` on nldd-date-field takes: md, sm.",
 		"context": "nldd-date-field[size]:not([size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
@@ -1801,14 +1801,14 @@ export const devRules: DevRule[] = [
 		"context": "nldd-full-bleed-section[lg-padding-bottom]:not([lg-padding-bottom=\"0\"], [lg-padding-bottom=\"10\"], [lg-padding-bottom=\"12\"], [lg-padding-bottom=\"16\"], [lg-padding-bottom=\"2\"], [lg-padding-bottom=\"20\"], [lg-padding-bottom=\"24\"], [lg-padding-bottom=\"28\"], [lg-padding-bottom=\"32\"], [lg-padding-bottom=\"4\"], [lg-padding-bottom=\"40\"], [lg-padding-bottom=\"44\"], [lg-padding-bottom=\"48\"], [lg-padding-bottom=\"56\"], [lg-padding-bottom=\"6\"], [lg-padding-bottom=\"64\"], [lg-padding-bottom=\"8\"], [lg-padding-bottom=\"80\"], [lg-padding-bottom=\"96\"])"
 	},
 	{
-		"id": "invalid-value-hero-layout",
-		"message": "`layout` on nldd-hero takes: contained, overlap.",
-		"context": "nldd-hero[layout]:not([layout=\"contained\"], [layout=\"overlap\"])"
-	},
-	{
 		"id": "invalid-value-hero-main-background",
 		"message": "`main-background` on nldd-hero takes: accent, base.",
 		"context": "nldd-hero[main-background]:not([main-background=\"accent\"], [main-background=\"base\"])"
+	},
+	{
+		"id": "invalid-value-hero-layout",
+		"message": "`layout` on nldd-hero takes: contained, overlap.",
+		"context": "nldd-hero[layout]:not([layout=\"contained\"], [layout=\"overlap\"])"
 	},
 	{
 		"id": "invalid-value-hero-main-position",
@@ -1881,14 +1881,14 @@ export const devRules: DevRule[] = [
 		"context": "nldd-hero[lg-padding-bottom]:not([lg-padding-bottom=\"0\"], [lg-padding-bottom=\"10\"], [lg-padding-bottom=\"12\"], [lg-padding-bottom=\"16\"], [lg-padding-bottom=\"2\"], [lg-padding-bottom=\"20\"], [lg-padding-bottom=\"24\"], [lg-padding-bottom=\"28\"], [lg-padding-bottom=\"32\"], [lg-padding-bottom=\"4\"], [lg-padding-bottom=\"40\"], [lg-padding-bottom=\"44\"], [lg-padding-bottom=\"48\"], [lg-padding-bottom=\"56\"], [lg-padding-bottom=\"6\"], [lg-padding-bottom=\"64\"], [lg-padding-bottom=\"8\"], [lg-padding-bottom=\"80\"], [lg-padding-bottom=\"96\"])"
 	},
 	{
-		"id": "invalid-value-icon-size",
-		"message": "`size` on nldd-icon takes: 16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96, full, inherit.",
-		"context": "nldd-icon[size]:not([size=\"16\"], [size=\"20\"], [size=\"24\"], [size=\"28\"], [size=\"32\"], [size=\"40\"], [size=\"44\"], [size=\"48\"], [size=\"56\"], [size=\"64\"], [size=\"80\"], [size=\"96\"], [size=\"full\"], [size=\"inherit\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
-	},
-	{
 		"id": "invalid-value-icon-color",
 		"message": "`color` on nldd-icon takes: accent, bruin, content, critical, donkerblauw, donkerbruin, donkergeel, donkergroen, geel, groen, hemelblauw, lichtblauw, lintblauw, mintgroen, mosgroen, oranje, paars, robijnrood, rood, roze, secondary, success, violet, warning.",
 		"context": "nldd-icon[color]:not([color=\"accent\"], [color=\"bruin\"], [color=\"content\"], [color=\"critical\"], [color=\"donkerblauw\"], [color=\"donkerbruin\"], [color=\"donkergeel\"], [color=\"donkergroen\"], [color=\"geel\"], [color=\"groen\"], [color=\"hemelblauw\"], [color=\"lichtblauw\"], [color=\"lintblauw\"], [color=\"mintgroen\"], [color=\"mosgroen\"], [color=\"oranje\"], [color=\"paars\"], [color=\"robijnrood\"], [color=\"rood\"], [color=\"roze\"], [color=\"secondary\"], [color=\"success\"], [color=\"violet\"], [color=\"warning\"])"
+	},
+	{
+		"id": "invalid-value-icon-size",
+		"message": "`size` on nldd-icon takes: 16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96, full, inherit.",
+		"context": "nldd-icon[size]:not([size=\"16\"], [size=\"20\"], [size=\"24\"], [size=\"28\"], [size=\"32\"], [size=\"40\"], [size=\"44\"], [size=\"48\"], [size=\"56\"], [size=\"64\"], [size=\"80\"], [size=\"96\"], [size=\"full\"], [size=\"inherit\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
 		"id": "invalid-value-icon-button-appearance",
@@ -1901,11 +1901,6 @@ export const devRules: DevRule[] = [
 		"context": "nldd-icon-button[size]:not([size=\"lg\"], [size=\"md\"], [size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
-		"id": "invalid-value-icon-button-type",
-		"message": "`type` on nldd-icon-button takes: button, reset, submit.",
-		"context": "nldd-icon-button[type]:not([type=\"button\"], [type=\"reset\"], [type=\"submit\"])"
-	},
-	{
 		"id": "invalid-value-icon-button-popup-type",
 		"message": "`popup-type` on nldd-icon-button takes: dialog, grid, listbox, menu, tree.",
 		"context": "nldd-icon-button[popup-type]:not([popup-type=\"dialog\"], [popup-type=\"grid\"], [popup-type=\"listbox\"], [popup-type=\"menu\"], [popup-type=\"tree\"])"
@@ -1916,9 +1911,9 @@ export const devRules: DevRule[] = [
 		"context": "nldd-icon-button[tooltip-timing]:not([tooltip-timing=\"delay\"], [tooltip-timing=\"instant\"], [tooltip-timing=\"never\"])"
 	},
 	{
-		"id": "invalid-value-icon-cell-size",
-		"message": "`size` on nldd-icon-cell takes: 16, 20, 24, 32.",
-		"context": "nldd-icon-cell[size]:not([size=\"16\"], [size=\"20\"], [size=\"24\"], [size=\"32\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+		"id": "invalid-value-icon-button-type",
+		"message": "`type` on nldd-icon-button takes: button, reset, submit.",
+		"context": "nldd-icon-button[type]:not([type=\"button\"], [type=\"reset\"], [type=\"submit\"])"
 	},
 	{
 		"id": "invalid-value-icon-cell-color",
@@ -1926,24 +1921,19 @@ export const devRules: DevRule[] = [
 		"context": "nldd-icon-cell[color]:not([color=\"accent\"], [color=\"content\"], [color=\"critical\"], [color=\"secondary\"], [color=\"success\"], [color=\"warning\"])"
 	},
 	{
+		"id": "invalid-value-icon-cell-size",
+		"message": "`size` on nldd-icon-cell takes: 16, 20, 24, 32.",
+		"context": "nldd-icon-cell[size]:not([size=\"16\"], [size=\"20\"], [size=\"24\"], [size=\"32\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
 		"id": "invalid-value-icon-cell-vertical-alignment",
 		"message": "`vertical-alignment` on nldd-icon-cell takes: bottom, center, top.",
 		"context": "nldd-icon-cell[vertical-alignment]:not([vertical-alignment=\"bottom\"], [vertical-alignment=\"center\"], [vertical-alignment=\"top\"])"
 	},
 	{
-		"id": "invalid-value-image-loading",
-		"message": "`loading` on nldd-image takes: eager, lazy.",
-		"context": "nldd-image[loading]:not([loading=\"eager\"], [loading=\"lazy\"])"
-	},
-	{
-		"id": "invalid-value-image-decoding",
-		"message": "`decoding` on nldd-image takes: async, auto, sync.",
-		"context": "nldd-image[decoding]:not([decoding=\"async\"], [decoding=\"auto\"], [decoding=\"sync\"])"
-	},
-	{
-		"id": "invalid-value-image-fetchpriority",
-		"message": "`fetchpriority` on nldd-image takes: auto, high, low.",
-		"context": "nldd-image[fetchpriority]:not([fetchpriority=\"auto\"], [fetchpriority=\"high\"], [fetchpriority=\"low\"])"
+		"id": "invalid-value-image-shape",
+		"message": "`shape` on nldd-image takes: circle, rounded, square.",
+		"context": "nldd-image[shape]:not([shape=\"circle\"], [shape=\"rounded\"], [shape=\"square\"])"
 	},
 	{
 		"id": "invalid-value-image-object-fit",
@@ -1956,9 +1946,19 @@ export const devRules: DevRule[] = [
 		"context": "nldd-image[object-position]:not([object-position=\"bottom\"], [object-position=\"center\"], [object-position=\"left\"], [object-position=\"right\"], [object-position=\"top\"])"
 	},
 	{
-		"id": "invalid-value-image-shape",
-		"message": "`shape` on nldd-image takes: circle, rounded, square.",
-		"context": "nldd-image[shape]:not([shape=\"circle\"], [shape=\"rounded\"], [shape=\"square\"])"
+		"id": "invalid-value-image-decoding",
+		"message": "`decoding` on nldd-image takes: async, auto, sync.",
+		"context": "nldd-image[decoding]:not([decoding=\"async\"], [decoding=\"auto\"], [decoding=\"sync\"])"
+	},
+	{
+		"id": "invalid-value-image-fetchpriority",
+		"message": "`fetchpriority` on nldd-image takes: auto, high, low.",
+		"context": "nldd-image[fetchpriority]:not([fetchpriority=\"auto\"], [fetchpriority=\"high\"], [fetchpriority=\"low\"])"
+	},
+	{
+		"id": "invalid-value-image-loading",
+		"message": "`loading` on nldd-image takes: eager, lazy.",
+		"context": "nldd-image[loading]:not([loading=\"eager\"], [loading=\"lazy\"])"
 	},
 	{
 		"id": "invalid-value-inline-dialog-variant",
@@ -1966,14 +1966,14 @@ export const devRules: DevRule[] = [
 		"context": "nldd-inline-dialog[variant]:not([variant=\"\"], [variant=\"alert\"], [variant=\"loading\"], [variant=\"success\"])"
 	},
 	{
-		"id": "invalid-value-inline-dialog-size",
-		"message": "`size` on nldd-inline-dialog takes: lg, md.",
-		"context": "nldd-inline-dialog[size]:not([size=\"lg\"], [size=\"md\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
-	},
-	{
 		"id": "invalid-value-inline-dialog-icon-color",
 		"message": "`icon-color` on nldd-inline-dialog takes: accent, critical, secondary, success, warning.",
 		"context": "nldd-inline-dialog[icon-color]:not([icon-color=\"\"], [icon-color=\"accent\"], [icon-color=\"critical\"], [icon-color=\"secondary\"], [icon-color=\"success\"], [icon-color=\"warning\"])"
+	},
+	{
+		"id": "invalid-value-inline-dialog-size",
+		"message": "`size` on nldd-inline-dialog takes: lg, md.",
+		"context": "nldd-inline-dialog[size]:not([size=\"lg\"], [size=\"md\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
 		"id": "invalid-value-inline-dialog-horizontal-alignment",
@@ -1986,11 +1986,6 @@ export const devRules: DevRule[] = [
 		"context": "nldd-just-in-time-education[placement]:not([placement=\"auto\"], [placement=\"bottom\"], [placement=\"left\"], [placement=\"right\"], [placement=\"top\"])"
 	},
 	{
-		"id": "invalid-value-keyboard-shortcut-size",
-		"message": "`size` on nldd-keyboard-shortcut takes: inherit, md, sm.",
-		"context": "nldd-keyboard-shortcut[size]:not([size=\"inherit\"], [size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
-	},
-	{
 		"id": "invalid-value-keyboard-shortcut-appearance",
 		"message": "`appearance` on nldd-keyboard-shortcut takes: keycap, text.",
 		"context": "nldd-keyboard-shortcut[appearance]:not([appearance=\"keycap\"], [appearance=\"text\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
@@ -1999,6 +1994,11 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-keyboard-shortcut-color",
 		"message": "`color` on nldd-keyboard-shortcut takes: content, neutral.",
 		"context": "nldd-keyboard-shortcut[color]:not([color=\"content\"], [color=\"neutral\"])"
+	},
+	{
+		"id": "invalid-value-keyboard-shortcut-size",
+		"message": "`size` on nldd-keyboard-shortcut takes: inherit, md, sm.",
+		"context": "nldd-keyboard-shortcut[size]:not([size=\"inherit\"], [size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
 		"id": "invalid-value-keyboard-shortcut-debug-os",
@@ -2016,14 +2016,14 @@ export const devRules: DevRule[] = [
 		"context": "nldd-link-group[size]:not([size=\"lg\"], [size=\"md\"], [size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
-		"id": "invalid-value-link-group-orientation",
-		"message": "`orientation` on nldd-link-group takes: horizontal, vertical.",
-		"context": "nldd-link-group[orientation]:not([orientation=\"horizontal\"], [orientation=\"vertical\"])"
-	},
-	{
 		"id": "invalid-value-link-group-horizontal-alignment",
 		"message": "`horizontal-alignment` on nldd-link-group takes: center, left.",
 		"context": "nldd-link-group[horizontal-alignment]:not([horizontal-alignment=\"center\"], [horizontal-alignment=\"left\"])"
+	},
+	{
+		"id": "invalid-value-link-group-orientation",
+		"message": "`orientation` on nldd-link-group takes: horizontal, vertical.",
+		"context": "nldd-link-group[orientation]:not([orientation=\"horizontal\"], [orientation=\"vertical\"])"
 	},
 	{
 		"id": "invalid-value-list-appearance",
@@ -2031,14 +2031,14 @@ export const devRules: DevRule[] = [
 		"context": "nldd-list[appearance]:not([appearance=\"box-base\"], [appearance=\"box-tinted\"], [appearance=\"simple\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
-		"id": "invalid-value-list-type",
-		"message": "`type` on nldd-list takes: form, list, listbox, navigation, radiogroup, tree.",
-		"context": "nldd-list[type]:not([type=\"form\"], [type=\"list\"], [type=\"listbox\"], [type=\"navigation\"], [type=\"radiogroup\"], [type=\"tree\"])"
-	},
-	{
 		"id": "invalid-value-list-dividers",
 		"message": "`dividers` on nldd-list takes: always, never, on-touch.",
 		"context": "nldd-list[dividers]:not([dividers=\"always\"], [dividers=\"never\"], [dividers=\"on-touch\"])"
+	},
+	{
+		"id": "invalid-value-list-type",
+		"message": "`type` on nldd-list takes: form, list, listbox, navigation, radiogroup, tree.",
+		"context": "nldd-list[type]:not([type=\"form\"], [type=\"list\"], [type=\"listbox\"], [type=\"navigation\"], [type=\"radiogroup\"], [type=\"tree\"])"
 	},
 	{
 		"id": "invalid-value-list-item-size",
@@ -2081,14 +2081,14 @@ export const devRules: DevRule[] = [
 		"context": "nldd-menu-bar-item[current-type]:not([current-type=\"date\"], [current-type=\"location\"], [current-type=\"page\"], [current-type=\"step\"], [current-type=\"time\"], [current-type=\"true\"])"
 	},
 	{
-		"id": "invalid-value-menu-item-type",
-		"message": "`type` on nldd-menu-item takes: button, checkbox, radio, submit.",
-		"context": "nldd-menu-item[type]:not([type=\"button\"], [type=\"checkbox\"], [type=\"radio\"], [type=\"submit\"])"
-	},
-	{
 		"id": "invalid-value-menu-item-query-mark-mode",
 		"message": "`query-mark-mode` on nldd-menu-item takes: match, predictive.",
 		"context": "nldd-menu-item[query-mark-mode]:not([query-mark-mode=\"match\"], [query-mark-mode=\"predictive\"])"
+	},
+	{
+		"id": "invalid-value-menu-item-type",
+		"message": "`type` on nldd-menu-item takes: button, checkbox, radio, submit.",
+		"context": "nldd-menu-item[type]:not([type=\"button\"], [type=\"checkbox\"], [type=\"radio\"], [type=\"submit\"])"
 	},
 	{
 		"id": "invalid-value-modal-dialog-variant",
@@ -2106,6 +2106,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-multi-line-text-field[size]:not([size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
+		"id": "invalid-value-multi-line-text-field-resize",
+		"message": "`resize` on nldd-multi-line-text-field takes: auto, none, vertical.",
+		"context": "nldd-multi-line-text-field[resize]:not([resize=\"auto\"], [resize=\"none\"], [resize=\"vertical\"])"
+	},
+	{
 		"id": "invalid-value-multi-line-text-field-keyboard",
 		"message": "`keyboard` on nldd-multi-line-text-field takes: decimal, email, none, numeric, search, tel, text, url.",
 		"context": "nldd-multi-line-text-field[keyboard]:not([keyboard=\"decimal\"], [keyboard=\"email\"], [keyboard=\"none\"], [keyboard=\"numeric\"], [keyboard=\"search\"], [keyboard=\"tel\"], [keyboard=\"text\"], [keyboard=\"url\"])"
@@ -2114,11 +2119,6 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-multi-line-text-field-enter-key",
 		"message": "`enter-key` on nldd-multi-line-text-field takes: done, enter, go, next, previous, search, send.",
 		"context": "nldd-multi-line-text-field[enter-key]:not([enter-key=\"done\"], [enter-key=\"enter\"], [enter-key=\"go\"], [enter-key=\"next\"], [enter-key=\"previous\"], [enter-key=\"search\"], [enter-key=\"send\"])"
-	},
-	{
-		"id": "invalid-value-multi-line-text-field-resize",
-		"message": "`resize` on nldd-multi-line-text-field takes: auto, none, vertical.",
-		"context": "nldd-multi-line-text-field[resize]:not([resize=\"auto\"], [resize=\"none\"], [resize=\"vertical\"])"
 	},
 	{
 		"id": "invalid-value-notification-variant",
@@ -2391,6 +2391,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-search-field[search-button]:not([search-button=\"\"], [search-button=\"primary\"], [search-button=\"secondary\"])"
 	},
 	{
+		"id": "invalid-value-segmented-control-variant",
+		"message": "`variant` on nldd-segmented-control takes: icon, icon-and-text, text.",
+		"context": "nldd-segmented-control[variant]:not([variant=\"icon\"], [variant=\"icon-and-text\"], [variant=\"text\"])"
+	},
+	{
 		"id": "invalid-value-segmented-control-appearance",
 		"message": "`appearance` on nldd-segmented-control takes: neutral-base, neutral-tinted.",
 		"context": "nldd-segmented-control[appearance]:not([appearance=\"neutral-base\"], [appearance=\"neutral-tinted\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
@@ -2406,9 +2411,9 @@ export const devRules: DevRule[] = [
 		"context": "nldd-segmented-control[type]:not([type=\"checkbox\"], [type=\"radio\"])"
 	},
 	{
-		"id": "invalid-value-segmented-control-variant",
-		"message": "`variant` on nldd-segmented-control takes: icon, icon-and-text, text.",
-		"context": "nldd-segmented-control[variant]:not([variant=\"icon\"], [variant=\"icon-and-text\"], [variant=\"text\"])"
+		"id": "invalid-value-segmented-control-item-variant",
+		"message": "`variant` on nldd-segmented-control-item takes: icon, icon-and-text, text.",
+		"context": "nldd-segmented-control-item[variant]:not([variant=\"icon\"], [variant=\"icon-and-text\"], [variant=\"text\"])"
 	},
 	{
 		"id": "invalid-value-segmented-control-item-appearance",
@@ -2419,11 +2424,6 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-segmented-control-item-size",
 		"message": "`size` on nldd-segmented-control-item takes: lg, md, sm.",
 		"context": "nldd-segmented-control-item[size]:not([size=\"lg\"], [size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
-	},
-	{
-		"id": "invalid-value-segmented-control-item-variant",
-		"message": "`variant` on nldd-segmented-control-item takes: icon, icon-and-text, text.",
-		"context": "nldd-segmented-control-item[variant]:not([variant=\"icon\"], [variant=\"icon-and-text\"], [variant=\"text\"])"
 	},
 	{
 		"id": "invalid-value-segmented-control-item-input-type",
@@ -2626,14 +2626,14 @@ export const devRules: DevRule[] = [
 		"context": "nldd-spacer-cell[size]:not([size=\"10\"], [size=\"12\"], [size=\"16\"], [size=\"2\"], [size=\"20\"], [size=\"24\"], [size=\"28\"], [size=\"32\"], [size=\"4\"], [size=\"40\"], [size=\"44\"], [size=\"48\"], [size=\"56\"], [size=\"6\"], [size=\"64\"], [size=\"8\"], [size=\"80\"], [size=\"96\"], [size=\"flexible\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
-		"id": "invalid-value-split-button-size",
-		"message": "`size` on nldd-split-button takes: lg, md, sm, xs.",
-		"context": "nldd-split-button[size]:not([size=\"lg\"], [size=\"md\"], [size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
-	},
-	{
 		"id": "invalid-value-split-button-appearance",
 		"message": "`appearance` on nldd-split-button takes: accent-filled, content-filled, content-tinted, neutral-base, neutral-tinted, primary, secondary.",
 		"context": "nldd-split-button[appearance]:not([appearance=\"accent-filled\"], [appearance=\"content-filled\"], [appearance=\"content-tinted\"], [appearance=\"neutral-base\"], [appearance=\"neutral-tinted\"], [appearance=\"primary\"], [appearance=\"secondary\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
+		"id": "invalid-value-split-button-size",
+		"message": "`size` on nldd-split-button takes: lg, md, sm, xs.",
+		"context": "nldd-split-button[size]:not([size=\"lg\"], [size=\"md\"], [size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
 		"id": "invalid-value-split-button-type",
@@ -2676,6 +2676,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-step-cell[size]:not([size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
+		"id": "invalid-value-step-cell-line",
+		"message": "`line` on nldd-step-cell takes: auto, both, bottom, none, top.",
+		"context": "nldd-step-cell[line]:not([line=\"auto\"], [line=\"both\"], [line=\"bottom\"], [line=\"none\"], [line=\"top\"])"
+	},
+	{
 		"id": "invalid-value-step-cell-vertical-alignment",
 		"message": "`vertical-alignment` on nldd-step-cell takes: bottom, center, top.",
 		"context": "nldd-step-cell[vertical-alignment]:not([vertical-alignment=\"bottom\"], [vertical-alignment=\"center\"], [vertical-alignment=\"top\"])"
@@ -2689,11 +2694,6 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-step-cell-position",
 		"message": "`position` on nldd-step-cell takes: between, first, last, only.",
 		"context": "nldd-step-cell[position]:not([position=\"between\"], [position=\"first\"], [position=\"last\"], [position=\"only\"])"
-	},
-	{
-		"id": "invalid-value-step-cell-line",
-		"message": "`line` on nldd-step-cell takes: auto, both, bottom, none, top.",
-		"context": "nldd-step-cell[line]:not([line=\"auto\"], [line=\"both\"], [line=\"bottom\"], [line=\"none\"], [line=\"top\"])"
 	},
 	{
 		"id": "invalid-value-stepper-size",
@@ -2716,14 +2716,14 @@ export const devRules: DevRule[] = [
 		"context": "nldd-swatch-picker-item[size]:not([size=\"md\"], [size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
-		"id": "invalid-value-switch-size",
-		"message": "`size` on nldd-switch takes: sm, xs.",
-		"context": "nldd-switch[size]:not([size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
-	},
-	{
 		"id": "invalid-value-switch-color",
 		"message": "`color` on nldd-switch takes: content.",
 		"context": "nldd-switch[color]:not([color=\"\"], [color=\"content\"])"
+	},
+	{
+		"id": "invalid-value-switch-size",
+		"message": "`size` on nldd-switch takes: sm, xs.",
+		"context": "nldd-switch[size]:not([size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
 		"id": "invalid-value-switch-field-color",
@@ -2771,6 +2771,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-tag[size]:not([size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
+		"id": "invalid-value-text-color",
+		"message": "`color` on nldd-text takes: accent, content, critical, secondary, success, warning.",
+		"context": "nldd-text[color]:not([color=\"accent\"], [color=\"content\"], [color=\"critical\"], [color=\"secondary\"], [color=\"success\"], [color=\"warning\"])"
+	},
+	{
 		"id": "invalid-value-text-size",
 		"message": "`size` on nldd-text takes: display-1, display-2, display-3, display-4, display-5, display-6, lg, md, sm, xs, xxs.",
 		"context": "nldd-text[size]:not([size=\"display-1\"], [size=\"display-2\"], [size=\"display-3\"], [size=\"display-4\"], [size=\"display-5\"], [size=\"display-6\"], [size=\"lg\"], [size=\"md\"], [size=\"sm\"], [size=\"xs\"], [size=\"xxs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
@@ -2786,24 +2791,19 @@ export const devRules: DevRule[] = [
 		"context": "nldd-text[line-height]:not([line-height=\"flat\"], [line-height=\"loose\"], [line-height=\"snug\"], [line-height=\"tight\"])"
 	},
 	{
-		"id": "invalid-value-text-color",
-		"message": "`color` on nldd-text takes: accent, content, critical, secondary, success, warning.",
-		"context": "nldd-text[color]:not([color=\"accent\"], [color=\"content\"], [color=\"critical\"], [color=\"secondary\"], [color=\"success\"], [color=\"warning\"])"
-	},
-	{
 		"id": "invalid-value-text-horizontal-alignment",
 		"message": "`horizontal-alignment` on nldd-text takes: center, left, right.",
 		"context": "nldd-text[horizontal-alignment]:not([horizontal-alignment=\"center\"], [horizontal-alignment=\"left\"], [horizontal-alignment=\"right\"])"
 	},
 	{
-		"id": "invalid-value-text-cell-size",
-		"message": "`size` on nldd-text-cell takes: md, sm.",
-		"context": "nldd-text-cell[size]:not([size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
-	},
-	{
 		"id": "invalid-value-text-cell-color",
 		"message": "`color` on nldd-text-cell takes: accent, content, critical, secondary, success, warning.",
 		"context": "nldd-text-cell[color]:not([color=\"accent\"], [color=\"content\"], [color=\"critical\"], [color=\"secondary\"], [color=\"success\"], [color=\"warning\"])"
+	},
+	{
+		"id": "invalid-value-text-cell-size",
+		"message": "`size` on nldd-text-cell takes: md, sm.",
+		"context": "nldd-text-cell[size]:not([size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
 		"id": "invalid-value-text-cell-horizontal-alignment",
@@ -2861,14 +2861,14 @@ export const devRules: DevRule[] = [
 		"context": "nldd-title[size]:not([size=\"display-1\"], [size=\"display-2\"], [size=\"display-3\"], [size=\"display-4\"], [size=\"display-5\"], [size=\"display-6\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
-		"id": "invalid-value-title-cell-size",
-		"message": "`size` on nldd-title-cell takes: display-1, display-2, display-3, display-4, display-5, display-6.",
-		"context": "nldd-title-cell[size]:not([size=\"display-1\"], [size=\"display-2\"], [size=\"display-3\"], [size=\"display-4\"], [size=\"display-5\"], [size=\"display-6\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
-	},
-	{
 		"id": "invalid-value-title-cell-color",
 		"message": "`color` on nldd-title-cell takes: accent, content, critical, secondary, success, warning.",
 		"context": "nldd-title-cell[color]:not([color=\"accent\"], [color=\"content\"], [color=\"critical\"], [color=\"secondary\"], [color=\"success\"], [color=\"warning\"])"
+	},
+	{
+		"id": "invalid-value-title-cell-size",
+		"message": "`size` on nldd-title-cell takes: display-1, display-2, display-3, display-4, display-5, display-6.",
+		"context": "nldd-title-cell[size]:not([size=\"display-1\"], [size=\"display-2\"], [size=\"display-3\"], [size=\"display-4\"], [size=\"display-5\"], [size=\"display-6\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
 		"id": "invalid-value-title-cell-horizontal-alignment",
@@ -2886,9 +2886,9 @@ export const devRules: DevRule[] = [
 		"context": "nldd-title-cell[query-mark-mode]:not([query-mark-mode=\"match\"], [query-mark-mode=\"predictive\"])"
 	},
 	{
-		"id": "invalid-value-toggle-button-type",
-		"message": "`type` on nldd-toggle-button takes: button, checkbox, radio.",
-		"context": "nldd-toggle-button[type]:not([type=\"button\"], [type=\"checkbox\"], [type=\"radio\"])"
+		"id": "invalid-value-toggle-button-variant",
+		"message": "`variant` on nldd-toggle-button takes: icon, icon-and-text, text.",
+		"context": "nldd-toggle-button[variant]:not([variant=\"\"], [variant=\"icon\"], [variant=\"icon-and-text\"], [variant=\"text\"])"
 	},
 	{
 		"id": "invalid-value-toggle-button-appearance",
@@ -2901,14 +2901,9 @@ export const devRules: DevRule[] = [
 		"context": "nldd-toggle-button[size]:not([size=\"lg\"], [size=\"md\"], [size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
-		"id": "invalid-value-toggle-button-variant",
-		"message": "`variant` on nldd-toggle-button takes: icon, icon-and-text, text.",
-		"context": "nldd-toggle-button[variant]:not([variant=\"\"], [variant=\"icon\"], [variant=\"icon-and-text\"], [variant=\"text\"])"
-	},
-	{
-		"id": "invalid-value-toggle-button-group-type",
-		"message": "`type` on nldd-toggle-button-group takes: button, checkbox, radio.",
-		"context": "nldd-toggle-button-group[type]:not([type=\"button\"], [type=\"checkbox\"], [type=\"radio\"])"
+		"id": "invalid-value-toggle-button-type",
+		"message": "`type` on nldd-toggle-button takes: button, checkbox, radio.",
+		"context": "nldd-toggle-button[type]:not([type=\"button\"], [type=\"checkbox\"], [type=\"radio\"])"
 	},
 	{
 		"id": "invalid-value-toggle-button-group-appearance",
@@ -2919,6 +2914,11 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-toggle-button-group-size",
 		"message": "`size` on nldd-toggle-button-group takes: lg, md, sm, xs.",
 		"context": "nldd-toggle-button-group[size]:not([size=\"lg\"], [size=\"md\"], [size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
+		"id": "invalid-value-toggle-button-group-type",
+		"message": "`type` on nldd-toggle-button-group takes: button, checkbox, radio.",
+		"context": "nldd-toggle-button-group[type]:not([type=\"button\"], [type=\"checkbox\"], [type=\"radio\"])"
 	},
 	{
 		"id": "invalid-value-token-control",
@@ -2941,14 +2941,14 @@ export const devRules: DevRule[] = [
 		"context": "nldd-toolbar-item[size]:not([size=\"sm\"], [size=\"md\"], [size=\"lg\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
-		"id": "invalid-value-toolbar-title-align",
-		"message": "`align` on nldd-toolbar-title takes: center, left.",
-		"context": "nldd-toolbar-title[align]:not([align=\"center\"], [align=\"left\"])"
-	},
-	{
 		"id": "invalid-value-toolbar-title-size",
 		"message": "`size` on nldd-toolbar-title takes: sm, md, lg.",
 		"context": "nldd-toolbar-title[size]:not([size=\"sm\"], [size=\"md\"], [size=\"lg\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
+		"id": "invalid-value-toolbar-title-align",
+		"message": "`align` on nldd-toolbar-title takes: center, left.",
+		"context": "nldd-toolbar-title[align]:not([align=\"center\"], [align=\"left\"])"
 	},
 	{
 		"id": "invalid-value-tooltip-placement",

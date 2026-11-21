@@ -28,23 +28,23 @@
  * @keywords datum, time, tijd, datetime
  * @related nldd-date-picker
  *
+ * @attr {'md'|'sm'} size - 'md' (default) | 'sm'. Set automatically by nldd-form-field.
+ * @attr {string} width - Width. By default exactly wide enough for a date plus the icons; 'full' fills the container; 'fit-content' drops the room for the validation icon and grows again as soon as the field turns valid or invalid; or pass your own CSS length.
+ * @attr {string} placeholder - Placeholder text. Do not put a format here; use the supporting label of nldd-form-field for that.
+ * @attr {string} accessible-label - Accessible label for the internal input. Set automatically by nldd-form-field.
+ * @attr {boolean} no-picker - Hides the calendar button. It is shown by default.
+ * @attr {boolean} valid - Marks the field as valid.
+ * @attr {boolean} invalid - Marks the field as invalid.
+ * @attr {boolean} readonly - Read-only state.
+ * @attr {boolean} disabled - Disabled state.
+ * @attr {string} name - Name for form submission.
+ * @attr {string} input-id - Sets the id on the internal input. Set automatically by nldd-form-field.
  * @attr {string} value - The date as ISO (yyyy-mm-dd). With `range` an ISO 8601 interval: `yyyy-mm-dd/yyyy-mm-dd`. Empty when there is no valid date.
  * @attr {boolean} range - Pick a period: two inputs and a calendar in range mode.
  * @attr {string} min - Earliest allowed date as ISO (yyyy-mm-dd).
  * @attr {string} max - Latest allowed date as ISO (yyyy-mm-dd).
- * @attr {boolean} no-picker - Hides the calendar button. It is shown by default.
- * @attr {string} placeholder - Placeholder text. Do not put a format here; use the supporting label of nldd-form-field for that.
- * @attr {string} input-id - Sets the id on the internal input. Set automatically by nldd-form-field.
- * @attr {'md'|'sm'} size - 'md' (default) | 'sm'. Set automatically by nldd-form-field.
- * @attr {boolean} invalid - Marks the field as invalid.
- * @attr {boolean} valid - Marks the field as valid.
- * @attr {boolean} disabled - Disabled state.
- * @attr {boolean} readonly - Read-only state.
  * @attr {boolean} required - Required state.
- * @attr {string} name - Name for form submission.
  * @attr {string} autocomplete - Autocomplete hint, for example 'bday'.
- * @attr {string} accessible-label - Accessible label for the internal input. Set automatically by nldd-form-field.
- * @attr {string} width - Width. By default exactly wide enough for a date plus the icons; 'full' fills the container; 'fit-content' drops the room for the validation icon and grows again as soon as the field turns valid or invalid; or pass your own CSS length.
  * @attr {object} translations - Translations; unspecified keys fall back to Dutch.
  *
  * @slot picker - Your own nldd-date-picker instead of the default calendar. The field keeps setting `value`, `min`, `max` and `range`; use the slot for what only a calendar knows: `week-numbers`, `first-day-of-week`, `is-date-unavailable` and its own translations.
@@ -111,6 +111,38 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ reflect: true, converter: reflectNonDefault<'md' | 'sm'>('md') })
 	size: 'md' | 'sm' = 'md';
 
+	/** Optional fixed width. Without a value the field fills its container. */
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	width = '';
+
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	placeholder = '';
+
+	/** Accessible label for the inner input. Set automatically by nldd-form-field. */
+	@property({ type: String, attribute: 'accessible-label' })
+	accessibleLabel = '';
+
+	@property({ type: Boolean, reflect: true, attribute: 'no-picker' })
+	noPicker = false;
+
+	@property({ type: Boolean, reflect: true })
+	valid = false;
+
+	@property({ type: Boolean, reflect: true })
+	invalid = false;
+
+	@property({ type: Boolean, reflect: true })
+	readonly = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
+
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	name = '';
+
+	@property({ type: String, attribute: 'input-id' })
+	inputId = '';
+
 	@property({ type: String })
 	value = '';
 
@@ -123,44 +155,11 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: String })
 	max = '';
 
-	@property({ type: Boolean, reflect: true, attribute: 'no-picker' })
-	noPicker = false;
-
-	@property({ type: String, attribute: 'input-id' })
-	inputId = '';
-
-	@property({ reflect: true, converter: reflectNonDefault<string>('') })
-	placeholder = '';
-
-	@property({ type: Boolean, reflect: true })
-	invalid = false;
-
-	@property({ type: Boolean, reflect: true })
-	valid = false;
-
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
-	@property({ type: Boolean, reflect: true })
-	readonly = false;
-
 	@property({ type: Boolean, reflect: true })
 	required = false;
 
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	name = '';
-
 	@property({ type: String })
 	autocomplete = '';
-
-	/** Accessible label for the inner input. Set automatically by nldd-form-field. */
-	@property({ type: String, attribute: 'accessible-label' })
-	accessibleLabel = '';
-
-
-	/** Optional fixed width. Without a value the field fills its container. */
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	width = '';
 
 	/** Override one or more translation keys. Keys left out fall back to Dutch. */
 	@property({ type: Object })

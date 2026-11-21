@@ -11,13 +11,13 @@ export default {
 	tags: ['autodocs'],
 	args: {
 		compact: false,
-		overflowText: '',
 		accessibleLabel: 'Navigatie',
+		overflowText: '',
 	},
 	argTypes: {
 		compact: { control: 'boolean', description: 'Propageert compact naar slotted items', table: { defaultValue: { summary: false } } },
-		overflowText: { name: 'overflow-text', control: 'text', description: 'Tekst voor de overflow button', table: { defaultValue: { summary: 'Meer opties' } } },
 		accessibleLabel: { name: 'accessible-label', control: 'text', description: 'aria-label voor de nav landmark' },
+		overflowText: { name: 'overflow-text', control: 'text', description: 'Tekst voor de overflow button', table: { defaultValue: { summary: 'Meer opties' } } },
 	},
 };
 
@@ -25,14 +25,14 @@ const layoutArea = 'container-type: inline-size; container-name: layout-containe
 
 const Template = ({
 	compact,
-	overflowText,
 	accessibleLabel,
+	overflowText,
 }: Record<string, unknown>) => html`
 	<div style=${layoutArea}>
 		<nldd-menu-bar
+			?compact=${compact}
 			accessible-label=${(accessibleLabel as string) || nothing}
 			overflow-text=${(overflowText as string) || nothing}
-			?compact=${compact}
 		>
 			<nldd-menu-bar-item
 				text="Home"

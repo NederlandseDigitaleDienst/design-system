@@ -171,55 +171,57 @@ export default {
 		},
 	},
 	args: {
-		embedded: false,
-		syntax: 'hidden',
-		value: SAMPLE,
-		placeholder: '',
-		rows: 8,
 		resize: 'auto',
+		rows: 8,
+		placeholder: '',
+		embedded: false,
+		accessibleLabel: 'Tekst',
 		wrap: true,
+		syntax: 'hidden',
 		invalid: false,
 		readonly: false,
+		disabled: false,
+		value: SAMPLE,
 		required: false,
 		noSpellcheck: false,
-		disabled: false,
-		accessibleLabel: 'Tekst',
 	},
 	argTypes: {
-		embedded: {
-			control: 'boolean',
-			description: 'Zonder kader, vulling, padding en focusring, voor een editor in een eigen compositie die die zelf levert',
-			table: { defaultValue: { summary: false } },
-		},
-		syntax: {
-			control: 'select',
-			options: ['hidden', 'visible'],
-			description: 'Opmaaktekens. "hidden" verbergt ze en toont ze waar de cursor of selectie een constructie raakt; "visible" laat ze gedimd staan, voor wie markdown schrijft.',
-			table: { defaultValue: { summary: 'hidden' } },
-		},
-		value: {
-			control: 'text',
-			description: 'De inhoud (markdown)',
-		},
-		placeholder: {
-			control: 'text',
-			description: 'Placeholder tekst',
-		},
-		rows: {
-			control: 'number',
-			description: 'Minimale zichtbare regels (de vloer in elke resize-modus)',
-			table: { defaultValue: { summary: 6 } },
-		},
 		resize: {
 			control: 'select',
 			options: ['none', 'vertical', 'auto'],
 			description: 'Resize-gedrag. auto = groeit mee, vertical = slepen vanaf rows, none = vast.',
 			table: { defaultValue: { summary: 'auto' } },
 		},
+		rows: {
+			control: 'number',
+			description: 'Minimale zichtbare regels (de vloer in elke resize-modus)',
+			table: { defaultValue: { summary: 6 } },
+		},
+		placeholder: {
+			control: 'text',
+			description: 'Placeholder tekst',
+		},
+		embedded: {
+			control: 'boolean',
+			description: 'Zonder kader, vulling, padding en focusring, voor een editor in een eigen compositie die die zelf levert',
+			table: { defaultValue: { summary: false } },
+		},
+		accessibleLabel: {
+			name: 'accessible-label',
+			control: 'text',
+			description: 'Toegankelijk label',
+			table: { defaultValue: { summary: 'Tekst' } },
+		},
 		wrap: {
 			control: 'boolean',
 			description: 'Lange regels afbreken (default aan; proza wrapt)',
 			table: { defaultValue: { summary: true } },
+		},
+		syntax: {
+			control: 'select',
+			options: ['hidden', 'visible'],
+			description: 'Opmaaktekens. "hidden" verbergt ze en toont ze waar de cursor of selectie een constructie raakt; "visible" laat ze gedimd staan, voor wie markdown schrijft.',
+			table: { defaultValue: { summary: 'hidden' } },
 		},
 		invalid: {
 			control: 'boolean',
@@ -230,6 +232,15 @@ export default {
 			control: 'boolean',
 			description: 'Alleen-lezen staat',
 			table: { defaultValue: { summary: false } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde staat',
+			table: { defaultValue: { summary: false } },
+		},
+		value: {
+			control: 'text',
+			description: 'De inhoud (markdown)',
 		},
 		required: {
 			control: 'boolean',
@@ -242,49 +253,38 @@ export default {
 			description: 'Zet de spellingscontrole uit. Standaard aan, zonder code, URL\'s en mentions.',
 			table: { defaultValue: { summary: false } },
 		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde staat',
-			table: { defaultValue: { summary: false } },
-		},
-		accessibleLabel: {
-			name: 'accessible-label',
-			control: 'text',
-			description: 'Toegankelijk label',
-			table: { defaultValue: { summary: 'Tekst' } },
-		},
 	},
 };
 
 const Template = ({
-	embedded,
-	syntax,
-	value,
-	placeholder,
-	rows,
 	resize,
+	rows,
+	placeholder,
+	embedded,
+	accessibleLabel,
 	wrap,
+	syntax,
 	invalid,
 	readonly,
+	disabled,
+	value,
 	required,
 	noSpellcheck,
-	disabled,
-	accessibleLabel,
 }: Record<string, any>) => html`
 	<nldd-text-editor
-		?embedded=${embedded}
-		syntax=${syntax as string}
-		.value=${value || ''}
-		placeholder=${placeholder || nothing}
-		rows=${rows as number}
 		resize=${resize as string}
+		rows=${rows as number}
+		placeholder=${placeholder || nothing}
+		?embedded=${embedded}
+		accessible-label=${accessibleLabel || nothing}
 		?wrap=${wrap}
-		?readonly=${readonly}
+		syntax=${syntax as string}
 		?invalid=${invalid}
+		?readonly=${readonly}
+		?disabled=${disabled}
+		.value=${value || ''}
 		?required=${required}
 		?no-spellcheck=${noSpellcheck}
-		?disabled=${disabled}
-		accessible-label=${accessibleLabel || nothing}
 	></nldd-text-editor>
 `;
 

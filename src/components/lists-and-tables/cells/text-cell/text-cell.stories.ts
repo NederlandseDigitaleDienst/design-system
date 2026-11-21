@@ -16,32 +16,32 @@ export default {
 	component: 'nldd-text-cell',
 	tags: ['autodocs'],
 	args: {
-		size: 'md',
 		color: 'content',
+		size: 'md',
 		width: '',
 		minWidth: '',
 		maxWidth: '',
 		minHeight: '',
 		horizontalAlignment: 'left',
 		verticalAlignment: 'center',
+		hideAbove: '',
+		hideBelow: '',
 		text: 'Tekstcel',
 		supportingText: '',
 		overline: '',
-		hideBelow: '',
-		hideAbove: '',
 	},
 	argTypes: {
-		size: {
-			control: 'select',
-			options: ['sm', 'md'],
-			description: 'Grootte van de tekstcel',
-			table: { defaultValue: { summary: 'md' } },
-		},
 		color: {
 			control: 'select',
 			options: ['content', 'secondary', 'accent', 'success', 'warning', 'critical'],
 			description: 'Kleurvariant. `accent`, `success`, `warning` en `critical` gelden voor alle drie tekstvelden zodat de cel als één samenhangende status leest.',
 			table: { defaultValue: { summary: 'content' } },
+		},
+		size: {
+			control: 'select',
+			options: ['sm', 'md'],
+			description: 'Grootte van de tekstcel',
+			table: { defaultValue: { summary: 'md' } },
 		},
 		width: {
 			control: 'text',
@@ -77,6 +77,16 @@ export default {
 			description: 'Verticale uitlijning van de cel',
 			table: { defaultValue: { summary: 'center' } },
 		},
+		hideAbove: {
+			name: 'hide-above',
+			control: 'text',
+			description: 'Verberg wanneer cells-container breder is dan deze CSS-lengte (bv. "1200px")',
+		},
+		hideBelow: {
+			name: 'hide-below',
+			control: 'text',
+			description: 'Verberg wanneer cells-container smaller is dan deze CSS-lengte (bv. "320px", "20rem")',
+		},
 		text: {
 			control: 'text',
 			description: 'Hoofdtekst. Ondersteunt **vet**-markeringen. Valt terug op de default-slot als deze leeg is.',
@@ -90,32 +100,22 @@ export default {
 			control: 'text',
 			description: 'Optionele overline-tekst. Ondersteunt **vet**-markeringen. Valt terug op de `overline`-slot als deze leeg is.',
 		},
-		hideBelow: {
-			name: 'hide-below',
-			control: 'text',
-			description: 'Verberg wanneer cells-container smaller is dan deze CSS-lengte (bv. "320px", "20rem")',
-		},
-		hideAbove: {
-			name: 'hide-above',
-			control: 'text',
-			description: 'Verberg wanneer cells-container breder is dan deze CSS-lengte (bv. "1200px")',
-		},
 	},
 };
 
 export const Standaard = {
 	render: (args: Record<string, any>) => html`
 		<nldd-text-cell
-			size=${args.size}
 			color=${args.color}
+			size=${args.size}
 			width=${args.width || nothing}
 			horizontal-alignment=${args.horizontalAlignment}
 			vertical-alignment=${args.verticalAlignment}
+			hide-above=${args.hideAbove || nothing}
+			hide-below=${args.hideBelow || nothing}
 			text=${args.text}
 			supporting-text=${args.supportingText}
 			overline=${args.overline}
-			hide-below=${args.hideBelow || nothing}
-			hide-above=${args.hideAbove || nothing}
 		></nldd-text-cell>
 	`,
 };

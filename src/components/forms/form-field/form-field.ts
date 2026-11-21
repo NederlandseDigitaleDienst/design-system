@@ -21,11 +21,11 @@
  * @keywords veld, label
  *
  * @attr {'top'|'right'|'left'} label-alignment - 'top' (default) | 'right' | 'left'. A value of its own always wins over the inherited form-label-alignment.
+ * @attr {string} form-label-alignment - Set by a wrapping nldd-form as a fallback. Do not set it yourself in consumer code.
  * @attr {string} label - Field label text. Omit for no-label layout. Supports **bold** markdown syntax, for the word to type in a confirmation; the accessible name of the control takes the text without the markers.
  * @attr {string} supporting-label - Short supporting text below the label. Same typography as optional badge. Supports **bold** markdown syntax.
  * @attr {boolean} optional - Shows an optional badge next to the label.
  * @attr {object} translations - Override translation keys, such as the text of the optional badge; unset keys fall back to Dutch
- * @attr {string} form-label-alignment - Set by a wrapping nldd-form as a fallback. Do not set it yourself in consumer code.
  *
  * @slot - The slotted input (e.g. nldd-text-field), its nldd-validation-list and its nldd-form-field-help-text.
  *

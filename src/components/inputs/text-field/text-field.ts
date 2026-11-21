@@ -5,26 +5,26 @@
  * @keywords textbox, invoerveld, tekstveld
  * @related nldd-multi-line-text-field, nldd-number-field, nldd-search-field, nldd-combo-box
  *
- * @attr {string} value - The input value
- * @attr {string} placeholder - Placeholder text
- * @attr {string} input-id - Sets the id on the native input. Set automatically by nldd-form-field.
  * @attr {'md'|'sm'} size - 'md' (default) | 'sm'. Set automatically by nldd-form-field.
- * @attr {boolean} invalid - Marks the field as invalid
+ * @attr {string} width - Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container.
+ * @attr {string} placeholder - Placeholder text
+ * @attr {string} accessible-label - Accessible label forwarded to the inner input. Set automatically by nldd-form-field.
  * @attr {boolean} valid - Marks the field as valid
+ * @attr {boolean} invalid - Marks the field as invalid
+ * @attr {boolean} readonly - Readonly state
  * @attr {boolean} disabled - Disabled state
+ * @attr {string} name - Input name for form submission
+ * @attr {string} input-id - Sets the id on the native input. Set automatically by nldd-form-field.
+ * @attr {string} value - The input value
  * @attr {'text'|'email'|'tel'|'url'} type - Input type: 'text' | 'email' | 'tel' | 'url'
  * @attr {'none'|'text'|'decimal'|'numeric'|'tel'|'search'|'email'|'url'} keyboard - Which virtual keyboard a phone or tablet raises, forwarded as `inputmode`: 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url'. It changes nothing about what the field accepts, and nothing at all on a desktop. Reach for it where the value is digits but not a quantity you would step (a house number, a postcode, a rack unit): 'numeric'. The keyboard for 'tel', 'email' and 'url' already follows from `type`.
  * @attr {'enter'|'done'|'go'|'next'|'previous'|'search'|'send'} enter-key - What the Enter key of the virtual keyboard says, forwarded as `enterkeyhint`: 'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'. It only labels the key; what Enter does is still up to the form, and on a desktop it changes nothing.
- * @attr {string} name - Input name for form submission
- * @attr {boolean} readonly - Readonly state
- * @attr {boolean} required - Required state
- * @attr {string} autocomplete - Autocomplete hint
- * @attr {string} accessible-label - Accessible label forwarded to the inner input. Set automatically by nldd-form-field.
- * @attr {boolean} no-spellcheck - Disables browser spellchecking on the inner input
- * @attr {string} width - Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container.
- * @attr {string} pattern - Regular expression the value has to match, as the native `pattern`.
  * @attr {number} minlength - Fewest characters the value may have.
  * @attr {number} maxlength - Most characters the value may have.
+ * @attr {string} pattern - Regular expression the value has to match, as the native `pattern`.
+ * @attr {boolean} required - Required state
+ * @attr {string} autocomplete - Autocomplete hint
+ * @attr {boolean} no-spellcheck - Disables browser spellchecking on the inner input
  *
  * @slot button - One `nldd-button`, `nldd-icon-button` or `nldd-toggle-button` at the end of the field: the one action of a form that is only this field (sign up with an email address, redeem a code), or an aid for filling in the field, such as an `nldd-toggle-button` that starts and stops dictation. The field passes on its corner, so the button's corners follow the field's. The field sets its `size`, `sm` in a field of `md` and `xs` in one of `sm`, so it sits inside the border; a `size` of your own is overwritten. A disabled field disables the button too. Give it `type="submit"` in a form, and its own `text`. A form with more fields keeps its buttons in `nldd-form-actions`.
  *
@@ -92,23 +92,37 @@ export class NLDDTextField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ reflect: true, converter: reflectNonDefault<'md' | 'sm'>('md') })
 	size: 'md' | 'sm' = 'md';
 
-	@property({ type: String })
-	value = '';
-
-	@property({ type: String, attribute: 'input-id' })
-	inputId = '';
+	/** Optional fixed width (any CSS length). When unset, the field stretches to fill its container. */
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	width = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	placeholder = '';
 
-	@property({ type: Boolean, reflect: true })
-	invalid = false;
+	/** Accessible label forwarded to the inner <input>. Set automatically by nldd-form-field. */
+	@property({ type: String, attribute: 'accessible-label' })
+	accessibleLabel = '';
 
 	@property({ type: Boolean, reflect: true })
 	valid = false;
 
 	@property({ type: Boolean, reflect: true })
+	invalid = false;
+
+	@property({ type: Boolean, reflect: true })
+	readonly = false;
+
+	@property({ type: Boolean, reflect: true })
 	disabled = false;
+
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	name = '';
+
+	@property({ type: String, attribute: 'input-id' })
+	inputId = '';
+
+	@property({ type: String })
+	value = '';
 
 	@property({ type: String })
 	type: InputType = 'text';
@@ -121,42 +135,6 @@ export class NLDDTextField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: String, reflect: true, attribute: 'enter-key' })
 	enterKey?: EnterKey;
 
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	name = '';
-
-	@property({ type: Boolean, reflect: true })
-	readonly = false;
-
-	@property({ type: Boolean, reflect: true })
-	required = false;
-
-	@property({ type: String })
-	autocomplete = '';
-
-	/** Accessible label forwarded to the inner <input>. Set automatically by nldd-form-field. */
-	@property({ type: String, attribute: 'accessible-label' })
-	accessibleLabel = '';
-
-
-	@property({ type: Boolean, reflect: true, attribute: 'no-spellcheck' })
-	noSpellcheck = false;
-
-	/** Optional fixed width (any CSS length). When unset, the field stretches to fill its container. */
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	width = '';
-
-
-	@query('.text-field__input')
-	private _input!: HTMLInputElement;
-
-	/** @internal The `button` slot: its size, its disabled state, and whether it is filled. */
-	_button = new FieldButtonController(this);
-
-
-	/** Regular expression the value has to match, as the native `pattern`. */
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	pattern = '';
-
 	/** Fewest characters the value may have, as the native `minlength`. */
 	@property({ type: Number, reflect: true })
 	minlength?: number;
@@ -164,6 +142,26 @@ export class NLDDTextField extends DescribedBy(FormAssociated(LitElement)) {
 	/** Most characters the value may have, as the native `maxlength`. */
 	@property({ type: Number, reflect: true })
 	maxlength?: number;
+
+	/** Regular expression the value has to match, as the native `pattern`. */
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	pattern = '';
+
+	@property({ type: Boolean, reflect: true })
+	required = false;
+
+	@property({ type: String })
+	autocomplete = '';
+
+	@property({ type: Boolean, reflect: true, attribute: 'no-spellcheck' })
+	noSpellcheck = false;
+
+	@query('.text-field__input')
+	private _input!: HTMLInputElement;
+
+	/** @internal The `button` slot: its size, its disabled state, and whether it is filled. */
+	_button = new FieldButtonController(this);
+
 
 	override updated(changed: PropertyValues): void {
 		if (changed.has('keyboard') || changed.has('type')) this._syncKeyboardConflict();
