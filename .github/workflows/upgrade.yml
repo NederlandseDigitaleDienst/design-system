@@ -54,7 +54,9 @@ name: Upgrade a project
 # The agent runs commands in a repository that is not ours, so it gets as
 # little as the work takes. No token of the repository: the clone keeps no
 # credentials, and the push happens in a later step. The key for the model is
-# kept out of every command it runs, and the run checks that it was. Still:
+# kept out of every command it runs, and the run checks that it was. That
+# takes a sandbox, and some builds do not run in one: `sandbox: false` gives
+# the agent the whole runner, for a repository you trust as your own. Still:
 # turn the agent on for repositories whose content you trust, and give a fleet
 # a key with a spending limit, not that of a person. A run without a key
 # skips the agent and says so.
@@ -85,6 +87,10 @@ on:
         description: 'Let an agent work the list of what is left, with the upgrade skill, before the pull request is made. Needs claude_code_oauth_token or anthropic_api_key.'
         type: boolean
         default: false
+      sandbox:
+        description: 'Keep the key for the model out of the commands the agent runs, by running them in a sandbox. Some builds do not run in it. Turn it off only for a repository whose content you trust as your own.'
+        type: boolean
+        default: true
       build:
         description: 'The command that builds the site, on a plain runner and from a clean checkout. With `site`, the pull request gets pictures of what changed. Default: what the agent finds.'
         type: string
@@ -215,7 +221,7 @@ jobs:
           OAUTH_TOKEN: ${{ secrets.claude_code_oauth_token }}
           API_KEY: ${{ secrets.anthropic_api_key }}
           # Keeps the key for the model out of the commands the agent runs.
-          CLAUDE_CODE_SUBPROCESS_ENV_SCRUB: 1
+          CLAUDE_CODE_SUBPROCESS_ENV_SCRUB: ${{ inputs.sandbox && '1' || '0' }}
         run: |
           if [ -n "$OAUTH_TOKEN" ]; then
             export CLAUDE_CODE_OAUTH_TOKEN="$OAUTH_TOKEN"
@@ -239,9 +245,11 @@ jobs:
 
           # With the key kept out, the agent's commands run in a sandbox of their own. That needs
           # bubblewrap, and a runner that lets a process without privileges make a namespace.
-          sudo apt-get update --quiet --quiet
-          sudo apt-get install --yes --quiet --quiet --no-install-recommends bubblewrap socat
-          sudo sysctl --quiet --write kernel.apparmor_restrict_unprivileged_userns=0
+          if [ "$CLAUDE_CODE_SUBPROCESS_ENV_SCRUB" = 1 ]; then
+            sudo apt-get update --quiet --quiet
+            sudo apt-get install --yes --quiet --quiet --no-install-recommends bubblewrap socat
+            sudo sysctl --quiet --write kernel.apparmor_restrict_unprivileged_userns=0
+          fi
 
           npm install --global --no-audit --no-fund @anthropic-ai/claude-code
           prompt="This repository was just upgraded to @nldd/design-system $VERSION by \`nldd upgrade\`.
@@ -252,7 +260,7 @@ jobs:
           Before you stop, run what the project's own CI runs on a pull request, where that needs no secret and no service:
           read .github/workflows for it. Fix what the upgrade broke.
           Leave the report as it is: the command writes it again after you. Write $TOOLS/keuzes.md instead, a short list
-          in Dutch, plain, for the people who review the pull request: every choice that does not follow from the changelog,
+          in Dutch, plain, without a title, for the people who review the pull request: every choice that does not follow from the changelog,
           what you left and why, and what of the project's CI still fails.
           If the project builds to a static site, write $TOOLS/site.json as well: {\"build\": \"<one shell command that builds
           the site from a clean checkout on this runner, installing what it needs>\", \"site\": \"<the directory it writes to>\"}.
@@ -264,9 +272,10 @@ jobs:
             printf '\n- De agent die de lijst afwerkt is niet klaar gekomen. Wat hij tot dan deed, staat in deze pull request.\n' >> "$TOOLS/keuzes.md"
           fi
 
-          case "$(cat "$TOOLS/sees-key" 2>/dev/null)" in
-            no) ;;
-            yes) echo "::error::A command of the agent could read the key for the model. No pull request is made; replace the key."; exit 1 ;;
+          case "$CLAUDE_CODE_SUBPROCESS_ENV_SCRUB$(cat "$TOOLS/sees-key" 2>/dev/null)" in
+            0*) echo "::notice::The commands of the agent ran without a sandbox, as asked: they could read the key for the model." ;;
+            1no) ;;
+            1yes) echo "::error::A command of the agent could read the key for the model. No pull request is made; replace the key."; exit 1 ;;
             *) echo "::warning::Whether a command of the agent could read the key for the model was not checked: the check did not run." ;;
           esac
 

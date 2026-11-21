@@ -205,6 +205,13 @@ describe('nldd upgrade', () => {
 		assert.match(report, /## Nog te doen\n\nNiets\.[^]*## Keuzes\n\n- De kleur volgt nu het vlak\./);
 	});
 
+	it('puts notes that bring a title and headings of their own under the heading of the report', async () => {
+		const { result } = await upgrade(project(files));
+		const report = formatReport({ ...result, notes: '# Keuzes bij de upgrade\n\n## Wat ik liet staan\n\n- De kleur.\n\n### In de zijbalk\n\n- Het kopje.\n' });
+		assert.match(report, /\n## Keuzes\n\n### Wat ik liet staan\n\n- De kleur\.\n\n#### In de zijbalk\n/);
+		assert.doesNotMatch(report, /Keuzes bij de upgrade/);
+	});
+
 	it('changes nothing in a second reading, also where a fix could', async () => {
 		const root = project(files);
 		const { result: first } = await upgrade(root);

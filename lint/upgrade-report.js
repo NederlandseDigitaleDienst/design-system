@@ -88,6 +88,18 @@ function sinceSection({ earlier, work, unread, undecided }) {
 	return lines;
 }
 
+/**
+ * The notes of whoever worked the list, as they fit under the heading the report gives
+ * them: without a title of their own, and with their headings a level below it.
+ */
+function notesUnder(notes) {
+	const lines = notes.trim().split('\n');
+	if (/^# /.test(lines[0])) lines.shift();
+	const levels = lines.flatMap((line) => (/^#{1,6} /.test(line) ? [line.indexOf(' ')] : []));
+	const deeper = '#'.repeat(Math.max(0, 3 - Math.min(...levels, 3)));
+	return lines.map((line) => (/^#{1,6} /.test(line) ? deeper + line : line)).join('\n').trim();
+}
+
 /** The first sentence of an entry: its bold lead, or its first line. */
 const leadOf = (text) => text.split('\n')[0].replace(/^\*\*(.+?)\*\*.*$/, '$1').replace(/[.,:]$/, '');
 
@@ -158,7 +170,7 @@ function renderedSection({ rendered }) {
  */
 export function formatReport(result) {
 	const title = result.from ? `# Designsysteem van ${result.from} naar ${result.to}` : `# Designsysteem naar ${result.to}`;
-	const notes = result.notes?.trim() ? ['## Keuzes', '', result.notes.trim()] : [];
+	const notes = result.notes?.trim() ? ['## Keuzes', '', notesUnder(result.notes)] : [];
 	const sections = [versionSection(result), fixedSection(result), sinceSection(result), workSection(result), notes, undecidedSection(result), renderedSection(result), breakingSection(result), standingSection(result)].filter((lines) => lines.length > 0);
 	const closing = result.rendered
 		? ['## Kijken', '', 'Leg oud en nieuw naast elkaar:', '', '```', 'npx nldd compare <oud> <nieuw> --out vergelijking', '```']
