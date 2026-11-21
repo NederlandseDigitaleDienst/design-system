@@ -20,8 +20,7 @@
  * @element nldd-form-field
  * @keywords veld, label
  *
- * @attr {'top'|'right'|'left'} label-alignment - 'top' (default) | 'right' | 'left'. A value of its own always wins over the inherited form-label-alignment.
- * @attr {string} form-label-alignment - Set by a wrapping nldd-form as a fallback. Do not set it yourself in consumer code.
+ * @attr {'top'|'right'|'left'} label-alignment - 'top' (default) | 'right' | 'left'. A value of its own wins over the one of a wrapping nldd-form.
  * @attr {string} label - Field label text. Omit for no-label layout. Supports **bold** markdown syntax, for the word to type in a confirmation; the accessible name of the control takes the text without the markers.
  * @attr {string} supporting-label - Short supporting text below the label. Same typography as optional badge. Supports **bold** markdown syntax.
  * @attr {boolean} optional - Shows an optional badge next to the label.
@@ -65,6 +64,7 @@ import {
 	formFieldHelpTextTemplate,
 } from './form-field.template.js';
 import { setState } from '../../../utilities/element-state.js';
+import { syncFormLabelAlignment } from '../../../utilities/form-label-alignment.js';
 import { translate } from '../../../utilities/translations.js';
 import { nlddFormFieldTranslations } from './form-field.i18n.js';
 import type { NLDDFormFieldTranslations } from './form-field.i18n.js';
@@ -134,7 +134,7 @@ export class NLDDFormField extends LitElement {
 	 * Default is `undefined` (and not `'top'`) so Lit doesn't reflect the
 	 * default value to the attribute on first update. That keeps the
 	 * "no own value set" state visible to CSS as `:not([label-alignment])`,
-	 * which the form-label-alignment fallback selectors rely on. Visually
+	 * which the alignment inherited from nldd-form relies on. Visually
 	 * `undefined` and `'top'` render identically (no `[label-alignment]`
 	 * rules apply for either).
 	 */
@@ -192,6 +192,7 @@ export class NLDDFormField extends LitElement {
 
 	override connectedCallback() {
 		super.connectedCallback();
+		syncFormLabelAlignment(this);
 		this._childObserver = new MutationObserver(() => this._onSlotChange());
 		this._childObserver.observe(this, { childList: true });
 		// Moved in the DOM: `firstUpdated` does not come again, and the observer

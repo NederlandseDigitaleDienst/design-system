@@ -8920,7 +8920,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A layout wrapper for the action buttons at the bottom of a form (typically a submit button or a button group). Follows the same responsive layout as `nldd-form-field`: with `label-alignment=\"right\"` or `\"left\"` the content gets the same indent as the fields above it, thanks to a `::before` pseudo-element that acts as the spacer column where the label would sit. Inherits `label-alignment` automatically from a wrapping `nldd-form`: the form propagates its own `label-alignment` as `form-label-alignment` to descendant `nldd-form-actions` (and `nldd-form-field`) through a MutationObserver. An explicit `label-alignment` on the form-actions itself wins through the CSS cascade, and the form code never touches the `label-alignment` attribute of the descendant.",
+          "description": "A layout wrapper for the action buttons at the bottom of a form (typically a submit button or a button group). Follows the same responsive layout as `nldd-form-field`: with `label-alignment=\"right\"` or `\"left\"` the content gets the same indent as the fields above it, thanks to a `::before` pseudo-element that acts as the spacer column where the label would sit. Inherits `label-alignment` from a wrapping `nldd-form`. A `label-alignment` of its own wins.",
           "name": "NLDDFormActions",
           "members": [
             {
@@ -8930,7 +8930,7 @@
                 "text": "LabelAlignment | undefined"
               },
               "default": "undefined",
-              "description": "Default is `undefined` (and not `'top'`) so Lit doesn't reflect the\ndefault value to the attribute on first update. See `nldd-form-field` for\nthe explanation, for the same reason: the form-label-alignment fallback CSS\nworks on `:not([label-alignment])`.",
+              "description": "Default is `undefined` (and not `'top'`) so Lit doesn't reflect the\ndefault value to the attribute on first update. See `nldd-form-field` for\nthe explanation, for the same reason: the inherited alignment\napplies on `:not([label-alignment])`.",
               "attribute": "label-alignment",
               "reflects": true
             }
@@ -8942,17 +8942,10 @@
                 "text": "LabelAlignment | undefined"
               },
               "default": "undefined",
-              "description": "'top' (default) | 'right' | 'left'. A value of its own always wins over the inherited form-label-alignment.",
+              "description": "'top' (default) | 'right' | 'left'. A value of its own wins over the one of a wrapping nldd-form.",
               "fieldName": "labelAlignment",
               "expandedType": {
                 "text": "'left' | 'right' | 'top'"
-              }
-            },
-            {
-              "name": "form-label-alignment",
-              "description": "Set by a wrapping nldd-form as a fallback. Do not set it yourself in consumer code.",
-              "type": {
-                "text": "string"
               }
             }
           ],
@@ -9008,7 +9001,7 @@
                 "text": "LabelAlignment | undefined"
               },
               "default": "undefined",
-              "description": "Controls how the label is positioned relative to the input.\n - 'top'   : label above the input (default)\n - 'right' : 240 px column, right-aligned text\n - 'left'  : 240 px column, left-aligned text\n\nCollapses to 'top' automatically when the container is < 640 px wide.\n\nDefault is `undefined` (and not `'top'`) so Lit doesn't reflect the\ndefault value to the attribute on first update. That keeps the\n\"no own value set\" state visible to CSS as `:not([label-alignment])`,\nwhich the form-label-alignment fallback selectors rely on. Visually\n`undefined` and `'top'` render identically (no `[label-alignment]`\nrules apply for either).",
+              "description": "Controls how the label is positioned relative to the input.\n - 'top'   : label above the input (default)\n - 'right' : 240 px column, right-aligned text\n - 'left'  : 240 px column, left-aligned text\n\nCollapses to 'top' automatically when the container is < 640 px wide.\n\nDefault is `undefined` (and not `'top'`) so Lit doesn't reflect the\ndefault value to the attribute on first update. That keeps the\n\"no own value set\" state visible to CSS as `:not([label-alignment])`,\nwhich the alignment inherited from nldd-form relies on. Visually\n`undefined` and `'top'` render identically (no `[label-alignment]`\nrules apply for either).",
               "attribute": "label-alignment",
               "reflects": true
             },
@@ -9060,7 +9053,7 @@
                 "text": "LabelAlignment | undefined"
               },
               "default": "undefined",
-              "description": "'top' (default) | 'right' | 'left'. A value of its own always wins over the inherited form-label-alignment.",
+              "description": "'top' (default) | 'right' | 'left'. A value of its own wins over the one of a wrapping nldd-form.",
               "fieldName": "labelAlignment",
               "expandedType": {
                 "text": "'left' | 'right' | 'top'"
@@ -9101,13 +9094,6 @@
               "default": "{}",
               "description": "Override translation keys, such as the text of the optional badge; unset keys fall back to Dutch",
               "fieldName": "translations"
-            },
-            {
-              "name": "form-label-alignment",
-              "description": "Set by a wrapping nldd-form as a fallback. Do not set it yourself in consumer code.",
-              "type": {
-                "text": "string"
-              }
             }
           ],
           "superclass": {
@@ -9282,7 +9268,7 @@
           "attributes": [
             {
               "name": "label-alignment",
-              "description": "Default `label-alignment` for descendant nldd-form-field and nldd-form-actions ('top' | 'right' | 'left'). Propagated to descendants as `form-label-alignment`. A `label-alignment` of its own on the descendant takes precedence through the CSS cascade.",
+              "description": "Default `label-alignment` for descendant nldd-form-field and nldd-form-actions ('top' | 'right' | 'left'). A `label-alignment` of its own on the descendant wins.",
               "type": {
                 "text": "'top'|'right'|'left'"
               }
@@ -56736,6 +56722,40 @@
           "declaration": {
             "name": "FormAssociated",
             "module": "src/utilities/form-associated-mixin.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/form-label-alignment.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "syncFormLabelAlignment",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "element",
+              "type": {
+                "text": "HTMLElement"
+              }
+            }
+          ],
+          "description": "Gives a field or the actions of an nldd-form the label alignment of that form,\nas `:state(form-label-left)` or `:state(form-label-right)`. Their own\n`label-alignment` wins in their styles. The element calls it when it connects,\nthe form when its alignment or its content changes."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "syncFormLabelAlignment",
+          "declaration": {
+            "name": "syncFormLabelAlignment",
+            "module": "src/utilities/form-label-alignment.ts"
           }
         }
       ]

@@ -31,8 +31,8 @@ export const formActionsStyles = css`
 
 	:host([label-alignment="left"]) .form-actions,
 	:host([label-alignment="right"]) .form-actions,
-	:host(:not([label-alignment])[form-label-alignment="left"]) .form-actions,
-	:host(:not([label-alignment])[form-label-alignment="right"]) .form-actions {
+	:host(:not([label-alignment]):state(form-label-left)) .form-actions,
+	:host(:not([label-alignment]):state(form-label-right)) .form-actions {
 		@container (min-width: ${mdMin}) {
 			flex-direction: row;
 			gap: var(--semantics-forms-columns-gap);
@@ -42,8 +42,8 @@ export const formActionsStyles = css`
 
 	:host([label-alignment="left"]) .form-actions::before,
 	:host([label-alignment="right"]) .form-actions::before,
-	:host(:not([label-alignment])[form-label-alignment="left"]) .form-actions::before,
-	:host(:not([label-alignment])[form-label-alignment="right"]) .form-actions::before {
+	:host(:not([label-alignment]):state(form-label-left)) .form-actions::before,
+	:host(:not([label-alignment]):state(form-label-right)) .form-actions::before {
 		@container (min-width: ${mdMin}) {
 			content: '';
 			width: var(--semantics-forms-label-column-width);

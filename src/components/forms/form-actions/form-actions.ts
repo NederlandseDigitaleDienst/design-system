@@ -7,18 +7,13 @@
  * gets the same indent as the fields above it, thanks to a `::before`
  * pseudo-element that acts as the spacer column where the label would sit.
  *
- * Inherits `label-alignment` automatically from a wrapping `nldd-form`: the
- * form propagates its own `label-alignment` as `form-label-alignment` to
- * descendant `nldd-form-actions` (and `nldd-form-field`) through a
- * MutationObserver. An explicit `label-alignment` on the form-actions itself
- * wins through the CSS cascade, and the form code never touches the
- * `label-alignment` attribute of the descendant.
+ * Inherits `label-alignment` from a wrapping `nldd-form`. A `label-alignment`
+ * of its own wins.
  *
  * @element nldd-form-actions
  * @keywords formulierknoppen
  *
- * @attr {'top'|'right'|'left'} label-alignment - 'top' (default) | 'right' | 'left'. A value of its own always wins over the inherited form-label-alignment.
- * @attr {string} form-label-alignment - Set by a wrapping nldd-form as a fallback. Do not set it yourself in consumer code.
+ * @attr {'top'|'right'|'left'} label-alignment - 'top' (default) | 'right' | 'left'. A value of its own wins over the one of a wrapping nldd-form.
  *
  * @slot - Action elements (button, button-group, and so on)
  *
@@ -38,6 +33,7 @@
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
+import { syncFormLabelAlignment } from '../../../utilities/form-label-alignment.js';
 import { formActionsStyles } from './form-actions.styles.js';
 import { formActionsTemplate } from './form-actions.template.js';
 
@@ -50,11 +46,16 @@ export class NLDDFormActions extends LitElement {
 	/**
 	 * Default is `undefined` (and not `'top'`) so Lit doesn't reflect the
 	 * default value to the attribute on first update. See `nldd-form-field` for
-	 * the explanation, for the same reason: the form-label-alignment fallback CSS
-	 * works on `:not([label-alignment])`.
+	 * the explanation, for the same reason: the inherited alignment
+	 * applies on `:not([label-alignment])`.
 	 */
 	@property({ type: String, reflect: true, attribute: 'label-alignment' })
 	labelAlignment: LabelAlignment | undefined = undefined;
+
+	override connectedCallback() {
+		super.connectedCallback();
+		syncFormLabelAlignment(this);
+	}
 
 	override render() {
 		return formActionsTemplate();

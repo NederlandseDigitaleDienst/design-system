@@ -1177,7 +1177,7 @@ Nederlandse Digitale Dienst Form Component Plain custom element (extends HTMLEle
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `label-alignment` | `'top'\|'right'\|'left'` | Default `label-alignment` for descendant nldd-form-field and nldd-form-actions ('top' \| 'right' \| 'left'). Propagated to descendants as `form-label-alignment`. A `label-alignment` of its own on the descendant takes precedence through the CSS cascade. |
+| `label-alignment` | `'top'\|'right'\|'left'` | Default `label-alignment` for descendant nldd-form-field and nldd-form-actions ('top' \| 'right' \| 'left'). A `label-alignment` of its own on the descendant wins. |
 | `name` | `string` | Form name |
 | `autocomplete` | `'on'\|'off'` | 'on' \| 'off' (form-level autofill toggle) |
 | `target` | `string` | Submit target ('_self' \| '_blank' \| ...) |
@@ -1197,7 +1197,7 @@ Nederlandse Digitale Dienst Form Component Plain custom element (extends HTMLEle
 
 ### `<nldd-form-actions>`
 
-A layout wrapper for the action buttons at the bottom of a form (typically a submit button or a button group). Follows the same responsive layout as `nldd-form-field`: with `label-alignment="right"` or `"left"` the content gets the same indent as the fields above it, thanks to a `::before` pseudo-element that acts as the spacer column where the label would sit. Inherits `label-alignment` automatically from a wrapping `nldd-form`: the form propagates its own `label-alignment` as `form-label-alignment` to descendant `nldd-form-actions` (and `nldd-form-field`) through a MutationObserver. An explicit `label-alignment` on the form-actions itself wins through the CSS cascade, and the form code never touches the `label-alignment` attribute of the descendant.
+A layout wrapper for the action buttons at the bottom of a form (typically a submit button or a button group). Follows the same responsive layout as `nldd-form-field`: with `label-alignment="right"` or `"left"` the content gets the same indent as the fields above it, thanks to a `::before` pseudo-element that acts as the spacer column where the label would sit. Inherits `label-alignment` from a wrapping `nldd-form`. A `label-alignment` of its own wins.
 
 **Keywords:** formulierknoppen.
 
@@ -1211,8 +1211,7 @@ A layout wrapper for the action buttons at the bottom of a form (typically a sub
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `label-alignment` | `'top'\|'right'\|'left'` | 'top' (default) \| 'right' \| 'left'. A value of its own always wins over the inherited form-label-alignment. |
-| `form-label-alignment` | `string` | Set by a wrapping nldd-form as a fallback. Do not set it yourself in consumer code. |
+| `label-alignment` | `'top'\|'right'\|'left'` | 'top' (default) \| 'right' \| 'left'. A value of its own wins over the one of a wrapping nldd-form. |
 
 **Slots**
 
@@ -1243,8 +1242,7 @@ A field around one input: its label, supporting label, optional badge, validatio
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `label-alignment` | `'top'\|'right'\|'left'` | 'top' (default) \| 'right' \| 'left'. A value of its own always wins over the inherited form-label-alignment. |
-| `form-label-alignment` | `string` | Set by a wrapping nldd-form as a fallback. Do not set it yourself in consumer code. |
+| `label-alignment` | `'top'\|'right'\|'left'` | 'top' (default) \| 'right' \| 'left'. A value of its own wins over the one of a wrapping nldd-form. |
 | `label` | `string` | Field label text. Omit for no-label layout. Supports **bold** markdown syntax, for the word to type in a confirmation; the accessible name of the control takes the text without the markers. |
 | `supporting-label` | `string` | Short supporting text below the label. Same typography as optional badge. Supports **bold** markdown syntax. |
 | `optional` | `boolean` | Shows an optional badge next to the label. |

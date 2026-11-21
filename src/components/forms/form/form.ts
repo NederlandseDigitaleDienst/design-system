@@ -1,4 +1,5 @@
 import { PlainElement } from '../../../utilities/custom-element.js';
+import { syncFormLabelAlignment } from '../../../utilities/form-label-alignment.js';
 /**
  * Nederlandse Digitale Dienst Form Component
  *
@@ -47,7 +48,7 @@ import { PlainElement } from '../../../utilities/custom-element.js';
  * @element nldd-form
  * @keywords formulier
  *
- * @attr {'top'|'right'|'left'} label-alignment - Default `label-alignment` for descendant nldd-form-field and nldd-form-actions ('top' | 'right' | 'left'). Propagated to descendants as `form-label-alignment`. A `label-alignment` of its own on the descendant takes precedence through the CSS cascade.
+ * @attr {'top'|'right'|'left'} label-alignment - Default `label-alignment` for descendant nldd-form-field and nldd-form-actions ('top' | 'right' | 'left'). A `label-alignment` of its own on the descendant wins.
  * @attr {string} name - Form name
  * @attr {'on'|'off'} autocomplete - 'on' | 'off' (form-level autofill toggle)
  * @attr {string} target - Submit target ('_self' | '_blank' | ...)
@@ -329,7 +330,7 @@ export class NLDDForm extends PlainElement {
 				}
 				// Newly added descendants — also from inside a nested
 				// nldd-form-section — should receive the inherited alignment.
-				this._propagateLabelAlignment(this.getAttribute('label-alignment'));
+				this._propagateLabelAlignment();
 			});
 			// subtree:true so dynamically added form-fields inside a
 			// nested form-section are pulled in by the propagation as well.
@@ -343,7 +344,7 @@ export class NLDDForm extends PlainElement {
 		this.addEventListener('reset', this._handleReset);
 
 		// Propagate label-alignment to current children (initial + after reconnect)
-		this._propagateLabelAlignment(this.getAttribute('label-alignment'));
+		this._propagateLabelAlignment();
 	}
 
 	disconnectedCallback(): void {
@@ -357,7 +358,7 @@ export class NLDDForm extends PlainElement {
 
 	attributeChangedCallback(name: string, _oldVal: string | null, newVal: string | null): void {
 		if (name === 'label-alignment') {
-			this._propagateLabelAlignment(newVal);
+			this._propagateLabelAlignment();
 			return;
 		}
 		if (!this._form) return;
@@ -366,27 +367,14 @@ export class NLDDForm extends PlainElement {
 	}
 
 	/**
-	 * Push `label-alignment` to descendant nldd-form-field and nldd-form-actions
-	 * elements as a separate `form-label-alignment` attribute, defaulting to
-	 * `'top'` when the form itself has no `label-alignment`. Descendant CSS
-	 * uses `[label-alignment="X"]` first and falls back to
-	 * `[form-label-alignment="X"]` when no own value is set, so a consumer's
-	 * explicit `label-alignment` always wins automatically, without us having
-	 * to track which elements we previously inherited to.
-	 *
-	 * Always-setting (rather than only when the form has its own value) lets
-	 * downstream selectors assume the attribute is present on every descendant
-	 * inside an `nldd-form`, which keeps form.css's adjacent-sibling tight-gap
-	 * rule simple.
-	 *
-	 * The two-attribute split also avoids the historical Lit reflect-default
-	 * vs MutationObserver timing race: we never touch `label-alignment` on
-	 * the descendant, so a freshly upgraded Lit element reflecting its default
-	 * doesn't conflict with the form's intent.
+	 * Hands `label-alignment` to descendant nldd-form-field and nldd-form-actions
+	 * as a custom state, never as their own `label-alignment`, so a value they
+	 * set themselves wins. One that is not defined yet takes it when it connects.
 	 */
-	private _propagateLabelAlignment(value: string | null): void {
-		const fields = this.querySelectorAll<HTMLElement>(DESCENDANT_SELECTOR);
-		fields.forEach(f => f.setAttribute('form-label-alignment', value ?? 'top'));
+	private _propagateLabelAlignment(): void {
+		this.querySelectorAll<HTMLElement>(DESCENDANT_SELECTOR).forEach(field => {
+			if (field.matches(':defined')) syncFormLabelAlignment(field);
+		});
 	}
 
 	private _mirrorAttributes(): void {

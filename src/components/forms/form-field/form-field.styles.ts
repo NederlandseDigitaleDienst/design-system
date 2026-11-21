@@ -38,8 +38,8 @@ export const formFieldStyles = css`
 
 	:host([label-alignment="left"]) .form-field,
 	:host([label-alignment="right"]) .form-field,
-	:host(:not([label-alignment])[form-label-alignment="left"]) .form-field,
-	:host(:not([label-alignment])[form-label-alignment="right"]) .form-field {
+	:host(:not([label-alignment]):state(form-label-left)) .form-field,
+	:host(:not([label-alignment]):state(form-label-right)) .form-field {
 		@container (min-width: ${mdMin}) {
 			flex-direction: row;
 			gap: var(--semantics-forms-columns-gap);
@@ -62,8 +62,8 @@ export const formFieldStyles = css`
 
 	:host([label-alignment="left"]) .form-field__header,
 	:host([label-alignment="right"]) .form-field__header,
-	:host(:not([label-alignment])[form-label-alignment="left"]) .form-field__header,
-	:host(:not([label-alignment])[form-label-alignment="right"]) .form-field__header {
+	:host(:not([label-alignment]):state(form-label-left)) .form-field__header,
+	:host(:not([label-alignment]):state(form-label-right)) .form-field__header {
 		@container (min-width: ${mdMin}) {
 			z-index: auto;
 			width: var(--semantics-forms-label-column-width);
@@ -75,7 +75,7 @@ export const formFieldStyles = css`
 	}
 
 	:host([label-alignment="right"]) .form-field__header,
-	:host(:not([label-alignment])[form-label-alignment="right"]) .form-field__header {
+	:host(:not([label-alignment]):state(form-label-right)) .form-field__header {
 		@container (min-width: ${mdMin}) {
 			align-items: end;
 			text-align: right;
@@ -83,7 +83,7 @@ export const formFieldStyles = css`
 	}
 
 	:host([label-alignment="left"]) .form-field__header,
-	:host(:not([label-alignment])[form-label-alignment="left"]) .form-field__header {
+	:host(:not([label-alignment]):state(form-label-left)) .form-field__header {
 		@container (min-width: ${mdMin}) {
 			align-items: start;
 			text-align: left;
@@ -96,8 +96,8 @@ export const formFieldStyles = css`
 
 	:host([label-alignment="left"]) .form-field__header.is-empty,
 	:host([label-alignment="right"]) .form-field__header.is-empty,
-	:host(:not([label-alignment])[form-label-alignment="left"]) .form-field__header.is-empty,
-	:host(:not([label-alignment])[form-label-alignment="right"]) .form-field__header.is-empty {
+	:host(:not([label-alignment]):state(form-label-left)) .form-field__header.is-empty,
+	:host(:not([label-alignment]):state(form-label-right)) .form-field__header.is-empty {
 		@container (min-width: ${mdMin}) {
 			display: flex;
 		}
@@ -118,8 +118,8 @@ export const formFieldStyles = css`
 
 	:host([label-alignment="left"]) .form-field__label,
 	:host([label-alignment="right"]) .form-field__label,
-	:host(:not([label-alignment])[form-label-alignment="left"]) .form-field__label,
-	:host(:not([label-alignment])[form-label-alignment="right"]) .form-field__label {
+	:host(:not([label-alignment]):state(form-label-left)) .form-field__label,
+	:host(:not([label-alignment]):state(form-label-right)) .form-field__label {
 		@container (min-width: ${mdMin}) {
 			display: flex;
 			flex-direction: column;
@@ -128,14 +128,14 @@ export const formFieldStyles = css`
 	}
 
 	:host([label-alignment="right"]) .form-field__label,
-	:host(:not([label-alignment])[form-label-alignment="right"]) .form-field__label {
+	:host(:not([label-alignment]):state(form-label-right)) .form-field__label {
 		@container (min-width: ${mdMin}) {
 			align-items: end;
 		}
 	}
 
 	:host([label-alignment="left"]) .form-field__label,
-	:host(:not([label-alignment])[form-label-alignment="left"]) .form-field__label {
+	:host(:not([label-alignment]):state(form-label-left)) .form-field__label {
 		@container (min-width: ${mdMin}) {
 			align-items: start;
 		}
