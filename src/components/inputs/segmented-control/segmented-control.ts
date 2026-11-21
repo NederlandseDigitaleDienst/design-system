@@ -27,9 +27,6 @@
  * ---
  *
  * @element nldd-segmented-control-item
- * @attr {'text'|'icon'|'icon-and-text'} variant - Content type: 'text' | 'icon' | 'icon-and-text' (default: 'text'). Set by nldd-segmented-control.
- * @attr {'neutral-tinted'|'neutral-base'} appearance - Visual style: 'neutral-tinted' | 'neutral-base' (default: 'neutral-tinted'). Set by nldd-segmented-control.
- * @attr {'sm'|'md'|'lg'} size - Control size: 'sm' | 'md' | 'lg' (default: 'md'). Set by nldd-segmented-control.
  * @attr {string} text - Text label (shown for variant "text" and "icon-and-text"; used as aria-label and tooltip for variant "icon")
  * @attr {string} icon - Icon name for nldd-icon
  * @attr {string} shortcut - Keyboard shortcut hint shown in the tooltip, e.g. 'Cmd+B'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up the handling in your app. Part of the accessible name ("Vet Cmd B"), as in nldd-menu-item. Hidden on touch-only devices, where it isn't invokable.
@@ -37,9 +34,7 @@
  * @attr {string} shortcut-windows - Override of `shortcut` on Windows (falls back to `shortcut`).
  * @attr {string} shortcut-linux - Override of `shortcut` on Linux (falls back to `shortcut`).
  * @attr {boolean} selected - Whether this item is selected (set by parent)
- * @attr {string} group-name - Name of the group for form submission, put on the native checkbox. Set by nldd-segmented-control.
  * @attr {string} value - Value for this item
- * @attr {'radio'|'checkbox'} input-type - Selection mode: 'radio' | 'checkbox' (default: 'radio'). In radio mode the item is the radio itself, in checkbox mode it renders a native checkbox. Set by nldd-segmented-control.
  * @attr {boolean} required - Required state of the native checkbox. In radio mode the group carries the constraint.
  * @attr {boolean} disabled - Disabled state
  *
@@ -68,11 +63,16 @@ import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
 import { ShortcutAvailabilityController, shortcutLabel } from '../../../utilities/shortcut.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
+import { styleValueState } from '../../../utilities/element-state.js';
 
 export type SegmentedControlAppearance = 'neutral-tinted' | 'neutral-base';
 export type SegmentedControlSize = 'sm' | 'md' | 'lg';
 export type SegmentedControlType = 'radio' | 'checkbox';
 export type SegmentedControlVariant = 'text' | 'icon' | 'icon-and-text';
+
+const VARIANTS: readonly SegmentedControlVariant[] = ['text', 'icon', 'icon-and-text'];
+const APPEARANCES: readonly SegmentedControlAppearance[] = ['neutral-tinted', 'neutral-base'];
+const SIZES: readonly SegmentedControlSize[] = ['sm', 'md', 'lg'];
 
 
 // # nldd-segmented-control-item
@@ -82,16 +82,17 @@ export class NLDDSegmentedControlItem extends LitElement {
 
 	static override styles = segmentedControlItemStyles;
 
-	/** Set by nldd-segmented-control. Not part of the public API. */
-	@property({ reflect: true, attribute: 'variant', converter: reflectNonDefault<SegmentedControlVariant>('text') })
+	/** @internal Set by nldd-segmented-control: the content type of every item.
+	 *  The styles read it as `:state(variant-text)` and so on. */
+	@property({ attribute: false })
 	variant: SegmentedControlVariant = 'text';
 
-	/** Set by nldd-segmented-control. Not part of the public API. */
-	@property({ reflect: true, converter: reflectNonDefault<SegmentedControlAppearance>('neutral-tinted') })
+	/** @internal Set by nldd-segmented-control, read as `:state(appearance-…)`. */
+	@property({ attribute: false })
 	appearance: SegmentedControlAppearance = 'neutral-tinted';
 
-	/** Control size: 'sm' | 'md' | 'lg'. Set by nldd-segmented-control. Not part of the public API. */
-	@property({ reflect: true, converter: reflectNonDefault<SegmentedControlSize>('md') })
+	/** @internal Set by nldd-segmented-control, read as `:state(size-…)`. */
+	@property({ attribute: false })
 	size: SegmentedControlSize = 'md';
 
 	/** Text label for the item. Used as visible text and as aria-label/tooltip for icon variant. */
@@ -118,18 +119,17 @@ export class NLDDSegmentedControlItem extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	selected = false;
 
-	/** Set by nldd-segmented-control. Not part of the public API.
-	 *
-	 * The attribute name is stated: without it Lit derives `groupname`, all
-	 * lowercase, while the documentation has always promised `group-name`. */
-	@property({ type: String, attribute: 'group-name' })
+	/** @internal Set by nldd-segmented-control: the name of the group, put on
+	 *  the native checkbox. */
+	@property({ attribute: false })
 	groupName = '';
 
 	@property({ type: String })
 	value = '';
 
-	/** Set by nldd-segmented-control. Not part of the public API. */
-	@property({ reflect: true, attribute: 'input-type', converter: reflectNonDefault<SegmentedControlType>('radio') })
+	/** @internal Set by nldd-segmented-control: in radio mode the item is the
+	 *  radio itself, in checkbox mode it renders a native checkbox. */
+	@property({ attribute: false })
 	inputType: SegmentedControlType = 'radio';
 
 	@property({ type: Boolean, reflect: true })
@@ -183,6 +183,13 @@ export class NLDDSegmentedControlItem extends LitElement {
 	private _onRadioBlur = (): void => {
 		this._tooltip?._handleTriggerLeave();
 	};
+
+	override willUpdate(changedProperties: Map<string, unknown>): void {
+		super.willUpdate(changedProperties);
+		if (changedProperties.has('variant') || !this.hasUpdated) styleValueState(this, 'variant', this.variant, VARIANTS);
+		if (changedProperties.has('appearance') || !this.hasUpdated) styleValueState(this, 'appearance', this.appearance, APPEARANCES);
+		if (changedProperties.has('size') || !this.hasUpdated) styleValueState(this, 'size', this.size, SIZES);
+	}
 
 	override updated(): void {
 		this._syncRadioAria();

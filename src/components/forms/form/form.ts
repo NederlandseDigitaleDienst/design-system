@@ -1,5 +1,4 @@
 import { PlainElement } from '../../../utilities/custom-element.js';
-import { syncFormLabelAlignment } from '../../../utilities/form-label-alignment.js';
 /**
  * Nederlandse Digitale Dienst Form Component
  *
@@ -368,12 +367,13 @@ export class NLDDForm extends PlainElement {
 
 	/**
 	 * Hands `label-alignment` to descendant nldd-form-field and nldd-form-actions
-	 * as a custom state, never as their own `label-alignment`, so a value they
-	 * set themselves wins. One that is not defined yet takes it when it connects.
+	 * as their `formLabelAlignment` property, never as their own
+	 * `label-alignment`, so a value they set themselves wins.
 	 */
 	private _propagateLabelAlignment(): void {
-		this.querySelectorAll<HTMLElement>(DESCENDANT_SELECTOR).forEach(field => {
-			if (field.matches(':defined')) syncFormLabelAlignment(field);
+		const value = this.getAttribute('label-alignment') ?? undefined;
+		this.querySelectorAll<HTMLElement & { formLabelAlignment?: string }>(DESCENDANT_SELECTOR).forEach(field => {
+			field.formLabelAlignment = value;
 		});
 	}
 

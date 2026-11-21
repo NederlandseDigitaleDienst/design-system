@@ -184,7 +184,7 @@ const SHADOW_TAB_STOP = ':is(a[href], button, input, select, textarea, [tabindex
  * @attr {'simple'|'box-tinted'|'box-base'} appearance - Visual style (default 'simple'): `simple` is a plain vertical strip with no chrome, the two `box` values a framed card with rounded corners, fill and inset border ring. `box-tinted` for a list on a plain page, `box-base` for one on an already-tinted parent (the border ring gets +2 palette steps so it still reads against a card-on-card)
  * @attr {'always'|'on-touch'|'never'} dividers - When to draw the lines between the items (default 'always'). `on-touch` draws them only where the primary input is touch, under `(pointer: coarse)`: a pointer has the hover highlight to tell one row from the next and a finger has nothing, so the line earns its place in the one case and is clutter in the other. `never` hides them everywhere
  * @attr {string} height - Listbox only: caps the options' scroll region at this CSS length (e.g. '320px'). Unset means no cap.
- * @attr {boolean} reorderable - Enables drag-to-reorder and pushes `reorderable` onto the items. Only valid with `type="list"`; there the arrow keys move rows instead of focus.
+ * @attr {boolean} reorderable - Enables drag-to-reorder and shows the items' reorder handles. Only valid with `type="list"`; there the arrow keys move rows instead of focus.
  * @attr {string} accessible-label - Accessible name: of the list in `type="list"`, of the search field in `type="listbox"`, and of the navigation landmark in `type="navigation"`, so several navigation lists on a page can be told apart. Falls back to the i18n default. An `aria-label` or `aria-labelledby` set on the element itself wins.
  * @attr {'list'|'navigation'|'listbox'|'tree'|'form'|'radiogroup'} type - A11y role and behavior (default 'list'). See the docblock above.
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
@@ -546,11 +546,7 @@ export class NLDDList extends LitElement {
 			row.classList.toggle('is-last', row === lastVisible);
 		});
 		items.forEach((item) => {
-			if (reorderActive) {
-				item.setAttribute('reorderable', '');
-			} else {
-				item.removeAttribute('reorderable');
-			}
+			item.reorderable = reorderActive;
 		});
 		this._updateItemContext();
 		this._updateRoving();

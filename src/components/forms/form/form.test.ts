@@ -248,9 +248,11 @@ describe('nldd-form', () => {
 			const field = el.querySelector('nldd-form-field')!;
 
 			el.setAttribute('label-alignment', 'left');
+			await field.updateComplete;
 			expect(alignment(field)).toBe('left');
 
 			el.removeAttribute('label-alignment');
+			await field.updateComplete;
 			expect(alignment(field)).toBe('top');
 			expect(field.hasAttribute('label-alignment')).toBe(false);
 		});
@@ -263,6 +265,7 @@ describe('nldd-form', () => {
 			const actions = document.createElement('nldd-form-actions');
 			el.append(field, actions);
 			await awaitMicrotask();
+			await Promise.all([field.updateComplete, actions.updateComplete]);
 
 			expect(alignment(field)).toBe('right');
 			expect(alignment(actions)).toBe('right');
@@ -317,7 +320,7 @@ describe('nldd-form', () => {
 			await settle();
 			const group = el.querySelector('nldd-radio-button-group')!;
 			expect(group.hasAttribute('invalid')).toBe(true);
-			expect(el.querySelector('nldd-validation-item')!.hasAttribute('visible')).toBe(true);
+			expect((el.querySelector('nldd-validation-item') as HTMLElement & { visible: boolean }).visible).toBe(true);
 
 			(el.querySelector('nldd-radio-button-field') as HTMLElement).click();
 			await settle();

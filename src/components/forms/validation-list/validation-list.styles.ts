@@ -47,11 +47,11 @@ export const validationItemStyles = css`
 		text-wrap: pretty;
 	}
 
-	:host([visible]) {
+	:host(:state(visible)) {
 		display: block;
 	}
 
-	:host([unmet]) {
+	:host(:state(unmet)) {
 		--_validation-item-content-color: var(--semantics-content-critical-color);
 	}
 

@@ -24,7 +24,7 @@ import { template } from './menu-bar.template.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddMenuBarTranslations } from './menu-bar.i18n.js';
 import '../menu-bar-item/menu-bar-item.js';
-import type { NLDDMenuBarItem } from '../menu-bar-item/menu-bar-item.js';
+import { NLDDMenuBarItem } from '../menu-bar-item/menu-bar-item.js';
 import { OverflowMenu } from '../../../utilities/overflow-menu.js';
 import { OverlayInvoker, type InvokableOverlay } from '../../../utilities/overlay-invoker.js';
 import { setState } from '../../../utilities/element-state.js';
@@ -165,11 +165,11 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 		setState(this, 'unnamed', !this.accessibleLabel && !this.hasAttribute('empty'));
 	}
 
-	/** Propagate compact attribute to slotted items. */
+	/** Hands compact on to the slotted items, as a property: it is no attribute of theirs. */
 	private _syncCompactAttribute(): void {
 		const items = this._defaultSlot?.assignedElements({ flatten: true }) ?? [];
 		for (const item of items) {
-			item.toggleAttribute('compact', this.compact);
+			if (item instanceof NLDDMenuBarItem) item.compact = this.compact;
 		}
 	}
 

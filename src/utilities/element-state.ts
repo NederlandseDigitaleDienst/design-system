@@ -52,3 +52,11 @@ export function styleState(element: HTMLElement, name: string, on: boolean): voi
 		// A browser without custom states draws no ring; the field still works.
 	}
 }
+
+/**
+ * One state per value, `${name}-${value}` such as `size-lg`, for a value a
+ * parent hands on: only the current value is on.
+ */
+export function styleValueState<T extends string>(element: HTMLElement, name: string, value: T | undefined, values: readonly T[]): void {
+	for (const each of values) styleState(element, `${name}-${each}`, each === value);
+}

@@ -112,7 +112,7 @@ export class NLDDIconButton extends DescribedBy(withTranslations(LitElement, nld
 	@property({ type: Boolean, reflect: true, attribute: 'expandable' })
 	expandable = false;
 
-	/** Set by a group that draws one border around its controls, such as
+	/** @internal Set by a group that draws one border around its controls, such as
 	 *  nldd-button-bar: drops this control's own highlight border. No attribute:
 	 *  the styles read it as `:state(no-highlight-border)`. */
 	@property({ attribute: false })

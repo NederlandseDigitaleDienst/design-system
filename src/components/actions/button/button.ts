@@ -185,7 +185,7 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	@property({ reflect: true, attribute: 'shortcut-windows', converter: reflectNonDefault<string>('') })
 	shortcutWindows = '';
 
-	/** Set by a group that draws one border around its controls, such as
+	/** @internal Set by a group that draws one border around its controls, such as
 	 *  nldd-button-bar: drops this control's own highlight border. No attribute:
 	 *  the styles read it as `:state(no-highlight-border)`. */
 	@property({ attribute: false })

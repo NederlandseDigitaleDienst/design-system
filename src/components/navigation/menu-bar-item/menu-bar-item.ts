@@ -7,7 +7,6 @@
  * another popover element).
  *
  * @element nldd-menu-bar-item
- * @attr {boolean} compact - Activates content-priority behavior (set by the parent nldd-menu-bar)
  * @attr {boolean} icon-only - Hide the text visually (always). The text then shows as a tooltip on hover and focus.
  * @attr {string} text - Text of the item
  * @attr {string} icon - Optional icon name (nldd-icon)
@@ -31,10 +30,11 @@
  *   items work directly, because nothing is cloned anymore.
  */
 
-import { LitElement } from 'lit';
+import { LitElement, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
+import { styleState } from '../../../utilities/element-state.js';
 import { menuBarItemStyles } from './menu-bar-item.styles.js';
 import { template } from './menu-bar-item.template.js';
 import '../../content/icon/icon.js';
@@ -59,7 +59,10 @@ interface PopoverMenu extends HTMLElement {
 export class NLDDMenuBarItem extends LitElement {
 	static override styles = menuBarItemStyles;
 
-	@property({ type: Boolean, reflect: true })
+	/** @internal Set by nldd-menu-bar and nldd-top-navigation-bar on a narrow
+	 *  screen: turns on content-priority. No attribute: the styles read it as
+	 *  `:state(compact)`. */
+	@property({ attribute: false })
 	compact = false;
 
 	@property({ type: Boolean, attribute: 'icon-only', reflect: true })
@@ -144,6 +147,11 @@ export class NLDDMenuBarItem extends LitElement {
 		// node even before the custom element has upgraded; the toggle
 		// listener attaches to the stable DOM node and survives upgrade.)
 		this._wireMenu();
+	}
+
+	override willUpdate(changed: PropertyValues): void {
+		super.willUpdate(changed);
+		if (changed.has('compact')) styleState(this, 'compact', this.compact);
 	}
 
 	override firstUpdated(): void {

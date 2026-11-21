@@ -2411,26 +2411,6 @@ export const devRules: DevRule[] = [
 		"context": "nldd-segmented-control[type]:not([type=\"checkbox\"], [type=\"radio\"])"
 	},
 	{
-		"id": "invalid-value-segmented-control-item-variant",
-		"message": "`variant` on nldd-segmented-control-item takes: icon, icon-and-text, text.",
-		"context": "nldd-segmented-control-item[variant]:not([variant=\"icon\"], [variant=\"icon-and-text\"], [variant=\"text\"])"
-	},
-	{
-		"id": "invalid-value-segmented-control-item-appearance",
-		"message": "`appearance` on nldd-segmented-control-item takes: neutral-base, neutral-tinted.",
-		"context": "nldd-segmented-control-item[appearance]:not([appearance=\"neutral-base\"], [appearance=\"neutral-tinted\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
-	},
-	{
-		"id": "invalid-value-segmented-control-item-size",
-		"message": "`size` on nldd-segmented-control-item takes: lg, md, sm.",
-		"context": "nldd-segmented-control-item[size]:not([size=\"lg\"], [size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
-	},
-	{
-		"id": "invalid-value-segmented-control-item-input-type",
-		"message": "`input-type` on nldd-segmented-control-item takes: checkbox, radio.",
-		"context": "nldd-segmented-control-item[input-type]:not([input-type=\"checkbox\"], [input-type=\"radio\"])"
-	},
-	{
 		"id": "invalid-value-sheet-placement",
 		"message": "`placement` on nldd-sheet takes: bottom, left, right.",
 		"context": "nldd-sheet[placement]:not([placement=\"bottom\"], [placement=\"left\"], [placement=\"right\"])"
@@ -2711,11 +2691,6 @@ export const devRules: DevRule[] = [
 		"context": "nldd-swatch-picker-item[color]:not([color=\"\"], [color=\"bruin\"], [color=\"donkerblauw\"], [color=\"donkerbruin\"], [color=\"donkergeel\"], [color=\"donkergroen\"], [color=\"geel\"], [color=\"groen\"], [color=\"hemelblauw\"], [color=\"lichtblauw\"], [color=\"lintblauw\"], [color=\"mintgroen\"], [color=\"mosgroen\"], [color=\"oranje\"], [color=\"paars\"], [color=\"robijnrood\"], [color=\"rood\"], [color=\"roze\"], [color=\"violet\"])"
 	},
 	{
-		"id": "invalid-value-swatch-picker-item-size",
-		"message": "`size` on nldd-swatch-picker-item takes: md, sm, xs.",
-		"context": "nldd-swatch-picker-item[size]:not([size=\"md\"], [size=\"sm\"], [size=\"xs\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
-	},
-	{
 		"id": "invalid-value-switch-color",
 		"message": "`color` on nldd-switch takes: content.",
 		"context": "nldd-switch[color]:not([color=\"\"], [color=\"content\"])"
@@ -2934,16 +2909,6 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-toolbar-size",
 		"message": "`size` on nldd-toolbar takes: lg, md, sm.",
 		"context": "nldd-toolbar[size]:not([size=\"lg\"], [size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
-	},
-	{
-		"id": "invalid-value-toolbar-item-size",
-		"message": "`size` on nldd-toolbar-item takes: sm, md, lg.",
-		"context": "nldd-toolbar-item[size]:not([size=\"sm\"], [size=\"md\"], [size=\"lg\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
-	},
-	{
-		"id": "invalid-value-toolbar-title-size",
-		"message": "`size` on nldd-toolbar-title takes: sm, md, lg.",
-		"context": "nldd-toolbar-title[size]:not([size=\"sm\"], [size=\"md\"], [size=\"lg\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
 	},
 	{
 		"id": "invalid-value-toolbar-title-align",

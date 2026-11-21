@@ -164,24 +164,24 @@ export const toolbarItemStyles = css`
 		align-items: center;
 	}
 
-	:host([fluid]) {
+	:host(:state(fluid)) {
 		min-width: var(--_toolbar-item-min-width);
 		flex-shrink: 1;
 		flex-basis: var(--_toolbar-item-width);
 	}
 
-	:host([solo-fluid]) {
+	:host(:state(solo-fluid)) {
 		min-width: 0;
 		flex-grow: 1;
 		flex-shrink: 1;
 		flex-basis: 0;
 	}
 
-	:host([shrinkable]) {
+	:host(:state(shrinkable)) {
 		flex-basis: var(--_toolbar-item-preferred-width);
 	}
 
-	:host([shrunk]) {
+	:host(:state(shrunk)) {
 		min-width: var(--_toolbar-item-shrunk-min-width);
 		max-width: var(--_toolbar-item-preferred-width);
 		flex-grow: 1;
@@ -202,9 +202,9 @@ export const toolbarItemStyles = css`
 		justify-content: center;
 	}
 
-	:host([fluid]) .toolbar__item-content ::slotted(*),
-	:host([solo-fluid]) .toolbar__item-content ::slotted(*),
-	:host([shrinkable]) .toolbar__item-content ::slotted(*) {
+	:host(:state(fluid)) .toolbar__item-content ::slotted(*),
+	:host(:state(solo-fluid)) .toolbar__item-content ::slotted(*),
+	:host(:state(shrinkable)) .toolbar__item-content ::slotted(*) {
 		width: 100%;
 	}
 
@@ -220,7 +220,7 @@ export const toolbarItemStyles = css`
 		white-space: nowrap;
 	}
 
-	:host([show-item-labels]) .toolbar__item-label {
+	:host(:state(show-item-labels)) .toolbar__item-label {
 		display: block;
 	}
 
@@ -257,17 +257,17 @@ export const toolbarTitleStyles = css`
 		align-items: center;
 	}
 
-	:host([size="sm"]) {
+	:host(:state(size-sm)) {
 		--_toolbar-title-group-height: var(--semantics-controls-sm-min-size);
 		--_toolbar-title-font: var(--primitives-font-body-sm-semi-bold-flat);
 		--_toolbar-title-supporting-text-font: var(--primitives-font-body-xxs-regular-flat);
 	}
 
-	:host([size="lg"]) {
+	:host(:state(size-lg)) {
 		--_toolbar-title-group-height: var(--semantics-controls-lg-min-size);
 	}
 
-	:host([solo-fluid]) {
+	:host(:state(solo-fluid)) {
 		min-width: 0;
 		flex-grow: 1;
 		flex-shrink: 1;
@@ -276,7 +276,7 @@ export const toolbarTitleStyles = css`
 
 	/* Sole toolbar element: let the text fill the row instead of capping at
 	   --_toolbar-title-max-width, matching the pre-fit-content stretch behavior. */
-	:host([solo-fluid]) .toolbar__title-group {
+	:host(:state(solo-fluid)) .toolbar__title-group {
 		max-width: none;
 	}
 
@@ -289,8 +289,8 @@ export const toolbarTitleStyles = css`
 	   trailing action, as one unit) along the row's main axis instead. Scoped to
 	   solo-fluid so a title balanced by real start/end items keeps using the
 	   toolbar spacers. */
-	:host([solo-fluid][align="center"]),
-	:host([solo-fluid][slot="center"]) {
+	:host(:state(solo-fluid)[align="center"]),
+	:host(:state(solo-fluid)[slot="center"]) {
 		justify-content: center;
 	}
 

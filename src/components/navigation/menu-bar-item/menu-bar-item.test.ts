@@ -1,6 +1,7 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
+import type { NLDDMenuBarItem } from './menu-bar-item.js';
 import './menu-bar-item.js';
 import '../../content/avatar/avatar.js';
 
@@ -241,14 +242,17 @@ describe('nldd-menu-bar-item', () => {
 		expect(el.getAttribute('content-priority')).toBe('icon');
 	});
 
-	it('reflects compact attribute', async () => {
-		el = await fixture('<nldd-menu-bar-item text="Zoeken" icon="magnifier" compact></nldd-menu-bar-item>');
+	it('turns compact into a state, not an attribute', async () => {
+		el = await fixture('<nldd-menu-bar-item text="Zoeken" icon="magnifier"></nldd-menu-bar-item>');
+		(el as NLDDMenuBarItem).compact = true;
 		await waitForUpdate(el);
-		expect(el.hasAttribute('compact')).toBe(true);
+		expect(el.matches(':state(compact)')).toBe(true);
+		expect(el.hasAttribute('compact')).toBe(false);
 	});
 
 	it('sets aria-label when content-priority="icon" and compact', async () => {
-		el = await fixture('<nldd-menu-bar-item text="Zoeken" icon="magnifier" content-priority="icon" compact></nldd-menu-bar-item>');
+		el = await fixture('<nldd-menu-bar-item text="Zoeken" icon="magnifier" content-priority="icon"></nldd-menu-bar-item>');
+		(el as NLDDMenuBarItem).compact = true;
 		await waitForUpdate(el);
 		const button = el.shadowRoot!.querySelector('button');
 		expect(button!.getAttribute('aria-label')).toBe('Zoeken');
@@ -324,7 +328,8 @@ describe('nldd-menu-bar-item – icon slot', () => {
 	});
 
 	it('keeps only the slotted icon in compact mode with content-priority="icon", named by the text', async () => {
-		el = await fixture('<nldd-menu-bar-item text="Account" content-priority="icon" compact><span slot="icon"></span></nldd-menu-bar-item>');
+		el = await fixture('<nldd-menu-bar-item text="Account" content-priority="icon"><span slot="icon"></span></nldd-menu-bar-item>');
+		(el as NLDDMenuBarItem).compact = true;
 		await waitForUpdate(el);
 		expect(iconArea().hidden).toBe(false);
 		expect(Math.round(text().getBoundingClientRect().width)).toBeLessThanOrEqual(1);
@@ -332,7 +337,8 @@ describe('nldd-menu-bar-item – icon slot', () => {
 	});
 
 	it('hides the slotted icon in compact mode with content-priority="text"', async () => {
-		el = await fixture('<nldd-menu-bar-item text="Account" content-priority="text" compact><span slot="icon"></span></nldd-menu-bar-item>');
+		el = await fixture('<nldd-menu-bar-item text="Account" content-priority="text"><span slot="icon"></span></nldd-menu-bar-item>');
+		(el as NLDDMenuBarItem).compact = true;
 		await waitForUpdate(el);
 		expect(getComputedStyle(iconArea()).display).toBe('none');
 		expect(text().getBoundingClientRect().width).toBeGreaterThan(1);
@@ -402,7 +408,8 @@ describe('nldd-menu-bar-item – icon slot', () => {
 	});
 
 	it('laat een compact item zonder icoon zijn tekst houden, zonder aria-label of tooltip', async () => {
-		el = await fixture('<nldd-menu-bar-item text="Zoeken" content-priority="icon" compact></nldd-menu-bar-item>');
+		el = await fixture('<nldd-menu-bar-item text="Zoeken" content-priority="icon"></nldd-menu-bar-item>');
+		(el as NLDDMenuBarItem).compact = true;
 		await waitForUpdate(el);
 		// Nothing to fall back on, so the text stays visible and is the name.
 		expect(el.shadowRoot!.querySelector('.menu-bar-item')!.hasAttribute('aria-label')).toBe(false);
@@ -420,7 +427,7 @@ describe('nldd-menu-bar-item – icon slot', () => {
 		const control = el.shadowRoot!.querySelector('.menu-bar-item')!;
 		expect(control.hasAttribute('aria-describedby')).toBe(false);
 
-		el.toggleAttribute('compact', true);
+		(el as NLDDMenuBarItem).compact = true;
 		await waitForUpdate(el);
 		expect(tooltip.getAttribute('text')).toBe('Zoeken');
 		expect(control.hasAttribute('aria-describedby')).toBe(false);

@@ -51,8 +51,6 @@
  * what the field wants, after one as what the value does not meet.
  *
  * @attr {boolean} hint - Show this item before there is a verdict, whatever the list says.
- * @attr {boolean} unmet - Whether the value fails this item. Managed by the list; do not set it yourself.
- * @attr {boolean} visible - Whether the item is on screen. Managed by the list.
  * @attr {number} minlength - Fewest characters the value may have. Not held against an empty value unless the field is required.
  * @attr {number} maxlength - Most characters the value may have.
  * @attr {string} match - Regular expression the value has to contain. Not anchored, unlike the native `pattern`: `[A-Z]` means "has a capital in it". Not held against an empty value unless the field is required.
@@ -77,7 +75,7 @@ import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
 import { validationListStyles, validationItemStyles } from './validation-list.styles.js';
 import { validationListTemplate, validationItemTemplate } from './validation-list.template.js';
-import { setState } from '../../../utilities/element-state.js';
+import { setState, styleState } from '../../../utilities/element-state.js';
 import { nlddValidationListTranslations } from './validation-list.i18n.js';
 import type { NLDDValidationListTranslations } from './validation-list.i18n.js';
 import { translate } from '../../../utilities/translations.js';
@@ -103,10 +101,18 @@ export class NLDDValidationItem extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	hint = false;
 
-	@property({ type: Boolean, reflect: true })
+	/**
+	 * @internal Whether the value fails this item. Set by the list; the styles
+	 * read it as `:state(unmet)`.
+	 */
+	@property({ attribute: false })
 	unmet = false;
 
-	@property({ type: Boolean, reflect: true })
+	/**
+	 * @internal Whether the item is on screen. Set by the list; the styles read
+	 * it as `:state(visible)`.
+	 */
+	@property({ attribute: false })
 	visible = false;
 
 	@property({ type: Number })
@@ -159,9 +165,13 @@ export class NLDDValidationItem extends LitElement {
 	 * and on its control's attributes, so the item tells it.
 	 */
 	override updated(changed: PropertyValues) {
-		if (!['match', 'minlength', 'maxlength', 'required'].some((key) => changed.has(key))) return;
-		const list = this.parentElement;
-		if (list instanceof NLDDValidationList) list.requestUpdate();
+		const list = this.parentElement instanceof NLDDValidationList ? this.parentElement : null;
+		if (changed.has('unmet')) styleState(this, 'unmet', this.unmet);
+		if (changed.has('visible')) {
+			styleState(this, 'visible', this.visible);
+			list?.onItemVisibilityChange?.();
+		}
+		if (['match', 'minlength', 'maxlength', 'required'].some((key) => changed.has(key))) list?.requestUpdate();
 	}
 
 	override render() {
@@ -228,6 +238,12 @@ export class NLDDValidationList extends LitElement {
 
 	@property({ type: Object })
 	translations: Partial<NLDDValidationListTranslations> = {};
+
+	/**
+	 * @internal Called when one of the items shows or hides. Set by
+	 * nldd-form-field, which describes its control with the items on screen.
+	 */
+	onItemVisibilityChange: (() => void) | null = null;
 
 	_t(key: keyof NLDDValidationListTranslations, vars?: Record<string, string | number>): string {
 		return translate(this.translations, nlddValidationListTranslations, key, vars);

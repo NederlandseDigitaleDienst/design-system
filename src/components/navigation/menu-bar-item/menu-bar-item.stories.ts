@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 import './menu-bar-item.js';
+import '../menu-bar/menu-bar.js';
 import '../../content/avatar/avatar.js';
 import { ICONS } from '../../content/icon/icon.js';
 import '../../layout/container/container.js';
@@ -13,7 +14,6 @@ export default {
 	component: 'nldd-menu-bar-item',
 	tags: ['autodocs'],
 	args: {
-		compact: false,
 		iconOnly: false,
 		text: 'Aanvragen',
 		icon: '',
@@ -25,7 +25,6 @@ export default {
 		disabled: false,
 	},
 	argTypes: {
-		compact: { control: 'boolean', description: 'Activeert content-priority gedrag (gezet door parent)', table: { defaultValue: { summary: false } } },
 		iconOnly: { name: 'icon-only', control: 'boolean', description: 'Verberg tekst visueel (altijd)', table: { defaultValue: { summary: false } } },
 		text: { control: 'text', description: 'Tekst van het item' },
 		icon: { control: 'select', options: ['(geen)', ...ICONS], mapping: { '(geen)': '' }, description: 'Icon naam (nldd-icon)', table: { defaultValue: { summary: '(geen)' } } },
@@ -46,7 +45,6 @@ export default {
 };
 
 const Template = ({
-	compact,
 	iconOnly,
 	text,
 	icon,
@@ -58,7 +56,6 @@ const Template = ({
 	disabled,
 }: Record<string, unknown>) => html`
 	<nldd-menu-bar-item
-		?compact=${compact}
 		?icon-only=${iconOnly}
 		text=${text || nothing}
 		icon=${icon || nothing}
@@ -109,11 +106,18 @@ export const AlleenIcoon = {
 	},
 };
 
+/** Compact is what a bar sets on its items on a narrow screen, so these sit in one. */
+const CompactTemplate = (args: Record<string, unknown>) => html`
+	<nldd-menu-bar
+		compact
+		accessible-label="Menu"
+	>${Template(args)}</nldd-menu-bar>
+`;
+
 export const ContentPriorityIcon = {
 	name: 'Content-priority icon',
-	render: Template,
+	render: CompactTemplate,
 	args: {
-		compact: true,
 		text: 'Zoeken',
 		icon: 'magnifier',
 		contentPriority: 'icon',
@@ -122,9 +126,8 @@ export const ContentPriorityIcon = {
 
 export const ContentPriorityText = {
 	name: 'Content-priority text',
-	render: Template,
+	render: CompactTemplate,
 	args: {
-		compact: true,
 		text: 'Mijn account',
 		icon: 'person',
 		contentPriority: 'text',
@@ -162,8 +165,8 @@ export const MetExpandable = {
  * Het `icon`-slot neemt de plek van het icoon in, bijvoorbeeld voor een
  * `nldd-avatar` van wie er is ingelogd. Het krijgt de maat van een icoon en
  * volgt `content-priority` en `icon-only` zoals het icoon dat doet: het tweede
- * item is `compact` en toont alleen de avatar, met de tekst als toegankelijke
- * naam.
+ * item staat in een compacte `nldd-menu-bar` en toont alleen de avatar, met
+ * de tekst als toegankelijke naam.
  */
 export const MetAvatar = {
 	name: 'Met avatar',
@@ -189,24 +192,28 @@ export const MetAvatar = {
 					<nldd-menu-item text="Log uit"></nldd-menu-item>
 				</nldd-menu>
 			</nldd-menu-bar-item>
-			<nldd-menu-bar-item
-				text="Mijn account"
-				expandable
-				content-priority="icon"
+			<nldd-menu-bar
 				compact
+				accessible-label="Account"
 			>
-				<nldd-avatar
-					slot="icon"
-					color="content"
-					name="Anouk de Vries"
-					decorative
-					icon-aligned
-				></nldd-avatar>
-				<nldd-menu>
-					<nldd-menu-item text="Profiel"></nldd-menu-item>
-					<nldd-menu-item text="Log uit"></nldd-menu-item>
-				</nldd-menu>
-			</nldd-menu-bar-item>
+				<nldd-menu-bar-item
+					text="Mijn account"
+					expandable
+					content-priority="icon"
+				>
+					<nldd-avatar
+						slot="icon"
+						color="content"
+						name="Anouk de Vries"
+						decorative
+						icon-aligned
+					></nldd-avatar>
+					<nldd-menu>
+						<nldd-menu-item text="Profiel"></nldd-menu-item>
+						<nldd-menu-item text="Log uit"></nldd-menu-item>
+					</nldd-menu>
+				</nldd-menu-bar-item>
+			</nldd-menu-bar>
 		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
@@ -237,23 +244,31 @@ export const AlleToestanden = {
 				icon="magnifier"
 				content-priority="icon"
 			></nldd-menu-bar-item>
-			<nldd-menu-bar-item
-				text="Voorrang icoon (compact)"
-				icon="magnifier"
-				content-priority="icon"
+			<nldd-menu-bar
 				compact
-			></nldd-menu-bar-item>
+				accessible-label="Voorrang icoon"
+			>
+				<nldd-menu-bar-item
+					text="Voorrang icoon (compact)"
+					icon="magnifier"
+					content-priority="icon"
+				></nldd-menu-bar-item>
+			</nldd-menu-bar>
 			<nldd-menu-bar-item
 				text="Voorrang tekst"
 				icon="person"
 				content-priority="text"
 			></nldd-menu-bar-item>
-			<nldd-menu-bar-item
-				text="Voorrang tekst (compact)"
-				icon="person"
-				content-priority="text"
+			<nldd-menu-bar
 				compact
-			></nldd-menu-bar-item>
+				accessible-label="Voorrang tekst"
+			>
+				<nldd-menu-bar-item
+					text="Voorrang tekst (compact)"
+					icon="person"
+					content-priority="text"
+				></nldd-menu-bar-item>
+			</nldd-menu-bar>
 			<nldd-menu-bar-item
 				text="Uitgeschakeld"
 				disabled

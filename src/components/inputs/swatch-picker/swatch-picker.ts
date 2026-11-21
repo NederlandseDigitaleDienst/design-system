@@ -36,7 +36,6 @@
  * @element nldd-swatch-picker-item
  * @attr {'lintblauw'|'donkerblauw'|'hemelblauw'|'lichtblauw'|'paars'|'violet'|'robijnrood'|'roze'|'rood'|'oranje'|'donkergeel'|'geel'|'donkerbruin'|'bruin'|'donkergroen'|'groen'|'mosgroen'|'mintgroen'} color - Category color: 'lintblauw' | 'donkerblauw' | 'hemelblauw' | 'lichtblauw' | 'paars' | 'violet' | 'robijnrood' | 'roze' | 'rood' | 'oranje' | 'donkergeel' | 'geel' | 'donkerbruin' | 'bruin' | 'donkergroen' | 'groen' | 'mosgroen' | 'mintgroen'. Brings its name along, so `text` is optional.
  * @attr {string} custom-color - Any CSS color of your own (e.g. '#7a1f3d' or 'var(--brand-color)'), for a color outside the categories. Needs `text`.
- * @attr {'xs'|'sm'|'md'} size - Swatch size: 'xs' | 'sm' | 'md' (set by the picker, default: 'md')
  * @attr {string} text - Name of the swatch, for screen readers and the tooltip. Overrides the name of a category `color`.
  * @attr {string} image - URL of an image that fills the swatch, for a pattern or a material. Needs `text`.
  * @attr {string} image-srcset - Sources of the image at other pixel densities, with x descriptors (e.g. '/oak.jpg 1x, /oak@2x.jpg 2x'). The swatch has a fixed size, so there are no widths to choose from.
@@ -55,6 +54,7 @@ import { radioPositions, type RadioPosition } from '../../../utilities/radio-pos
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
+import { styleValueState } from '../../../utilities/element-state.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import type { NLDDTooltip } from '../../content/tooltip/tooltip.js';
 import { swatchPickerStyles, swatchPickerItemStyles } from './swatch-picker.styles.js';
@@ -66,6 +66,7 @@ import '../../content/icon/icon.js';
 const NAME_AFTER_TAP_MS = 1500;
 
 export type SwatchPickerSize = 'xs' | 'sm' | 'md';
+const SIZES: readonly SwatchPickerSize[] = ['xs', 'sm', 'md'];
 export type SwatchColor = 'lintblauw' | 'donkerblauw' | 'hemelblauw' | 'lichtblauw' | 'paars' | 'violet' | 'robijnrood' | 'roze' | 'rood' | 'oranje' | 'donkergeel' | 'geel' | 'donkerbruin' | 'bruin' | 'donkergroen' | 'groen' | 'mosgroen' | 'mintgroen';
 
 
@@ -81,8 +82,9 @@ export class NLDDSwatchPickerItem extends withTranslations(LitElement, nlddSwatc
 	@property({ reflect: true, attribute: 'custom-color', converter: reflectNonDefault<string>('') })
 	customColor = '';
 
-	/** Set by nldd-swatch-picker. Not part of the public API. */
-	@property({ reflect: true, converter: reflectNonDefault<SwatchPickerSize>('md') })
+	/** @internal Set by nldd-swatch-picker. The styles read it as `:state(size-xs)`
+	 *  and so on. */
+	@property({ attribute: false })
 	size: SwatchPickerSize = 'md';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
@@ -143,6 +145,11 @@ export class NLDDSwatchPickerItem extends withTranslations(LitElement, nlddSwatc
 		this.removeEventListener('focus', this._onFocus);
 		this.removeEventListener('blur', this._onBlur);
 		this._hideName();
+	}
+
+	override willUpdate(changedProperties: Map<string, unknown>): void {
+		super.willUpdate(changedProperties);
+		if (changedProperties.has('size') || !this.hasUpdated) styleValueState(this, 'size', this.size, SIZES);
 	}
 
 	override updated(changedProperties: Map<string, unknown>): void {

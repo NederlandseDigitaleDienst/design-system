@@ -440,7 +440,7 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 		// Internal items not inside a menu-bar (menu-button, back-button)
 		const internalItems = this.shadowRoot?.querySelectorAll('nldd-menu-bar-item') ?? [];
 		for (const item of internalItems) {
-			item.toggleAttribute('compact', isCompact);
+			(item as NLDDMenuBarItem).compact = isCompact;
 		}
 
 		this._syncHasGlobalItems();

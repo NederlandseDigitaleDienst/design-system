@@ -111,7 +111,7 @@ export class NLDDRadioButton extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-	/** Set by nldd-radio-button-field, which is the radio and holds the focus,
+	/** @internal Set by nldd-radio-button-field, which is the radio and holds the focus,
 	 *  while the shape it rings is drawn here. No attribute: the styles read it
 	 *  as `:state(focus-ring)`. */
 	@property({ attribute: false })

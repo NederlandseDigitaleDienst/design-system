@@ -1,6 +1,7 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate, nextFrames, until } from '../../../test-utils.js';
 import type { NLDDMenuBar } from './menu-bar.js';
+import type { NLDDMenuBarItem } from '../menu-bar-item/menu-bar-item.js';
 import './menu-bar.js';
 
 describe('nldd-menu-bar', () => {
@@ -291,7 +292,7 @@ describe('nldd-menu-bar – compact propagation', () => {
 		document.querySelectorAll('nldd-menu').forEach(m => m.remove());
 	});
 
-	it('propagates compact attribute to slotted items', async () => {
+	it('hands compact on to slotted items as a state, not an attribute', async () => {
 		el = await fixture(`
 			<nldd-menu-bar compact>
 				<nldd-menu-bar-item text="Home"></nldd-menu-bar-item>
@@ -299,23 +300,28 @@ describe('nldd-menu-bar – compact propagation', () => {
 			</nldd-menu-bar>
 		`);
 		await waitForUpdate(el);
-		const items = el.querySelectorAll('nldd-menu-bar-item');
-		expect(items[0].hasAttribute('compact')).toBe(true);
-		expect(items[1].hasAttribute('compact')).toBe(true);
+		const items = el.querySelectorAll<NLDDMenuBarItem>('nldd-menu-bar-item');
+		await Promise.all([...items].map(item => item.updateComplete));
+		expect(items[0].matches(':state(compact)')).toBe(true);
+		expect(items[1].matches(':state(compact)')).toBe(true);
+		expect(items[0].hasAttribute('compact')).toBe(false);
 	});
 
-	it('removes compact attribute from items when compact is removed', async () => {
+	it('takes compact off the items when compact is removed', async () => {
 		el = await fixture(`
 			<nldd-menu-bar compact>
 				<nldd-menu-bar-item text="Home"></nldd-menu-bar-item>
 			</nldd-menu-bar>
 		`);
 		await waitForUpdate(el);
-		expect(el.querySelector('nldd-menu-bar-item')!.hasAttribute('compact')).toBe(true);
+		const item = el.querySelector<NLDDMenuBarItem>('nldd-menu-bar-item')!;
+		await item.updateComplete;
+		expect(item.matches(':state(compact)')).toBe(true);
 
 		(el as NLDDMenuBar).compact = false;
 		await waitForUpdate(el);
-		expect(el.querySelector('nldd-menu-bar-item')!.hasAttribute('compact')).toBe(false);
+		await item.updateComplete;
+		expect(item.matches(':state(compact)')).toBe(false);
 	});
 });
 

@@ -474,18 +474,12 @@ One control in an nldd-toolbar, with its alternative for the overflow menu.
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `size` | `'sm'\|'md'\|'lg'` | Set by nldd-toolbar, not a consumer attribute: mirrors the toolbar's size (default: 'md') onto the item host, so size-dependent styling can key off it. |
-| `show-item-labels` | `boolean` | Set by nldd-toolbar, not a consumer attribute: mirrors the toolbar's show-item-labels, so the item renders its label below the control. |
 | `width` | `string` | Fluid width: a percentage (e.g. '40%') or any CSS length (e.g. '240px'). Setting it (or min-width or max-width) makes the item fluid so it grows to fill the available space. |
 | `min-width` | `string` | Minimum (fluid) width as a CSS length (e.g. '240px'). Setting it also makes the item fluid. |
 | `max-width` | `string` | Maximum (fluid) width as a CSS length (e.g. '480px'). Setting it also makes the item fluid. |
-| `fluid` | `boolean` | Set by nldd-toolbar, not a consumer attribute: marks an item that grows or shrinks to fill space. Toggled synchronously during measurement, so it can appear or disappear between layout frames, so do not style against it. It is not reflected as a JS property, so read it with hasAttribute('fluid'). |
-| `solo-fluid` | `boolean` | Set by nldd-toolbar, not a consumer attribute: the sole fluid item, allowed to shrink below its content. Same synchronous-toggle and property-read caveats as fluid. |
-| `shrinkable` | `boolean` | Set by nldd-toolbar, not a consumer attribute: the item holds a control that overflows by itself (nldd-tab-bar), so it gets the width that control wants with everything shown. Same synchronous-toggle caveat. |
 | `label` | `string` | Text label shown below the item when the toolbar has show-item-labels. |
 | `priority` | `number` | Overflow order: items with a lower priority move into the overflow menu first (default 0). Items sharing a priority overflow together, regardless of position. |
-| `shrunk` | `boolean` | Set by nldd-toolbar, not a consumer attribute: a shrinkable item narrowed down to what its control needs at least, before it would move into the overflow menu. Same synchronous-toggle caveat. |
-| `hidden` | `boolean` | Set by nldd-toolbar, not a consumer attribute, when the item moves into the overflow menu. Same synchronous-toggle caveat. |
+| `hidden` | `boolean` | Set by nldd-toolbar, not a consumer attribute, when the item moves into the overflow menu. Toggled synchronously during measurement, so do not style against it. |
 
 **Slots**
 
@@ -506,7 +500,6 @@ The title of an nldd-toolbar, with optional media before it and an action after 
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `size` | `'sm'\|'md'\|'lg'` | Set by nldd-toolbar, not a consumer attribute: mirrors the toolbar's size (default: 'md'), which sets the title group height and, at 'sm', the title and supporting-text fonts. |
 | `width` | `string` | Preferred (fluid) width as a CSS length or percentage; the title grows toward it and shrinks to min-width. |
 | `min-width` | `string` | Minimum width as a CSS length (default: the width of its own text, up to `max-width`). Items move into the overflow menu before the title gets narrower than this; only when no item is left to move does the title truncate below it. Set `0` to let the title shrink first. |
 | `max-width` | `string` | Maximum width as a CSS length (default: '240px'); the title text truncates with an ellipsis beyond it. The cap is lifted while the title is the sole toolbar element (it then stretches to fill the row). |
@@ -1245,7 +1238,7 @@ A field around one input: its label, supporting label, optional badge, validatio
 | `label-alignment` | `'top'\|'right'\|'left'` | 'top' (default) \| 'right' \| 'left'. A value of its own wins over the one of a wrapping nldd-form. |
 | `label` | `string` | Field label text. Omit for no-label layout. Supports **bold** markdown syntax, for the word to type in a confirmation; the accessible name of the control takes the text without the markers. |
 | `supporting-label` | `string` | Short supporting text below the label. Same typography as optional badge. Supports **bold** markdown syntax. |
-| `optional` | `boolean` | Shows an optional badge next to the label. |
+| `optional` | `boolean` | Shows an optional badge next to the label. Its text is the translation key `components.form-field.optional-label` ("Optioneel"). |
 | `translations` | `object` | Override translation keys, such as the text of the optional badge; unset keys fall back to Dutch |
 
 **Slots**
@@ -1290,8 +1283,6 @@ One requirement of a value, with the rule that checks it. Give every item an id 
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `hint` | `boolean` | Show this item before there is a verdict, whatever the list says. |
-| `unmet` | `boolean` | Whether the value fails this item. Managed by the list; do not set it yourself. |
-| `visible` | `boolean` | Whether the item is on screen. Managed by the list. |
 | `minlength` | `number` | Fewest characters the value may have. Not held against an empty value unless the field is required. |
 | `maxlength` | `number` | Most characters the value may have. |
 | `match` | `string` | Regular expression the value has to contain. Not anchored, unlike the native `pattern`: `[A-Z]` means "has a capital in it". Not held against an empty value unless the field is required. |
@@ -2070,9 +2061,6 @@ A horizontal group of mutually exclusive (radio) or multi-select (checkbox) opti
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `variant` | `'text'\|'icon'\|'icon-and-text'` | Content type: 'text' \| 'icon' \| 'icon-and-text' (default: 'text'). Set by nldd-segmented-control. |
-| `appearance` | `'neutral-tinted'\|'neutral-base'` | Visual style: 'neutral-tinted' \| 'neutral-base' (default: 'neutral-tinted'). Set by nldd-segmented-control. |
-| `size` | `'sm'\|'md'\|'lg'` | Control size: 'sm' \| 'md' \| 'lg' (default: 'md'). Set by nldd-segmented-control. |
 | `text` | `string` | Text label (shown for variant "text" and "icon-and-text"; used as aria-label and tooltip for variant "icon") |
 | `icon` | `string` | Icon name for nldd-icon |
 | `shortcut` | `string` | Keyboard shortcut hint shown in the tooltip, e.g. 'Cmd+B'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up the handling in your app. Part of the accessible name ("Vet Cmd B"), as in nldd-menu-item. Hidden on touch-only devices, where it isn't invokable. |
@@ -2080,9 +2068,7 @@ A horizontal group of mutually exclusive (radio) or multi-select (checkbox) opti
 | `shortcut-windows` | `string` | Override of `shortcut` on Windows (falls back to `shortcut`). |
 | `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
 | `selected` | `boolean` | Whether this item is selected (set by parent) |
-| `group-name` | `string` | Name of the group for form submission, put on the native checkbox. Set by nldd-segmented-control. |
 | `value` | `string` | Value for this item |
-| `input-type` | `'radio'\|'checkbox'` | Selection mode: 'radio' \| 'checkbox' (default: 'radio'). In radio mode the item is the radio itself, in checkbox mode it renders a native checkbox. Set by nldd-segmented-control. |
 | `required` | `boolean` | Required state of the native checkbox. In radio mode the group carries the constraint. |
 | `disabled` | `boolean` | Disabled state |
 
@@ -2216,7 +2202,6 @@ A row of swatches to choose one from: a color, or an image of a pattern or a mat
 | --- | --- | --- |
 | `color` | `'lintblauw'\|'donkerblauw'\|'hemelblauw'\|'lichtblauw'\|'paars'\|'violet'\|'robijnrood'\|'roze'\|'rood'\|'oranje'\|'donkergeel'\|'geel'\|'donkerbruin'\|'bruin'\|'donkergroen'\|'groen'\|'mosgroen'\|'mintgroen'` | Category color: 'lintblauw' \| 'donkerblauw' \| 'hemelblauw' \| 'lichtblauw' \| 'paars' \| 'violet' \| 'robijnrood' \| 'roze' \| 'rood' \| 'oranje' \| 'donkergeel' \| 'geel' \| 'donkerbruin' \| 'bruin' \| 'donkergroen' \| 'groen' \| 'mosgroen' \| 'mintgroen'. Brings its name along, so `text` is optional. |
 | `custom-color` | `string` | Any CSS color of your own (e.g. '#7a1f3d' or 'var(--brand-color)'), for a color outside the categories. Needs `text`. |
-| `size` | `'xs'\|'sm'\|'md'` | Swatch size: 'xs' \| 'sm' \| 'md' (set by the picker, default: 'md') |
 | `text` | `string` | Name of the swatch, for screen readers and the tooltip. Overrides the name of a category `color`. |
 | `image` | `string` | URL of an image that fills the swatch, for a pattern or a material. Needs `text`. |
 | `image-srcset` | `string` | Sources of the image at other pixel densities, with x descriptors (e.g. '/oak.jpg 1x, /oak@2x.jpg 2x'). The swatch has a fixed size, so there are no widths to choose from. |
@@ -3922,7 +3907,6 @@ Interactive building block for use in a menu bar. Renders as an <a> (with href) 
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `compact` | `boolean` | Activates content-priority behavior (set by the parent nldd-menu-bar) |
 | `icon-only` | `boolean` | Hide the text visually (always). The text then shows as a tooltip on hover and focus. |
 | `text` | `string` | Text of the item |
 | `icon` | `string` | Optional icon name (nldd-icon) |
@@ -4688,7 +4672,7 @@ A container for `nldd-list-item` elements. The `type` attribute switches the lis
 | `appearance` | `'simple'\|'box-tinted'\|'box-base'` | Visual style (default 'simple'): `simple` is a plain vertical strip with no chrome, the two `box` values a framed card with rounded corners, fill and inset border ring. `box-tinted` for a list on a plain page, `box-base` for one on an already-tinted parent (the border ring gets +2 palette steps so it still reads against a card-on-card) |
 | `dividers` | `'always'\|'on-touch'\|'never'` | When to draw the lines between the items (default 'always'). `on-touch` draws them only where the primary input is touch, under `(pointer: coarse)`: a pointer has the hover highlight to tell one row from the next and a finger has nothing, so the line earns its place in the one case and is clutter in the other. `never` hides them everywhere |
 | `height` | `string` | Listbox only: caps the options' scroll region at this CSS length (e.g. '320px'). Unset means no cap. |
-| `reorderable` | `boolean` | Enables drag-to-reorder and pushes `reorderable` onto the items. Only valid with `type="list"`; there the arrow keys move rows instead of focus. |
+| `reorderable` | `boolean` | Enables drag-to-reorder and shows the items' reorder handles. Only valid with `type="list"`; there the arrow keys move rows instead of focus. |
 | `accessible-label` | `string` | Accessible name: of the list in `type="list"`, of the search field in `type="listbox"`, and of the navigation landmark in `type="navigation"`, so several navigation lists on a page can be told apart. Falls back to the i18n default. An `aria-label` or `aria-labelledby` set on the element itself wins. |
 | `type` | `'list'\|'navigation'\|'listbox'\|'tree'\|'form'\|'radiogroup'` | A11y role and behavior (default 'list'). See the docblock above. |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
@@ -4750,7 +4734,6 @@ A row within an `nldd-list`. Renders as a link when `href` is set, as a checkbox
 | `checkbox` | `boolean` | Makes the whole row a `role="checkbox"` control. Wins over `button`, loses to `href`. |
 | `radio` | `boolean` | Makes the whole row one radio of a group: the action becomes a `role="radio"` button carrying `aria-checked`, and activation sets `checked` (never clears it) and fires `change`. Put the rows in an `nldd-list type="radiogroup"`, which is what makes them a set. Wins over `button`, loses to `href` and `checkbox`. The arrow keys move focus without checking, where a native radio group and `nldd-radio-button-group` check as they go: a row can carry more than a label, so stepping past one should not commit it. |
 | `expandable` | `boolean` | The row opens something, also while it is closed: without `expanded` it says "collapsed" instead of nothing. This is how markup writes a closed disclosure, since an attribute can only be there or not. A row with children in a tree already is one. |
-| `reorderable` | `boolean` | Set by the parent `nldd-list` when its own `reorderable` is on (with `type="list"`); consumers do not set this. Serves as a CSS hook for drag handle visibility. |
 | `accessible-label` | `string` | Accessible name of the row's action (its link, button, checkbox or radio), for a row whose text does not say enough on its own. It replaces the content of the whole row for assistive technology, the supporting text and a status included, so set it only when the row has no text of its own, or put everything that matters in it. Start it with the row's visible title, so voice control finds the row by the words on screen (WCAG 2.5.3); development warns when it does not. The hint for another website or a new tab is added to it. |
 | `current-type` | `'page'\|'step'\|'location'\|'date'\|'time'\|'true'` | The `aria-current` value a `current` or `selected` row puts on its action in a `navigation` parent (default 'page'). Use 'location' for a table of contents, whose rows point at sections of the page you are on. |
 | `selected` | `boolean` | Marks the item as selected: it is one of the rows you picked. Selection is consumer-managed; the list never sets it. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value; in a `listbox` parent it drives `aria-selected`. |

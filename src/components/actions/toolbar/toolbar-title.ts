@@ -6,7 +6,10 @@ import { toolbarTitleStyles } from './toolbar.styles.js';
 import { toolbarTitleTemplate } from './toolbar-title.template.js';
 import { nlddToolbarTranslations, type NLDDToolbarTranslations } from './toolbar.i18n.js';
 import { translate } from '../../../utilities/translations.js';
+import { styleState, styleValueState } from '../../../utilities/element-state.js';
 import type { Size } from './toolbar-item.js';
+
+const SIZES: readonly Size[] = ['sm', 'md', 'lg'];
 
 type TitleAlign = 'left' | 'center';
 
@@ -14,7 +17,6 @@ type TitleAlign = 'left' | 'center';
  * The title of an nldd-toolbar, with optional media before it and an action after it.
  *
  * @element nldd-toolbar-title
- * @attr {'sm'|'md'|'lg'} size - Set by nldd-toolbar, not a consumer attribute: mirrors the toolbar's size (default: 'md'), which sets the title group height and, at 'sm', the title and supporting-text fonts.
  * @attr {string} width - Preferred (fluid) width as a CSS length or percentage; the title grows toward it and shrinks to min-width.
  * @attr {string} min-width - Minimum width as a CSS length (default: the width of its own text, up to `max-width`). Items move into the overflow menu before the title gets narrower than this; only when no item is left to move does the title truncate below it. Set `0` to let the title shrink first.
  * @attr {string} max-width - Maximum width as a CSS length (default: '240px'); the title text truncates with an ellipsis beyond it. The cap is lifted while the title is the sole toolbar element (it then stretches to fill the row).
@@ -32,10 +34,6 @@ type TitleAlign = 'left' | 'center';
 @customElement('nldd-toolbar-title')
 export class NLDDToolbarTitle extends LitElement {
 	static override styles = toolbarTitleStyles;
-
-	/** Set by nldd-toolbar; not part of the public API. @internal */
-	@property({ reflect: true, converter: reflectNonDefault<Size>('md') })
-	size: Size = 'md';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	width = '';
@@ -68,9 +66,24 @@ export class NLDDToolbarTitle extends LitElement {
 		return translate(this.translations, nlddToolbarTranslations, key);
 	}
 
-	// Layout state — `solo-fluid` and `hidden` — is owned by nldd-toolbar and
-	// toggled directly as attributes during measurement (synchronous). Not a
-	// reactive property for the same reflection-timing reason as the item.
+	private _size: Size = 'md';
+	private _soloFluid = false;
+
+	/** @internal The toolbar's size: the title group height and, at 'sm', the fonts. Not an attribute: the toolbar sets it. Read as `:state(size-sm)` and the like, flipped synchronously because the toolbar measures right after. */
+	get size(): Size { return this._size; }
+	/** @internal */
+	set size(value: Size) {
+		this._size = value;
+		styleValueState(this, 'size', value, SIZES);
+	}
+
+	/** @internal Set by nldd-toolbar during measurement: the title is the sole element and fills the row. Read as `:state(solo-fluid)`. */
+	get soloFluid(): boolean { return this._soloFluid; }
+	/** @internal */
+	set soloFluid(on: boolean) {
+		this._soloFluid = on;
+		styleState(this, 'solo-fluid', on);
+	}
 
 	// willUpdate (not updated) so the size CSS variables are written before the
 	// toolbar measures the title with getBoundingClientRect() on the same frame.

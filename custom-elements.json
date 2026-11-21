@@ -477,15 +477,6 @@
             },
             {
               "kind": "field",
-              "name": "noHighlightBorder",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Set by a group that draws one border around its controls, such as\nnldd-button-bar: drops this control's own highlight border. No attribute:\nthe styles read it as `:state(no-highlight-border)`."
-            },
-            {
-              "kind": "field",
               "name": "shortcutLinux",
               "type": {
                 "text": "string"
@@ -1174,15 +1165,6 @@
               "default": "false",
               "attribute": "expandable",
               "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "noHighlightBorder",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Set by a group that draws one border around its controls, such as\nnldd-button-bar: drops this control's own highlight border. No attribute:\nthe styles read it as `:state(no-highlight-border)`."
             },
             {
               "kind": "field",
@@ -4070,20 +4052,6 @@
           "attributes": [
             {
               "type": {
-                "text": "'sm'|'md'|'lg'"
-              },
-              "description": "Set by nldd-toolbar, not a consumer attribute: mirrors the toolbar's size (default: 'md') onto the item host, so size-dependent styling can key off it.",
-              "name": "size"
-            },
-            {
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Set by nldd-toolbar, not a consumer attribute: mirrors the toolbar's show-item-labels, so the item renders its label below the control.",
-              "name": "show-item-labels"
-            },
-            {
-              "type": {
                 "text": "string"
               },
               "description": "Fluid width: a percentage (e.g. '40%') or any CSS length (e.g. '240px'). Setting it (or min-width or max-width) makes the item fluid so it grows to fill the available space.",
@@ -4111,27 +4079,6 @@
             },
             {
               "type": {
-                "text": "boolean"
-              },
-              "description": "Set by nldd-toolbar, not a consumer attribute: marks an item that grows or shrinks to fill space. Toggled synchronously during measurement, so it can appear or disappear between layout frames, so do not style against it. It is not reflected as a JS property, so read it with hasAttribute('fluid').",
-              "name": "fluid"
-            },
-            {
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Set by nldd-toolbar, not a consumer attribute: the sole fluid item, allowed to shrink below its content. Same synchronous-toggle and property-read caveats as fluid.",
-              "name": "solo-fluid"
-            },
-            {
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Set by nldd-toolbar, not a consumer attribute: the item holds a control that overflows by itself (nldd-tab-bar), so it gets the width that control wants with everything shown. Same synchronous-toggle caveat.",
-              "name": "shrinkable"
-            },
-            {
-              "type": {
                 "text": "string"
               },
               "description": "Text label shown below the item when the toolbar has show-item-labels.",
@@ -4152,14 +4099,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Set by nldd-toolbar, not a consumer attribute: a shrinkable item narrowed down to what its control needs at least, before it would move into the overflow menu. Same synchronous-toggle caveat.",
-              "name": "shrunk"
-            },
-            {
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Set by nldd-toolbar, not a consumer attribute, when the item moves into the overflow menu. Same synchronous-toggle caveat.",
+              "description": "Set by nldd-toolbar, not a consumer attribute, when the item moves into the overflow menu. Toggled synchronously during measurement, so do not style against it.",
               "name": "hidden"
             }
           ],
@@ -4300,13 +4240,6 @@
             }
           ],
           "attributes": [
-            {
-              "type": {
-                "text": "'sm'|'md'|'lg'"
-              },
-              "description": "Set by nldd-toolbar, not a consumer attribute: mirrors the toolbar's size (default: 'md'), which sets the title group height and, at 'sm', the title and supporting-text fonts.",
-              "name": "size"
-            },
             {
               "type": {
                 "text": "string"
@@ -9083,7 +9016,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Shows an optional badge next to the label.",
+              "description": "Shows an optional badge next to the label. Its text is the translation key `components.form-field.optional-label` (\"Optioneel\").",
               "fieldName": "optional"
             },
             {
@@ -9387,26 +9320,6 @@
             },
             {
               "kind": "field",
-              "name": "unmet",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "unmet",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "visible",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "visible",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "minlength",
               "type": {
                 "text": "number | undefined"
@@ -9479,24 +9392,6 @@
               "default": "false",
               "fieldName": "hint",
               "description": "Show this item before there is a verdict, whatever the list says."
-            },
-            {
-              "name": "unmet",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "unmet",
-              "description": "Whether the value fails this item. Managed by the list; do not set it yourself."
-            },
-            {
-              "name": "visible",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "visible",
-              "description": "Whether the item is on screen. Managed by the list."
             },
             {
               "name": "minlength",
@@ -21292,15 +21187,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "focusRing",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Set by nldd-radio-button-field, which is the radio and holds the focus,\nwhile the shape it rings is drawn here. No attribute: the styles read it\nas `:state(focus-ring)`."
-            },
-            {
               "kind": "method",
               "name": "describedTarget",
               "return": {
@@ -22683,39 +22569,6 @@
           "members": [
             {
               "kind": "field",
-              "name": "variant",
-              "type": {
-                "text": "SegmentedControlVariant"
-              },
-              "default": "'text'",
-              "description": "Set by nldd-segmented-control. Not part of the public API.",
-              "attribute": "variant",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "appearance",
-              "type": {
-                "text": "SegmentedControlAppearance"
-              },
-              "default": "'neutral-tinted'",
-              "description": "Set by nldd-segmented-control. Not part of the public API.",
-              "attribute": "appearance",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "size",
-              "type": {
-                "text": "SegmentedControlSize"
-              },
-              "default": "'md'",
-              "description": "Control size: 'sm' | 'md' | 'lg'. Set by nldd-segmented-control. Not part of the public API.",
-              "attribute": "size",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "text",
               "type": {
                 "text": "string"
@@ -22787,33 +22640,12 @@
             },
             {
               "kind": "field",
-              "name": "groupName",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Set by nldd-segmented-control. Not part of the public API.\n\nThe attribute name is stated: without it Lit derives `groupname`, all\nlowercase, while the documentation has always promised `group-name`.",
-              "attribute": "group-name"
-            },
-            {
-              "kind": "field",
               "name": "value",
               "type": {
                 "text": "string"
               },
               "default": "''",
               "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "inputType",
-              "type": {
-                "text": "SegmentedControlType"
-              },
-              "default": "'radio'",
-              "description": "Set by nldd-segmented-control. Not part of the public API.",
-              "attribute": "input-type",
-              "reflects": true
             },
             {
               "kind": "field",
@@ -22862,42 +22694,6 @@
             }
           ],
           "attributes": [
-            {
-              "name": "variant",
-              "type": {
-                "text": "SegmentedControlVariant"
-              },
-              "default": "'text'",
-              "description": "Content type: 'text' | 'icon' | 'icon-and-text' (default: 'text'). Set by nldd-segmented-control.",
-              "fieldName": "variant",
-              "expandedType": {
-                "text": "'icon' | 'icon-and-text' | 'text'"
-              }
-            },
-            {
-              "name": "appearance",
-              "type": {
-                "text": "SegmentedControlAppearance"
-              },
-              "default": "'neutral-tinted'",
-              "description": "Visual style: 'neutral-tinted' | 'neutral-base' (default: 'neutral-tinted'). Set by nldd-segmented-control.",
-              "fieldName": "appearance",
-              "expandedType": {
-                "text": "'neutral-base' | 'neutral-tinted'"
-              }
-            },
-            {
-              "name": "size",
-              "type": {
-                "text": "SegmentedControlSize"
-              },
-              "default": "'md'",
-              "description": "Control size: 'sm' | 'md' | 'lg' (default: 'md'). Set by nldd-segmented-control.",
-              "fieldName": "size",
-              "expandedType": {
-                "text": "'lg' | 'md' | 'sm'"
-              }
-            },
             {
               "name": "text",
               "type": {
@@ -22962,15 +22758,6 @@
               "description": "Whether this item is selected (set by parent)"
             },
             {
-              "name": "group-name",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Name of the group for form submission, put on the native checkbox. Set by nldd-segmented-control.",
-              "fieldName": "groupName"
-            },
-            {
               "name": "value",
               "type": {
                 "text": "string"
@@ -22978,18 +22765,6 @@
               "default": "''",
               "fieldName": "value",
               "description": "Value for this item"
-            },
-            {
-              "name": "input-type",
-              "type": {
-                "text": "SegmentedControlType"
-              },
-              "default": "'radio'",
-              "description": "Selection mode: 'radio' | 'checkbox' (default: 'radio'). In radio mode the item is the radio itself, in checkbox mode it renders a native checkbox. Set by nldd-segmented-control.",
-              "fieldName": "inputType",
-              "expandedType": {
-                "text": "'checkbox' | 'radio'"
-              }
             },
             {
               "name": "required",
@@ -25103,17 +24878,6 @@
             },
             {
               "kind": "field",
-              "name": "size",
-              "type": {
-                "text": "SwatchPickerSize"
-              },
-              "default": "'md'",
-              "description": "Set by nldd-swatch-picker. Not part of the public API.",
-              "attribute": "size",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "text",
               "type": {
                 "text": "string"
@@ -25230,18 +24994,6 @@
               "default": "''",
               "fieldName": "customColor",
               "description": "Any CSS color of your own (e.g. '#7a1f3d' or 'var(--brand-color)'), for a color outside the categories. Needs `text`."
-            },
-            {
-              "name": "size",
-              "type": {
-                "text": "SwatchPickerSize"
-              },
-              "default": "'md'",
-              "description": "Swatch size: 'xs' | 'sm' | 'md' (set by the picker, default: 'md')",
-              "fieldName": "size",
-              "expandedType": {
-                "text": "'md' | 'sm' | 'xs'"
-              }
             },
             {
               "name": "text",
@@ -47038,17 +46790,6 @@
             },
             {
               "kind": "field",
-              "name": "reorderable",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Set by the parent nldd-list when reorderable is enabled. Used as a CSS hook for drag handle visibility.",
-              "attribute": "reorderable",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "accessibleLabel",
               "type": {
                 "text": "string"
@@ -47260,15 +47001,6 @@
               "default": "false",
               "description": "The row opens something, also while it is closed: without `expanded` it says \"collapsed\" instead of nothing. This is how markup writes a closed disclosure, since an attribute can only be there or not. A row with children in a tree already is one.",
               "fieldName": "expandable"
-            },
-            {
-              "name": "reorderable",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Set by the parent `nldd-list` when its own `reorderable` is on (with `type=\"list\"`); consumers do not set this. Serves as a CSS hook for drag handle visibility.",
-              "fieldName": "reorderable"
             },
             {
               "name": "accessible-label",
@@ -47716,7 +47448,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Enables drag-to-reorder and pushes `reorderable` onto the items. Only valid with `type=\"list\"`; there the arrow keys move rows instead of focus.",
+              "description": "Enables drag-to-reorder and shows the items' reorder handles. Only valid with `type=\"list\"`; there the arrow keys move rows instead of focus.",
               "name": "reorderable",
               "default": "false",
               "fieldName": "reorderable"
@@ -49121,16 +48853,6 @@
           "members": [
             {
               "kind": "field",
-              "name": "compact",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "compact",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "iconOnly",
               "type": {
                 "text": "boolean"
@@ -49284,15 +49006,6 @@
             }
           ],
           "attributes": [
-            {
-              "name": "compact",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "compact",
-              "description": "Activates content-priority behavior (set by the parent nldd-menu-bar)"
-            },
             {
               "name": "icon-only",
               "type": {
@@ -56064,6 +55777,42 @@
             }
           ],
           "description": "A state the component's own styles read, as `:state(name)`, in production\ntoo: for what one component tells another that is no attribute of either,\nsuch as the focus ring nldd-radio-button-field asks of its radio."
+        },
+        {
+          "kind": "function",
+          "name": "styleValueState",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "element",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "T | undefined"
+              }
+            },
+            {
+              "name": "values",
+              "type": {
+                "text": "readonly T[]"
+              }
+            }
+          ],
+          "description": "One state per value, `${name}-${value}` such as `size-lg`, for a value a\nparent hands on: only the current value is on."
         }
       ],
       "exports": [
@@ -56096,6 +55845,14 @@
           "name": "styleState",
           "declaration": {
             "name": "styleState",
+            "module": "src/utilities/element-state.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "styleValueState",
+          "declaration": {
+            "name": "styleValueState",
             "module": "src/utilities/element-state.ts"
           }
         }
@@ -56722,40 +56479,6 @@
           "declaration": {
             "name": "FormAssociated",
             "module": "src/utilities/form-associated-mixin.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/utilities/form-label-alignment.ts",
-      "declarations": [
-        {
-          "kind": "function",
-          "name": "syncFormLabelAlignment",
-          "return": {
-            "type": {
-              "text": "void"
-            }
-          },
-          "parameters": [
-            {
-              "name": "element",
-              "type": {
-                "text": "HTMLElement"
-              }
-            }
-          ],
-          "description": "Gives a field or the actions of an nldd-form the label alignment of that form,\nas `:state(form-label-left)` or `:state(form-label-right)`. Their own\n`label-alignment` wins in their styles. The element calls it when it connects,\nthe form when its alignment or its content changes."
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "syncFormLabelAlignment",
-          "declaration": {
-            "name": "syncFormLabelAlignment",
-            "module": "src/utilities/form-label-alignment.ts"
           }
         }
       ]

@@ -11,7 +11,7 @@ import { nlddListItemTranslations } from './list-item.i18n.js';
 import { downloadLinkHintKey, markDownloadTarget } from '../../../utilities/link-hint.js';
 import type { ListContext, ListType, NLDDList } from '../list/list.js';
 import type { RovingState } from '../list/list.roving.js';
-import { setState } from '../../../utilities/element-state.js';
+import { setState, styleState } from '../../../utilities/element-state.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
 
 export type ListItemSize = 'sm' | 'md';
@@ -172,7 +172,6 @@ const NESTED_CONTROLS = [
  * @attr {boolean} checkbox - Makes the whole row a `role="checkbox"` control. Wins over `button`, loses to `href`.
  * @attr {boolean} radio - Makes the whole row one radio of a group: the action becomes a `role="radio"` button carrying `aria-checked`, and activation sets `checked` (never clears it) and fires `change`. Put the rows in an `nldd-list type="radiogroup"`, which is what makes them a set. Wins over `button`, loses to `href` and `checkbox`. The arrow keys move focus without checking, where a native radio group and `nldd-radio-button-group` check as they go: a row can carry more than a label, so stepping past one should not commit it.
  * @attr {boolean} expandable - The row opens something, also while it is closed: without `expanded` it says "collapsed" instead of nothing. This is how markup writes a closed disclosure, since an attribute can only be there or not. A row with children in a tree already is one.
- * @attr {boolean} reorderable - Set by the parent `nldd-list` when its own `reorderable` is on (with `type="list"`); consumers do not set this. Serves as a CSS hook for drag handle visibility.
  * @attr {string} accessible-label - Accessible name of the row's action (its link, button, checkbox or radio), for a row whose text does not say enough on its own. It replaces the content of the whole row for assistive technology, the supporting text and a status included, so set it only when the row has no text of its own, or put everything that matters in it. Start it with the row's visible title, so voice control finds the row by the words on screen (WCAG 2.5.3); development warns when it does not. The hint for another website or a new tab is added to it.
  * @attr {'page'|'step'|'location'|'date'|'time'|'true'} current-type - The `aria-current` value a `current` or `selected` row puts on its action in a `navigation` parent (default 'page'). Use 'location' for a table of contents, whose rows point at sections of the page you are on.
  * @attr {boolean} selected - Marks the item as selected: it is one of the rows you picked. Selection is consumer-managed; the list never sets it. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value; in a `listbox` parent it drives `aria-selected`.
@@ -265,8 +264,11 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	@property({ type: Boolean, reflect: true })
 	expandable = false;
 
-	/** Set by the parent nldd-list when reorderable is enabled. Used as a CSS hook for drag handle visibility. */
-	@property({ type: Boolean, reflect: true })
+	/**
+	 * @internal Set by the parent nldd-list while it is reorderable (with
+	 * `type="list"`). No attribute: the styles read it as `:state(reorderable)`.
+	 */
+	@property({ attribute: false })
 	reorderable = false;
 
 	/** Accessible name of the row's action; replaces the content of the whole row. */
@@ -663,6 +665,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	}
 
 	override updated(changed: Map<string, unknown>) {
+		if (changed.has('reorderable')) styleState(this, 'reorderable', this.reorderable);
 		if (changed.has('selected') || changed.has('current') || changed.has('currentType') || changed.has('button') || changed.has('checkbox') || changed.has('radio') || changed.has('href') || changed.has('_parentType')) {
 			this._updateAriaState();
 		}

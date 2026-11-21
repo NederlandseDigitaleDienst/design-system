@@ -33,7 +33,7 @@
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
-import { syncFormLabelAlignment } from '../../../utilities/form-label-alignment.js';
+import { styleValueState } from '../../../utilities/element-state.js';
 import { formActionsStyles } from './form-actions.styles.js';
 import { formActionsTemplate } from './form-actions.template.js';
 
@@ -52,9 +52,15 @@ export class NLDDFormActions extends LitElement {
 	@property({ type: String, reflect: true, attribute: 'label-alignment' })
 	labelAlignment: LabelAlignment | undefined = undefined;
 
-	override connectedCallback() {
-		super.connectedCallback();
-		syncFormLabelAlignment(this);
+	/** @internal Set by a wrapping nldd-form: its `label-alignment`. No attribute:
+	 *  the styles read it as `:state(form-label-left)` or `:state(form-label-right)`,
+	 *  and a `label-alignment` of its own wins. */
+	@property({ attribute: false })
+	formLabelAlignment: LabelAlignment | undefined = undefined;
+
+	override willUpdate(changed: Map<string, unknown>) {
+		super.willUpdate(changed);
+		if (changed.has('formLabelAlignment')) styleValueState(this, 'form-label', this.formLabelAlignment, ['left', 'right']);
 	}
 
 	override render() {

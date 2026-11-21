@@ -281,6 +281,32 @@ describe('nldd-toolbar', () => {
 		expect(button?.getAttribute('size')).toBe('sm');
 	});
 
+	it('hands size, labels and fluid to items and titles as states, not attributes', async () => {
+		el = await fixture(`
+			<nldd-toolbar size="sm" show-item-labels>
+				<nldd-toolbar-title slot="start" text="Titel"></nldd-toolbar-title>
+				<nldd-toolbar-item slot="end" label="Item" min-width="80px">
+					<nldd-icon-button aria-label="Item"></nldd-icon-button>
+				</nldd-toolbar-item>
+				<nldd-toolbar-item slot="end" label="Ander">
+					<nldd-icon-button aria-label="Ander"></nldd-icon-button>
+				</nldd-toolbar-item>
+			</nldd-toolbar>
+		`);
+		await waitForUpdate(el);
+		const title = el.querySelector('nldd-toolbar-title')!;
+		const item = el.querySelector('nldd-toolbar-item')!;
+		expect(title.matches(':state(size-sm)')).toBe(true);
+		expect(item.matches(':state(show-item-labels)')).toBe(true);
+		expect(item.matches(':state(fluid)')).toBe(true);
+		for (const name of ['size', 'show-item-labels', 'fluid', 'solo-fluid']) {
+			expect(title.hasAttribute(name) || item.hasAttribute(name)).toBe(false);
+		}
+		// Only :host(:state(show-item-labels)) shows the label.
+		const label = item.shadowRoot!.querySelector('.toolbar__item-label')!;
+		expect(getComputedStyle(label).display).toBe('block');
+	});
+
 	it('does not propagate size to overflow slot children', async () => {
 		el = await fixture(`
 			<nldd-toolbar size="sm">
@@ -729,7 +755,7 @@ describe('nldd-toolbar centered title layout', () => {
 	it('promotes a lone centered title to solo-fluid despite a hidden start item', async () => {
 		await mount(HIDDEN_START + TITLE);
 		const title = el.querySelector('nldd-toolbar-title')!;
-		expect(title.hasAttribute('solo-fluid')).toBe(true);
+		expect(title.matches(':state(solo-fluid)')).toBe(true);
 	});
 
 	it('actually centers a lone title (hidden start) — the reported bug', async () => {
@@ -1051,8 +1077,8 @@ describe('nldd-toolbar – met een tab-bar', () => {
 	it('laat alles staan als het past', async () => {
 		await mount(900);
 		const { tabs, action, overflowed } = state();
-		expect(tabs.hasAttribute('shrinkable')).toBe(true);
-		expect(tabs.hasAttribute('shrunk')).toBe(false);
+		expect(tabs.matches(':state(shrinkable)')).toBe(true);
+		expect(tabs.matches(':state(shrunk)')).toBe(false);
 		expect(action.hidden).toBe(false);
 		expect(overflowed).toBe(0);
 	});
@@ -1065,7 +1091,7 @@ describe('nldd-toolbar – met een tab-bar', () => {
 		const { tabs, action, overflowed } = state();
 		expect(action.hidden).toBe(true);
 		expect(tabs.hidden).toBe(false);
-		expect(tabs.hasAttribute('shrunk')).toBe(true);
+		expect(tabs.matches(':state(shrunk)')).toBe(true);
 		expect(overflowed).toBeGreaterThan(0);
 		expect(el.querySelector('nldd-tab-bar-item[current]')!.hasAttribute('data-overflow')).toBe(false);
 	});
@@ -1083,7 +1109,7 @@ describe('nldd-toolbar – met een tab-bar', () => {
 		await frames(10);
 		const { tabs, action, overflowed } = state();
 		expect(tabs.hidden).toBe(false);
-		expect(tabs.hasAttribute('shrunk')).toBe(false);
+		expect(tabs.matches(':state(shrunk)')).toBe(false);
 		expect(action.hidden).toBe(false);
 		expect(overflowed).toBe(0);
 	});
