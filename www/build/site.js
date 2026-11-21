@@ -259,6 +259,7 @@ function themePicker({ compact = false } = {}) {
 						icon="themes"
 						text="Weergave"
 						expandable
+						tooltip-timing="never"
 						data-site-theme-button
 					>`
 			: `<nldd-button
