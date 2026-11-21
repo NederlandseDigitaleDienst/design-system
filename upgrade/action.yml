@@ -56,6 +56,9 @@ inputs:
   claude-code-oauth-token:
     description: 'For the agent: a token of a subscription, from `claude setup-token`. Used before anthropic-api-key.'
     default: ''
+  claude-code-version:
+    description: 'The version of Claude Code the agent runs on. Fixed, as the model is: what its sandbox does depends on it.'
+    default: '2.1.330'
   model:
     description: 'The model the agent works with. Fixed, so the same run does the same work, and named in the pull request.'
     default: claude-opus-5-5
@@ -135,6 +138,7 @@ runs:
       env:
         VERSION: ${{ steps.upgrade.outputs.version }}
         MODEL: ${{ inputs.model }}
+        CLAUDE_CODE_VERSION: ${{ inputs.claude-code-version }}
         OAUTH_TOKEN: ${{ inputs.claude-code-oauth-token }}
         API_KEY: ${{ inputs.anthropic-api-key }}
         # Keeps the key for the model out of the commands the agent runs.

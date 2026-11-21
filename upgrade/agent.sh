@@ -22,7 +22,10 @@ unset OAUTH_TOKEN API_KEY
 
 # The skill of the version the project now has.
 if [ -z "${SKILLS:-}" ]; then
-	git clone --quiet --depth 1 --branch "v$VERSION" https://github.com/NederlandseDigitaleDienst/design-system "$TOOLS/source"
+	if ! git clone --quiet --depth 1 --branch "v$VERSION" https://github.com/NederlandseDigitaleDienst/design-system "$TOOLS/source"; then
+		echo "::error::The skill of $VERSION could not be fetched: the design system has no tag v$VERSION. The pull request holds what the command did."
+		exit 1
+	fi
 	SKILLS="$TOOLS/source/skills"
 fi
 
@@ -33,10 +36,18 @@ chmod +x "$TOOLS/sees-key.sh"
 mkdir -p "$HOME/.npm" "$HOME/.cache"
 jq --null-input --arg hook "$TOOLS/sees-key.sh" --arg home "$HOME" --arg work "$WORK" '{
 	hooks: { SessionStart: [{ hooks: [{ type: "command", command: $hook }] }] },
-	sandbox: { filesystem: { allowWrite: [($home + "/.npm"), ($home + "/.cache"), $work] } }
+	sandbox: { enabled: true, filesystem: { allowWrite: [($home + "/.npm"), ($home + "/.cache"), $work] } }
 }' > "$TOOLS/settings.json"
 
-npm install --global --no-audit --no-fund @anthropic-ai/claude-code
+# A fixed version: what the sandbox and the settings do depends on it, and the pull request names it.
+npm install --global --no-audit --no-fund "@anthropic-ai/claude-code@$CLAUDE_CODE_VERSION"
+
+# The sandbox has to start. Without it the commands of the agent would run unconfined, with nothing
+# to say so; so a runner where bubblewrap cannot make a namespace stops here.
+if [ "$CLAUDE_CODE_SUBPROCESS_ENV_SCRUB" = 1 ] && ! bwrap --ro-bind / / --dev /dev --proc /proc --unshare-pid true; then
+	echo "::error::The sandbox for the commands of the agent cannot start on this runner. No agent runs; the pull request holds what the command did."
+	exit 1
+fi
 
 # The sandbox puts an empty, locked file in the project for each protected path that is not
 # there, such as package.json, a lockfile or .bashrc, and adds them to .git/info/exclude.
@@ -46,7 +57,10 @@ ls -A > "$TOOLS/root.before"
 cp .git/info/exclude "$TOOLS/exclude.before" 2>/dev/null || true
 
 prompt="$(sed -e "s#{VERSION}#$VERSION#g" -e "s#{WORK}#$WORK#g" -e "s#{SKILLS}#$SKILLS#g" "$ACTION/prompt.md")"
-if ! timeout 60m claude --print "$prompt" --model "$MODEL" --add-dir "$WORK" --add-dir "$SKILLS" --settings "$TOOLS/settings.json" --tools Bash Read Edit Write Glob Grep --allowedTools Bash Read Edit Write Glob Grep; then
+# --restricted reads no settings of the user, the project or `local`: a repository could otherwise
+# bring a hook of its own in .claude/, which runs as Claude Code itself, outside the sandbox and with
+# the key in its environment. Only the settings of the action apply, and no MCP server of the project.
+if ! timeout 60m claude --print "$prompt" --model "$MODEL" --restricted --strict-mcp-config --add-dir "$WORK" --add-dir "$SKILLS" --settings "$TOOLS/settings.json" --tools Bash Read Edit Write Glob Grep --allowedTools Bash Read Edit Write Glob Grep; then
 	echo "::warning::The agent stopped before it was done. The pull request holds what it did until then."
 	printf '\n- De agent die de lijst afwerkt is niet klaar gekomen. Wat hij tot dan deed, staat in deze pull request.\n' >> "$WORK/keuzes.md"
 fi
