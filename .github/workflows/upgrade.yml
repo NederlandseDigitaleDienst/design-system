@@ -403,11 +403,16 @@ jobs:
           cp comment.md hosted.md
           attached=true
           for image in $images; do
-            url="$(curl --silent --fail --request POST \
+            status="$(curl --silent --output answer.json --write-out '%{http_code}' --request POST \
               "https://uploads.github.com/user-attachments/assets?name=$image&content_type=image/png&repository_id=$id" \
               --header "Authorization: Bearer $GH_TOKEN" --header 'Content-Type: application/octet-stream' \
-              --header 'Accept: application/vnd.github+json' --data-binary "@$image" | jq --raw-output '.url // empty')" || url=''
-            if [ -z "$url" ]; then attached=false; break; fi
+              --header 'Accept: application/vnd.github+json' --data-binary "@$image")" || status=000
+            url="$(jq --raw-output '.url // empty' answer.json 2>/dev/null || true)"
+            if [ -z "$url" ]; then
+              echo "::notice::Attaching was refused: HTTP $status, $(head -c 200 answer.json 2>/dev/null | tr -d '\n')"
+              attached=false
+              break
+            fi
             sed --in-place "s#(\./$image)#($url)#" hosted.md
           done
 
