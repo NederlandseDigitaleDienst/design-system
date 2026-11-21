@@ -2075,8 +2075,9 @@ describe('markup the linter cannot read', () => {
 		assert.deepEqual(await rulesIn("expect(html).toMatch('<nldd-buton[^>]*>');", 'e.js'), []);
 	});
 
-	it('says so for a string with an escaped quote, where a value is not what it seems', async () => {
-		assert.deepEqual(await rulesIn('const a = "<nldd-button text=\\"a\\" foo=\\"b\\"></nldd-button>";', 'a.js'), ['file-not-read']);
+	it('reads a quote behind a backslash in a string as the quote it is', async () => {
+		assert.deepEqual(await rulesIn('const a = "<nldd-button text=\\"a\\" foo=\\"b\\"></nldd-button>";', 'a.js'), ['unknown-attribute']);
+		assert.deepEqual(await rulesIn('const a = "<nldd-button text=\\"a\\" size=\\"md\\"></nldd-button>";', 'a.js'), []);
 	});
 
 	it('has no parser for a type it lists as not read', () => {

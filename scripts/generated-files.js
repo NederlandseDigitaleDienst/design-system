@@ -34,6 +34,7 @@ export const GENERATED = [
 			'src/assets/styles/removed-tokens.json',
 			'src/translations/removed-keys.json',
 			'src/components/removed-events.json',
+			'src/rules/introduced.json',
 			'src/utilities/dev-rules.generated.ts',
 			'src/utilities/autoloader.generated.ts',
 		],

@@ -42,15 +42,15 @@ export async function fixUntilStable(linter, original, filename, options) {
 	let fixed = 0;
 	const renamedTags = new Map();
 	for (let pass = 0; pass < MAX_FIX_PASSES; pass++) {
-		const { findings } = await linter.lintSource(source, filename, options);
+		const { findings, undecided } = await linter.lintSource(source, filename, options);
 		const change = applyFixes(source, findings);
-		if (change.fixed === 0) return { source, fixed, renamedTags, findings, unstable: false };
+		if (change.fixed === 0) return { source, fixed, renamedTags, findings, undecided, unstable: false };
 		source = change.source;
 		fixed += change.fixed;
 		for (const [from, to] of change.renamedTags) renamedTags.set(from, to);
 	}
-	const { findings } = await linter.lintSource(source, filename, options);
-	return { source, fixed, renamedTags, findings, unstable: applyFixes(source, findings).fixed > 0 };
+	const { findings, undecided } = await linter.lintSource(source, filename, options);
+	return { source, fixed, renamedTags, findings, undecided, unstable: applyFixes(source, findings).fixed > 0 };
 }
 
 const isUnread = (filename) => UNREAD_EXTENSIONS.includes(extname(filename));
@@ -102,10 +102,12 @@ function fixReferences(renamedTags, paths, root, exclude) {
  * @param {boolean} [options.fix] - write the fixes that are certain
  * @param {(filename: string) => boolean} [options.keep] - read this file even without a component
  * @param {boolean} [options.markdown] - a scan also reads Markdown and MDX, for the markup they render
+ * @param {Function} [options.types] - from createTypes(): what the project's types say an expression in JSX renders
+ * @param {(rule: object) => boolean} [options.undecided] - the rules whose undecided places each result lists
  * @returns {Promise<{ results: object[], files: number, unread: number, fixed: number, fixedFiles: number,
  *   notUtf8: string[], symlinks: string[], unstable: string[], partialExcludes: { entry: string, file: string }[], references?: { fixed: number, files: number, remaining: string[] } }>}
  */
-export async function lintProject(data, { root, paths = [], config = {}, severities, input, fix = false, keep = () => false, markdown = false }) {
+export async function lintProject(data, { root, paths = [], config = {}, severities, input, fix = false, keep = () => false, markdown = false, undecided, types }) {
 	const everything = readsEverything(data, severities);
 	const scanned = [...DEFAULT_EXTENSIONS, ...STYLESHEET_EXTENSIONS, ...UNREAD_EXTENSIONS, ...SCRIPT_EXTENSIONS, ...STRING_EXTENSIONS, ...(markdown ? MARKDOWN_EXTENSIONS : [])];
 	const inStrings = (filename) => STRING_EXTENSIONS.includes(extname(filename));
@@ -147,7 +149,7 @@ export async function lintProject(data, { root, paths = [], config = {}, severit
 	let fixedFiles = 0;
 	if (relevant.length > 0) {
 		const { createLinter } = await import('./linter.js');
-		const linter = createLinter(data, { wrappers: config.wrappers, severities, projectTokens: projectTokens(inputs) });
+		const linter = createLinter(data, { wrappers: config.wrappers, severities, projectTokens: projectTokens(inputs), undecided, types });
 		for (const { filename, source } of relevant) {
 			const options = eventsOnly(filename) ? { only: 'events' } : scannedMarkdown(filename) ? { rendered: true } : undefined;
 			const linked = fix && isSymlink(filename);
@@ -166,7 +168,7 @@ export async function lintProject(data, { root, paths = [], config = {}, severit
 				fixedFiles += 1;
 				for (const [from, to] of change.renamedTags) renamedTags.set(from, to);
 			}
-			results.push({ filename, source: change.source, findings: change.findings });
+			results.push({ filename, source: change.source, findings: change.findings, undecided: change.undecided });
 		}
 	}
 	const references = renamedTags.size > 0 ? fixReferences(renamedTags, paths, root, config.exclude) : undefined;

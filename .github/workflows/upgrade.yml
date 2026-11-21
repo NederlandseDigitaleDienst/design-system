@@ -6,6 +6,11 @@ name: Upgrade a project
 # applies every fix that is certain, and writes what is left as the text of the
 # pull request. This workflow only runs it and delivers the result.
 #
+# It runs with `--install`: the dependencies are installed, without their
+# scripts, so the linter can read the project's types. In a React app that is
+# the difference between a list of places and a pull request that is done.
+# Only files the repository already tracks are committed.
+#
 # A team calls it from its own repository, on a schedule:
 #
 #   on:
@@ -77,8 +82,8 @@ jobs:
         run: |
           version="$(npm view "@nldd/design-system@$WANTED" version)"
           echo "version=$version" >> "$GITHUB_OUTPUT"
-          npx --yes "@nldd/design-system@$version" upgrade --report "$RUNNER_TEMP/upgrade.md"
-          if [ -z "$(git status --porcelain)" ]; then
+          npx --yes "@nldd/design-system@$version" upgrade --install --report "$RUNNER_TEMP/upgrade.md"
+          if git diff --quiet; then
             echo "Nothing to upgrade."
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
@@ -120,7 +125,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git switch --force-create "$BRANCH"
-          git add --all
+          git add --update
           git commit --message "chore: designsysteem naar $VERSION"
           git push --force origin "$BRANCH"
           number="$(gh pr list --repo "$REPOSITORY" --head "$BRANCH" --state open --json number --jq '.[0].number')"

@@ -946,7 +946,7 @@ function scriptLiterals(source) {
 			const char = source[at];
 			if (char === "'" || char === '"') {
 				const end = endOfString(source, at);
-				templates.push({ start: at + 1, end, holes: [], html: false, escapedQuote: /\\['"]/.test(source.slice(at, end)) });
+				templates.push({ start: at + 1, end, holes: [], html: false });
 				at = end;
 			} else if (source.startsWith('//', at)) at = source.indexOf('\n', at) >>> 0;
 			else if (source.startsWith('/*', at)) at = source.indexOf('*/', at) >>> 0;
@@ -1014,13 +1014,10 @@ function pythonStrings(source) {
 			const delimiter = source.startsWith(char.repeat(3), at) ? char.repeat(3) : char;
 			const start = at + delimiter.length;
 			const holes = [];
-			let escapedQuote = false;
 			let end = start;
 			while (end < source.length && !source.startsWith(delimiter, end)) {
-				if (source[end] === '\\') {
-					escapedQuote ||= source[end + 1] === '"' || source[end + 1] === "'";
-					end += 2;
-				} else if (source[end] === '{' && source[end + 1] === '{') end += 2;
+				if (source[end] === '\\') end += 2;
+				else if (source[end] === '{' && source[end + 1] === '{') end += 2;
 				else if (formatted && source[end] === '{') {
 					const close = endOfHole(end + 1);
 					holes.push([end, close + 1]);
@@ -1034,7 +1031,7 @@ function pythonStrings(source) {
 			// Without an `f`, a `{name}` is still a hole once `.format()` fills it.
 			const filled = formatted ? holes : [...source.slice(start, end).matchAll(/\{[^{}\n]*\}/g)].map((match) => [start + match.index, start + match.index + match[0].length]);
 			// A literal that is a line of its own is a docstring: it names markup and renders none.
-			if (!(depth === 0 && alone)) strings.push({ start, end, holes: filled, escapedQuote });
+			if (!(depth === 0 && alone)) strings.push({ start, end, holes: filled, raw: /r/i.test(prefix) });
 			at = end + delimiter.length - 1;
 		}
 		at += 1;
@@ -1052,22 +1049,27 @@ const PERCENT_FORMAT = /%(\([^)]*\))?[-#0 +]*\d*(\.\d+)?[sdrifgx]/;
  * element the literal does not close has children nobody can see here. A pattern
  * that looks for markup, as a test has, is no markup and is left out.
  *
+ * Every doubt here ends in "unknown" and never in a finding: a `{name}` that no
+ * `.format()` fills is still read as a hole, and a tag the literal leaves open
+ * has no children to judge.
+ *
  * `unread` on the result is where markup stands that this could not read, or -1:
- * a literal with an escaped quote, where an attribute's value is not what it seems.
+ * a raw literal with a quote behind a backslash.
  * @param {string} source
- * @param {{ start: number, end: number, holes: [number, number][], escapedQuote?: boolean }[]} literals
+ * @param {{ start: number, end: number, holes: [number, number][], raw?: boolean }[]} literals
  */
+/** What only a regular expression writes: `.*`, `.+`, `[^`, and a class such as `\s` or `\d`. */
+const WILDCARD = /\.[*+]|\[\^|\\[sSdDwWbB]/;
+
 function readLiterals(source, literals) {
 	const roots = [];
 	roots.unread = -1;
 	roots.strings = true;
-	for (const { start, end, holes, escapedQuote } of literals) {
+	for (const { start, end, holes, raw } of literals) {
 		let text = source.slice(start, end);
 		if (!/<nldd-[a-z]/.test(text)) continue;
-		if (escapedQuote) {
-			if (roots.unread < 0) roots.unread = start + text.search(/<nldd-[a-z]/);
-			continue;
-		}
+		const escaped = /\\['"]/.test(text);
+		if (!raw) text = unescaped(text);
 		for (const [from, to] of holes) {
 			// Right after a name, as in `<nldd-x{attrs}>`, the hole is not part of that name.
 			const afterName = /[\w-]/.test(text[from - start - 1] ?? '');
@@ -1077,12 +1079,21 @@ function readLiterals(source, literals) {
 		}
 		// A start tag the next literal finishes: nothing certain about it here.
 		text = text.replace(/<[a-zA-Z][^<>]*$/, blank);
-		// `<nldd-card[^>]*>` and `<nldd-menu-(item|divider)`: a pattern, and no markup.
-		if ([...text.matchAll(/<nldd-[a-z0-9-]*/g)].some((match) => /[^\s>/]/.test(text[match.index + match[0].length] ?? ' '))) continue;
+		// `<nldd-card[^>]*>` and `<nldd-menu-(item|divider)`: a pattern, and no markup. After a tag's
+		// name comes white space, `/` or `>`. And `<nldd-menu slot="popup".*?</nldd-menu>` reads as
+		// markup, tag by tag, while its wildcard says what it is.
+		if (WILDCARD.test(source.slice(start, end)) || [...text.matchAll(/<nldd-[a-z0-9-]*/g)].some((match) => /[^\s>/]/.test(text[match.index + match[0].length] ?? ' '))) continue;
+		if (escaped && raw) {
+			// In a raw string the backslash stays in the text, so the quote behind it is not markup's.
+			if (roots.unread < 0) roots.unread = start + text.search(/<nldd-[a-z]/);
+			continue;
+		}
 		const root = createRoot();
 		const padded = ' '.repeat(start) + text;
 		readHtmlChildren(parseMarkup(padded, { selfClosing: false }).children, root, { lit: true });
 		const settle = (node) => {
+			// An edit would have to write the backslashes back.
+			node.escaped = escaped;
 			for (const [name, value] of node.attrs) {
 				if (typeof value === 'string' && (value.includes(HOLE) || PERCENT_FORMAT.test(value))) node.attrs.set(name, BOUND);
 			}
@@ -1100,6 +1111,20 @@ function readLiterals(source, literals) {
 	return roots;
 }
 
+/**
+ * A literal as the markup in it reads, at the same offsets: each escape becomes
+ * as many characters that mean the same to an HTML parser. A quote opens a value
+ * right after `=`, and there the space goes before it; anywhere else it closes
+ * one or stands in text, and the space goes behind. A newline or a tab is white
+ * space either way.
+ */
+function unescaped(text) {
+	return text.replace(/\\(['"nrt]|\r?\n)/g, (match, char, at) => {
+		if (char === '"' || char === "'") return /=\s*$/.test(text.slice(0, at)) ? ` ${char}` : `${char} `;
+		return char.length === 1 ? '  ' : ` ${char}`;
+	});
+}
+
 /** Markup in the string literals of a Python file. */
 export function parsePython(source) {
 	return readLiterals(source, pythonStrings(source));
@@ -1111,12 +1136,12 @@ export function parsePython(source) {
  * JSX is read only where no template holds our markup and the file parses as
  * JSX with an element in it. What is left is read as string literals.
  */
-export async function parseScript(source, filename) {
+export async function parseScript(source, filename, options) {
 	const templates = parseLit(source);
 	if (templates.length > 0 || !/<(nldd-|Nldd)/.test(source)) return templates;
 	await loadOxc(filename);
 	try {
-		const roots = await parseJsx(source, filename);
+		const roots = await parseJsx(source, filename, options);
 		if (!roots.syntaxError && roots.length > 0) {
 			roots.jsx = true;
 			return roots;
@@ -1284,6 +1309,17 @@ function readJsxAttributes(element, attributes, roots) {
 	}
 }
 
+/**
+ * An expression the syntax does not settle. The types of the project may: a
+ * string is text, `undefined` renders nothing, and anything else stays unknown.
+ * @returns the unknown child, where it stayed unknown
+ */
+function readUnsettled(expression, parent, roots) {
+	const kind = roots.rendersAs?.(expression.start, expression.end);
+	if (kind === 'text') parent.text = true;
+	return kind ? undefined : appendUnknown(parent, expression.start);
+}
+
 function readJsxExpression(expression, parent, flags, roots) {
 	const conditional = { ...flags, conditional: true };
 	switch (expression.type) {
@@ -1315,18 +1351,20 @@ function readJsxExpression(expression, parent, flags, roots) {
 		case 'CallExpression': {
 			const found = [];
 			collectJsx(expression, found);
-			if (found.length === 0) appendUnknown(parent, expression.start);
+			if (found.length === 0) readUnsettled(expression, parent, roots);
 			for (const { node } of found) {
 				readJsxNode(node, parent, { ...flags, repeated: true }, roots);
 			}
 			break;
 		}
-		case 'Identifier':
+		case 'Identifier': {
 			// `{items}`: whatever the file bound to that name renders here.
-			appendUnknown(parent, expression.start).ref = expression.name;
+			const unknown = readUnsettled(expression, parent, roots);
+			if (unknown) unknown.ref = expression.name;
 			break;
+		}
 		default:
-			appendUnknown(parent, expression.start);
+			readUnsettled(expression, parent, roots);
 	}
 }
 
@@ -1400,7 +1438,11 @@ async function loadOxc(filename) {
 	});
 }
 
-export async function parseJsx(source, filename) {
+/**
+ * @param {{ types?: (filename: string, source: string) => Function | undefined }} [options]
+ *   `types` answers what an expression renders, from the types of the project
+ */
+export async function parseJsx(source, filename, { types } = {}) {
 	await loadOxc(filename);
 	// A .js file takes JSX only when asked: React apps write it there too.
 	const options = /\.[cm]?js$/.test(filename) ? { lang: 'jsx' } : {};
@@ -1409,6 +1451,7 @@ export async function parseJsx(source, filename) {
 	collectJsx(program, found, {}, exportedNamesOf(program));
 	const bindings = bindingCounts(program);
 	const roots = [];
+	roots.rendersAs = types?.(filename, source);
 	const owners = new Map();
 	for (const { node, detached, owner } of found) {
 		const root = jsxTree(node, roots, detached);

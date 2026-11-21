@@ -29,16 +29,16 @@ Een upgrade heeft twee delen. Wat zeker is, doet een opdracht. Wat een keuze vra
 ### 1. Laat de opdracht het zekere deel doen
 
 ```sh
-npx @nldd/design-system@<doelversie> upgrade --report upgrade.md
+npx @nldd/design-system@<doelversie> upgrade --install --report upgrade.md
 ```
 
 Kies de doelversie één keer, bijvoorbeeld `0.27.1`, en gebruik die in elke stap. Met `@latest` krijg je wat vandaag de nieuwste is. De opdracht upgradet naar zijn eigen versie, want een linter kent de API van de versie waar hij bij hoort.
 
 Hij doet vier dingen, in het hele project:
 
-- **De versie ophogen op elke plek die hij kent**: een `package.json`, ook in een submap of een monorepo, een adres of opdracht met `@nldd/design-system@<versie>` erin, en een eigen JSON-bestand dat de versie vastlegt, met de hash van het pakket als die erbij staat. Het bereik dat je koos (`^`, `~` of exact) blijft.
-- **De lockfile herschrijven**, met npm, pnpm, yarn of bun. Alleen de lockfile: `node_modules` installeer je zelf.
-- **Elke fix toepassen die zeker is**: een naam of waarde die anders heet en hetzelfde betekent. Ook in strings van Python en JavaScript, en in Markdown waar een pagina de markup rendert.
+- **De versie ophogen op elke plek die hij kent**: de naam van het pakket als sleutel in JSON (een afhankelijkheid, een override, een resolution), een adres of opdracht met `@nldd/design-system@<versie>` erin, het adres van de tarball, en een eigen JSON-bestand dat de versie vastlegt. Staat daar een hash bij, dan gaat de versie alleen omhoog als die hash de hash van het pakket is, en krijgt hij die van de nieuwe versie. Een adres in een tag met `integrity` laat hij staan, want dat is de hash van één bestand. Het verslag noemt wat bleef staan.
+- **De lockfile herschrijven**, met npm, pnpm, yarn of bun. Met `--install` installeert hij ook wat erin staat, zonder scripts van afhankelijkheden. Doe dat in een app met React en TypeScript: met de typen van het project erbij weet de linter dat `{rij.label}` tekst is, en dan past hij zelf aan wat anders een plek op de lijst was. Zonder `--install` gebruikt hij de `node_modules` die er staan.
+- **Elke fix toepassen die zeker is**: een naam of waarde die anders heet en hetzelfde betekent, en tekst die in een element van zichzelf hoort. Ook in strings van Python en JavaScript, en in Markdown waar een pagina de markup rendert.
 - **Opschrijven wat overblijft**, in `upgrade.md`.
 
 `--format json` geeft hetzelfde als gegevens, voor een script. Draai de opdracht gerust nog een keer: wat al gedaan is, laat hij staan.
@@ -52,7 +52,8 @@ Het verslag is je werklijst. Het heeft deze delen:
 | Nog te doen | Elke plek is een keuze die de linter niet voor je kan maken. De melding zegt wat er veranderde. Los ze allemaal op |
 | Niet gelezen | Bestanden met componenten die de linter niet kan lezen. Loop ze zelf na op de oude namen uit de changelog |
 | Brekende wijzigingen onderweg | Lees ze. Niet elke wijziging heeft een lintregel: een andere maat of een ander gedrag vind je alleen hier |
-| Wat de linter verder vindt | Waarschuwingen van regels die nieuw kunnen zijn in deze versie. Zie [De linter in je eigen CI](#de-linter-in-je-eigen-ci) |
+| Niet te beslissen in de bron | Plekken waar de inhoud van een element uit een variabele of een onderdeel van de app komt. Open ze en kijk wat daar rendert: tekst hoort in zijn element, een element mag blijven |
+| Stond er al | Waarschuwingen van regels die de app ook had in de versie waar hij vandaan komt. Ze horen niet bij deze upgrade. Zie [De linter in je eigen CI](#de-linter-in-je-eigen-ci) |
 
 Verifieer bij twijfel tegen [`reference.md`](../nldd-design/reference.md) of een attribuut, slot of event in de doelversie bestaat zoals je verwacht. Die referentie hoort bij de versie van de plugin, en die kan ouder zijn dan je doel.
 

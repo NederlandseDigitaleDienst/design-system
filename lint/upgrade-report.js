@@ -45,7 +45,7 @@ const placeLines = ({ rule, places }) => [
 function workSection({ work, unread }) {
 	if (work.length === 0 && unread.length === 0) return ['## Nog te doen', '', 'Niets. De linter van deze versie vindt geen fouten en niets wat niet meer bestaat.'];
 	const total = work.reduce((sum, { places }) => sum + places.length, 0);
-	const lines = ['## Nog te doen', '', `${plural(total, 'plek', 'plekken')} waar iemand moet kiezen. De linter weet hier niet zeker wat de bedoeling is, en past dus niets aan.`];
+	const lines = ['## Nog te doen', '', `${plural(total, 'plek', 'plekken')} waar iemand moet kiezen. Ze komen van deze upgrade: iets bestaat niet meer, of een regel is nieuw sinds de versie waar de app vandaan komt.`];
 	for (const entry of work) {
 		lines.push('', `### \`${entry.rule}\` (${entry.places.length}${entry.severity === 'error' ? ', fout' : ''})`, '', entry.message, '', ...placeLines(entry));
 	}
@@ -71,14 +71,31 @@ function breakingSection({ breaking, from, to }) {
 	return lines;
 }
 
-function otherSection({ other }) {
-	if (other.length === 0) return [];
-	const total = other.reduce((sum, { places }) => sum + places.length, 0);
+/** Where a binding or another file decides: no finding, and still a place the upgrade can break. */
+function undecidedSection({ undecided, types }) {
+	if (undecided.length === 0) return [];
+	const total = undecided.reduce((sum, { places }) => sum + places.length, 0);
+	// With the project's TypeScript installed, a string in JSX is read as text and most of these are decided.
+	const untyped = types?.without > 0 ? ['', `De typen van het project zijn niet gelezen, want TypeScript staat niet in \`node_modules\`. Met \`nldd upgrade --install\` leest de linter ze wel, en blijft hier minder over.`] : [];
 	return [
-		'## Wat de linter verder vindt',
+		'## Niet te beslissen in de bron',
 		'',
-		`${plural(total, 'waarschuwing', 'waarschuwingen')}. Een deel komt van een regel die nieuw is in deze versie, een deel stond er al: de linter kan dat niet uit elkaar houden.`,
-		...other.flatMap((entry) => ['', '<details>', `<summary><code>${entry.rule}</code> (${entry.places.length})</summary>`, '', entry.message, '', ...placeLines(entry), '', '</details>']),
+		`${plural(total, 'plek', 'plekken')} waar de inhoud van een element uit een variabele of uit een onderdeel van de app komt. Of de regel daar geldt, staat niet in dit bestand, dus de linter meldt het niet als fout. Loop ze na, of lees de draaiende app met \`--url\`.`,
+		...untyped,
+		...undecided.flatMap((entry) => ['', '<details>', `<summary><code>${entry.rule}</code> (${entry.places.length})</summary>`, '', entry.message, '', ...placeLines(entry), '', '</details>']),
+	];
+}
+
+/** Findings of rules the project had before this upgrade: named, and not part of the work. */
+function standingSection({ standing, from }) {
+	if (standing.length === 0) return [];
+	const total = standing.reduce((sum, { places }) => sum + places.length, 0);
+	return [
+		'## Stond er al',
+		'',
+		`${plural(total, 'waarschuwing', 'waarschuwingen')} van regels die er in ${from ?? 'deze versie'} ook waren. Ze horen niet bij deze upgrade.`,
+		'',
+		...standing.map(({ rule, places }) => `- \`${rule}\`: ${places.length}`),
 	];
 }
 
@@ -109,7 +126,7 @@ function renderedSection({ rendered }) {
  */
 export function formatReport(result) {
 	const title = result.from ? `# Designsysteem van ${result.from} naar ${result.to}` : `# Designsysteem naar ${result.to}`;
-	const sections = [versionSection(result), fixedSection(result), workSection(result), renderedSection(result), breakingSection(result), otherSection(result)].filter((lines) => lines.length > 0);
+	const sections = [versionSection(result), fixedSection(result), workSection(result), undecidedSection(result), renderedSection(result), breakingSection(result), standingSection(result)].filter((lines) => lines.length > 0);
 	const closing = result.rendered
 		? ['## Kijken', '', 'Leg oud en nieuw naast elkaar:', '', '```', 'npx nldd compare <oud> <nieuw> --out vergelijking', '```']
 		: [

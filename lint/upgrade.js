@@ -17,6 +17,7 @@ import { basename, dirname, extname, join } from 'node:path';
 import { BUILT_IN_RULES } from './rule-data.js';
 import { applyBaseline, findFiles, readBaseline, relativePath } from './project.js';
 import { lintProject } from './session.js';
+import { createTypes } from './types.js';
 
 export const PACKAGE = '@nldd/design-system';
 
@@ -34,8 +35,6 @@ const PIN_EXTENSIONS = ['.json', '.yml', '.yaml', '.toml', '.html', '.htm', '.md
 /** Written by a package manager or a release, not by hand: the first follows the manifest, the second is history. */
 const NOT_A_PIN = /^(package-lock\.json|npm-shrinkwrap\.json|pnpm-lock\.yaml|yarn\.lock|bun\.lock|changelog.*)$/i;
 
-const DEPENDENCY_SECTIONS = ['dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies'];
-
 /** `^0.13.2`, `~0.13.2` or `0.13.2`: a range this can raise and keep its meaning. */
 const SIMPLE_RANGE = /^([\^~]?)(\d+\.\d+\.\d+)$/;
 
@@ -43,29 +42,31 @@ const escapeRegExp = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 const lineOf = (source, offset) => source.slice(0, offset).split('\n').length;
 
-/** A manifest: the range of the dependency, in each section that has it. */
-function manifestPins(source) {
-	let manifest;
-	try {
-		manifest = JSON.parse(source);
-	} catch {
-		return { edits: [], left: [] };
-	}
+/**
+ * The package's name as a key, with a range as its value: a dependency in a
+ * manifest, and just as much an override, a resolution or a catalog. In a
+ * manifest, a value that is no plain range is reported; elsewhere it is not a pin.
+ */
+function keyedPins(source, isManifest) {
 	const edits = [];
 	const left = [];
-	for (const section of DEPENDENCY_SECTIONS) {
-		const range = manifest?.[section]?.[PACKAGE];
-		if (typeof range !== 'string') continue;
-		const simple = SIMPLE_RANGE.exec(range);
-		const written = new RegExp(`("${escapeRegExp(PACKAGE)}"\\s*:\\s*")${escapeRegExp(range)}"`).exec(source);
+	for (const match of source.matchAll(new RegExp(`(${escapeRegExp(JSON.stringify(PACKAGE))}\\s*:\\s*")([^"\\n]*)"`, 'g'))) {
+		const simple = SIMPLE_RANGE.exec(match[2]);
+		if (simple) edits.push({ kind: isManifest ? 'manifest' : 'record', at: match.index + match[1].length, length: match[2].length, from: simple[2], write: (target) => simple[1] + target });
 		// `workspace:*`, a tag, a git address, `>=0.13`: the project chose something else than a version.
-		if (!simple || !written) left.push({ line: written ? lineOf(source, written.index) : 1, text: `${section}: ${range}` });
-		else edits.push({ kind: 'manifest', at: written.index + written[1].length, length: range.length, from: simple[2], write: (target) => simple[1] + target });
+		else if (isManifest) left.push({ line: lineOf(source, match.index), text: match[2] });
 	}
 	return { edits, left };
 }
 
-/** A record of the package in a JSON file of the project's own: its name (as `name` or `package`), its version, and maybe the hash of that version. */
+/** A hash as a registry and a lockfile write it: `sha512-…`, or hex digits from a SHA-1 up. Taken wide: one that is missed would stay behind with a version it does not belong to. */
+const HASH = /^(sha\d+-\S+|[0-9a-f]{40,128})$/;
+
+/**
+ * A record of the package in a JSON file of the project's own: an object with a
+ * `version` that says it is about the package, by its `name` or `package`, or by
+ * the key it stands under. It may hold the hash of that version too.
+ */
 function recordPins(source) {
 	let parsed;
 	try {
@@ -74,38 +75,51 @@ function recordPins(source) {
 		return { edits: [], left: [] };
 	}
 	const records = [];
-	(function walk(value) {
+	(function walk(value, key) {
 		if (value === null || typeof value !== 'object') return;
-		if ((value.name === PACKAGE || value.package === PACKAGE) && typeof value.version === 'string' && VERSION.test(value.version)) records.push(value);
-		Object.values(value).forEach(walk);
+		const about = key === PACKAGE || value.name === PACKAGE || value.package === PACKAGE;
+		if (about && !Array.isArray(value) && typeof value.version === 'string' && VERSION.test(value.version)) {
+			records.push({ version: value.version, hashes: Object.values(value).filter((held) => typeof held === 'string' && HASH.test(held)) });
+		}
+		for (const [name, held] of Object.entries(value)) walk(held, name);
 	})(parsed);
 	const edits = [];
 	const left = [];
-	for (const record of records) {
-		const places = [...source.matchAll(new RegExp(`("version"\\s*:\\s*")${escapeRegExp(record.version)}"`, 'g'))];
-		const hash = typeof record.integrity === 'string' ? source.indexOf(record.integrity) : -1;
-		const hashIsOnce = hash >= 0 && source.indexOf(record.integrity, hash + 1) < 0;
+	const once = (text) => source.indexOf(text) >= 0 && source.indexOf(text, source.indexOf(text) + 1) < 0;
+	for (const { version, hashes } of records) {
+		const places = [...source.matchAll(new RegExp(`("version"\\s*:\\s*")${escapeRegExp(version)}"`, 'g'))];
 		// Two versions written the same way, or a hash that stands twice: which one is the record's is a guess.
-		if (records.length !== 1 || places.length !== 1 || (record.integrity !== undefined && !hashIsOnce)) {
-			left.push({ line: places[0] ? lineOf(source, places[0].index) : 1, text: `"version": "${record.version}"` });
+		if (records.length !== 1 || places.length !== 1 || !hashes.every(once)) {
+			left.push({ line: places[0] ? lineOf(source, places[0].index) : 1, text: `"version": "${version}"` });
 			continue;
 		}
-		const version = { kind: 'record', at: places[0].index + places[0][1].length, length: record.version.length, from: record.version, write: (target) => target };
-		if (record.integrity === undefined) edits.push(version);
-		// A version with the hash of another one is a broken record, so the two change together or not at all.
-		else edits.push({ ...version, with: { at: hash, length: record.integrity.length } });
+		edits.push({ kind: 'record', at: places[0].index + places[0][1].length, length: version.length, from: version, write: (target) => target, hashes: hashes.map((hash) => ({ at: source.indexOf(hash), text: hash })) });
 	}
 	return { edits, left };
 }
 
-/** `@nldd/design-system@0.13.2`: a CDN address, an `npx` line in a workflow, an import map. */
+/** The tag a place stands in, when it stands in one: from its `<` to its `>`. */
+function tagAround(source, at) {
+	const open = source.lastIndexOf('<', at);
+	const close = source.indexOf('>', at);
+	return open >= 0 && close >= 0 && source.lastIndexOf('>', at) < open ? source.slice(open, close + 1) : '';
+}
+
+/**
+ * `@nldd/design-system@0.13.2`: a CDN address, an `npx` line in a workflow, an
+ * import map. And the address of the tarball, which names the version without the `@`.
+ */
 function referencePins(source) {
-	return [...source.matchAll(new RegExp(`${escapeRegExp(PACKAGE)}@(\\d+\\.\\d+\\.\\d+)(?![\\w.-])`, 'g'))].map((match) => ({
+	const name = PACKAGE.split('/')[1];
+	const written = new RegExp(`${escapeRegExp(PACKAGE)}(?:@|/-/${escapeRegExp(name)}-)(\\d+\\.\\d+\\.\\d+)(?![\\w-]|\\.\\d)`, 'g');
+	return [...source.matchAll(written)].map((match) => ({
 		kind: 'reference',
-		at: match.index + PACKAGE.length + 1,
+		at: match.index + match[0].length - match[1].length,
 		length: match[1].length,
 		from: match[1],
 		write: (target) => target,
+		// A tag with `integrity` holds the hash of the one file it loads, and that is not ours to recompute.
+		guarded: /\sintegrity\s*=/.test(tagAround(source, match.index)),
 	}));
 }
 
@@ -116,48 +130,69 @@ function referencePins(source) {
 export function pinsIn(filename, source) {
 	if (!source.includes(PACKAGE)) return { edits: [], left: [] };
 	const name = basename(filename);
-	const own = name === 'package.json' ? manifestPins(source) : extname(name) === '.json' ? recordPins(source) : { edits: [], left: [] };
-	return { edits: [...own.edits, ...referencePins(source)], left: own.left };
+	const sets = extname(name) === '.json' ? [keyedPins(source, name === 'package.json'), recordPins(source)] : [];
+	return { edits: [...sets.flatMap(({ edits }) => edits), ...referencePins(source)], left: sets.flatMap(({ left }) => left) };
 }
 
 /**
  * Raises every pin in a source to `target`. A pin that is already there, or past
- * it, stays. `integrity` gives the hash of the target for a record that has one;
- * without it such a record is left as it is.
+ * it, stays. A version next to a hash changes with that hash or not at all: a
+ * record is raised only when each hash in it is the one the registry gives for
+ * the old version, and then it gets the one for the new.
+ * @param {(version: string) => { integrity?: string, shasum?: string } | undefined} [dist] - what the registry says about a version
  * @returns {{ source: string, raised: { kind: string, from: string, line: number }[], left: { line: number, text: string }[] }}
  */
-export function raisePins(filename, source, target, integrity) {
+export function raisePins(filename, source, target, dist = () => undefined) {
 	const { edits, left } = pinsIn(filename, source);
 	const raised = [];
 	const changes = [];
 	for (const edit of edits) {
 		if (compareVersions(edit.from, target) >= 0) continue;
-		if (edit.with && !integrity) {
-			left.push({ line: lineOf(source, edit.at), text: `"version": "${edit.from}" with an integrity hash` });
+		const line = lineOf(source, edit.at);
+		if (edit.guarded) {
+			left.push({ line, text: `${PACKAGE}@${edit.from} with the integrity hash of one file` });
 			continue;
 		}
-		changes.push({ at: edit.at, length: edit.length, text: edit.write(target) });
-		if (edit.with) changes.push({ at: edit.with.at, length: edit.with.length, text: integrity });
-		raised.push({ kind: edit.kind, from: edit.from, line: lineOf(source, edit.at) });
+		const swaps = [];
+		if (edit.hashes?.length) {
+			const [old, next] = [dist(edit.from), dist(target)];
+			for (const { at, text } of edit.hashes) {
+				const field = ['integrity', 'shasum'].find((name) => old?.[name] === text);
+				if (field && next?.[field]) swaps.push({ at, length: text.length, text: next[field] });
+			}
+			if (swaps.length !== edit.hashes.length) {
+				left.push({ line, text: `${edit.from} with a hash that is not the registry's for that version` });
+				continue;
+			}
+		}
+		changes.push({ at: edit.at, length: edit.length, text: edit.write(target) }, ...swaps);
+		raised.push({ kind: edit.kind, from: edit.from, line });
 	}
 	let result = source;
 	for (const { at, length, text } of changes.sort((a, b) => b.at - a.at)) result = result.slice(0, at) + text + result.slice(at + length);
 	return { source: result, raised, left };
 }
 
-/** The lockfile a manifest's directory falls under, and how its package manager rewrites only that. */
+const isBerry = (directory) => existsSync(join(directory, '.yarnrc.yml'));
+
+/**
+ * The lockfile a manifest's directory falls under, and what its package manager
+ * runs to rewrite only that, or to install what it lists as well. Neither runs a
+ * script of a dependency.
+ */
 const LOCKFILES = [
-	['package-lock.json', () => ['npm', ['install', '--package-lock-only', '--ignore-scripts', '--no-audit', '--no-fund']]],
-	['pnpm-lock.yaml', () => ['pnpm', ['install', '--lockfile-only', '--ignore-scripts']]],
-	['yarn.lock', (directory) => (existsSync(join(directory, '.yarnrc.yml')) ? ['yarn', ['install', '--mode', 'update-lockfile']] : ['yarn', ['install', '--ignore-scripts']])],
-	['bun.lock', () => ['bun', ['install', '--lockfile-only']]],
-	['bun.lockb', () => ['bun', ['install', '--lockfile-only']]],
+	['package-lock.json', () => ({ lockfile: ['npm', ['install', '--package-lock-only', '--ignore-scripts', '--no-audit', '--no-fund']], full: ['npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund']] })],
+	['pnpm-lock.yaml', () => ({ lockfile: ['pnpm', ['install', '--lockfile-only', '--ignore-scripts']], full: ['pnpm', ['install', '--ignore-scripts']] })],
+	['yarn.lock', (directory) => (isBerry(directory) ? { lockfile: ['yarn', ['install', '--mode', 'update-lockfile']], full: ['yarn', ['install', '--mode', 'skip-build']] } : { lockfile: ['yarn', ['install', '--ignore-scripts']], full: ['yarn', ['install', '--ignore-scripts']] })],
+	['bun.lock', () => ({ lockfile: ['bun', ['install', '--lockfile-only']], full: ['bun', ['install', '--ignore-scripts']] })],
+	['bun.lockb', () => ({ lockfile: ['bun', ['install', '--lockfile-only']], full: ['bun', ['install', '--ignore-scripts']] })],
 ];
 
-export function lockfileCommand(directory, root) {
+/** @param {'lockfile' | 'full'} [mode] */
+export function lockfileCommand(directory, root, mode = 'lockfile') {
 	for (let at = directory; ; at = dirname(at)) {
-		for (const [name, command] of LOCKFILES) {
-			if (existsSync(join(at, name))) return { directory: at, lockfile: name, command: command(at) };
+		for (const [name, commands] of LOCKFILES) {
+			if (existsSync(join(at, name))) return { directory: at, lockfile: name, command: commands(at)[mode] };
 		}
 		if (at === root || dirname(at) === at) return undefined;
 	}
@@ -191,14 +226,16 @@ export function breakingFor(breaking, from, target, text) {
 	return { total: entries.length, touching };
 }
 
-const groupOf = (data, id) => data.rules.find((rule) => rule.id === id)?.group ?? (BUILT_IN_RULES[id] ? 'api' : undefined);
-
 /**
- * What the upgrade certainly asks for: what no longer exists or has no effect,
- * and every error. Whether another warning is new with this version or was there
- * already, the linter cannot tell, so those are listed apart.
+ * Which rules the upgrade brings to a project that comes from `from`: what no
+ * longer exists or has no effect, and every rule that came after that version.
+ * A finding of another rule the project had already, with the linter it has now.
  */
-const isWork = (data, finding) => finding.severity === 'error' || groupOf(data, finding.rule) === 'api';
+function upgradeRules(data, from) {
+	const byId = new Map(data.rules.map((rule) => [rule.id, rule]));
+	const isNew = (rule) => rule.group === 'api' || (rule.after !== undefined && compareVersions(from, rule.after) <= 0);
+	return { isNew, of: (id) => (byId.has(id) ? isNew(byId.get(id)) : id in BUILT_IN_RULES) };
+}
 
 const bySize = (a, b) => Number(b.severity === 'error') - Number(a.severity === 'error') || b.places.length - a.places.length;
 
@@ -229,7 +266,7 @@ export function withRendered(result, session, root) {
  * @param {object} options.config - the project's lint config
  * @param {object} options.severities - from resolveSeverities()
  * @param {(id: string) => string} [options.canonical] - a rule id under its current name, for the baseline
- * @param {boolean} [options.install] - rewrite the lockfiles (default true)
+ * @param {boolean | 'full'} [options.install] - rewrite the lockfiles (default true), or with `full` install what they list too, so the project's types can be read
  * @param {(command: string, args: string[], cwd: string) => { ok: boolean, output?: string, error?: string }} [options.run]
  * @returns {Promise<object>} what was done and what is left, as the report and the worklist read it
  */
@@ -238,21 +275,27 @@ export async function upgradeProject(data, { root, target, breaking, config, sev
 	const pinned = [];
 	const notRaised = [];
 	const manifestDirectories = new Set();
-	let integrity;
-	const integrityOf = () => {
-		if (integrity === undefined) {
-			const asked = run('npm', ['view', `${PACKAGE}@${target}`, 'dist.integrity'], root);
-			integrity = asked.ok && /^sha\d+-/.test(asked.output.trim()) ? asked.output.trim() : null;
+	// What the registry says about a version, asked once and only where a record holds a hash.
+	const asked = new Map();
+	const dist = (version) => {
+		if (!asked.has(version)) {
+			const answer = run('npm', ['view', `${PACKAGE}@${version}`, 'dist', '--json'], root);
+			let parsed;
+			try {
+				parsed = answer.ok ? JSON.parse(answer.output) : undefined;
+			} catch {
+				parsed = undefined;
+			}
+			asked.set(version, parsed);
 		}
-		return integrity;
+		return asked.get(version);
 	};
 	for (const filename of findFiles([], root, config.exclude, PIN_EXTENSIONS)) {
 		if (NOT_A_PIN.test(basename(filename))) continue;
 		const source = readFileSync(filename, 'utf8');
 		const found = pinsIn(filename, source);
 		if (found.edits.length === 0 && found.left.length === 0) continue;
-		const needsHash = found.edits.some((edit) => edit.with && compareVersions(edit.from, target) < 0);
-		const change = raisePins(filename, source, target, needsHash ? integrityOf() : undefined);
+		const change = raisePins(filename, source, target, dist);
 		const file = relativePath(root, filename);
 		if (change.source !== source) writeFileSync(filename, change.source);
 		for (const pin of change.raised) pinned.push({ file, ...pin });
@@ -265,7 +308,7 @@ export async function upgradeProject(data, { root, target, breaking, config, sev
 	const lockfiles = [];
 	const seen = new Set();
 	for (const directory of manifestDirectories) {
-		const lock = lockfileCommand(directory, root);
+		const lock = lockfileCommand(directory, root, install === 'full' ? 'full' : 'lockfile');
 		if (!lock || seen.has(lock.directory)) continue;
 		seen.add(lock.directory);
 		const [command, args] = lock.command;
@@ -274,7 +317,12 @@ export async function upgradeProject(data, { root, target, breaking, config, sev
 	}
 
 	// 3. Every fix that is certain. A first pass without writing says which rules they come from.
-	const lint = (fix) => lintProject(data, { root, config, severities, fix, markdown: true });
+	const brings = upgradeRules(data, from ?? target);
+	// Where the syntax leaves an expression open, the project's types may settle it. What stays open
+	// is listed for the rules that can fail a build: there the upgrade can break without a finding.
+	const types = createTypes();
+	const canBreak = (rule) => rule.severity === 'error' && brings.isNew(rule);
+	const lint = (fix) => lintProject(data, { root, config, severities, fix, markdown: true, undecided: canBreak, types });
 	const before = await lint(false);
 	const fixedByRule = {};
 	for (const finding of before.results.flatMap(({ findings }) => findings)) {
@@ -285,15 +333,23 @@ export async function upgradeProject(data, { root, target, breaking, config, sev
 	// 4. What is left, without what the project accepted in its baseline.
 	const baseline = readBaseline(root, canonical);
 	const work = new Map();
-	const other = new Map();
+	const standing = new Map();
+	const undecided = new Map();
 	const unread = [];
-	for (const { filename, findings } of session.results) {
+	const messages = new Map(data.rules.map((rule) => [rule.id, rule]));
+	for (const { filename, findings, undecided: open = [] } of session.results) {
 		const file = relativePath(root, filename);
+		for (const { rule, line, tag } of open) {
+			const { severity, message } = messages.get(rule);
+			const entry = undecided.get(rule) ?? { rule, severity, message, places: [] };
+			entry.places.push({ file, line, tag });
+			undecided.set(rule, entry);
+		}
 		for (const finding of applyBaseline(filename, findings, baseline, root)) {
 			if (finding.severity === 'hint') continue;
 			if (finding.rule === 'file-not-read') unread.push(file);
 			else {
-				const list = isWork(data, finding) ? work : other;
+				const list = finding.severity === 'error' || brings.of(finding.rule) ? work : standing;
 				const entry = list.get(finding.rule) ?? { rule: finding.rule, severity: finding.severity, message: finding.message, places: [] };
 				entry.places.push({ file, line: finding.line, tag: finding.tag || undefined });
 				list.set(finding.rule, entry);
@@ -315,8 +371,10 @@ export async function upgradeProject(data, { root, target, breaking, config, sev
 		fixed: { total: session.fixed, files: session.fixedFiles, byRule: fixedByRule, references: session.references?.fixed ?? 0, stillNamed: session.references?.remaining ?? [] },
 		files: session.files,
 		work: [...work.values()].sort(bySize),
-		other: [...other.values()].sort(bySize),
+		undecided: [...undecided.values()].sort(bySize),
+		standing: [...standing.values()].sort(bySize),
 		unread,
 		breaking: { total: changes.total, touching: changes.touching },
+		types: { projects: types.projects(), without: types.without() },
 	};
 }

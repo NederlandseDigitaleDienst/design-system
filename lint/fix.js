@@ -143,16 +143,17 @@ function tagEdits(source, { offset, endOffset, tag: name, startTag }, to) {
 /**
  * What stands between the start tag and the closing tag of an element, when the
  * file says it for certain: no hole a template fills (`{ }`, `${ }`, `{{ }}`)
- * and no comment, which could hold anything.
+ * and no comment, which could hold anything. Where a hole can only be text, as
+ * `{{ }}` in Vue and an expression in JSX that the finding took for text, it stays.
  */
-function contentOf(source, { offset, endOffset, tag: name, startTag }) {
+function contentOf(source, { offset, endOffset, tag: name, startTag, holesAreText }) {
 	if (!startTag || endOffset === undefined || endOffset >= source.length || !source.startsWith(`<${name}`, offset)) return undefined;
 	if (startTag.selfClosing) return undefined;
 	const start = startTag.end + 1;
 	const closing = source.lastIndexOf('</', endOffset);
 	if (closing < start || !new RegExp(`^</${name}\\s*>$`).test(source.slice(closing, endOffset + 1))) return undefined;
 	const text = source.slice(start, closing);
-	if (/[{}]|<!--/.test(text)) return undefined;
+	if ((holesAreText ? /<!--/ : /[{}]|<!--/).test(text)) return undefined;
 	return { start, end: closing, text };
 }
 

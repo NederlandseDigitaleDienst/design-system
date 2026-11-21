@@ -60,13 +60,48 @@ describe('the version, wherever a project names it', () => {
 		assert.equal(raised, source.replaceAll('0.13.2', '0.27.1'));
 	});
 
-	it('raises a record of the package with its hash, or not at all', () => {
-		const record = (version, integrity) => JSON.stringify({ package: '@nldd/design-system', version, integrity }, null, 2);
-		const source = record('0.16.0', 'sha512-old');
-		assert.equal(raisePins('pinned.json', source, '0.27.1', 'sha512-new').source, record('0.27.1', 'sha512-new'));
-		const without = raisePins('pinned.json', source, '0.27.1', null);
-		assert.equal(without.source, source);
-		assert.equal(without.left.length, 1);
+	it('raises an override, a resolution or any other key that is the name of the package', () => {
+		const manifest = (range) => JSON.stringify({ dependencies: { '@nldd/design-system': range }, overrides: { '@nldd/design-system': range } }, null, 2);
+		assert.equal(raisePins('package.json', manifest('^0.13.2'), '0.27.1').source, manifest('^0.27.1'));
+		const versions = (range) => JSON.stringify({ '@nldd/design-system': range, lit: '3.0.0' });
+		assert.equal(raisePins('versions.json', versions('0.13.2'), '0.27.1').source, versions('0.27.1'));
+		assert.deepEqual(raisePins('versions.json', versions('see the docs'), '0.27.1').left, []);
+	});
+
+	it('leaves an address in a tag with the integrity hash of the file it loads, and says so', () => {
+		const source = '<script src="https://cdn.jsdelivr.net/npm/@nldd/design-system@0.13.2/dist/index.js" integrity="sha384-abc" crossorigin="anonymous"></script>\n<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@nldd/design-system@0.13.2/dist/styles.css">\n';
+		const result = raisePins('index.html', source, '0.27.1');
+		assert.equal(result.source, source.replace('@0.13.2/dist/styles', '@0.27.1/dist/styles'));
+		assert.deepEqual(result.left.map(({ line }) => line), [1]);
+	});
+
+	it('raises the address of the tarball', () => {
+		const source = 'curl -O https://registry.npmjs.org/@nldd/design-system/-/design-system-0.13.2.tgz\n';
+		assert.equal(raisePins('fetch.sh', source, '0.27.1').source, source.replace('0.13.2', '0.27.1'));
+	});
+
+	describe('a record with a hash', () => {
+		const registry = { '0.16.0': { integrity: 'sha512-AAAA', shasum: 'a'.repeat(40) }, '0.27.1': { integrity: 'sha512-BBBB', shasum: 'b'.repeat(40) } };
+		const dist = (version) => registry[version];
+
+		it('gets the version and the hash of the new one, whether it names the package or stands under its name', () => {
+			const named = (version, { integrity, shasum }) => JSON.stringify({ package: '@nldd/design-system', version, integrity, shasum }, null, 2);
+			assert.equal(raisePins('pinned.json', named('0.16.0', registry['0.16.0']), '0.27.1', dist).source, named('0.27.1', registry['0.27.1']));
+			const keyed = (version, { integrity }) => JSON.stringify({ vendored: { '@nldd/design-system': { version, integrity } } }, null, 2);
+			assert.equal(raisePins('vendor.json', keyed('0.16.0', registry['0.16.0']), '0.27.1', dist).source, keyed('0.27.1', registry['0.27.1']));
+		});
+
+		it('stays as it is when the hash is not the one the registry has for that version', () => {
+			const source = JSON.stringify({ name: '@nldd/design-system', version: '0.16.0', integrity: 'sha384-of-one-file' }, null, 2);
+			const result = raisePins('pinned.json', source, '0.27.1', dist);
+			assert.equal(result.source, source);
+			assert.equal(result.left.length, 1);
+		});
+
+		it('stays as it is when the registry does not answer', () => {
+			const source = JSON.stringify({ name: '@nldd/design-system', version: '0.16.0', integrity: 'sha512-AAAA' }, null, 2);
+			assert.equal(raisePins('pinned.json', source, '0.27.1').source, source);
+		});
 	});
 
 	it('leaves a version in a JSON file that is not a record of the package', () => {
@@ -141,6 +176,22 @@ describe('nldd upgrade', () => {
 		assert.deepEqual(result.breaking.touching.map(({ version }) => version), ['0.22.0']);
 	});
 
+	it('keeps apart what a rule the project had already finds', async () => {
+		const page = '<nldd-title text="Aanvraag A-1042"></nldd-title>\n';
+		const since = (after) => ({ ...DATA, rules: DATA.rules.map((rule) => (rule.id === 'title-needs-heading-level' ? { ...rule, after } : rule)) });
+		const upgraded = async (after) => (await upgradeProject(since(after), { root: project({ ...files, 'page.html': page }), target: '0.27.1', breaking: {}, config: {}, severities, run: () => ({ ok: true, output: '' }) }));
+		const had = await upgraded('0.16.0');
+		assert.deepEqual([had.work.length, had.standing.map(({ rule }) => rule)], [0, ['title-needs-heading-level']]);
+		const brought = await upgraded('0.22.0');
+		assert.deepEqual([brought.work.map(({ rule }) => rule), brought.standing.length], [['title-needs-heading-level'], 0]);
+		assert.match(formatReport(had), /## Stond er al\n\n1 waarschuwing van regels die er in 0\.20\.0 ook waren/);
+	});
+
+	it('installs what the lockfile lists when asked to, so the types of the project can be read', async () => {
+		const { ran } = await upgrade(project(files), { install: 'full' });
+		assert.deepEqual(ran, ['npm install --ignore-scripts --no-audit --no-fund']);
+	});
+
 	it('leaves the lockfile alone when told to, and says it is not rewritten', async () => {
 		const { result, ran } = await upgrade(project(files), { install: false });
 		assert.deepEqual(ran, []);
@@ -208,12 +259,22 @@ describe('markup in Python strings', () => {
 	});
 
 	it('leaves a pattern that looks for markup alone, as a test has', async () => {
-		const source = "import re\na = re.search(r'<nldd-buton[^>]*>', html)\nb = re.compile(r'<nldd-menu-(item|divider)[ >]')\nc = '<nldd-text-feld\\b[^>]*>'\n";
+		const source = "import re\na = re.search(r'<nldd-buton[^>]*>', html)\nb = re.compile(r'<nldd-menu-(item|divider)[ >]')\nc = '<nldd-text-feld\\b[^>]*>'\nd = re.findall(r'<nldd-icon[^>]*icon=\\\"([^\\\"]+)\\\"', html)\ne = re.findall(r'<nldd-menu slot=\"popup\".*?</nldd-menu>', html)\n";
 		assert.deepEqual(await rulesOf(source), []);
 	});
 
-	it('says a literal with an escaped quote was not read', async () => {
-		assert.deepEqual(await rulesOf('a = "<nldd-title size=\\"3\\" text=\\"x\\"></nldd-title>"\n'), ['file-not-read']);
+	it('reads a quote behind a backslash as the quote it is, and writes no fix there', async () => {
+		const findings = await lint('a = "<nldd-title size=\\"3\\" heading-level=\\"2\\" text=\\"x\\"></nldd-title>"\nb = \'<nldd-title size=\\\'display-3\\\' heading-level=\\\'2\\\' text=\\\'x\\\'></nldd-title>\'\n');
+		assert.deepEqual(findings.map(({ rule, line }) => [rule, line]), [['title-size-renamed', 1]]);
+		assert.equal(findings[0].fix, undefined);
+	});
+
+	it('reads `\\n` between two attributes as white space', async () => {
+		assert.deepEqual(await rulesOf('a = "<nldd-title\\n  size=\\"display-3\\"\\n  heading-level=\\"2\\" text=\\"x\\"></nldd-title>"\n'), []);
+	});
+
+	it('says a raw literal with a quote behind a backslash was not read', async () => {
+		assert.deepEqual(await rulesOf('a = r"<nldd-title size=\\"3\\" text=\\"x\\"></nldd-title>"\n'), ['file-not-read']);
 	});
 
 	it('is found by a scan, and only where a literal holds a component', async () => {
@@ -236,5 +297,57 @@ describe('Markdown in a scan', () => {
 		const rulesIn = (session) => session.results.flatMap(({ findings }) => findings.map(({ rule }) => rule)).filter((rule) => rule !== 'title-needs-heading-level');
 		assert.deepEqual(rulesIn(await lintProject(DATA, { root, severities, markdown: true })), []);
 		assert.ok(rulesIn(await lintProject(DATA, { root, severities, paths: ['docs/a.md'] })).includes('title-size-renamed'));
+	});
+});
+
+describe('an expression in JSX, read by its type', async () => {
+	const { default: compiler } = await import('typescript');
+	const { createTypes } = await import('./types.js');
+	const { applyFixes } = await import('./fix.js');
+	const component = (body) => `type Row = { label: string; count: number; note?: string; cell: unknown };\nexport function View({ row, children }: { row: Row; children: any }) {\n\treturn ${body};\n}\n`;
+	const lintIn = async (body, options = {}) => {
+		const root = project({ 'tsconfig.json': JSON.stringify({ compilerOptions: { jsx: 'preserve', strict: true }, include: ['*.tsx'] }) });
+		const linter = createLinter(DATA, { types: options.untyped ? undefined : createTypes({ compiler }), undecided: options.undecided });
+		return linter.lintSource(component(body), join(root, 'View.tsx'));
+	};
+	const rulesOf = async (body, options) => (await lintIn(body, options)).findings.filter(({ severity }) => severity !== 'hint').map(({ rule }) => rule);
+
+	it('takes a string or a number for text, also where it may be missing', async () => {
+		for (const expression of ['row.label', 'row.count', 'row.note', 'row.label.toUpperCase()', 'row.note ?? row.label']) {
+			assert.deepEqual(await rulesOf(`<nldd-text>{${expression}}</nldd-text>`), ['text-needs-element'], expression);
+		}
+	});
+
+	it('says nothing about a type that can be an element, or that did not resolve', async () => {
+		for (const expression of ['children', 'row.cell', 'missing.label']) {
+			assert.deepEqual(await rulesOf(`<nldd-text>{${expression}}</nldd-text>`), [], expression);
+		}
+	});
+
+	it('says nothing without the types, as before', async () => {
+		assert.deepEqual(await rulesOf('<nldd-text>{row.label}</nldd-text>', { untyped: true }), []);
+	});
+
+	it('puts the text in its element, expression and all', async () => {
+		const body = '<nldd-text size="sm">{row.label} van {row.count}</nldd-text>';
+		const { findings } = await lintIn(body);
+		assert.match(applyFixes(component(body), findings).source, /<nldd-text size="sm"><p>\{row\.label\} van \{row\.count\}<\/p><\/nldd-text>/);
+	});
+
+	it('lists a place where the content stays open, for the rules someone asks about', async () => {
+		const asked = { undecided: (rule) => rule.id === 'text-needs-element' };
+		assert.deepEqual((await lintIn('<nldd-text>{children}</nldd-text>', asked)).undecided.map(({ rule, tag, line }) => [rule, tag, line]), [['text-needs-element', 'nldd-text', 3]]);
+		// A bound attribute is open on every element, so it is no place to look.
+		assert.deepEqual((await lintIn('<nldd-text text={row.label}></nldd-text>', asked)).undecided, []);
+		assert.deepEqual((await lintIn('<nldd-text>{children}</nldd-text>')).undecided, []);
+	});
+});
+
+describe('a fix around a hole that can only be text', () => {
+	it('wraps `{{ }}` in Vue', async () => {
+		const { applyFixes } = await import('./fix.js');
+		const source = '<template>\n\t<nldd-text>{{ label }}</nldd-text>\n</template>\n';
+		const { findings } = await createLinter(DATA).lintSource(source, 'View.vue');
+		assert.match(applyFixes(source, findings).source, /<nldd-text><p>\{\{ label \}\}<\/p><\/nldd-text>/);
 	});
 });

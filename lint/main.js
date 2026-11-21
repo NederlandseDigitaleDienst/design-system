@@ -22,6 +22,8 @@ const USAGE = `Usage:
     --select <groups or rules>      only these, comma separated
     --ignore <groups or rules>      all but these
     --statistics                    count per rule instead of listing every finding
+    --types                         read an expression in JSX by its type, with the project's TypeScript:
+                                    {row.label} is text when it is a string. Finds more, and takes longer
     --stdin --filename <name>       check a snippet instead of files
     --url <url> [paths...]          check pages as they run, in a browser: what an expression or a
                                     variable fills in, which the source does not show. Needs Playwright
@@ -43,6 +45,8 @@ const USAGE = `Usage:
     --report <file>                 write the report there, as Markdown for a pull request
     --format json                   the same as data, for a script or an agent
     --no-install                    leave the lockfile to you
+    --install                       install the dependencies too, without their scripts: with the project's
+                                    TypeScript there, an expression in JSX is read by its type
     --url <url> [--crawl]           also read the running app, as lint --url does, and add what it
                                     shows to the report
   nldd explain <rule>               what a rule checks, and why
@@ -176,7 +180,7 @@ async function runUpgrade(data, paths, options) {
 		config,
 		severities,
 		canonical: createCanonical(data),
-		install: !options['no-install'],
+		install: options['no-install'] ? false : options.install ? 'full' : true,
 	});
 	// The running app, where the project has one up: the places the source left undecided.
 	const result = options.url ? withRendered(upgraded, await lintPages(data, [], options, { root, config, severities }), root) : upgraded;
@@ -229,6 +233,7 @@ async function runLint(data, paths, options) {
 		input: options.stdin ? { filename: options.filename ?? 'stdin.html', source: readFileSync(0, 'utf8') } : undefined,
 		fix: options.fix,
 		keep: (filename) => inBaseline.has(relativePath(root, filename)),
+		types: options.types ? (await import('./types.js')).createTypes() : undefined,
 	});
 	const { results } = session;
 	for (const filename of session.notUtf8) console.error(`Skipped ${relative(root, filename)}: it is not UTF-8.`);
@@ -309,6 +314,8 @@ async function main() {
 			out: { type: 'string' },
 			report: { type: 'string' },
 			'no-install': { type: 'boolean' },
+			install: { type: 'boolean' },
+			types: { type: 'boolean' },
 			'label-before': { type: 'string' },
 			'label-after': { type: 'string' },
 			for: { type: 'string' },

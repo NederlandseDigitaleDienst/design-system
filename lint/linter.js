@@ -275,7 +275,7 @@ function linkedFile(href, filename) {
 	}
 }
 
-export function createLinter(data = loadData(), { wrappers = {}, severities: configured = {}, projectTokens = [] } = {}) {
+export function createLinter(data = loadData(), { wrappers = {}, severities: configured = {}, projectTokens = [], undecided = () => false, types } = {}) {
 	const canonical = createCanonical(data);
 	const severities = Object.fromEntries(Object.entries(configured).map(([id, level]) => [canonical(id), level]));
 	const context = {
@@ -503,6 +503,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 
 	function lintRoots(roots, isPlainHtml) {
 		const findings = [];
+		const open = [];
 		const counts = { failed: 0, passed: 0, cantTell: 0 };
 		for (const root of roots) {
 			findings.push(...builtInFindings(root, { ...context, isPlainHtml }));
@@ -511,7 +512,12 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 					counts[outcome]++;
 					// A name that is gone is wrong whatever the binding holds, but not for a rule about one of its values.
 					const namesRemoved = !testsRemovedValue(rule) && rule.removed?.some((name) => node.attrs.get(name) === BOUND);
-					if (outcome !== 'failed' && !(outcome === 'cantTell' && namesRemoved)) continue;
+					if (outcome !== 'failed' && !(outcome === 'cantTell' && namesRemoved)) {
+						// Content that a variable or a component of the app fills in decides this one: no finding, and
+						// a place to look for whoever asks. A bound or spread attribute is not: that is open everywhere.
+						if (outcome === 'cantTell' && undecided(rule) && !node.spread && node.children.some((child) => child.opaque)) open.push({ rule: rule.id, node });
+						continue;
+					}
 					findings.push({
 						rule: rule.id,
 						severity: rule.severity,
@@ -523,17 +529,17 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 				}
 			}
 		}
-		return { findings: withoutCovered(findings), counts };
+		return { findings: withoutCovered(findings), counts, open };
 	}
 
 	/** @returns {Promise<{ findings: object[], counts: object }>} */
 	async function lintSource(source, filename, { only, rendered } = {}) {
 		if (only === 'events') return lintEvents(source, filename);
-		const parsed = applyWrappers(await parseSource(source, filename, { rendered }), wrappers);
+		const parsed = applyWrappers(await parseSource(source, filename, { rendered, types }), wrappers);
 		const isPlainHtml = /\.(html?|j2|jinja2?|tmpl|gohtml)$/.test(filename);
 		const roots = readPropertyNames(parsed, data.tags, isPlainHtml);
 		readLinkedStylesheets(roots, filename);
-		const { findings, counts } = lintRoots(roots, isPlainHtml);
+		const { findings, counts, open } = lintRoots(roots, isPlainHtml);
 		const { suppressed, missingReason } = readSuppressions(source, canonical);
 		const position = createPositions(source);
 		const aboutSuppression = (rule, line, detail = BUILT_IN_RULES[rule].description) => ({
@@ -555,7 +561,10 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 				mention: node.mention,
 				startTag: node.startTag,
 				jsx,
+				// A finding about text was decided with every hole read: as text, or it would not be one.
+				holesAreText: jsx || /\.vue$/.test(filename),
 				inString: Boolean(parsed.strings),
+				escaped: Boolean(node.escaped),
 				...position(node.offset),
 			}))
 			.concat(
@@ -565,7 +574,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 			);
 		const stuck = stuckTags(source, all, jsx);
 		for (const finding of all) {
-			if (finding.fix && (!canFix(source, finding) || (finding.fix.tag && stuck.has(finding.tag)))) finding.fix = undefined;
+			if (finding.fix && (finding.escaped || !canFix(source, finding) || (finding.fix.tag && stuck.has(finding.tag)))) finding.fix = undefined;
 		}
 		const fires = (line, id) => all.some((finding) => finding.line === line && finding.rule === id);
 		// A rule that did not run here says nothing, and Markdown shows a suppression as an example.
@@ -586,7 +595,10 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 			.map((finding) => ({ ...finding, severity: severities[finding.rule] ?? finding.severity }))
 			.filter((finding) => finding.severity !== 'off');
 		located.sort((a, b) => a.line - b.line || a.column - b.column);
-		return { findings: located, counts };
+		const stillOpen = open
+			.map(({ rule, node }) => ({ rule, tag: node.name, ...position(node.offset) }))
+			.filter(({ rule, line }) => !suppressed.get(line)?.has(rule) && severities[rule] !== 'off');
+		return { findings: located, counts, undecided: stillOpen };
 	}
 
 	/** A script the scan reads only for the events it listens to, such as a `.ts` file. */
