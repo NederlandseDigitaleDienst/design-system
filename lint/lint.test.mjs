@@ -7,7 +7,8 @@ import { describe, it } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { cssRules, isDesignSystemCss } from './css.js';
 import { createEngine } from './engine.js';
-import { parseAstro, parseHtml, parseJsx, parseMarkdown, parseStylesheet, parseVue, readerOf } from './frontends.js';
+import { parseAstro, parseHtml, parseMarkdown, parseStylesheet, parseVue, readerOf } from './frontends.js';
+import { parseJsx } from './jsx.js';
 import { createCanonical, createLinter, loadData } from './linter.js';
 import { resolveSeverities } from './rule-data.js';
 import { readBaseline, UNREAD_EXTENSIONS } from './project.js';
@@ -113,7 +114,7 @@ describe('frontends', () => {
 	});
 
 	it('reads JSX with conditions, lists, fragments and spreads', async () => {
-		const roots = await parseJsx(
+		const { roots } = await parseJsx(
 			'const a = <nldd-list {...p}><>{x && <nldd-a />}{y.map((i) => <nldd-b key={i} />)}{children}</></nldd-list>;',
 			'a.tsx',
 		);
@@ -125,7 +126,7 @@ describe('frontends', () => {
 	});
 
 	it('reads an element passed as a prop as a tree of its own', async () => {
-		const roots = await parseJsx('const a = <Foo icon={<nldd-icon icon="plus" />} />;', 'a.tsx');
+		const { roots } = await parseJsx('const a = <Foo icon={<nldd-icon icon="plus" />} />;', 'a.tsx');
 		assert.ok(first(roots, 'nldd-icon'));
 	});
 

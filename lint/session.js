@@ -40,17 +40,19 @@ const MAX_FIX_PASSES = 10;
 export async function fixUntilStable(linter, original, filename, options) {
 	let source = original;
 	let fixed = 0;
+	const byRule = {};
 	const renamedTags = new Map();
 	for (let pass = 0; pass < MAX_FIX_PASSES; pass++) {
 		const { findings, undecided } = await linter.lintSource(source, filename, options);
 		const change = applyFixes(source, findings);
-		if (change.fixed === 0) return { source, fixed, renamedTags, findings, undecided, unstable: false };
+		if (change.fixed === 0) return { source, fixed, byRule, renamedTags, findings, undecided, unstable: false };
 		source = change.source;
 		fixed += change.fixed;
+		for (const [rule, count] of Object.entries(change.byRule)) byRule[rule] = (byRule[rule] ?? 0) + count;
 		for (const [from, to] of change.renamedTags) renamedTags.set(from, to);
 	}
 	const { findings, undecided } = await linter.lintSource(source, filename, options);
-	return { source, fixed, renamedTags, findings, undecided, unstable: applyFixes(source, findings).fixed > 0 };
+	return { source, fixed, byRule, renamedTags, findings, undecided, unstable: applyFixes(source, findings).fixed > 0 };
 }
 
 const isUnread = (filename) => UNREAD_EXTENSIONS.includes(extname(filename));
@@ -104,7 +106,7 @@ function fixReferences(renamedTags, paths, root, exclude) {
  * @param {boolean} [options.markdown] - a scan also reads Markdown and MDX, for the markup they render
  * @param {Function} [options.types] - from createTypes(): what the project's types say an expression in JSX renders
  * @param {(rule: object) => boolean} [options.undecided] - the rules whose undecided places each result lists
- * @returns {Promise<{ results: object[], files: number, unread: number, fixed: number, fixedFiles: number,
+ * @returns {Promise<{ results: object[], files: number, unread: number, fixed: number, fixedFiles: number, fixedByRule: Record<string, number>,
  *   notUtf8: string[], symlinks: string[], unstable: string[], partialExcludes: { entry: string, file: string }[], references?: { fixed: number, files: number, remaining: string[] } }>}
  */
 export async function lintProject(data, { root, paths = [], config = {}, severities, input, fix = false, keep = () => false, markdown = false, undecided, types }) {
@@ -147,6 +149,7 @@ export async function lintProject(data, { root, paths = [], config = {}, severit
 	const renamedTags = new Map();
 	let fixed = 0;
 	let fixedFiles = 0;
+	const fixedByRule = {};
 	if (relevant.length > 0) {
 		const { createLinter } = await import('./linter.js');
 		const linter = createLinter(data, { wrappers: config.wrappers, severities, projectTokens: projectTokens(inputs), undecided, types });
@@ -166,6 +169,7 @@ export async function lintProject(data, { root, paths = [], config = {}, severit
 				writeFileSync(filename, change.source);
 				fixed += change.fixed;
 				fixedFiles += 1;
+				for (const [rule, count] of Object.entries(change.byRule)) fixedByRule[rule] = (fixedByRule[rule] ?? 0) + count;
 				for (const [from, to] of change.renamedTags) renamedTags.set(from, to);
 			}
 			results.push({ filename, source: change.source, findings: change.findings, undecided: change.undecided });
@@ -176,5 +180,5 @@ export async function lintProject(data, { root, paths = [], config = {}, severit
 	// Counted on the markup, so a suppressed `file-not-read` does not make it read.
 	const unread = inputs.filter(({ filename, source }) => isUnread(filename) && hasOurMarkup(source)).length;
 	const partial = input ? [] : partialExcludes(paths, root, config.exclude, scanned);
-	return { results, files, unread, fixed, fixedFiles, notUtf8, symlinks, unstable, partialExcludes: partial, references };
+	return { results, files, unread, fixed, fixedFiles, fixedByRule, notUtf8, symlinks, unstable, partialExcludes: partial, references };
 }

@@ -461,13 +461,13 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 	 * script without an `html` template, where `<nldd-` sits in a plain string. What a
 	 * markup parser skips on purpose, such as a comment or an inert template, is not this.
 	 */
-	function unreadMarkup(source, filename, roots) {
+	function unreadMarkup(source, filename, reading) {
 		const rule = 'file-not-read';
 		const finding = (offset) => [{ rule, severity: BUILT_IN_RULES[rule].severity, message: BUILT_IN_RULES[rule].description, tag: '', offset }];
 		// A reader that knows what it left unread says so itself.
-		if (roots.unread !== undefined) return roots.unread < 0 ? [] : finding(roots.unread);
+		if (reading.kind === 'strings') return reading.unread === undefined ? [] : finding(reading.unread);
 		const reader = readerOf(filename);
-		if (reader === 'markup' || (reader === 'templates' && roots.length > 0)) return [];
+		if (reader === 'markup' || (reader === 'templates' && reading.roots.length > 0)) return [];
 		const offset = withoutComments(source, !MARKUP_FILE.test(filename)).search(/<nldd-[a-z]/);
 		if (offset < 0) return [];
 		return finding(offset);
@@ -535,9 +535,9 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 	/** @returns {Promise<{ findings: object[], counts: object }>} */
 	async function lintSource(source, filename, { only, rendered } = {}) {
 		if (only === 'events') return lintEvents(source, filename);
-		const parsed = applyWrappers(await parseSource(source, filename, { rendered, types }), wrappers);
+		const parsed = await parseSource(source, filename, { rendered, types });
 		const isPlainHtml = /\.(html?|j2|jinja2?|tmpl|gohtml)$/.test(filename);
-		const roots = readPropertyNames(parsed, data.tags, isPlainHtml);
+		const roots = readPropertyNames(applyWrappers(parsed.roots, wrappers), data.tags, isPlainHtml);
 		readLinkedStylesheets(roots, filename);
 		const { findings, counts, open } = lintRoots(roots, isPlainHtml);
 		const { suppressed, missingReason } = readSuppressions(source, canonical);
@@ -550,7 +550,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 			line,
 			column: 1,
 		});
-		const jsx = /\.[jt]sx$/.test(filename) || Boolean(parsed.jsx);
+		const jsx = parsed.kind === 'jsx';
 		const all = findings
 			.map(({ node, severity, covers, attribute, ...finding }) => ({
 				...finding,
@@ -560,11 +560,9 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 				endOffset: node.endOffset,
 				mention: node.mention,
 				startTag: node.startTag,
-				jsx,
-				// A finding about text was decided with every hole read: as text, or it would not be one.
-				holesAreText: jsx || /\.vue$/.test(filename),
-				inString: Boolean(parsed.strings),
-				escaped: Boolean(node.escaped),
+				// What a fix may write here: what the reader of this file allows, and nothing where it says so.
+				writes: parsed.writes,
+				readOnly: Boolean(node.readOnly),
 				...position(node.offset),
 			}))
 			.concat(
@@ -574,11 +572,11 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 			);
 		const stuck = stuckTags(source, all, jsx);
 		for (const finding of all) {
-			if (finding.fix && (finding.escaped || !canFix(source, finding) || (finding.fix.tag && stuck.has(finding.tag)))) finding.fix = undefined;
+			if (finding.fix && (!canFix(source, finding) || (finding.fix.tag && stuck.has(finding.tag)))) finding.fix = undefined;
 		}
 		const fires = (line, id) => all.some((finding) => finding.line === line && finding.rule === id);
 		// A rule that did not run here says nothing, and Markdown shows a suppression as an example.
-		const unneeded = /\.mdx?$/.test(filename) || parsed.length === 0 || parsed.syntaxError
+		const unneeded = /\.mdx?$/.test(filename) || parsed.roots.length === 0 || parsed.syntaxError
 			? []
 			: [...suppressed].flatMap(([line, ids]) =>
 					[...ids]
@@ -593,6 +591,9 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 			.concat(missingReason.map((line) => aboutSuppression('suppression-needs-reason', line)), unneeded)
 			.concat(parsed.syntaxError ? [syntaxError(parsed.syntaxError, position)] : [])
 			.map((finding) => ({ ...finding, severity: severities[finding.rule] ?? finding.severity }))
+			// Strings were not read before, so what stands in them comes as a warning: a release that is no
+			// breaking one may not turn the build of a project red.
+			.map((finding) => (parsed.kind === 'strings' && finding.severity === 'error' ? { ...finding, severity: 'warn' } : finding))
 			.filter((finding) => finding.severity !== 'off');
 		located.sort((a, b) => a.line - b.line || a.column - b.column);
 		const stillOpen = open
@@ -617,10 +618,10 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 	/** Evaluates one rule on a snippet, for the examples of that rule. */
 	async function outcomesOf(rule, snippet) {
 		const isDocument = snippet.startsWith('<html');
-		const parsed = isDocument
+		const { roots } = isDocument
 			? await parseSource(snippet, 'example.html')
 			: await parseSource(`<template>${snippet}</template>`, 'example.vue');
-		return parsed.flatMap((root) => engine.evaluate(rule, root).map(({ outcome }) => outcome));
+		return roots.flatMap((root) => engine.evaluate(rule, root).map(({ outcome }) => outcome));
 	}
 
 	return { lintSource, outcomesOf };

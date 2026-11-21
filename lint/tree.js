@@ -9,6 +9,21 @@
 /** Marks an attribute whose value only exists at runtime. */
 export const BOUND = Symbol('bound');
 
+/** Wrappers that add nothing to the DOM: a frontend reads through them to what they hold. */
+export const TRANSPARENT = new Set([
+	'Transition',
+	'TransitionGroup',
+	'KeepAlive',
+	'Suspense',
+	'transition',
+	'transition-group',
+	'keep-alive',
+	'suspense',
+	'Fragment',
+	'React.Fragment',
+	'ng-container',
+]);
+
 /**
  * @typedef {object} TreeNode
  * @property {string} name

@@ -638,6 +638,7 @@
     "lint:fix": "eslint src/ www/ --fix",
     "lint:rules": "node scripts/check-lint-rules.js",
     "lint:corpus": "node scripts/lint-corpus.js",
+    "upgrade:corpus": "node scripts/upgrade-corpus.js",
     "changelog:draft": "node scripts/changelog-draft.mjs",
     "prepare": "pre-commit install || true",
     "pretest": "npm run build:icons",

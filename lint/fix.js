@@ -85,9 +85,9 @@ function writtenTranslations(source, found) {
  * bound or already has the key. One per element per pass: the next pass adds the next key.
  */
 function translationEdits(source, finding, translation) {
-	const { startTag, jsx, inString } = finding;
+	const { startTag, writes } = finding;
 	// In a string literal of another language, a quote of ours could end the literal.
-	if (jsx || inString) return [];
+	if (writes && !writes.quotes) return [];
 	return Object.entries(translation).flatMap(([name, key]) => {
 		const found = findAttribute(startTag, name);
 		const text = writtenText(source, found);
@@ -146,14 +146,14 @@ function tagEdits(source, { offset, endOffset, tag: name, startTag }, to) {
  * and no comment, which could hold anything. Where a hole can only be text, as
  * `{{ }}` in Vue and an expression in JSX that the finding took for text, it stays.
  */
-function contentOf(source, { offset, endOffset, tag: name, startTag, holesAreText }) {
+function contentOf(source, { offset, endOffset, tag: name, startTag, writes }) {
 	if (!startTag || endOffset === undefined || endOffset >= source.length || !source.startsWith(`<${name}`, offset)) return undefined;
 	if (startTag.selfClosing) return undefined;
 	const start = startTag.end + 1;
 	const closing = source.lastIndexOf('</', endOffset);
 	if (closing < start || !new RegExp(`^</${name}\\s*>$`).test(source.slice(closing, endOffset + 1))) return undefined;
 	const text = source.slice(start, closing);
-	if ((holesAreText ? /<!--/ : /[{}]|<!--/).test(text)) return undefined;
+	if ((writes?.aroundHoles ? /<!--/ : /[{}]|<!--/).test(text)) return undefined;
 	return { start, end: closing, text };
 }
 
@@ -183,6 +183,7 @@ function wrapEdits(source, finding, wrapper) {
 /** An edit is `{ from, to, text }` in the source. What is not certain makes none. */
 function editsOf(source, finding) {
 	const { fix, offset, tag, mention, startTag } = finding;
+	if (finding.readOnly) return [];
 	return [
 		...Object.entries(fix.rename ?? {}).flatMap(([from, to]) => renameEdits(source, startTag, from, to)),
 		...Object.entries(fix.value ?? {}).flatMap(([name, values]) => valueEdits(source, startTag, name, values)),
@@ -343,6 +344,7 @@ export function applyFixes(source, findings) {
 		// Edits of one finding that overlap each other would corrupt the file, so that fix is not made.
 		const clash = (edit, i) => unique.some((other) => overlaps(edit, other)) || found.slice(i + 1).some((other) => overlaps(edit, other));
 		if (found.length === 0 || found.some(clash)) continue;
+		for (const edit of found) edit.rule = finding.rule;
 		unique.push(...found);
 		if (finding.fix.tag) renamedTags.set(finding.tag, finding.fix.tag);
 		if (finding.fix.translation) translated.add(finding.offset);
@@ -351,5 +353,8 @@ export function applyFixes(source, findings) {
 	for (const { from, to, text } of unique.sort((a, b) => b.from - a.from)) {
 		fixed = fixed.slice(0, from) + text + fixed.slice(to);
 	}
-	return { source: fixed, fixed: unique.filter(({ closing }) => !closing).length, renamedTags };
+	const counted = unique.filter(({ closing }) => !closing);
+	const byRule = {};
+	for (const { rule } of counted) byRule[rule] = (byRule[rule] ?? 0) + 1;
+	return { source: fixed, fixed: counted.length, byRule, renamedTags };
 }

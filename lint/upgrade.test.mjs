@@ -6,7 +6,9 @@ import { describe, it } from 'node:test';
 import { createLinter } from './linter.js';
 import { loadData, resolveSeverities } from './rule-data.js';
 import { lintProject } from './session.js';
-import { breakingFor, compareVersions, lockfileCommand, raisePins, upgradeProject, withRendered } from './upgrade.js';
+import { lockfileCommand } from './lockfiles.js';
+import { compareVersions, raisePins } from './pins.js';
+import { breakingFor, upgradeProject, withRendered } from './upgrade.js';
 import { formatReport, formatSummary } from './upgrade-report.js';
 
 const DATA = loadData();
@@ -267,6 +269,13 @@ describe('markup in Python strings', () => {
 		const findings = await lint('a = "<nldd-title size=\\"3\\" heading-level=\\"2\\" text=\\"x\\"></nldd-title>"\nb = \'<nldd-title size=\\\'display-3\\\' heading-level=\\\'2\\\' text=\\\'x\\\'></nldd-title>\'\n');
 		assert.deepEqual(findings.map(({ rule, line }) => [rule, line]), [['title-size-renamed', 1]]);
 		assert.equal(findings[0].fix, undefined);
+	});
+
+	it('gives what stands in a string as a warning at most, since strings were not read before', async () => {
+		const source = "a = '<nldd-text>Dakisolatie</nldd-text>'\n";
+		assert.deepEqual((await lint(source)).map(({ rule, severity }) => [rule, severity]), [['text-needs-element', 'warn']]);
+		const inMarkup = (await createLinter(DATA).lintSource('<nldd-text>Dakisolatie</nldd-text>', 'page.html')).findings;
+		assert.deepEqual(inMarkup.map(({ rule, severity }) => [rule, severity]), [['text-needs-element', 'error']]);
 	});
 
 	it('reads `\\n` between two attributes as white space', async () => {
