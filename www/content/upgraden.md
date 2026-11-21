@@ -72,6 +72,10 @@ jobs:
 
 Zonder token van een app of een bot opent `github-actions[bot]` de pull request. Dan draait je eigen CI er niet op. Geef de workflow een token als je dat wel wilt.
 
+Je organisatie moet een workflow uit een andere repository toestaan. Dat staat onder **Settings**, **Actions**, **General**. Staat daar dat alleen eigen acties mogen, dan faalt de aanroep.
+
+`@main` neemt elke wijziging aan de workflow meteen mee. Wil je dat niet, zet dan een versie achter de naam, zoals `upgrade.yml@v0.28.0`, en verhoog die zelf.
+
 ### Met een agent
 
 Met `agent: true` werkt een agent de lijst af voordat de pull request opengaat. Hij volgt de skill van dezelfde versie, draait de CI van je project en schrijft zijn keuzes onder het verslag. Daarna leest de opdracht je project opnieuw, zodat het verslag zegt wat de linter nog vindt.
