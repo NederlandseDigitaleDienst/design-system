@@ -29,6 +29,40 @@ fi
 printf '%s\n%s\n' "$name" "$id+$name@users.noreply.github.com" > "$TOOLS/identity"
 use_identity
 
+# `nldd` is the command of the version the project goes to, in every step from here.
+if [ "$FROM_SOURCE" = true ]; then
+	checkout="$(cd "$ACTION/.." && pwd)"
+	npm ci --prefix "$checkout" --omit=dev --ignore-scripts --no-audit --no-fund
+	version="$(node --print "require('$checkout/package.json').version")"
+	printf '#!/bin/sh\nexec node "%s" "$@"\n' "$checkout/lint/cli.js" > "$TOOLS/bin/nldd"
+	echo "SKILLS=$checkout/skills" >> "$GITHUB_ENV"
+else
+	version="$(npm view "@nldd/design-system@$WANTED" version)"
+	printf '#!/bin/sh\nexec npx --yes "@nldd/design-system@%s" "$@"\n' "$version" > "$TOOLS/bin/nldd"
+fi
+chmod +x "$TOOLS/bin/nldd"
+echo "$TOOLS/bin" >> "$GITHUB_PATH"
+echo "version=$version" >> "$GITHUB_OUTPUT"
+
+number="$(gh pr list --repo "$REPOSITORY" --head "$BRANCH" --state open --json number --jq '.[0].number')"
+echo "number=$number" >> "$GITHUB_OUTPUT"
+
+# A pull request the team closed without merging is a no for that minor. The patches of it do not
+# ask again; the next minor, which may break something, does. A pull request the action closed
+# itself, because the project got there without it, is no answer of the team.
+if [ -z "$number" ]; then
+	read -r declined title < <(gh pr list --repo "$REPOSITORY" --head "$BRANCH" --state closed --limit 1 --json number,title,mergedAt --jq '.[] | select(.mergedAt == null) | "\(.number) \(.title)"') || true
+	if [ -n "${declined:-}" ]; then
+		closer="$(gh api "repos/$REPOSITORY/issues/$declined/events" --jq '[.[] | select(.event == "closed")] | last | .actor.login')"
+		was="${title##* }"
+		if [ "$closer" != "$name" ] && [ "${was%.*}" = "${version%.*}" ]; then
+			echo "The team closed #$declined for $was. $version is of the same minor, so it waits for the next one."
+			{ echo "changed=false"; echo "agent=false"; } >> "$GITHUB_OUTPUT"
+			exit 0
+		fi
+	fi
+fi
+
 # A plain clone, and not the checkout action. The token is asked for when git needs it and is
 # never written to disk, so a later step without it cannot push. And the action stops on a
 # repository whose tree holds a submodule without an address, which a real app turned out to have.
@@ -39,8 +73,6 @@ cp "$PROJECT/.git/config" "$TOOLS/git-config"
 cd "$PROJECT"
 git() { command git -c core.hooksPath=/dev/null "$@"; }
 
-number="$(gh pr list --repo "$REPOSITORY" --head "$BRANCH" --state open --json number --jq '.[0].number')"
-echo "number=$number" >> "$GITHUB_OUTPUT"
 from=''
 if [ -n "$number" ]; then
 	gh pr view "$number" --repo "$REPOSITORY" --json body --jq .body > "$TOOLS/previous.md"
@@ -66,25 +98,11 @@ if [ -n "$number" ]; then
 			echo "MERGE=resolved" >> "$GITHUB_ENV"
 		else
 			git merge --abort
+			behind=true
 			{ echo 'MERGE<<EOF'; echo 'behind'; sed 's/^/- `/; s/$/`/' <<< "$conflicted"; echo 'EOF'; } >> "$GITHUB_ENV"
 		fi
 	fi
 fi
-
-# `nldd` is the command of the version the project goes to, in every step from here.
-if [ "$FROM_SOURCE" = true ]; then
-	source="$(cd "$ACTION/.." && pwd)"
-	npm ci --prefix "$source" --omit=dev --ignore-scripts --no-audit --no-fund
-	version="$(node --print "require('$source/package.json').version")"
-	printf '#!/bin/sh\nexec node "%s" "$@"\n' "$source/lint/cli.js" > "$TOOLS/bin/nldd"
-	echo "SKILLS=$source/skills" >> "$GITHUB_ENV"
-else
-	version="$(npm view "@nldd/design-system@$WANTED" version)"
-	printf '#!/bin/sh\nexec npx --yes "@nldd/design-system@%s" "$@"\n' "$version" > "$TOOLS/bin/nldd"
-fi
-chmod +x "$TOOLS/bin/nldd"
-echo "$TOOLS/bin" >> "$GITHUB_PATH"
-echo "version=$version" >> "$GITHUB_OUTPUT"
 
 # A pull request without a state, one from before the state or whose text someone rewrote, holds
 # the version of the run before. Where the project came from is then what the default branch has.
@@ -104,7 +122,8 @@ node "$ACTION/state.mjs" write "$TOOLS/upgrade.json" > "$TOOLS/state-new.json"
 
 # Changed: the upgrade wrote something, or the default branch came in. Nothing at all to do: the
 # project is where the release is, by this pull request or without it.
-if git diff --quiet && { [ -z "$number" ] || [ "$(git rev-parse HEAD)" = "$(git rev-parse "origin/$BRANCH")" ]; }; then
+# A branch that falls behind says so, also when nothing else is new.
+if [ -z "${behind:-}" ] && git diff --quiet && { [ -z "$number" ] || [ "$(git rev-parse HEAD)" = "$(git rev-parse "origin/$BRANCH")" ]; }; then
 	echo "changed=false" >> "$GITHUB_OUTPUT"
 else
 	echo "changed=true" >> "$GITHUB_OUTPUT"

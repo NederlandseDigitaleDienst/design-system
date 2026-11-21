@@ -4,7 +4,9 @@
 #
 # A step with the token after a build ran: commands from the system only, and no hook in git.
 set -euo pipefail
-export PATH=/usr/bin:/bin
+# The system's own commands. A test of the action points this at its stand-ins. Only a step that
+# writes the environment of the next could change it, and no code of the project runs in one.
+export PATH="${NLDD_SYSTEM_PATH:-/usr/bin:/bin}"
 source "$ACTION/confine.sh"
 reset_git
 git() { command git -c core.hooksPath=/dev/null "$@"; }

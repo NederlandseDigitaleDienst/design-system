@@ -166,6 +166,22 @@ function renderedSection({ rendered }) {
 }
 
 /**
+ * What the reader has to do, before anything about how the upgrade went: whether this can be
+ * merged as it is, and where a choice waits. The sections below say the rest.
+ */
+function summaryLines({ work, unread, undecided, breaking, rendered }) {
+	const count = (entries) => entries.reduce((sum, { places }) => sum + places.length, 0);
+	const choices = count(work) + unread.length + (rendered ? count(rendered.rules) : 0);
+	const open = count(undecided);
+	const lines = [];
+	if (choices === 0 && open === 0) lines.push('- **Klaar om te mergen**, als de checks van het project slagen. De linter van deze versie vindt niets meer wat deze upgrade vraagt.');
+	if (choices > 0) lines.push(`- **${plural(choices, 'plek vraagt', 'plekken vragen')} om een keuze.** Ze staan onder "Nog te doen".`);
+	if (open > 0) lines.push(`- **${plural(open, 'plek', 'plekken')} kan de linter niet beslissen in de bron.** Kijk ze na in de draaiende app.`);
+	if (breaking.touching.length > 0) lines.push(`- **${plural(breaking.touching.length, 'brekende wijziging noemt', 'brekende wijzigingen noemen')} een component dat jullie gebruiken.** Niet elke heeft een regel; lees ze door.`);
+	return lines;
+}
+
+/**
  * @param {object} result - from upgradeProject()
  * @returns {string} Markdown
  */
@@ -185,7 +201,7 @@ export function formatReport(result) {
 				'npx nldd compare <oud> <nieuw> --out vergelijking',
 				'```',
 			];
-	return `${[[title], ...sections, closing].map((lines) => lines.join('\n')).join('\n\n')}\n`;
+	return `${[[title], summaryLines(result), ...sections, closing].filter((lines) => lines.length > 0).map((lines) => lines.join('\n')).join('\n\n')}\n`;
 }
 
 /** What GitHub takes as the text of a pull request or of a comment is 65,536 characters. */

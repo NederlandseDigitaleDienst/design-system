@@ -6,10 +6,17 @@
 # This step holds the token, after an agent and the project's own code have run. So it takes its
 # commands from the system only, puts the git configuration back as it was cloned, and runs no hook.
 set -euo pipefail
-export PATH=/usr/bin:/bin
+# The system's own commands. A test of the action points this at its stand-ins. Only a step that
+# writes the environment of the next could change it, and no code of the project runs in one.
+export PATH="${NLDD_SYSTEM_PATH:-/usr/bin:/bin}"
 source "$ACTION/confine.sh"
 
 BRANCH=nldd/design-system-upgrade
+if [ "$CHANGED" != true ]; then
+	echo "Nothing new for $REPOSITORY."
+	exit 0
+fi
+
 cd "$PROJECT"
 reset_git
 use_identity
@@ -17,11 +24,6 @@ git() { command git -c core.hooksPath=/dev/null "$@"; }
 title="chore: designsysteem naar $VERSION"
 number="${NUMBER:-}"
 merge="${MERGE:-}"
-
-if [ "$CHANGED" != true ]; then
-	echo "Nothing new for $REPOSITORY."
-	exit 0
-fi
 
 # What the repository tracks, and a file made after the command ran: the agent's.
 git switch --quiet --create "$BRANCH" 2>/dev/null || true
@@ -45,8 +47,9 @@ fi
 
 # The text: the report as it stands, what this run did to a pull request that was open already,
 # and the state the next run continues from.
-{
-	if [ -n "$number" ]; then
+: > "$TOOLS/note.md"
+if [ -n "$number" ]; then
+	{
 		printf '> Deze pull request liep al. Deze run bracht hem naar %s, bovenop wat er stond. Wat hieronder staat, is de stand van nu.\n' "$VERSION"
 		case "$merge" in
 			behind*)
@@ -56,8 +59,13 @@ fi
 			resolved) printf '>\n> `%s` gaf een conflict in de lockfile of `package.json`. Die zijn van `%s` genomen en daarna opnieuw geschreven.\n' "$BASE" "$BASE" ;;
 		esac
 		echo
-	fi
-	cat "$WORK/upgrade.md"
+	} > "$TOOLS/note.md"
+fi
+{
+	# The title, then the note on a pull request that was open already, then the rest of the report.
+	head -n 2 "$WORK/upgrade.md"
+	cat "$TOOLS/note.md"
+	tail -n +3 "$WORK/upgrade.md"
 	echo
 	# With how the site builds, when the agent found it. A file the agent wrote is data: jq reads it, and
 	# a file that is no JSON is left out.

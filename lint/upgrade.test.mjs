@@ -285,6 +285,15 @@ describe('nldd upgrade', () => {
 		assert.deepEqual(rules(result.standing), ['suppression-needs-reason']);
 	});
 
+	it('says first what the reader has to do', async () => {
+		const root = project(files);
+		const { result } = await upgrade(root);
+		assert.match(formatReport(result), /^# Designsysteem van 0\.20\.0 naar 0\.27\.1\n\n- \*\*1 plek vraagt om een keuze\.\*\* Ze staan onder "Nog te doen"\.\n- \*\*1 brekende wijziging noemt een component dat jullie gebruiken\.\*\*/);
+		writeFileSync(join(root, 'page.html'), read(root, 'page.html').replace(' color="inherit"', ''));
+		const { result: after } = await upgrade(root, { since: result });
+		assert.match(formatReport({ ...after, breaking: { total: 0, touching: [] } }), /^# Designsysteem van 0\.20\.0 naar 0\.27\.1\n\n- \*\*Klaar om te mergen\*\*/);
+	});
+
 	it('installs what the lockfile lists when asked to, so the types of the project can be read', async () => {
 		const { ran } = await upgrade(project(files), { install: 'full' });
 		assert.deepEqual(ran, ['npm install --ignore-scripts --no-audit --no-fund']);
