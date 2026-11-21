@@ -399,7 +399,7 @@ export const ToestandChecked = {
 
 ### Canonieke control volgorde
 
-Per component: pak alleen de keys die je gebruikt en zet ze in deze volgorde. De groepering is een mentaal model — de daadwerkelijke `args`/`argTypes` is een platte lijst.
+Per component: pak alleen de keys die je gebruikt en zet ze in deze volgorde. De groepering is een mentaal model — de daadwerkelijke `args`/`argTypes` is een platte lijst. `npm run validate:control-order` controleert de `@attr`-regels en de `@property`-declaraties tegen deze lijst; een naam die er niet in staat, zet je erbij in de groep waar hij hoort. Een naam die in één component iets anders betekent (de `max` van `nldd-avatar-group`), staat in `MEANINGS` in `scripts/check-control-order.js`.
 
 **Sorteer op wat een key doet, niet op hoe hij heet.** De groepen zijn het model, de namenlijsten eronder zijn voorbeelden. Twee componenten kunnen dezelfde naam voor iets anders gebruiken, en dan wint de betekenis. `max` is daar het schoolvoorbeeld van, en staat op drie plekken:
 
@@ -484,7 +484,7 @@ textEditorFor, textEditorCommand, sidebarSectionOnly
 [12. States]
 selected, checked, indeterminate, expanded, collapsed, open, active,
 loading, complete, shrunk, valid, invalid, judging, unmet, masked,
-readonly, current, empty, visible, hidden, disabled
+readonly, current, empty, visible, hidden, copyUnavailable, disabled
 
 [13. Form]
 form, for, name, inputId, groupName, value, values, startValue, endValue,
@@ -494,7 +494,7 @@ directory, allowCustom, required, total, autocomplete, noSpellcheck,
 href, target, rel, download, method, action, enctype, novalidate
 
 [14. Development]
-debugOs
+debugOs, debugSafeTriangle
 ```
 
 **Open punt**: `type` staat onder Form (HTML input type, vaakste betekenis). Voor `segmented-control` heeft het een andere semantiek (radio/checkbox-modus); kan later via een rename naar bijv. `selectionMode` opgelost worden.

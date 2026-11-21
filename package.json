@@ -614,6 +614,7 @@
     "check:server-import": "node scripts/check-server-import.js",
     "validate:host-styles": "node scripts/validate-host-styles.js",
     "validate:component-api": "node scripts/validate-component-api.js",
+    "validate:control-order": "node scripts/check-control-order.js",
     "validate:skill-markup": "node scripts/validate-skill-markup.js",
     "validate:changelog": "node scripts/validate-changelog.js",
     "lint:stories": "node scripts/lint-stories.js",
