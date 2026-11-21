@@ -322,7 +322,7 @@ const cutsOff = (node) => [...node.attrs].some(([name, value]) => /^(truncate|el
 
 const LINE_ONLY = new Set(['button', 'p', 'span', 'a', 'label', 'summary', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'nldd-text', 'nldd-title', 'nldd-button', 'nldd-link']);
 
-export function createLinter(data = loadData(), { wrappers = {}, severities: configured = {}, projectTokens = [], undecided = () => false, types } = {}) {
+export function createLinter(data = loadData(), { wrappers = {}, severities: configured = {}, projectTokens = [], undecided = () => false, types, listeners = new Map() } = {}) {
 	const canonical = createCanonical(data);
 	const severities = Object.fromEntries(Object.entries(configured).map(([id, level]) => [canonical(id), level]));
 	const context = {
@@ -431,7 +431,9 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 			// A function of the app's own that takes the name, such as a hook: useEvent(ref, 'tabchange', show).
 			// Its name says it is about events. That is not enough for a fix: the function may send the name
 			// on a bus of the app's own, or log it, and renaming one end of that breaks it. So this reports,
-			// and leaves out a function whose name says it sends, logs or builds (see SENDS below).
+			// and leaves out a function whose name says it sends, logs or builds (see SENDS below). Where the
+			// project defines the function and it only listens with that argument, the fix is certain
+			// (`listeners`, from listeners.js).
 			{ pattern: new RegExp(`(?<![\\w$])(?<!\\bnew\\s+)(?!(?:add|remove)EventListener\\()([\\w$]*(?:[Ee]vent|[Ll]isten)[\\w$]*)\\(\\s*(?:[^()'"\`]*?,\\s*)?(['"\`])${name}\\2`, 'dg'), fixable: false, callee: 1 },
 		];
 	})();
@@ -450,11 +452,13 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 				const group = match.length - 1;
 				const name = match[group];
 				const [offset, endOffset] = match.indices[group];
+				// The argument the name is: the commas between the call's parenthesis and the name.
+				const listens = callee && listeners.get(match[callee]) === (match[0].slice(match[callee].length, offset - match.index).match(/,/g) ?? []).length;
 				const { last, use } = removedEvents[name];
 				const message = use
 					? `\`${name}\` was renamed to \`${use}\` after ${last}, so a listener on the old name is never called.`
 					: `\`${name}\` is no longer fired after ${last}, so this listener is never called.`;
-				findings.push({ rule: 'event-renamed', severity: BUILT_IN_RULES['event-renamed'].severity, message, tag: name, offset, endOffset, ...(use && fixable ? { fix: { event: use } } : {}) });
+				findings.push({ rule: 'event-renamed', severity: BUILT_IN_RULES['event-renamed'].severity, message, tag: name, offset, endOffset, ...(use && (fixable || listens) ? { fix: { event: use } } : {}) });
 			}
 		}
 		return findings;

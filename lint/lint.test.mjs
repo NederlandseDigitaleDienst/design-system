@@ -2255,6 +2255,32 @@ describe('renamed events', () => {
 		}
 	});
 
+	it('renames the name in a hook of the project that only listens with it', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-hook-'));
+		mkdirSync(join(root, 'src'));
+		const hook = [
+			'export function useNlddEvent(ref: RefObject<HTMLElement>, type: string, handler: (event: Event) => void): void {',
+			'  const saved = useRef(handler);',
+			'  useEffect(() => {',
+			'    const el = ref.current;',
+			'    if (!el || saved.type === type) return;',
+			'    el.addEventListener(type, handler);',
+			'    return () => el.removeEventListener(type, handler);',
+			'  }, [ref, type]);',
+			'}',
+			'',
+		].join('\n');
+		// A function that listens and also tracks the name: renaming one end could break the other.
+		const bus = 'export function useBusEvent(name: string, payload: unknown) {\n  window.addEventListener(name, log);\n  track(name, payload);\n}\n';
+		writeFileSync(join(root, 'src/events.ts'), hook);
+		writeFileSync(join(root, 'src/bus.ts'), bus);
+		writeFileSync(join(root, 'src/Tabs.tsx'), "export const Tabs = () => {\n  useNlddEvent(ref, 'tabchange', show);\n  useBusEvent('tabchange', 1);\n  return <nldd-tab-bar ref={ref} />;\n};\n");
+		spawnSync(process.execPath, [fileURLToPath(new URL('./cli.js', import.meta.url)), 'lint', '--fix', 'src'], { cwd: root, encoding: 'utf8' });
+		const fixed = readFileSync(join(root, 'src/Tabs.tsx'), 'utf8');
+		assert.match(fixed, /useNlddEvent\(ref, 'tab-change', show\)/);
+		assert.match(fixed, /useBusEvent\('tabchange', 1\)/, 'a function that also tracks the name keeps it');
+	});
+
 	it('leaves a function that sends, logs or builds the name, and one that is not about events, alone', async () => {
 		const source = [
 			"el.dispatchEvent(new CustomEvent('nldd-move'));",

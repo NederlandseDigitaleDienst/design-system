@@ -9,6 +9,7 @@
 import { lstatSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { extname, relative, resolve } from 'node:path';
 import { applyFixes, linesNaming, renameReferences } from './fix.js';
+import { listenerFunctions } from './listeners.js';
 import { BUILT_IN_RULES, GROUPS, OPT_IN_GROUPS } from './rule-data.js';
 import { DEFAULT_EXTENSIONS, findFiles, MARKDOWN_EXTENSIONS, STRING_EXTENSIONS, partialExcludes, isBuildOutput, isBuilt, isRelevant, projectTokens, REFERENCE_EXTENSIONS, SCRIPT_EXTENSIONS, STYLESHEET_EXTENSIONS, UNREAD_EXTENSIONS } from './project.js';
 
@@ -142,7 +143,7 @@ export async function lintProject(data, { root, paths = [], config = {}, severit
 	const fixedIn = [];
 	if (relevant.length > 0) {
 		const { createLinter } = await import('./linter.js');
-		const linter = createLinter(data, { wrappers: config.wrappers, severities, projectTokens: projectTokens(inputs), undecided, types });
+		const linter = createLinter(data, { wrappers: config.wrappers, severities, projectTokens: projectTokens(inputs), undecided, types, listeners: listenerFunctions(inputs) });
 		for (const { filename, source } of relevant) {
 			const options = eventsOnly(filename) ? { only: 'events' } : scannedMarkdown(filename) ? { rendered: true } : undefined;
 			const linked = fix && isSymlink(filename);

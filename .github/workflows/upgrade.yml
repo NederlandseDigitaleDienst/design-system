@@ -248,7 +248,12 @@ jobs:
           # A command of the session itself says whether it can see the key: it runs as the agent's commands do.
           printf '#!/bin/sh\nif [ -n "${CLAUDE_CODE_OAUTH_TOKEN:-}${ANTHROPIC_API_KEY:-}" ]; then echo yes; else echo no; fi > "%s"\n' "$TOOLS/sees-key" > "$TOOLS/sees-key.sh"
           chmod +x "$TOOLS/sees-key.sh"
-          printf '{"hooks":{"SessionStart":[{"hooks":[{"type":"command","command":"%s"}]}]}}' "$TOOLS/sees-key.sh" > "$TOOLS/settings.json"
+          # In the sandbox a build may write to its caches in the home directory, and to nothing else outside the clone.
+          mkdir -p "$HOME/.npm" "$HOME/.cache"
+          jq --null-input --arg hook "$TOOLS/sees-key.sh" --arg home "$HOME" '{
+            hooks: { SessionStart: [{ hooks: [{ type: "command", command: $hook }] }] },
+            sandbox: { filesystem: { allowWrite: [($home + "/.npm"), ($home + "/.cache")] } }
+          }' > "$TOOLS/settings.json"
 
           # With the key kept out, the agent's commands run in a sandbox of their own. That needs
           # bubblewrap, and a runner that lets a process without privileges make a namespace.
