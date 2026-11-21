@@ -162,6 +162,9 @@ const INLINE = new Set(['a', 'abbr', 'b', 'br', 'cite', 'code', 'del', 'em', 'i'
 
 /** Text, with or without inline elements, goes in an element of its own, such as a `<p>`. */
 function wrapEdits(source, finding, wrapper) {
+	// Measured: in a host that is a block, a `<p>` takes the box a `<span>` takes. In one the app
+	// made inline it starts a line of its own, so there the choice is the app's.
+	if (/\sstyle\s*=[^>]*display\s*:\s*(inline|contents)/.test(source.slice(finding.offset, (finding.startTag?.end ?? finding.offset) + 1))) return [];
 	const content = contentOf(source, finding);
 	const inner = content?.text.trim();
 	// A blank line ends raw HTML in Markdown, and indenting it leaves trailing space.

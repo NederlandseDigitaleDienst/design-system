@@ -353,6 +353,14 @@ describe('an expression in JSX, read by its type', async () => {
 });
 
 describe('a fix around a hole that can only be text', () => {
+	it('leaves text alone in an element the app made inline, where a `<p>` would start a new line', async () => {
+		const { applyFixes } = await import('./fix.js');
+		const source = '<nldd-text style="display: inline">Dakisolatie</nldd-text>\n';
+		const { findings } = await createLinter(DATA).lintSource(source, 'page.html');
+		assert.deepEqual(findings.filter(({ rule }) => rule === 'text-needs-element').map(({ fix }) => fix), [undefined]);
+		assert.equal(applyFixes(source, findings).source, source);
+	});
+
 	it('wraps `{{ }}` in Vue', async () => {
 		const { applyFixes } = await import('./fix.js');
 		const source = '<template>\n\t<nldd-text>{{ label }}</nldd-text>\n</template>\n';

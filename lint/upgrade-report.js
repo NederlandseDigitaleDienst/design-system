@@ -14,6 +14,14 @@ const plural = (count, one, more) => `${count} ${count === 1 ? one : more}`;
 
 const KINDS = { manifest: 'afhankelijkheid', record: 'vastgelegde versie', reference: 'verwijzing' };
 
+/** Why a pin stayed as it was. */
+const WHY_LEFT = {
+	range: 'want dit is geen enkele versie',
+	ambiguous: 'want het bestand noemt meer dan één versie of hash, en welke bij het pakket hoort is gokken',
+	'file-hash': 'want de tag heeft een `integrity` van het ene bestand dat hij laadt. Zet de versie en die hash samen om',
+	'other-hash': 'want de hash ernaast is niet die van het pakket in het register. Zet de versie en die hash samen om',
+};
+
 function versionSection({ pinned, notRaised, lockfiles, to }) {
 	const lines = ['## De versie', ''];
 	if (pinned.length === 0) lines.push(`Geen plek gevonden die een oudere versie dan ${to} noemt.`);
@@ -22,15 +30,15 @@ function versionSection({ pinned, notRaised, lockfiles, to }) {
 		lines.push(ok ? `- \`${file}\`: bijgewerkt met \`${command}\`` : `- \`${file}\`: **niet bijgewerkt**. Draai \`${command}\`${error && error !== 'not run' ? ` (${error})` : ''}`);
 	}
 	if (notRaised.length > 0) {
-		lines.push('', 'Niet aangepast, want hier staat iets anders dan één versie:', '');
-		for (const { file, line, text } of notRaised) lines.push(`- \`${file}:${line}\`: \`${text}\``);
+		lines.push('', 'Niet aangepast:', '');
+		for (const { file, line, text, reason } of notRaised) lines.push(`- \`${file}:${line}\`: \`${text}\`, ${WHY_LEFT[reason]}`);
 	}
 	return lines;
 }
 
 function fixedSection({ fixed, files }) {
 	if (fixed.total === 0 && fixed.references === 0) return ['## Automatisch aangepast', '', `Niets: in de ${files} gelezen bestanden stond niets wat alleen een andere naam kreeg.`];
-	const lines = ['## Automatisch aangepast', '', `${plural(fixed.total, 'plek', 'plekken')} in ${plural(fixed.files, 'bestand', 'bestanden')}, door \`nldd lint --fix\`. Dit is alleen wat zeker is: een naam of waarde die anders heet en hetzelfde betekent.`, ''];
+	const lines = ['## Automatisch aangepast', '', `${plural(fixed.total, 'plek', 'plekken')} in ${plural(fixed.files, 'bestand', 'bestanden')}, door \`nldd lint --fix\`. Dit is alleen wat zeker is.`, ''];
 	for (const [rule, count] of Object.entries(fixed.byRule).sort((a, b) => b[1] - a[1])) lines.push(`- \`${rule}\`: ${count}`);
 	if (fixed.references > 0) lines.push(`- ${plural(fixed.references, 'import, klasse of selector', 'imports, klassen en selectors')} van een hernoemde tag`);
 	for (const place of fixed.stillNamed) lines.push(`- Noemt nog een oude tag: \`${place}\``);

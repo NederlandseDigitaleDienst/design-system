@@ -34,7 +34,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Changed
 
-- **`nldd lint --fix` puts text in its element where a hole in it can only be text.** `<nldd-text>{{ label }}</nldd-text>` in Vue and `<nldd-text>{'Dakisolatie'}</nldd-text>` in JSX got the finding and no fix, because the fix stopped at any hole. It now writes the `<p>` around it.
+- **`nldd lint --fix` puts text in its element where a hole in it can only be text.** `<nldd-text>{{ label }}</nldd-text>` in Vue and `<nldd-text>{'Dakisolatie'}</nldd-text>` in JSX got the finding and no fix, because the fix stopped at any hole. It now writes the `<p>` around it. It leaves text alone in an element whose own `style` makes it inline, where a `<p>` would start a new line.
 - **The `nldd-design-upgrade` skill starts from `nldd upgrade`.** The command does what is certain, and the skill is about the rest: how to work the list it leaves, what to read, and how to choose.
 - **The `nldd-design-upgrade` skill covers what the linter cannot read in the source.** It says where a version can be pinned besides `package.json`, that markup in Markdown and in strings of another language needs a search on the old names, that the built site and the running page are worth linting too, that the typed elements of the package turn a value that is gone into a type error, and what an upgrade brings to a project that runs `nldd lint` in its own CI. It ends with a list of when an upgrade is done.
 

@@ -40,7 +40,7 @@ function keyedPins(source, isManifest) {
 		const simple = SIMPLE_RANGE.exec(match[2]);
 		if (simple) edits.push({ kind: isManifest ? 'manifest' : 'record', at: match.index + match[1].length, length: match[2].length, from: simple[2], write: (target) => simple[1] + target });
 		// `workspace:*`, a tag, a git address, `>=0.13`: the project chose something else than a version.
-		else if (isManifest) left.push({ line: lineOf(source, match.index), text: match[2] });
+		else if (isManifest) left.push({ line: lineOf(source, match.index), text: match[2], reason: 'range' });
 	}
 	return { edits, left };
 }
@@ -76,7 +76,7 @@ function recordPins(source) {
 		const places = [...source.matchAll(new RegExp(`("version"\\s*:\\s*")${escapeRegExp(version)}"`, 'g'))];
 		// Two versions written the same way, or a hash that stands twice: which one is the record's is a guess.
 		if (records.length !== 1 || places.length !== 1 || !hashes.every(once)) {
-			left.push({ line: places[0] ? lineOf(source, places[0].index) : 1, text: `"version": "${version}"` });
+			left.push({ line: places[0] ? lineOf(source, places[0].index) : 1, text: `"version": "${version}"`, reason: 'ambiguous' });
 			continue;
 		}
 		edits.push({ kind: 'record', at: places[0].index + places[0][1].length, length: version.length, from: version, write: (target) => target, hashes: hashes.map((hash) => ({ at: source.indexOf(hash), text: hash })) });
@@ -111,7 +111,7 @@ function referencePins(source) {
 
 /**
  * Every place in one file that names the version, and what there could not be raised.
- * @returns {{ edits: object[], left: { line: number, text: string }[] }}
+ * @returns {{ edits: object[], left: { line: number, text: string, reason: 'range' | 'ambiguous' | 'file-hash' | 'other-hash' }[] }}
  */
 export function pinsIn(filename, source) {
 	if (!source.includes(PACKAGE)) return { edits: [], left: [] };
@@ -136,7 +136,7 @@ export function raisePins(filename, source, target, dist = () => undefined) {
 		if (compareVersions(edit.from, target) >= 0) continue;
 		const line = lineOf(source, edit.at);
 		if (edit.guarded) {
-			left.push({ line, text: `${PACKAGE}@${edit.from} with the integrity hash of one file` });
+			left.push({ line, text: `${PACKAGE}@${edit.from}`, reason: 'file-hash' });
 			continue;
 		}
 		const swaps = [];
@@ -147,7 +147,7 @@ export function raisePins(filename, source, target, dist = () => undefined) {
 				if (field && next?.[field]) swaps.push({ at, length: text.length, text: next[field] });
 			}
 			if (swaps.length !== edit.hashes.length) {
-				left.push({ line, text: `${edit.from} with a hash that is not the registry's for that version` });
+				left.push({ line, text: `"version": "${edit.from}"`, reason: 'other-hash' });
 				continue;
 			}
 		}
