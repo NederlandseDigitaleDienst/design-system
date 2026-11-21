@@ -51,6 +51,8 @@ Draai de linter van de versie waar je heen wilt op je huidige code.
 npx @nldd/design-system@latest lint
 ```
 
+Om echt te upgraden is er `nldd upgrade`. Zie [Upgraden](/upgraden/).
+
 ## Niveaus
 
 - **Fout** en **waarschuwing** kunnen CI laten falen.

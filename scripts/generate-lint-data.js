@@ -135,6 +135,21 @@ const removedEvents = updateLedger('src/components/removed-events.json', previou
  */
 const internalContext = [...inSource].filter((name) => name.startsWith('--context-') && !tokenSet.has(name) && !removedTokens[name]).sort();
 
+/**
+ * Since when a rule exists: the last release without it, so `nldd upgrade` can tell
+ * a finding that is new for a project from one it had already. A rule that is not
+ * in the ledger yet came after the version this package has now.
+ */
+function updateIntroduced(path) {
+	const file = resolve(repoRoot, path);
+	const ledger = existsSync(file) ? read(path) : {};
+	const lines = rules.map(({ id }) => `\t${JSON.stringify(id)}: ${JSON.stringify(ledger[id] ?? { after: pkg.version })}`).sort();
+	writeFileSync(file, `{\n${lines.join(',\n')}\n}\n`);
+	return Object.fromEntries(rules.map(({ id }) => [id, (ledger[id] ?? { after: pkg.version }).after]));
+}
+const introduced = updateIntroduced('src/rules/introduced.json');
+for (const rule of rules) rule.after = introduced[rule.id];
+
 const sorted = (object) => Object.fromEntries(Object.keys(object).sort().map((name) => [name, object[name]]));
 const data = { tags, classes, icons, rules, tokens, internalContext, removedTokens: sorted(removedTokens), translations, removedKeys: sorted(removedKeys), events, removedEvents: sorted(removedEvents), designSystemCss };
 

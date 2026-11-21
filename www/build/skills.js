@@ -12,6 +12,9 @@
  * order and their icons are those of the landing page (www/index.html).
  */
 
+import { readFileSync } from 'node:fs';
+import { fleetMarkdown } from '../../scripts/lib/fleet.js';
+
 export const SKILLS = [
 	{
 		name: 'nldd-design-build',
@@ -58,7 +61,11 @@ export const INSTALL = [
 ].join('\n');
 
 /** What a Markdown page can insert with `{{name}}`. */
+/** The repositories that get a pull request after each release, from fleet.json. */
+const FLEET = JSON.parse(readFileSync(new URL('../../fleet.json', import.meta.url), 'utf8'));
+
 export const MARKDOWN_INSERTS = {
+	fleetList: fleetMarkdown(FLEET),
 	skillsInstall: `\`\`\`text\n${INSTALL}\n\`\`\``,
 	// The same rows as on the landing page, with a line on what each one knows.
 	// Written without blank lines: Markdown ends an HTML block at the first one.

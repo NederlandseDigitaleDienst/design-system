@@ -770,7 +770,7 @@ An editorial line that shows authors or editors: optional avatar or avatars, a n
 
 **Rules** (`nldd lint`)
 
-- `slot-needs-element`: A slot for text takes the element that carries it: a `<p>`, or a heading in the default slot of nldd-title and nldd-title-cell. Put inline markup inside that element, and plain text in the attribute.
+- `slot-needs-element`: A slot for text takes the element that carries it: a `<p>`, or a heading in the default slot of nldd-title and nldd-title-cell. Put inline markup inside that element, and plain text in the attribute. A cell that holds a control or another component and no text is an nldd-cell.
 
 **Attributes**
 
@@ -1019,7 +1019,7 @@ A title bar with an optional overline, title, and supporting text on the left, a
 - `form-title-goes-in-form-section` (hint): Use nldd-form-section with `text`: its legend reaches a screen reader with every field in the group.
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
 - `row-navigation-no-heading` (hint): Use the `text` of an nldd-text-cell: a row is not a heading.
-- `slot-needs-element`: A slot for text takes the element that carries it: a `<p>`, or a heading in the default slot of nldd-title and nldd-title-cell. Put inline markup inside that element, and plain text in the attribute.
+- `slot-needs-element`: A slot for text takes the element that carries it: a `<p>`, or a heading in the default slot of nldd-title and nldd-title-cell. Put inline markup inside that element, and plain text in the attribute. A cell that holds a control or another component and no text is an nldd-cell.
 - `slot-text-needs-element`: Text straight in a slot is what the attribute is for. Put it in `text`, or in a `<p>` or heading in the slot.
 - `tag-goes-below-title` (hint): Put the tags below the title, in its slot or after it: the reader needs the subject before the metadata means anything.
 - `title-color-no-effect`: `color` is gone. `color="content"` was the default, so remove it. `color="inherit"` took the CSS `color` around it, so this text may have changed color: where your own CSS sets `color` here, set `--context-content-color` too, then remove the attribute.
@@ -4935,7 +4935,7 @@ A cell component for displaying text content in lists with configurable alignmen
 - `list-item-segment-icon-needs-name`: Give the segment an `accessible-label` that names the row: it holds only an icon.
 - `navigation-no-vague-label` (hint): Name the subject or the goal instead, such as "Ondersteuning" for "Service", so nobody has to guess what is behind it.
 - `slot-attribute-no-effect`: The attribute does nothing: the slot for the same content is filled, and what is in the slot wins. Remove one of the two.
-- `slot-needs-element`: A slot for text takes the element that carries it: a `<p>`, or a heading in the default slot of nldd-title and nldd-title-cell. Put inline markup inside that element, and plain text in the attribute.
+- `slot-needs-element`: A slot for text takes the element that carries it: a `<p>`, or a heading in the default slot of nldd-title and nldd-title-cell. Put inline markup inside that element, and plain text in the attribute. A cell that holds a control or another component and no text is an nldd-cell.
 - `slot-text-needs-element`: Text straight in a slot is what the attribute is for. Put it in `text`, or in a `<p>` or heading in the slot.
 
 **Attributes**
@@ -4978,7 +4978,7 @@ A cell component for displaying a title with optional overline and supporting te
 
 - `list-item-segment-icon-needs-name`: Give the segment an `accessible-label` that names the row: it holds only an icon.
 - `slot-attribute-no-effect`: The attribute does nothing: the slot for the same content is filled, and what is in the slot wins. Remove one of the two.
-- `slot-needs-element`: A slot for text takes the element that carries it: a `<p>`, or a heading in the default slot of nldd-title and nldd-title-cell. Put inline markup inside that element, and plain text in the attribute.
+- `slot-needs-element`: A slot for text takes the element that carries it: a `<p>`, or a heading in the default slot of nldd-title and nldd-title-cell. Put inline markup inside that element, and plain text in the attribute. A cell that holds a control or another component and no text is an nldd-cell.
 - `slot-text-needs-element`: Text straight in a slot is what the attribute is for. Put it in `text`, or in a `<p>` or heading in the slot.
 - `title-cell-size-renamed`: The sizes of a title cell are `display-1` to `display-6` now, and a number is ignored. Rename it here and on every other nldd-title-cell.
 

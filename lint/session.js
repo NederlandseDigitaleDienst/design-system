@@ -7,10 +7,11 @@
  */
 
 import { lstatSync, readFileSync, statSync, writeFileSync } from 'node:fs';
-import { extname, relative, resolve, sep } from 'node:path';
+import { extname, relative, resolve } from 'node:path';
 import { applyFixes, linesNaming, renameReferences } from './fix.js';
+import { listenerFunctions } from './listeners.js';
 import { BUILT_IN_RULES, GROUPS, OPT_IN_GROUPS } from './rule-data.js';
-import { DEFAULT_EXTENSIONS, findFiles, IGNORED_DIRECTORIES, partialExcludes, isBundle, isRelevant, projectTokens, REFERENCE_EXTENSIONS, SCRIPT_EXTENSIONS, STYLESHEET_EXTENSIONS, UNREAD_EXTENSIONS } from './project.js';
+import { DEFAULT_EXTENSIONS, findFiles, MARKDOWN_EXTENSIONS, STRING_EXTENSIONS, partialExcludes, isBuildOutput, isBuilt, isRelevant, projectTokens, REFERENCE_EXTENSIONS, SCRIPT_EXTENSIONS, STYLESHEET_EXTENSIONS, UNREAD_EXTENSIONS } from './project.js';
 
 /** Every name `--select`, `--ignore` and .nldd-lint.json may use: rule ids, aliases and groups. */
 export function knownKeys(data) {
@@ -40,31 +41,23 @@ const MAX_FIX_PASSES = 10;
 export async function fixUntilStable(linter, original, filename, options) {
 	let source = original;
 	let fixed = 0;
+	const byRule = {};
 	const renamedTags = new Map();
 	for (let pass = 0; pass < MAX_FIX_PASSES; pass++) {
-		const { findings } = await linter.lintSource(source, filename, options);
+		const { findings, undecided } = await linter.lintSource(source, filename, options);
 		const change = applyFixes(source, findings);
-		if (change.fixed === 0) return { source, fixed, renamedTags, findings, unstable: false };
+		if (change.fixed === 0) return { source, fixed, byRule, renamedTags, findings, undecided, unstable: false };
 		source = change.source;
 		fixed += change.fixed;
+		for (const [rule, count] of Object.entries(change.byRule)) byRule[rule] = (byRule[rule] ?? 0) + count;
 		for (const [from, to] of change.renamedTags) renamedTags.set(from, to);
 	}
-	const { findings } = await linter.lintSource(source, filename, options);
-	return { source, fixed, renamedTags, findings, unstable: applyFixes(source, findings).fixed > 0 };
+	const { findings, undecided } = await linter.lintSource(source, filename, options);
+	return { source, fixed, byRule, renamedTags, findings, undecided, unstable: applyFixes(source, findings).fixed > 0 };
 }
 
 const isUnread = (filename) => UNREAD_EXTENSIONS.includes(extname(filename));
 const hasOurMarkup = (source) => /<nldd-[a-z]/.test(source);
-
-/** In a directory a build writes to, such as `dist`: output, not the app's own source. */
-const isBuilt = (file, root) => relative(root, file).split(sep).some((part) => IGNORED_DIRECTORIES.has(part));
-
-/**
- * A script a bundler wrote. Its chunks hold the design system's own component
- * styles and markup in strings, which read as an app overriding them. The pages
- * and stylesheets next to it are what a build has to show.
- */
-const isBuiltScript = (file, root) => /\.[cm]?js$/.test(file) && isBuilt(file, root);
 
 /** The tag is gone from the markup; what still names it would break or stop matching. */
 function fixReferences(renamedTags, paths, root, exclude) {
@@ -77,8 +70,8 @@ function fixReferences(renamedTags, paths, root, exclude) {
 	for (const list of [inMarkup, elsewhere]) {
 		for (const filename of list) {
 			const source = readFileSync(filename, 'utf8');
-			// The lint pass skips a bundle, so a rename leaves it alone too.
-			if (isBundle(filename, source)) continue;
+			// The lint pass skips what a build wrote, so a rename leaves it alone too.
+			if (isBuildOutput(filename, source, root)) continue;
 			const change = isBuilt(filename, root) ? { source, fixed: 0 } : renameReferences(source, renamedTags, kindOf(filename));
 			if (change.fixed > 0 && !isSymlink(filename) && isUtf8(filename)) {
 				writeFileSync(filename, change.source);
@@ -101,21 +94,27 @@ function fixReferences(renamedTags, paths, root, exclude) {
  * @param {{ filename: string, source: string }} [options.input] - one snippet instead of files
  * @param {boolean} [options.fix] - write the fixes that are certain
  * @param {(filename: string) => boolean} [options.keep] - read this file even without a component
- * @returns {Promise<{ results: object[], files: number, unread: number, fixed: number, fixedFiles: number,
+ * @param {boolean} [options.markdown] - a scan also reads Markdown and MDX, for the markup they render
+ * @param {Function} [options.types] - from createTypes(): what the project's types say an expression in JSX renders
+ * @param {(rule: object) => boolean} [options.undecided] - the rules whose undecided places each result lists
+ * @returns {Promise<{ results: object[], files: number, unread: number, fixed: number, fixedFiles: number, fixedByRule: Record<string, number>,
  *   notUtf8: string[], symlinks: string[], unstable: string[], partialExcludes: { entry: string, file: string }[], references?: { fixed: number, files: number, remaining: string[] } }>}
  */
-export async function lintProject(data, { root, paths = [], config = {}, severities, input, fix = false, keep = () => false }) {
+export async function lintProject(data, { root, paths = [], config = {}, severities, input, fix = false, keep = () => false, markdown = false, undecided, types }) {
 	const everything = readsEverything(data, severities);
+	const scanned = [...DEFAULT_EXTENSIONS, ...STYLESHEET_EXTENSIONS, ...UNREAD_EXTENSIONS, ...SCRIPT_EXTENSIONS, ...STRING_EXTENSIONS, ...(markdown ? MARKDOWN_EXTENSIONS : [])];
+	const inStrings = (filename) => STRING_EXTENSIONS.includes(extname(filename));
+	// Markdown a scan found is read for what it renders. One that is named is read in full, examples too.
+	const scannedMarkdown = (filename) => MARKDOWN_EXTENSIONS.includes(extname(filename)) && !named.has(resolve(filename));
 	// A script named on the command line is read, also in `dist`: only a scan skips it.
 	const named = new Set(paths.map((path) => resolve(root, path)).filter((path) => statSync(path, { throwIfNoEntry: false })?.isFile()));
 	const inputs = input
 		? [{ filename: resolve(root, input.filename), source: input.source }]
-		: findFiles(paths, root, config.exclude, [...DEFAULT_EXTENSIONS, ...STYLESHEET_EXTENSIONS, ...UNREAD_EXTENSIONS, ...SCRIPT_EXTENSIONS])
-				.filter((filename) => named.has(resolve(filename)) || !isBuiltScript(filename, root))
+		: findFiles(paths, root, config.exclude, scanned)
 				.map((filename) => ({ filename, source: readFileSync(filename, 'utf8') }))
+				.filter(({ filename, source }) => named.has(resolve(filename)) || !isBuildOutput(filename, source, root))
 				// A template the linter cannot read matters only with our markup; the rest is let go.
-				.filter(({ filename, source }) => !isUnread(filename) || hasOurMarkup(source))
-				.filter(({ filename, source }) => !isBundle(filename, source));
+				.filter(({ filename, source }) => !(isUnread(filename) || inStrings(filename)) || hasOurMarkup(source));
 
 	// Most files in an app use no component at all, and those need no parser either.
 	// A stylesheet is still read for the tokens it declares.
@@ -140,11 +139,13 @@ export async function lintProject(data, { root, paths = [], config = {}, severit
 	const renamedTags = new Map();
 	let fixed = 0;
 	let fixedFiles = 0;
+	const fixedByRule = {};
+	const fixedIn = [];
 	if (relevant.length > 0) {
 		const { createLinter } = await import('./linter.js');
-		const linter = createLinter(data, { wrappers: config.wrappers, severities, projectTokens: projectTokens(inputs) });
+		const linter = createLinter(data, { wrappers: config.wrappers, severities, projectTokens: projectTokens(inputs), undecided, types, listeners: listenerFunctions(inputs) });
 		for (const { filename, source } of relevant) {
-			const options = eventsOnly(filename) ? { only: 'events' } : undefined;
+			const options = eventsOnly(filename) ? { only: 'events' } : scannedMarkdown(filename) ? { rendered: true } : undefined;
 			const linked = fix && isSymlink(filename);
 			const canWrite = fix && !linked && isUtf8(filename);
 			if (linked) symlinks.push(filename);
@@ -159,15 +160,17 @@ export async function lintProject(data, { root, paths = [], config = {}, severit
 				writeFileSync(filename, change.source);
 				fixed += change.fixed;
 				fixedFiles += 1;
+				for (const [rule, count] of Object.entries(change.byRule)) fixedByRule[rule] = (fixedByRule[rule] ?? 0) + count;
+				fixedIn.push({ filename, rules: Object.keys(change.byRule) });
 				for (const [from, to] of change.renamedTags) renamedTags.set(from, to);
 			}
-			results.push({ filename, source: change.source, findings: change.findings });
+			results.push({ filename, source: change.source, findings: change.findings, undecided: change.undecided });
 		}
 	}
 	const references = renamedTags.size > 0 ? fixReferences(renamedTags, paths, root, config.exclude) : undefined;
 	// Not in `files`: what has our markup and was not read, so the summary can say so.
 	// Counted on the markup, so a suppressed `file-not-read` does not make it read.
 	const unread = inputs.filter(({ filename, source }) => isUnread(filename) && hasOurMarkup(source)).length;
-	const partial = input ? [] : partialExcludes(paths, root, config.exclude, [...DEFAULT_EXTENSIONS, ...STYLESHEET_EXTENSIONS, ...UNREAD_EXTENSIONS, ...SCRIPT_EXTENSIONS]);
-	return { results, files, unread, fixed, fixedFiles, notUtf8, symlinks, unstable, partialExcludes: partial, references };
+	const partial = input ? [] : partialExcludes(paths, root, config.exclude, scanned);
+	return { results, files, unread, fixed, fixedFiles, fixedByRule, fixedIn, notUtf8, symlinks, unstable, partialExcludes: partial, references };
 }

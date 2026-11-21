@@ -9,8 +9,11 @@
 
 import { DomHandler, Parser } from 'htmlparser2';
 import { cssBlocks } from './css.js';
+import { REACT_ONLY, loadOxc, parseJsx } from './jsx.js';
+import { HOLE, PERCENT_FORMAT, blank, boundFiller, endOfString, markupIn, pythonStrings, scriptLiterals } from './literals.js';
 import {
 	BOUND,
+	TRANSPARENT,
 	appendChild,
 	attributeSpan,
 	appendUnknown,
@@ -19,20 +22,6 @@ import {
 	isOpaqueTag,
 	walk,
 } from './tree.js';
-
-const TRANSPARENT = new Set([
-	'Transition',
-	'TransitionGroup',
-	'KeepAlive',
-	'Suspense',
-	'transition',
-	'transition-group',
-	'keep-alive',
-	'suspense',
-	'Fragment',
-	'React.Fragment',
-	'ng-container',
-]);
 
 const CONDITIONAL = new Set(['v-if', 'v-else', 'v-else-if', '*ngIf']);
 const REPEATED = new Set(['v-for', '*ngFor']);
@@ -54,9 +43,6 @@ const isJsonObject = (value) => {
 		return false;
 	}
 };
-
-/** A filler of `length` characters without spaces that reads as a bound value: `${xxx}`. */
-const boundFiller = (length) => `\${${'x'.repeat(length - 3)}}`;
 
 const escapeRegExp = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
@@ -114,7 +100,7 @@ function readHtmlChildren(children, parent, given) {
 	const paragraphs = given.markdown && parent.name !== '#root' ? given.markdown(children) : null;
 	for (const node of children) {
 		// MDX marks an expression too short to stand as an element with a hole.
-		const holeAt = given.jsx && node.type === 'text' ? node.data.indexOf(HOLE) : -1;
+		const holeAt = (given.jsx || given.lit) && node.type === 'text' ? node.data.indexOf(HOLE) : -1;
 		if (holeAt !== -1) appendUnknown(parent, (node.startIndex ?? 0) + holeAt);
 		const data = holeAt === -1 ? node.data : node.data.replaceAll(HOLE, ' ');
 		if (node.type === 'text' && data.trim()) {
@@ -288,9 +274,6 @@ function isBalanced(markup, selfClosing = false) {
 	return open.every((name) => OPTIONAL_END.has(name));
 }
 
-/** Same length, so positions stay right. */
-const blank = (text) => text.replace(/[^\n]/g, ' ');
-
 /** Markup without its template tags, so `{% if a %}>{% endif %}` in a tag does not end it. */
 const withoutTemplateTags = (text) => text.replace(/\{%[\s\S]*?%\}|\{\{[\s\S]*?\}\}|\{#[\s\S]*?#\}/g, '');
 
@@ -453,18 +436,6 @@ export function parseStylesheet(source, filename = '') {
 	return blocks.length === 0 ? [] : [stylesheetRoot(blocks)];
 }
 
-/**
- * Where a string in a script ends, from its opening quote. A template literal can
- * span lines, the others cannot.
- */
-function endOfString(source, start) {
-	let at = start + 1;
-	while (at < source.length && source[at] !== source[start] && (source[start] === '`' || source[at] !== '\n')) {
-		at += source[at] === '\\' ? 2 : 1;
-	}
-	return at;
-}
-
 /** Where a `{…}` expression ends, from its opening brace, past strings and nested braces. */
 function endOfExpression(source, start) {
 	let depth = 0;
@@ -513,7 +484,6 @@ function mdxAsHtml(mdx) {
 }
 
 /** Private-use characters that stand in the text for an expression, one per brace. */
-const HOLE = '\uE000';
 const OPENS_CONDITION = '\uE001';
 const OPENS_LOOP = '\uE002';
 const OPENS_BOTH = '\uE003';
@@ -888,8 +858,10 @@ function markMentions(node, source) {
 /**
  * A Markdown or MDX file: every code block is a tree of its own, an inline tag a
  * mention, and the markup in the prose one tree, which is what the page renders.
+ * With `rendered`, only that last one: a code block and a mention are documentation
+ * about markup, and a scan of a project is about the markup it has.
  */
-export function parseMarkdown(source, filename = '') {
+export function parseMarkdown(source, filename = '', { rendered = false } = {}) {
 	const mdx = filename.endsWith('.mdx');
 	const roots = [];
 	const read = (text, offset, given = {}) => {
@@ -902,11 +874,11 @@ export function parseMarkdown(source, filename = '') {
 	};
 	const fences = /^( *)(```|~~~)[^\n]*\n([\s\S]*?)^ *\2/gm;
 	for (const match of source.matchAll(fences)) {
-		if (match[3].includes('<nldd-')) read(match[3], match.index + match[0].indexOf('\n') + 1);
+		if (!rendered && match[3].includes('<nldd-')) read(match[3], match.index + match[0].indexOf('\n') + 1);
 	}
 	let prose = source.replace(fences, blank).replace(/^---\r?\n[\s\S]*?\r?\n---(?=\r?\n|$)/, blank);
 	// A bare `<nldd-button>` in a sentence names the tag and says nothing about its attributes.
-	for (const match of prose.matchAll(/`(<nldd-[^`\n]*)`/g)) {
+	for (const match of rendered ? [] : prose.matchAll(/`(<nldd-[^`\n]*)`/g)) {
 		read(match[1].replace(/^<([a-z-]+)\s*\/?>$/, '<$1 v-bind="x"><Mention /></$1>'), match.index + 1);
 		markMentions(roots.at(-1), source);
 	}
@@ -917,54 +889,11 @@ export function parseMarkdown(source, filename = '') {
 }
 
 /**
- * Finds every html`` template, also inside the holes of another. A small scanner,
- * so that a story needs no TypeScript parser: it only tells strings, comments and
- * templates apart.
- */
-function litTemplates(source) {
-	const templates = [];
-	const readTemplate = (start, isHtml) => {
-		const holes = [];
-		let at = start;
-		while (at < source.length && source[at] !== '`') {
-			if (source[at] === '\\') at += 2;
-			else if (source.startsWith('${', at)) {
-				const end = readCode(at + 2, true);
-				holes.push([at, end + 1]);
-				at = end + 1;
-			} else at += 1;
-		}
-		if (isHtml) templates.push({ start, end: at, holes });
-		return at;
-	};
-	function readCode(start, inHole) {
-		let depth = 0;
-		let at = start;
-		while (at < source.length) {
-			const char = source[at];
-			if (char === "'" || char === '"') at = endOfString(source, at);
-			else if (source.startsWith('//', at)) at = source.indexOf('\n', at) >>> 0;
-			else if (source.startsWith('/*', at)) at = source.indexOf('*/', at) >>> 0;
-			else if (char === '`') at = readTemplate(at + 1, source.slice(at - 4, at) === 'html');
-			else if (char === '{') depth += 1;
-			else if (char === '}') {
-				if (inHole && depth === 0) return at;
-				depth -= 1;
-			}
-			at += 1;
-		}
-		return at;
-	}
-	readCode(0, false);
-	return templates;
-}
-
-/**
  * Lit in a .ts file. A hole gets a filler of the same length without spaces, so
  * positions stay right, an unquoted value stays one value, and it reads as bound.
  */
 export function parseLit(source) {
-	return litTemplates(source).flatMap(({ start, end, holes }) => {
+	return scriptLiterals(source).filter(({ html }) => html).flatMap(({ start, end, holes }) => {
 		let text = source.slice(start, end);
 		if (!text.includes('<nldd-')) return [];
 		for (const [from, to] of holes) {
@@ -979,339 +908,67 @@ export function parseLit(source) {
 }
 
 /**
- * A script holds `html` templates, or JSX, as a React app writes in a `.js` file.
- * JSX is read only where no template holds our markup and the file parses as
- * JSX: anything else stays unread, and says so.
+ * Markup in string literals. Each literal with a component is a tree of its own,
+ * and holds only part of what is rendered: a hole is a bound value, and an
+ * element the literal does not close has children nobody can see here.
+ * @param {string} source
+ * @param {object[]} literals - from a scanner in literals.js
+ * @returns {{ roots: object[], kind: 'strings', unread?: number }} `unread` is where markup stands that could not be read
  */
-export async function parseScript(source, filename) {
+function readLiterals(source, literals) {
+	const roots = [];
+	let unread;
+	for (const literal of literals) {
+		const markup = markupIn(source, literal);
+		if (!markup) continue;
+		if (markup.unread !== undefined) {
+			unread ??= markup.unread;
+			continue;
+		}
+		const root = createRoot();
+		readHtmlChildren(parseMarkup(markup.text, { selfClosing: false }).children, root, { lit: true });
+		const settle = (node) => {
+			// An edit would have to write the backslashes back.
+			node.readOnly = markup.escaped;
+			for (const [name, value] of node.attrs) {
+				if (typeof value === 'string' && (value.includes(HOLE) || PERCENT_FORMAT.test(value))) node.attrs.set(name, BOUND);
+			}
+			const written = markup.text.slice(node.offset, (node.endOffset ?? 0) + 1);
+			if (node.startTag && !new RegExp(`</${escapeRegExp(node.name)}\\s*>$`).test(written)) {
+				// Closed in another literal, or never: what it holds is put together elsewhere.
+				appendUnknown(node, node.offset);
+				node.endOffset = undefined;
+			}
+			node.children.forEach(settle);
+		};
+		root.children.forEach(settle);
+		roots.push(root);
+	}
+	return { roots, kind: 'strings', unread };
+}
+
+/** Markup in the string literals of a Python file. */
+export function parsePython(source) {
+	return readLiterals(source, pythonStrings(source));
+}
+
+/**
+ * A script holds `html` templates, or JSX, as a React app writes in a `.js` file,
+ * or markup in plain strings, as a script without a framework puts it together.
+ * JSX is read only where no template holds our markup and the file parses as
+ * JSX with an element in it. What is left is read as string literals.
+ */
+export async function parseScript(source, filename, options) {
 	const templates = parseLit(source);
 	if (templates.length > 0 || !/<(nldd-|Nldd)/.test(source)) return templates;
 	await loadOxc(filename);
 	try {
-		const roots = await parseJsx(source, filename);
-		if (roots.syntaxError) return [];
-		roots.jsx = true;
-		return roots;
+		const reading = await parseJsx(source, filename, options);
+		if (!reading.syntaxError && reading.roots.length > 0) return reading;
 	} catch {
-		return [];
+		// Not JSX: its strings are still there to read.
 	}
-}
-
-function jsxName(node) {
-	if (node.type === 'JSXIdentifier') return node.name;
-	if (node.type === 'JSXMemberExpression') return `${jsxName(node.object)}.${node.property.name}`;
-	return `${node.namespace.name}:${node.name.name}`;
-}
-
-/** Expressions a value passes through unchanged: `a ? <x /> : <y />`, `(<x />)`, `<x /> as JSX.Element`. */
-const PASSES_ON_VALUE = new Set([
-	'ConditionalExpression', 'LogicalExpression', 'ParenthesizedExpression', 'SequenceExpression',
-	'TSAsExpression', 'TSSatisfiesExpression', 'TSNonNullExpression', 'TSTypeAssertion',
-]);
-
-/** Between `export` and the component it exports: `export const A = memo(() => ...)`, a class and its render. */
-const PASSES_ON_EXPORT = new Set([
-	...PASSES_ON_VALUE, 'VariableDeclaration', 'VariableDeclarator', 'CallExpression',
-	'ClassDeclaration', 'ClassExpression', 'ClassBody', 'MethodDefinition', 'PropertyDefinition',
-]);
-
-const FUNCTIONS = new Set(['FunctionDeclaration', 'FunctionExpression', 'ArrowFunctionExpression']);
-
-/**
- * Finds every JSX tree. What an exported component returns is what this file
- * renders. Any other tree is built to be placed somewhere, maybe inside a component
- * of this same file, and is marked detached. A tree that a function bound to a name
- * returns, or that a name is bound to directly, gets that name as its owner, so its
- * place can be looked up: `<Row />`, `{items}`. JSX assigned later or pushed into an
- * array has no owner and stays unknown.
- */
-function collectJsx(node, found, state = {}, exportedNames = new Set()) {
-	if (!node || typeof node !== 'object') return;
-	const { exported = false, renders = false, returned = false, fnOwner, valueOwner } = state;
-	if (Array.isArray(node)) {
-		for (const item of node) collectJsx(item, found, state, exportedNames);
-		return;
-	}
-	if (node.type === 'JSXElement' || node.type === 'JSXFragment') {
-		found.push({ node, detached: !(renders && returned), owner: returned ? fnOwner : valueOwner });
-		return;
-	}
-	const isFunction = FUNCTIONS.has(node.type);
-	// `function A() {}` with `export default A` further down, or `export { A }`.
-	const named = (node.type === 'FunctionDeclaration' || node.type === 'VariableDeclarator' || node.type === 'ClassDeclaration') && exportedNames.has(node.id?.name);
-	const isExported = exported || named;
-	// The name a function returns its JSX under: its own, or the one it is bound to.
-	const ownName = node.type === 'FunctionDeclaration' ? node.id?.name : isFunction ? valueOwner : fnOwner;
-	for (const key of Object.keys(node)) {
-		if (key === 'parent') continue;
-		let nextValueOwner;
-		if (node.type === 'VariableDeclarator' && key === 'init' && node.id?.type === 'Identifier') nextValueOwner = node.id.name;
-		else if (PASSES_ON_VALUE.has(node.type)) nextValueOwner = valueOwner;
-		// `memo(() => ...)`, `useMemo(() => ...)`, `xs.map((x) => ...)`: the callback is what the name holds.
-		else if (node.type === 'CallExpression' && key === 'arguments') nextValueOwner = valueOwner;
-		collectJsx(node[key], found, {
-			exported: node.type === 'ExportNamedDeclaration' || node.type === 'ExportDefaultDeclaration' || (isExported && (named || PASSES_ON_EXPORT.has(node.type))),
-			// A function renders when it is the exported one; a function inside it does not.
-			renders: isFunction ? isExported : renders,
-			returned: (node.type === 'ReturnStatement' && key === 'argument')
-				|| (node.type === 'ArrowFunctionExpression' && key === 'body')
-				|| (returned && PASSES_ON_VALUE.has(node.type)),
-			fnOwner: isFunction ? ownName : fnOwner,
-			valueOwner: nextValueOwner,
-		}, exportedNames);
-	}
-}
-
-/** Every name the file binds, with how often: a name bound twice cannot be looked up by name alone. */
-function bindingCounts(program) {
-	const counts = new Map();
-	const add = (name) => name && counts.set(name, (counts.get(name) ?? 0) + 1);
-	const pattern = (node) => {
-		if (!node) return;
-		if (node.type === 'Identifier') add(node.name);
-		else if (node.type === 'ObjectPattern') node.properties.forEach((property) => pattern(property.value ?? property.argument));
-		else if (node.type === 'ArrayPattern') node.elements.forEach(pattern);
-		else if (node.type === 'AssignmentPattern') pattern(node.left);
-		else if (node.type === 'RestElement') pattern(node.argument);
-		else if (node.type === 'TSParameterProperty') pattern(node.parameter);
-	};
-	const visit = (node) => {
-		if (!node || typeof node !== 'object') return;
-		if (Array.isArray(node)) return node.forEach(visit);
-		if (node.type === 'VariableDeclarator') pattern(node.id);
-		if ((node.type === 'FunctionDeclaration' || node.type === 'ClassDeclaration') && node.id) add(node.id.name);
-		if (FUNCTIONS.has(node.type)) node.params?.forEach(pattern);
-		for (const key of Object.keys(node)) if (key !== 'parent') visit(node[key]);
-	};
-	visit(program);
-	return counts;
-}
-
-/** The names a module exports by reference rather than in place. */
-function exportedNamesOf(program) {
-	const names = new Set();
-	for (const statement of program.body ?? []) {
-		if (statement.type === 'ExportDefaultDeclaration' && statement.declaration?.type === 'Identifier') names.add(statement.declaration.name);
-		// `export default withRouter(Page)`: the component inside the wrapper is what is exported.
-		const wrapped = (call) => call?.type === 'CallExpression' && call.arguments.forEach((arg) => (arg.type === 'Identifier' ? names.add(arg.name) : wrapped(arg)));
-		if (statement.type === 'ExportDefaultDeclaration') wrapped(statement.declaration);
-		if (statement.type === 'ExportNamedDeclaration' && !statement.source) {
-			for (const specifier of statement.specifiers ?? []) names.add(specifier.local?.name);
-		}
-	}
-	return names;
-}
-
-/** `undefined` means the attribute is not there: `x={false}` and `x={null}` switch it off. */
-function staticJsxValue(value) {
-	if (value === null) return '';
-	if (value.type === 'Literal') return String(value.value);
-	if (value.type !== 'JSXExpressionContainer') return BOUND;
-	const { expression } = value;
-	if (expression.type === 'Literal') {
-		if (expression.value === false || expression.value === null) return undefined;
-		return expression.value === true ? '' : String(expression.value);
-	}
-	if (expression.type === 'TemplateLiteral' && expression.expressions.length === 0) {
-		return expression.quasis[0].value.cooked;
-	}
-	return BOUND;
-}
-
-/**
- * `translations={{ 'components.x.y': '…' }}` as JSON, so its keys can be checked. Only
- * the keys need to be static; a value that is filled in counts as an empty text.
- */
-function staticJsxObject(value) {
-	const expression = value?.type === 'JSXExpressionContainer' ? value.expression : undefined;
-	if (expression?.type !== 'ObjectExpression') return BOUND;
-	const entries = [];
-	for (const property of expression.properties) {
-		if (property.type !== 'Property' || property.computed || property.key.type !== 'Literal') return BOUND;
-		const text = property.value.type === 'Literal' ? property.value.value : '';
-		entries.push([String(property.key.value), String(text)]);
-	}
-	return JSON.stringify(Object.fromEntries(entries));
-}
-
-/** Props React keeps to itself: they never reach the element. */
-const REACT_ONLY = new Set(['key', 'ref', 'dangerouslySetInnerHTML', 'suppressHydrationWarning', 'suppressContentEditableWarning']);
-
-function readJsxAttributes(element, attributes, roots) {
-	for (const attribute of attributes) {
-		if (attribute.type === 'JSXSpreadAttribute') {
-			element.spread = true;
-			continue;
-		}
-		const name = jsxName(attribute.name);
-		const isHandler = /^on[A-Z]/.test(name) || REACT_ONLY.has(name);
-		const value = name === 'translations' ? staticJsxObject(attribute.value) : staticJsxValue(attribute.value);
-		if (!isHandler && value !== undefined) element.attrs.set(name === 'className' ? 'class' : name, value);
-		// An element passed as a prop renders elsewhere, so it is a tree of its own.
-		const nested = [];
-		collectJsx(attribute.value, nested);
-		for (const { node } of nested) roots.push(jsxTree(node, roots, true));
-	}
-}
-
-function readJsxExpression(expression, parent, flags, roots) {
-	const conditional = { ...flags, conditional: true };
-	switch (expression.type) {
-		case 'JSXElement':
-		case 'JSXFragment':
-			readJsxNode(expression, parent, flags, roots);
-			break;
-		case 'JSXEmptyExpression':
-			break;
-		case 'Literal':
-			// `{true}`, `{false}` and `{null}` render nothing; a string or a number is text.
-			if ((typeof expression.value === 'string' && expression.value.trim()) || typeof expression.value === 'number') parent.text = true;
-			break;
-		case 'TemplateLiteral':
-			if (expression.expressions.length > 0 || expression.quasis.some((quasi) => (quasi.value.cooked ?? quasi.value.raw).trim())) parent.text = true;
-			break;
-		case 'LogicalExpression':
-			// The left of `a && <x />` renders nothing worth counting.
-			if (expression.operator !== '&&') readJsxExpression(expression.left, parent, conditional, roots);
-			readJsxExpression(expression.right, parent, conditional, roots);
-			break;
-		case 'ConditionalExpression':
-			readJsxExpression(expression.consequent, parent, conditional, roots);
-			readJsxExpression(expression.alternate, parent, conditional, roots);
-			break;
-		case 'ParenthesizedExpression':
-			readJsxExpression(expression.expression, parent, flags, roots);
-			break;
-		case 'CallExpression': {
-			const found = [];
-			collectJsx(expression, found);
-			if (found.length === 0) appendUnknown(parent, expression.start);
-			for (const { node } of found) {
-				readJsxNode(node, parent, { ...flags, repeated: true }, roots);
-			}
-			break;
-		}
-		case 'Identifier':
-			// `{items}`: whatever the file bound to that name renders here.
-			appendUnknown(parent, expression.start).ref = expression.name;
-			break;
-		default:
-			appendUnknown(parent, expression.start);
-	}
-}
-
-function readJsxChildren(children, parent, flags, roots) {
-	for (const child of children) {
-		if (child.type === 'JSXText' && child.value.trim()) parent.text = true;
-		if (child.type === 'JSXElement' || child.type === 'JSXFragment') {
-			readJsxNode(child, parent, flags, roots);
-		} else if (child.type === 'JSXExpressionContainer') {
-			readJsxExpression(child.expression, parent, flags, roots);
-		} else if (child.type === 'JSXSpreadChild') {
-			appendUnknown(parent, child.start);
-		}
-	}
-}
-
-/** What the parser of JSX says about the start tag, in the shape the HTML parsers give. */
-function jsxStartTag(opening) {
-	const attributes = opening.attributes
-		.filter((attribute) => attribute.type === 'JSXAttribute')
-		.map((attribute) => {
-			const { value } = attribute;
-			const quote = !value ? undefined : value.type === 'Literal' ? (value.raw?.[0] ?? '"') : '{';
-			return {
-				name: jsxName(attribute.name),
-				prefix: '',
-				start: attribute.start,
-				end: attribute.end,
-				nameStart: attribute.name.start,
-				nameEnd: attribute.name.end,
-				value: value ? { start: value.start, end: value.end, quote } : undefined,
-			};
-		});
-	return { end: opening.end - 1, selfClosing: opening.selfClosing, attributes };
-}
-
-function readJsxNode(node, parent, flags, roots) {
-	if (node.type === 'JSXFragment') {
-		readJsxChildren(node.children, parent, flags, roots);
-		return;
-	}
-	const name = jsxName(node.openingElement.name);
-	if (TRANSPARENT.has(name)) {
-		readJsxChildren(node.children, parent, flags, roots);
-		return;
-	}
-	const element = createNode(name, node.start);
-	element.endOffset = node.end - 1;
-	element.conditional = Boolean(flags.conditional);
-	element.repeated = Boolean(flags.repeated);
-	element.opaque = isOpaqueTag(name);
-	element.startTag = jsxStartTag(node.openingElement);
-	readJsxAttributes(element, node.openingElement.attributes, roots);
-	appendChild(parent, element);
-	readJsxChildren(node.children, element, {}, roots);
-}
-
-function jsxTree(node, roots, detached = true) {
-	const root = createRoot();
-	if (detached) root.detached = true;
-	readJsxNode(node, root, {}, roots);
-	return root;
-}
-
-let oxcParser;
-
-/** The JSX parser, an optional dependency: without it a file with JSX cannot be read, and the run says why. */
-async function loadOxc(filename) {
-	oxcParser ??= await import('oxc-parser').catch(() => {
-		throw new Error(`Reading ${filename} needs the optional dependency oxc-parser, which needs Node 20.19 or newer.`);
-	});
-}
-
-export async function parseJsx(source, filename) {
-	await loadOxc(filename);
-	// A .js file takes JSX only when asked: React apps write it there too.
-	const options = /\.[cm]?js$/.test(filename) ? { lang: 'jsx' } : {};
-	const { program, errors } = oxcParser.parseSync(filename, source, options);
-	const found = [];
-	collectJsx(program, found, {}, exportedNamesOf(program));
-	const bindings = bindingCounts(program);
-	const roots = [];
-	const owners = new Map();
-	for (const { node, detached, owner } of found) {
-		const root = jsxTree(node, roots, detached);
-		roots.push(root);
-		// A name bound more than once (a parameter that shadows it, two components with
-		// the same local) might be the other one where it is used: then it stays unknown.
-		if (detached && owner && bindings.get(owner) === 1) owners.set(root, owner);
-	}
-	placeDetachedRoots(roots, owners);
-	if (errors?.length) {
-		roots.syntaxError = { message: errors[0].message, offset: errors[0].labels?.[0]?.start ?? 0 };
-	}
-	return roots;
-}
-
-/**
- * A tree bound to a name lands where this file uses that name: `<Row />` for a
- * component, `{items}` for a value. Those places tell what is around it, so a
- * rule can judge its plain HTML. Used nowhere in the file, it stays unknown.
- */
-function placeDetachedRoots(roots, owners) {
-	if (owners.size === 0) return;
-	const uses = new Map();
-	for (const root of roots) {
-		walk(root, (node) => {
-			const name = node.ref ?? (node.opaque ? node.name : undefined);
-			if (name) uses.set(name, [...(uses.get(name) ?? []), node]);
-		});
-	}
-	for (const [root, owner] of owners) {
-		const places = uses.get(owner);
-		if (places?.length) root.placements = places;
-	}
+	return readLiterals(source, scriptLiterals(source).filter(({ html }) => !html));
 }
 
 /** Names a framework wrapper by the tag it renders, with kebab-case props. */
@@ -1350,6 +1007,7 @@ const PARSERS = {
 	'.jsx': parseJsx,
 	'.tsx': parseJsx,
 	'.ts': parseLit,
+	'.py': parsePython,
 	'.js': parseScript,
 	'.mjs': parseScript,
 	'.css': parseStylesheet,
@@ -1366,12 +1024,30 @@ const PARSERS = {
 export function readerOf(filename) {
 	const parser = PARSERS[filename.slice(filename.lastIndexOf('.'))];
 	if (!parser) return 'none';
-	return parser === parseLit || parser === parseScript ? 'templates' : 'markup';
+	return parser === parseLit || parser === parseScript || parser === parsePython ? 'templates' : 'markup';
 }
 
-/** @returns {Promise<import('./tree.js').TreeNode[]>} */
-export async function parseSource(source, filename) {
-	const extension = filename.slice(filename.lastIndexOf('.'));
-	const parser = PARSERS[extension];
-	return parser ? parser(source, filename) : [];
+/**
+ * What a fix may write in a file, by how it was read. A quote of ours could end
+ * a string literal, and JSX takes no JSON in an attribute. A hole in text is text
+ * in Vue, and in JSX where the finding was decided with every expression read.
+ */
+const WRITES = {
+	markup: { quotes: true, aroundHoles: false },
+	vue: { quotes: true, aroundHoles: true },
+	jsx: { quotes: false, aroundHoles: true },
+	strings: { quotes: false, aroundHoles: false },
+};
+
+/**
+ * Reads one file. A reader gives its trees, and where it has more to say, an
+ * object with those trees in it.
+ * @returns {Promise<{ roots: import('./tree.js').TreeNode[], kind: 'markup' | 'vue' | 'jsx' | 'strings',
+ *   writes: { quotes: boolean, aroundHoles: boolean }, syntaxError?: { message: string, offset: number }, unread?: number }>}
+ */
+export async function parseSource(source, filename, options) {
+	const parser = PARSERS[filename.slice(filename.lastIndexOf('.'))];
+	const given = parser ? await parser(source, filename, options) : [];
+	const reading = Array.isArray(given) ? { roots: given, kind: parser === parseVue ? 'vue' : 'markup' } : given;
+	return { ...reading, writes: WRITES[reading.kind] };
 }

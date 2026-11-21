@@ -1,0 +1,187 @@
+name: Upgrade the NLDD design system
+description: Brings a repository to a version of @nldd/design-system and opens a pull request with what is left to do.
+author: Nederlandse Digitale Dienst
+branding:
+  icon: arrow-up-circle
+  color: blue
+
+# The work is `nldd upgrade`: it raises the version wherever the project names
+# it, rewrites the lockfile, applies every fix that is certain, and writes what
+# is left as the text of the pull request. This action runs it and delivers the
+# result. Each step is a script next to this file, so it reads and lints as
+# a script.
+#
+# It clones the repository itself, into the temporary directory of the runner:
+# the token is asked for when git needs it and never written to disk, so the
+# agent, which runs in between, has none. A job that calls this needs no
+# checkout of its own.
+#
+#   jobs:
+#     upgrade:
+#       runs-on: ubuntu-latest
+#       permissions:
+#         contents: write
+#         pull-requests: write
+#       steps:
+#         - uses: NederlandseDigitaleDienst/design-system/upgrade@v0.28.0
+#
+# A tag pins how the upgrade is delivered. The version the project goes to is
+# `version`, the latest on npm unless you say otherwise.
+
+inputs:
+  repository:
+    description: 'owner/name of the repository to upgrade. Default: the one this runs in.'
+    default: ${{ github.repository }}
+  base:
+    description: 'The branch to upgrade and to open the pull request against. Default: the default branch of the repository.'
+    default: ''
+  version:
+    description: 'The version to upgrade to: a number, or a tag such as latest.'
+    default: latest
+  token:
+    description: 'A token that may push a branch and open a pull request. With the token of the workflow, the CI of the repository does not run on the pull request.'
+    default: ${{ github.token }}
+  app-client-id:
+    description: 'The client ID of a GitHub App that opens the pull request instead. Needs app-private-key.'
+    default: ''
+  app-private-key:
+    description: 'The private key of that app.'
+    default: ''
+  agent:
+    description: 'Let an agent work the list of what is left, with the upgrade skill, before the pull request is made. Needs a key for a model.'
+    default: 'false'
+  anthropic-api-key:
+    description: 'For the agent: an API key.'
+    default: ''
+  claude-code-oauth-token:
+    description: 'For the agent: a token of a subscription, from `claude setup-token`. Used before anthropic-api-key.'
+    default: ''
+  model:
+    description: 'The model the agent works with. Fixed, so the same run does the same work, and named in the pull request.'
+    default: claude-opus-5-5
+  sandbox:
+    description: 'Keep the key for the model out of the commands the agent runs, by running them in a sandbox. Some builds do not run in it. Turn it off only for a repository whose content you trust as your own.'
+    default: 'true'
+  build:
+    description: 'The command that builds the site, from a clean checkout. With `site`, the pull request gets pictures of what changed. Default: what the agent finds.'
+    default: ''
+  site:
+    description: 'The directory `build` writes the site to.'
+    default: ''
+  from-source:
+    description: 'Run the command and the skill from the checkout of this action, not from npm. For trying a change to them before their release; `version` is then that of the checkout.'
+    default: 'false'
+
+outputs:
+  version:
+    description: 'The version the repository was brought to.'
+    value: ${{ steps.upgrade.outputs.version }}
+  changed:
+    description: 'Whether anything changed.'
+    value: ${{ steps.upgrade.outputs.changed }}
+  pull-request:
+    description: 'The number of the pull request, if one is open.'
+    value: ${{ steps.deliver.outputs.number }}
+
+runs:
+  using: composite
+  steps:
+    - name: Name the repository
+      id: repository
+      shell: bash
+      env:
+        REPOSITORY: ${{ inputs.repository }}
+      run: |
+        {
+          echo "TOOLS=$RUNNER_TEMP/nldd"
+          echo "WORK=$RUNNER_TEMP/nldd-work"
+          echo "PROJECT=$RUNNER_TEMP/nldd-project"
+          echo "REPOSITORY=$REPOSITORY"
+          echo "ACTION=$GITHUB_ACTION_PATH"
+        } >> "$GITHUB_ENV"
+        echo "owner=${REPOSITORY%%/*}" >> "$GITHUB_OUTPUT"
+        echo "name=${REPOSITORY#*/}" >> "$GITHUB_OUTPUT"
+
+    - name: Token of the app
+      id: app
+      if: inputs.app-client-id != ''
+      uses: actions/create-github-app-token@v3
+      with:
+        client-id: ${{ inputs.app-client-id }}
+        private-key: ${{ inputs.app-private-key }}
+        owner: ${{ steps.repository.outputs.owner }}
+        repositories: ${{ steps.repository.outputs.name }}
+
+    - uses: actions/setup-node@v7
+      with:
+        node-version: 24
+
+    - name: Upgrade
+      id: upgrade
+      shell: bash
+      env:
+        GH_TOKEN: ${{ steps.app.outputs.token || inputs.token }}
+        APP: ${{ steps.app.outputs.app-slug }}
+        BASE: ${{ inputs.base }}
+        WANTED: ${{ inputs.version }}
+        FROM_SOURCE: ${{ inputs.from-source }}
+      run: bash "$ACTION/upgrade.sh"
+
+    # What is certain is done. What is left asks for a choice, and that is what the skill is for.
+    # In a pull request that is continued, only a place that is new calls the agent again.
+    - name: Work the list
+      if: steps.upgrade.outputs.changed == 'true' && steps.upgrade.outputs.agent == 'true' && inputs.agent == 'true'
+      shell: bash
+      env:
+        VERSION: ${{ steps.upgrade.outputs.version }}
+        MODEL: ${{ inputs.model }}
+        OAUTH_TOKEN: ${{ inputs.claude-code-oauth-token }}
+        API_KEY: ${{ inputs.anthropic-api-key }}
+        # Keeps the key for the model out of the commands the agent runs.
+        CLAUDE_CODE_SUBPROCESS_ENV_SCRUB: ${{ inputs.sandbox == 'false' && '0' || '1' }}
+      run: bash "$ACTION/agent.sh"
+
+    # The report as it stands after the agent, with the choices of this run and of earlier ones.
+    - name: Read the project again
+      if: steps.upgrade.outputs.changed == 'true'
+      shell: bash
+      run: bash "$ACTION/report.sh"
+
+    - name: Open or update the pull request
+      id: deliver
+      shell: bash
+      env:
+        GH_TOKEN: ${{ steps.app.outputs.token || inputs.token }}
+        VERSION: ${{ steps.upgrade.outputs.version }}
+        CHANGED: ${{ steps.upgrade.outputs.changed }}
+        NUMBER: ${{ steps.upgrade.outputs.number }}
+      run: bash "$ACTION/deliver.sh"
+
+    # The pictures are an extra: a site that does not build here still gets its pull request.
+    - name: Photograph the site before and after
+      id: compare
+      if: steps.deliver.outputs.number != ''
+      continue-on-error: true
+      shell: bash
+      env:
+        BUILD: ${{ inputs.build }}
+        SITE: ${{ inputs.site }}
+      run: bash "$ACTION/compare.sh"
+
+    - name: Keep the pictures
+      id: pictures
+      if: steps.compare.outputs.made == 'true'
+      uses: actions/upload-artifact@v7
+      with:
+        name: nldd-compare-${{ steps.repository.outputs.name }}
+        path: ${{ runner.temp }}/nldd/compare
+
+    - name: Show the pictures under the pull request
+      if: steps.compare.outputs.made == 'true'
+      continue-on-error: true
+      shell: bash
+      env:
+        GH_TOKEN: ${{ steps.app.outputs.token || inputs.token }}
+        NUMBER: ${{ steps.deliver.outputs.number }}
+        ALL: ${{ steps.pictures.outputs.artifact-url }}
+      run: bash "$ACTION/pictures.sh"

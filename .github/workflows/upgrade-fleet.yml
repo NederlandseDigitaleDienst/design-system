@@ -1,0 +1,147 @@
+name: Upgrade the fleet
+
+# Brings every repository on the list to the latest release, each with a pull
+# request of its own: at once after a release that may break something, a
+# minor or a major, and on Monday morning for the patches of the week. A patch
+# here can be a new component, so it is not held back for long; it is batched
+# because releases come several a day, and each run adds a commit to every
+# pull request that is open. The work per repository is the action in
+# /upgrade, the same one a team uses.
+#
+# The list is fleet.json, at the root of this repository. A team puts its own
+# repository on it with a pull request, after an owner of its organization has
+# installed the app on that repository; scripts/lib/fleet.js says what an entry
+# may say, and the README shows the list. The rest is a variable of this
+# repository or a secret of its environment `fleet`:
+#
+#   NLDD_FLEET_APP_CLIENT_ID    variable   the GitHub App that opens the pull requests,
+#   NLDD_FLEET_APP_KEY          secret     and its private key
+#   NLDD_FLEET_TOKEN            secret     or, without an app, a token of a bot account
+#   NLDD_FLEET_MODEL            variable   the model of the agent. Default: claude-opus-5-5
+#   CLAUDE_CODE_OAUTH_TOKEN     secret     for the agent, or
+#   ANTHROPIC_API_KEY           secret     an API key
+#
+# The secrets are in the environment `fleet`, which only main may use. With
+# the key of the app a run can push to every repository the app is installed
+# on, so a workflow on another branch must not reach it. That is also why this
+# job runs the action itself and does not call upgrade.yml: a job that calls a
+# workflow cannot have an environment.
+#
+# The app is installed once per organization, by an owner who picks the
+# repositories. A repository on the list where it is not installed fails on its
+# own and holds up no other.
+#
+# Run by hand, it takes one repository that need not be on the list, and with
+# from_source the command of main before its release. A change on a branch is
+# tried from a repository of your own, with the action of that branch and a
+# token of your own: the environment keeps the key of the app on main.
+
+on:
+  workflow_run:
+    workflows: ['Publish to npmjs']
+    types: [completed]
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+    inputs:
+      repository:
+        description: 'Only this repository, owner/name. Default: the whole list.'
+        type: string
+        default: ''
+      version:
+        description: 'The version to upgrade to. Default: the latest on npm.'
+        type: string
+        default: latest
+      agent:
+        description: 'Let an agent work the list of what is left.'
+        type: choice
+        options: ['as fleet.json says', 'yes', 'no']
+        default: 'as fleet.json says'
+      from_source:
+        description: 'Take the command from main, not from npm: what is merged and not yet released.'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  # The list to run, from fleet.json: every entry, or the one repository asked for by hand.
+  list:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    outputs:
+      targets: ${{ steps.list.outputs.targets }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            fleet.json
+            scripts/lib/fleet.js
+          sparse-checkout-cone-mode: false
+
+      # After a release only a minor or a major goes out at once: under 1.0 a minor is what may break.
+      - id: release
+        if: github.event_name == 'workflow_run'
+        run: |
+          read -r previous latest < <(npm view @nldd/design-system versions --json | jq --raw-output '[.[] | select(test("^[0-9]+\\.[0-9]+\\.[0-9]+$"))] | .[-2:] | join(" ")')
+          if [ "${previous%.*}" = "${latest%.*}" ]; then
+            echo "$latest is a patch of $previous: it goes out on Monday."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - id: list
+        env:
+          ONLY: ${{ inputs.repository }}
+          SKIP: ${{ steps.release.outputs.skip }}
+        run: |
+          node --input-type=module --eval "
+            import { readFileSync } from 'node:fs';
+            import { fleetErrors, fleetMatrix } from './scripts/lib/fleet.js';
+            const fleet = JSON.parse(readFileSync('fleet.json', 'utf8'));
+            const errors = fleetErrors(fleet);
+            if (errors.length) { console.error(errors.join('\n')); process.exit(1); }
+            const only = process.env.ONLY;
+            const all = fleetMatrix(fleet);
+            const named = all.find(({ repository }) => repository.toLowerCase() === only?.toLowerCase());
+            const targets = process.env.SKIP ? [] : only ? [named ?? fleetMatrix({ repositories: [{ repository: only }] })[0]] : all;
+            console.log('targets=' + JSON.stringify(targets));
+          " >> "$GITHUB_OUTPUT"
+
+  upgrade:
+    needs: list
+    if: needs.list.outputs.targets != '[]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    environment: fleet
+    strategy:
+      fail-fast: false
+      # A few at a time: a release that breaks something shows in the first pull requests.
+      max-parallel: 3
+      matrix:
+        target: ${{ fromJSON(needs.list.outputs.targets) }}
+    # One run per repository at a time: two would overwrite each other's branch.
+    concurrency:
+      group: nldd-upgrade-${{ matrix.target.repository }}
+    steps:
+      # The action of the commit this runs on. It clones the project itself, outside this checkout.
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: ./upgrade
+        with:
+          repository: ${{ matrix.target.repository }}
+          version: ${{ inputs.version || 'latest' }}
+          token: ${{ secrets.NLDD_FLEET_TOKEN || github.token }}
+          app-client-id: ${{ vars.NLDD_FLEET_APP_CLIENT_ID }}
+          app-private-key: ${{ secrets.NLDD_FLEET_APP_KEY }}
+          agent: ${{ inputs.agent == 'yes' || (inputs.agent != 'no' && matrix.target.agent) }}
+          claude-code-oauth-token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
+          model: ${{ vars.NLDD_FLEET_MODEL || 'claude-opus-5-5' }}
+          sandbox: ${{ matrix.target.sandbox }}
+          build: ${{ matrix.target.build }}
+          site: ${{ matrix.target.site }}
+          from-source: ${{ inputs.from_source }}

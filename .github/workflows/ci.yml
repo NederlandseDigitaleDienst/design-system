@@ -57,6 +57,10 @@ jobs:
         run: npm run typecheck
       - name: Run unit tests
         run: npm run test:run
+      # `nldd lint --url` and `nldd compare` open a browser, so their tests run
+      # here, where Chromium is installed, and not with the other script tests.
+      - name: Test the lint commands that open a browser
+        run: npm run test:lint-browser
       # The website is published from main, so a pull request that breaks a
       # page has to fail here, before the merge.
       - name: Build the website

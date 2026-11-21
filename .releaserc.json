@@ -134,7 +134,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "npm run generate:skill-docs && npm run generate:publiccode"
+        "prepareCmd": "npm run generate:skill-docs && npm run generate:lint-breaking && npm run generate:publiccode"
       }
     ],
     [
@@ -147,6 +147,7 @@
           "skills/nldd-design/changelog.md",
           "skills/nldd-design/reference.md",
           "skills/nldd-design/design-guidelines.md",
+          "lint/breaking.generated.json",
           ".claude-plugin/plugin.json",
           ".claude-plugin/marketplace.json",
           ".cursor-plugin/plugin.json",

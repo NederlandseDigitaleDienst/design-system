@@ -1,6 +1,6 @@
 /** The `nldd` command, started from cli.js: arguments in, formatted findings out. What it checks is lint/session.js. */
 
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
 import { formatGithub, formatJson, formatStatistics, formatText } from './format.js';
@@ -22,7 +22,44 @@ const USAGE = `Usage:
     --select <groups or rules>      only these, comma separated
     --ignore <groups or rules>      all but these
     --statistics                    count per rule instead of listing every finding
+    --types                         read an expression in JSX by its type, with the project's TypeScript:
+                                    {row.label} is text when it is a string. Finds more, and takes longer
     --stdin --filename <name>       check a snippet instead of files
+    --url <url> [paths...]          check pages as they run, in a browser: what an expression or a
+                                    variable fills in, which the source does not show. Needs Playwright
+      --crawl                       also the pages of the same site they link to
+      --max <n>                     at most this many pages (default 40)
+      --storage-state <file>        a Playwright storage state, for a site behind a login
+      --playwright <module>         a playwright module, when the project has none
+  nldd compare <before> <after> [paths...] --out <directory>
+                                    photograph two versions of a site and outline every component that
+                                    changed. A version is a built site in a directory, or the address of
+                                    a running one. Needs Playwright
+    --report <file>                 write what was found there, as Markdown for under a pull request,
+                                    with the images that show most
+    --label-before <text>           what stands above the left half (default: Voor)
+    --label-after <text>            and above the right half (default: Na)
+    --storage-state, --playwright   as with lint --url
+  nldd upgrade                      bring this project to the version of this command: raise the version
+                                    wherever the project names it, rewrite the lockfile, apply every fix
+                                    that is certain, and report what is left. Run the version you want:
+                                    npx @nldd/design-system@latest upgrade
+    --report <file>                 write the report there, as Markdown for a pull request. A report
+                                    too long for one is cut at a section: the parts that follow are
+                                    <file>.2.md, <file>.3.md, for a comment each
+    --format json                   the same as data, for a script or an agent
+    --since <file>                  after the list was worked: read the project again and report what
+                                    is left now, next to what an earlier run left. <file> is the JSON
+                                    of that run. Changes nothing in the project
+    --from <version>                the version the project came from, where its pins hold another: in a
+                                    pull request that a later release continues, the version of main
+    --notes <file>                  with --since: the choices of whoever worked the list, for the
+                                    report, under the heading Keuzes
+    --no-install                    leave the lockfile to you
+    --install                       install the dependencies too, without their scripts: with the project's
+                                    TypeScript there, an expression in JSX is read by its type
+    --url <url> [--crawl]           also read the running app, as lint --url does, and add what it
+                                    shows to the report
   nldd explain <rule>               what a rule checks, and why
   nldd rules [--for <tag>] [--group <group>] [--json]
                                     list the rules, or those about one component or group
@@ -85,6 +122,100 @@ function noteOtherVersion(root) {
 	}
 }
 
+/**
+ * A running page instead of files. Nothing is written and nothing is accepted:
+ * what the browser shows is not a file to fix, and a baseline holds files.
+ */
+async function lintPages(data, paths, options, { root, config, severities }) {
+	for (const flag of ['fix', 'stdin', 'update-baseline', 'tighten-baseline']) {
+		if (options[flag]) throw new Error(`--url reads a running page, so it takes no --${flag}.`);
+	}
+	if (!/^https?:\/\//.test(options.url)) throw new Error('--url takes an address that starts with http:// or https://.');
+	if (options.max !== undefined && !/^[1-9]\d*$/.test(options.max)) throw new Error('--max takes a whole number above 0.');
+	const { lintRendered } = await import('./rendered.js');
+	const session = await lintRendered(data, {
+		root,
+		url: options.url,
+		paths,
+		crawl: options.crawl,
+		max: options.max ? Number(options.max) : undefined,
+		storageState: options['storage-state'],
+		playwright: options.playwright,
+		config,
+		severities,
+	});
+	for (const { url, error } of session.failed) console.error(`Could not open ${url}: ${error}`);
+	if (session.left > 0) console.error(`${session.left} more pages were found and not opened. Raise --max to open them.`);
+	return session;
+}
+
+/** Two versions of a site, side by side. A report to look at, so it never fails a run. */
+async function runCompare([before, after, ...paths], options) {
+	if (!before || !after) throw new Error('nldd compare takes two versions: a directory with a built site, or an address, for each.');
+	if (!options.out) throw new Error('nldd compare writes images, so it takes --out <directory>.');
+	const { compareSites, formatComparison } = await import('./compare.js');
+	const results = await compareSites({
+		root: process.cwd(),
+		before,
+		after,
+		paths,
+		out: options.out,
+		labels: { before: options['label-before'] ?? 'Voor', after: options['label-after'] ?? 'Na' },
+		storageState: options['storage-state'],
+		playwright: options.playwright,
+		onPage: (line) => console.log(line),
+	});
+	const failed = results.filter((result) => result.error).length;
+	const identical = results.filter((result) => result.identical).length;
+	const images = results.filter((result) => result.file).length;
+	if (options.report) writeFileSync(resolve(process.cwd(), options.report), formatComparison(results));
+	console.log(`\n${results.length} comparisons, ${identical} identical, ${images} with an image in ${options.out}${failed ? `, ${failed} that could not be made` : ''}`);
+	return 0;
+}
+
+/**
+ * The whole project, to the version of this package. Always the whole project:
+ * an upgrade that leaves a directory behind is not one.
+ */
+async function runUpgrade(data, paths, options) {
+	if (paths.length > 0) throw new Error('nldd upgrade takes no paths: it upgrades the whole project.');
+	if (options.format && options.format !== 'json') throw new Error('nldd upgrade writes Markdown, or JSON with --format json.');
+	const root = process.cwd();
+	const { upgradeProject, withRendered } = await import('./upgrade.js');
+	const { formatReport, formatSummary, splitReport } = await import('./upgrade-report.js');
+	if (options.notes && !options.since) throw new Error('--notes goes with --since: it is the text of whoever worked the list.');
+	const since = options.since ? JSON.parse(readFileSync(resolve(root, options.since), 'utf8')) : undefined;
+	if (options.from !== undefined && !/^\d+\.\d+\.\d+$/.test(options.from)) throw new Error('--from takes a version, such as 0.16.0.');
+	const config = readConfig(root, knownKeys(data));
+	const severities = resolveSeverities(data, config.rules, {});
+	const upgraded = await upgradeProject(data, {
+		root,
+		target: pkg.version,
+		breaking: JSON.parse(readFileSync(new URL('./breaking.generated.json', import.meta.url), 'utf8')),
+		config,
+		severities,
+		canonical: createCanonical(data),
+		install: options['no-install'] ? false : options.install ? 'full' : true,
+		since,
+		from: options.from,
+	});
+	if (options.notes && existsSync(resolve(root, options.notes))) upgraded.notes = readFileSync(resolve(root, options.notes), 'utf8');
+	// The running app, where the project has one up: the places the source left undecided.
+	const result = options.url ? withRendered(upgraded, await lintPages(data, [], options, { root, config, severities }), root) : upgraded;
+	if (options.report) {
+		// One file per part. A part of an earlier run that this one does not have would be posted again.
+		const file = resolve(root, options.report);
+		const partFile = (number) => (number === 1 ? file : `${file.replace(/\.md$/, '')}.${number}.md`);
+		const parts = splitReport(formatReport(result));
+		parts.forEach((part, index) => writeFileSync(partFile(index + 1), part));
+		for (let number = parts.length + 1; existsSync(partFile(number)); number++) rmSync(partFile(number));
+		console.error(formatSummary(result));
+	}
+	if (options.format === 'json') console.log(JSON.stringify(result, null, 2));
+	else if (!options.report) console.log(formatReport(result));
+	return 0;
+}
+
 async function runLint(data, paths, options) {
 	if (!/^\d+$/.test(options['max-warnings'] ?? '0')) throw new Error('--max-warnings takes a whole number, 0 or more.');
 	const formatName = options.format ?? 'text';
@@ -117,7 +248,7 @@ async function runLint(data, paths, options) {
 
 	// Tightening has to see every file the baseline names, also one without a component left.
 	const inBaseline = options['tighten-baseline'] ? new Set(Object.keys(readBaseline(root, canonical))) : new Set();
-	const session = await lintProject(data, {
+	const session = options.url ? await lintPages(data, paths, options, { root, config, severities }) : await lintProject(data, {
 		root,
 		paths,
 		config,
@@ -125,6 +256,7 @@ async function runLint(data, paths, options) {
 		input: options.stdin ? { filename: options.filename ?? 'stdin.html', source: readFileSync(0, 'utf8') } : undefined,
 		fix: options.fix,
 		keep: (filename) => inBaseline.has(relativePath(root, filename)),
+		types: options.types ? (await import('./types.js')).createTypes() : undefined,
 	});
 	const { results } = session;
 	for (const filename of session.notUtf8) console.error(`Skipped ${relative(root, filename)}: it is not UTF-8.`);
@@ -197,6 +329,21 @@ async function main() {
 			'max-warnings': { type: 'string' },
 			stdin: { type: 'boolean' },
 			filename: { type: 'string' },
+			url: { type: 'string' },
+			crawl: { type: 'boolean' },
+			max: { type: 'string' },
+			'storage-state': { type: 'string' },
+			playwright: { type: 'string' },
+			out: { type: 'string' },
+			report: { type: 'string' },
+			since: { type: 'string' },
+			from: { type: 'string' },
+			notes: { type: 'string' },
+			'no-install': { type: 'boolean' },
+			install: { type: 'boolean' },
+			types: { type: 'boolean' },
+			'label-before': { type: 'string' },
+			'label-after': { type: 'string' },
 			for: { type: 'string' },
 			group: { type: 'string' },
 			select: { type: 'string' },
@@ -218,8 +365,10 @@ async function main() {
 		console.log(USAGE);
 		return command || values.help ? 0 : 2;
 	}
+	if (command === 'compare') return runCompare(rest, values);
 	const data = loadData();
 	if (command === 'lint') return runLint(data, rest, values);
+	if (command === 'upgrade') return runUpgrade(data, rest, values);
 	if (command === 'explain' && rest[0]) return explain(data, rest[0]);
 	if (command === 'rules') return listRules(data, { tag: values.for, group: values.group, json: values.json });
 	console.error(USAGE);

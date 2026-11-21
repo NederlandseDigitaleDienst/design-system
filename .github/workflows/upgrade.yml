@@ -1,0 +1,111 @@
+name: Upgrade a project
+
+# Brings one repository to a version of the design system and opens a pull
+# request for it. The work is the action in /upgrade; this workflow gives it a
+# job of its own, with the permissions it needs and one run per repository at a
+# time. upgrade-fleet.yml calls it for every repository on its list.
+#
+# A team can call this workflow, or use the action in a job of its own:
+#
+#   steps:
+#     - uses: NederlandseDigitaleDienst/design-system/upgrade@v0.28.0
+#
+# The inputs are those of the action; the README of the action, in
+# upgrade/action.yml, says what each one does.
+
+on:
+  workflow_call:
+    inputs:
+      repository:
+        description: 'owner/name of the repository to upgrade. Default: the one that calls this.'
+        type: string
+        default: ''
+      base:
+        description: 'The branch to upgrade and to open the pull request against. Default: the default branch of the repository.'
+        type: string
+        default: ''
+      version:
+        description: 'The version to upgrade to: a number, or a tag such as latest.'
+        type: string
+        default: latest
+      agent:
+        description: 'Let an agent work the list of what is left, with the upgrade skill, before the pull request is made. Needs claude_code_oauth_token or anthropic_api_key.'
+        type: boolean
+        default: false
+      model:
+        description: 'The model the agent works with. Fixed, so the same run does the same work, and named in the pull request.'
+        type: string
+        default: claude-opus-5-5
+      sandbox:
+        description: 'Keep the key for the model out of the commands the agent runs, by running them in a sandbox. Some builds do not run in it. Turn it off only for a repository whose content you trust as your own.'
+        type: boolean
+        default: true
+      build:
+        description: 'The command that builds the site, on a plain runner and from a clean checkout. With `site`, the pull request gets pictures of what changed. Default: what the agent finds.'
+        type: string
+        default: ''
+      site:
+        description: 'The directory `build` writes the site to.'
+        type: string
+        default: ''
+      app_client_id:
+        description: 'The client ID of a GitHub App that opens the pull request. Needs the secret app_private_key.'
+        type: string
+        default: ''
+      from_source:
+        description: 'Run the command and the skill from the commit of this workflow, not from npm. For trying a change to them before their release; `version` is then that of the commit.'
+        type: boolean
+        default: false
+    secrets:
+      token:
+        description: 'A token that may push a branch and open a pull request in the repository. Default: the token of the workflow.'
+        required: false
+      app_private_key:
+        description: 'The private key of the app in app_client_id.'
+        required: false
+      claude_code_oauth_token:
+        description: 'For the agent: a token of a subscription, from `claude setup-token`.'
+        required: false
+      anthropic_api_key:
+        description: 'For the agent: an API key. Used when there is no claude_code_oauth_token.'
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  upgrade:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    # One run per repository at a time: two would overwrite each other's branch.
+    concurrency:
+      group: nldd-upgrade-${{ inputs.repository || github.repository }}
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      # The action of the same commit as this workflow, so the two never drift apart.
+      # job.workflow_sha is that commit; actionlint does not know it yet.
+      - uses: actions/checkout@v7
+        with:
+          repository: NederlandseDigitaleDienst/design-system
+          ref: ${{ job.workflow_sha }}
+          path: .nldd-action
+          persist-credentials: false
+
+      - uses: ./.nldd-action/upgrade
+        with:
+          repository: ${{ inputs.repository || github.repository }}
+          base: ${{ inputs.base }}
+          version: ${{ inputs.version }}
+          token: ${{ secrets.token || github.token }}
+          app-client-id: ${{ inputs.app_client_id }}
+          app-private-key: ${{ secrets.app_private_key }}
+          agent: ${{ inputs.agent }}
+          anthropic-api-key: ${{ secrets.anthropic_api_key }}
+          claude-code-oauth-token: ${{ secrets.claude_code_oauth_token }}
+          model: ${{ inputs.model }}
+          sandbox: ${{ inputs.sandbox }}
+          build: ${{ inputs.build }}
+          site: ${{ inputs.site }}
+          from-source: ${{ inputs.from_source }}

@@ -85,6 +85,8 @@ export default [js.configs.recommended, {
     '.claude/**',
     'scripts/**',
     'lint/**',
+    // The action runs in Node on a runner, like lint/ and scripts/, not in a browser.
+    'upgrade/**',
     '*.config.js',
   ],
 }];

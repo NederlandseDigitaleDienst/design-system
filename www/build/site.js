@@ -30,6 +30,8 @@ const SITE_NAME = 'NLDD Designsysteem';
  * `stories` is the file the examples on the page come from; with `examples`
  * every story of that file follows the text, under that heading.
  */
+const PACKAGE_VERSION = JSON.parse(readFileSync(resolve(repoRoot, 'package.json'), 'utf8')).version;
+
 const PROSE = [
 	{ path: '/aan-de-slag/', file: 'www/content/aan-de-slag.md', description: 'Installeer het pakket en zet je eerste component neer.' },
 	{ path: '/aan-de-slag/ai-assistent/', file: 'www/content/ai-assistent.md', description: 'Skills voor Claude Code en Cursor.' },
@@ -37,6 +39,7 @@ const PROSE = [
 	{ path: '/themas/', file: 'src/docs/themes.md', stories: 'src/docs/themes.stories.ts', examples: 'Elk thema op een pagina vol componenten', description: 'De accentkleur van je dienst, in licht en donker.' },
 	{ path: '/iconen/', file: 'src/docs/icons.md', stories: 'src/components/content/icon/icon-gallery.stories.ts', description: 'Alle iconen, met hun aliassen.' },
 	{ path: '/linter/', file: 'www/content/linter.md', rules: true, description: 'Controleer je code met nldd lint, en lees elke regel.' },
+	{ path: '/upgraden/', file: 'www/content/upgraden.md', description: 'Breng je project naar een nieuwe versie, met een pull request bij elke release.' },
 	{ path: '/breakpoints/', file: 'src/docs/breakpoints.md', description: 'Bij welke breedtes de layout verandert.' },
 	{ path: '/vertalingen/', file: 'src/docs/translations.md', description: 'Een interface in een andere taal dan Nederlands.' },
 	{ path: '/toegankelijkheid/', file: 'docs/ACCESSIBILITY.md', description: 'Wat het systeem voor toegankelijkheid regelt, en wat jij nog doet.' },
@@ -126,6 +129,7 @@ const NAVIGATION = [
 			["Thema's", '/themas/'],
 			['Werken met een AI-assistent', '/aan-de-slag/ai-assistent/'],
 			['Linter', '/linter/'],
+			['Upgraden', '/upgraden/'],
 			['Breakpoints', '/breakpoints/'],
 			['Vertalingen', '/vertalingen/'],
 		],
@@ -1246,10 +1250,13 @@ export function buildPages({ base = '/' } = {}) {
 		// as the list of skills. A file that is shown as it is in the repository
 		// has links relative to itself.
 		const source = file.startsWith('www/content/')
-			? read(file).replace(/^\{\{(\w+)\}\}$/gm, (_, key) => {
-					if (!(key in MARKDOWN_INSERTS)) throw new Error(`Onbekende plaatshouder {{${key}}} in ${file}`);
-					return MARKDOWN_INSERTS[key];
-				})
+			? read(file)
+					.replace(/^\{\{(\w+)\}\}$/gm, (_, key) => {
+						if (!(key in MARKDOWN_INSERTS)) throw new Error(`Onbekende plaatshouder {{${key}}} in ${file}`);
+						return MARKDOWN_INSERTS[key];
+					})
+					// The version the site is built from, so an example pins one that exists.
+					.replaceAll('{{version}}', PACKAGE_VERSION)
 			: absoluteLinks(read(file), file);
 		const storyFile = storiesPath ? parseStoryFile(resolve(repoRoot, storiesPath)) : undefined;
 		stories += storyFile?.stories.length ?? 0;
