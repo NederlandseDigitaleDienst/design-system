@@ -64,7 +64,8 @@ name: Upgrade a project
 # A project that builds to a static site gets pictures. The site is built
 # before and after the upgrade and `nldd compare` photographs both: the pages
 # that differ come as a comment under the pull request, all images as an
-# artifact of the run. How it builds is `build` and `site`, or else what the
+# artifact of the run. A token that may not attach a file (that of an app)
+# puts the pictures of the comment on refs/nldd/pictures, which is no branch. How it builds is `build` and `site`, or else what the
 # agent found in the project and wrote down. The agent looks; this workflow
 # runs the command, in a step that holds no token.
 
@@ -395,9 +396,24 @@ jobs:
           { echo '<!-- nldd-upgrade-compare -->'; cat compare.md; printf '\nAlle beelden: %s\n' "$ALL"; } > comment.md
           set --
           for image in $(grep --only-matching '(\./[^)]*\.png)' comment.md | tr -d '()'); do set -- "$@" --attach "$image"; done
-          if ! gh pr comment "$NUMBER" --repo "$REPOSITORY" --body-file comment.md "$@"; then
-            # Not every token may attach a file. The text then names each picture, and they are in the artifact.
-            echo "::warning::The pictures could not be attached. The comment links to the artifact instead."
-            sed --regexp-extended 's/^!\[([^]]*)\]\(\.\/([^)]*)\)$/Beeld `\2` in de bijlage van de run./' comment.md > plain.md
-            gh pr comment "$NUMBER" --repo "$REPOSITORY" --body-file plain.md
+          if gh pr comment "$NUMBER" --repo "$REPOSITORY" --body-file comment.md "$@"; then exit 0; fi
+
+          # The token of an app may not attach a file. The pictures then go in a commit of their own,
+          # on a ref that is no branch, so no list of branches shows it, and the comment points at them
+          # by the commit. A next run replaces the ref.
+          echo "::notice::The pictures could not be attached, so they are pushed to refs/nldd/pictures."
+          export GIT_INDEX_FILE="$TOOLS/pictures.index"
+          git -C "$GITHUB_WORKSPACE" read-tree --empty
+          for image in $(grep --only-matching '(\./[^)]*\.png)' comment.md | tr -d '()'); do
+            blob="$(git -C "$GITHUB_WORKSPACE" hash-object -w "$PWD/$image")"
+            git -C "$GITHUB_WORKSPACE" update-index --add --cacheinfo "100644,$blob,${image#./}"
+          done
+          tree="$(git -C "$GITHUB_WORKSPACE" write-tree)"
+          commit="$(git -C "$GITHUB_WORKSPACE" commit-tree "$tree" -m "Beelden van de designsysteem-upgrade")"
+          if git -C "$GITHUB_WORKSPACE" push --force origin "$commit:refs/nldd/pictures"; then
+            sed --regexp-extended "s#^(!\[[^]]*\]\()\./([^)]*)\)\$#\1https://github.com/$REPOSITORY/raw/$commit/\2)#" comment.md > hosted.md
+          else
+            echo "::warning::The pictures could not be pushed either. The comment names them, and they are in the artifact."
+            sed --regexp-extended 's/^!\[([^]]*)\]\(\.\/([^)]*)\)$/Beeld `\2` in de bijlage van de run./' comment.md > hosted.md
           fi
+          gh pr comment "$NUMBER" --repo "$REPOSITORY" --body-file hosted.md
