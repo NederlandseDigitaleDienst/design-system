@@ -1,0 +1,9 @@
+severity: warn
+context: 'nldd-form-field[optional-label]'
+removed: ['optional-label']
+fix:
+  translation: { optional-label: components.form-field.optional-label }
+message: '`optional-label` is gone. The text of the optional badge is the translation key `components.form-field.optional-label` now. Set it in `translations` or with `setTranslations()`.'
+examples:
+  passed: ['<nldd-form-field label="Telefoon" optional translations=''{"components.form-field.optional-label": "Niet verplicht"}''><nldd-text-field></nldd-text-field></nldd-form-field>']
+  failed: ['<nldd-form-field label="Telefoon" optional optional-label="Niet verplicht"><nldd-text-field></nldd-text-field></nldd-form-field>']

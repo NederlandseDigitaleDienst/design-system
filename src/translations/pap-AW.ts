@@ -175,6 +175,7 @@ export const papAW: Record<TranslationKey, string> = {
 	'components.file-field.show-options-action': 'Mustra opcion',
 	'components.file-field.required-error-text': 'Un archivo ta obligatorio',
 	'components.file-field.accepted-types-text': 'Permiti: {types}',
+	'components.form-field.optional-label': 'Opshonal',
 	'components.number-field.decrement-action': 'Baha',
 	'components.number-field.increment-action': 'Subi',
 	'components.number-field.to-adjust-value-action': 'Ahusta valor',

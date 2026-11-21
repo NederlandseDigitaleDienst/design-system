@@ -269,6 +269,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-form-field[optional] > [required]"
 	},
 	{
+		"id": "form-field-optional-label-no-effect",
+		"message": "`optional-label` is gone. The text of the optional badge is the translation key `components.form-field.optional-label` now. Set it in `translations` or with `setTranslations()`.",
+		"context": "nldd-form-field[optional-label]"
+	},
+	{
 		"id": "form-field-validation-no-multiple-controls",
 		"message": "More than one control, and the validation list has rules that read a value: it reads the first one. Set `for` on the list if it should read another.",
 		"context": "nldd-form-field:state(list-reads-first-control)"

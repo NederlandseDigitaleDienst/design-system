@@ -24,7 +24,7 @@
  * @attr {string} label - Field label text. Omit for no-label layout. Supports **bold** markdown syntax, for the word to type in a confirmation; the accessible name of the control takes the text without the markers.
  * @attr {string} supporting-label - Short supporting text below the label. Same typography as optional badge. Supports **bold** markdown syntax.
  * @attr {boolean} optional - Shows an optional badge next to the label.
- * @attr {string} optional-label - Text for the optional badge. Defaults to 'Optioneel'.
+ * @attr {object} translations - Override translation keys, such as the text of the optional badge; unset keys fall back to Dutch
  * @attr {string} form-label-alignment - Set by a wrapping nldd-form as a fallback. Do not set it yourself in consumer code.
  *
  * @slot - The slotted input (e.g. nldd-text-field), its nldd-validation-list and its nldd-form-field-help-text.
@@ -65,6 +65,9 @@ import {
 	formFieldHelpTextTemplate,
 } from './form-field.template.js';
 import { setState } from '../../../utilities/element-state.js';
+import { translate } from '../../../utilities/translations.js';
+import { nlddFormFieldTranslations } from './form-field.i18n.js';
+import type { NLDDFormFieldTranslations } from './form-field.i18n.js';
 
 export type LabelAlignment = 'top' | 'left' | 'right';
 
@@ -160,9 +163,13 @@ export class NLDDFormField extends LitElement {
 	@property({ type: Boolean })
 	optional = false;
 
-	/** Label text for the optional badge. Defaults to 'Optioneel'. Override for localisation. */
-	@property({ type: String, attribute: 'optional-label' })
-	optionalLabel = 'Optioneel';
+	/** Override one or more translation keys. Unset keys fall back to Dutch. */
+	@property({ type: Object })
+	translations: Partial<NLDDFormFieldTranslations> = {};
+
+	public _t(key: keyof NLDDFormFieldTranslations): string {
+		return translate(this.translations, nlddFormFieldTranslations, key);
+	}
 
 	private _childObserver: MutationObserver | null = null;
 	/** Watches the validation lists for items that come, go, show or hide. */

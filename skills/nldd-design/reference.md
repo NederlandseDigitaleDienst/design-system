@@ -1234,6 +1234,7 @@ A field around one input: its label, supporting label, optional badge, validatio
 - `form-field-no-name-in-parts` (hint): Ask for the full name in one field, and for the form of address separately if you need it.
 - `form-field-no-optional-and-required`: Drop `required`, or `optional`: the field cannot be both.
 - `form-field-no-own-label-alignment` (hint): Set `label-alignment` on nldd-form, which passes it to every field and to the actions, so the buttons line up with the fields.
+- `form-field-optional-label-no-effect`: `optional-label` is gone. The text of the optional badge is the translation key `components.form-field.optional-label` now. Set it in `translations` or with `setTranslations()`.
 - `form-field-validation-no-multiple-controls`: More than one control, and the validation list has rules that read a value: it reads the first one. Set `for` on the list if it should read another.
 - `label-no-all-caps` (hint): Write this label in sentence case: capitals weaken the word shape and make scanning harder.
 - `text-field-needs-type` (hint): Set the `type` that fits, `email` or `tel`, which brings the right keyboard and validation.
@@ -1246,7 +1247,7 @@ A field around one input: its label, supporting label, optional badge, validatio
 | `label` | `string` | Field label text. Omit for no-label layout. Supports **bold** markdown syntax, for the word to type in a confirmation; the accessible name of the control takes the text without the markers. |
 | `supporting-label` | `string` | Short supporting text below the label. Same typography as optional badge. Supports **bold** markdown syntax. |
 | `optional` | `boolean` | Shows an optional badge next to the label. |
-| `optional-label` | `string` | Text for the optional badge. Defaults to 'Optioneel'. |
+| `translations` | `object` | Override translation keys, such as the text of the optional badge; unset keys fall back to Dutch |
 | `form-label-alignment` | `string` | Set by a wrapping nldd-form as a fallback. Do not set it yourself in consumer code. |
 
 **Slots**

@@ -9070,13 +9070,13 @@
             },
             {
               "kind": "field",
-              "name": "optionalLabel",
+              "name": "translations",
               "type": {
-                "text": "string"
+                "text": "Partial<NLDDFormFieldTranslations>"
               },
-              "default": "'Optioneel'",
-              "description": "Label text for the optional badge. Defaults to 'Optioneel'. Override for localisation.",
-              "attribute": "optional-label"
+              "default": "{}",
+              "description": "Override one or more translation keys. Unset keys fall back to Dutch.",
+              "attribute": "translations"
             }
           ],
           "attributes": [
@@ -9120,13 +9120,13 @@
               "fieldName": "optional"
             },
             {
-              "name": "optional-label",
+              "name": "translations",
               "type": {
-                "text": "string"
+                "text": "Partial<NLDDFormFieldTranslations>"
               },
-              "default": "'Optioneel'",
-              "description": "Text for the optional badge. Defaults to 'Optioneel'.",
-              "fieldName": "optionalLabel"
+              "default": "{}",
+              "description": "Override translation keys, such as the text of the optional badge; unset keys fall back to Dutch",
+              "fieldName": "translations"
             },
             {
               "name": "form-label-alignment",

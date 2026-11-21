@@ -102,8 +102,8 @@ describe('nldd-form-field', () => {
 		expect(optional!.textContent).toContain('Optioneel');
 	});
 
-	it('renders a custom optional label when optional-label is set', async () => {
-		el = await fixture('<nldd-form-field label="Phone" optional optional-label="Optional"></nldd-form-field>');
+	it('takes the text of the optional badge from its translations', async () => {
+		el = await fixture(`<nldd-form-field label="Phone" optional translations='{"components.form-field.optional-label": "Optional"}'></nldd-form-field>`);
 		await waitForUpdate(el);
 		const optional = el.shadowRoot!.querySelector('.form-field__optional');
 		expect(optional!.textContent).toContain('Optional');
