@@ -26,10 +26,30 @@ name: Upgrade a project
 # upgrade-fleet.yml calls it for every repository on its list, with a token of
 # its own, so a team that did nothing gets the same pull request.
 #
+# Who opens the pull request follows from what the caller passes, and the
+# commit carries the same name:
+#
+#   app_client_id and app_private_key   a GitHub App, installed in the
+#                                       organization of the repository. One app
+#                                       serves every organization that installs
+#                                       it; the token is made per repository
+#                                       and ends with the job.
+#   token                               a bot account, or anyone's token.
+#   neither                             github-actions[bot]. A pull request made
+#                                       this way does not start the repository's
+#                                       other workflows, so its CI does not run.
+#
+# The app or the account needs contents and pull requests, both to write. A
+# project that names the version in a workflow file needs workflows as well.
+#
 # One branch per repository, rewritten on every run: a newer release replaces
-# the pull request that is open, it does not open a second one. A pull request
-# made with the token of the workflow itself does not start the repository's
-# other workflows; pass a token of an app or a bot account where CI has to run.
+# the pull request that is open, it does not open a second one.
+#
+# With `agent`, an agent works the list before the pull request is made, with
+# the upgrade skill of the same version. It gets the checkout and the
+# dependencies, and no token of the repository: the checkout keeps no
+# credentials, and the push happens in a later step. A run without a key for a
+# model skips the agent and says so.
 
 on:
   workflow_call:
@@ -38,19 +58,38 @@ on:
         description: 'owner/name of the repository to upgrade. Default: the one that calls this.'
         type: string
         default: ''
+      base:
+        description: 'The branch to upgrade and to open the pull request against. Default: the default branch of the repository.'
+        type: string
+        default: ''
       version:
         description: 'The version to upgrade to: a number, or a tag such as latest.'
         type: string
         default: latest
       agent:
-        description: 'Let an agent work the list of what is left, with the upgrade skill, before the pull request is made. Needs the secret claude_code_oauth_token.'
+        description: 'Let an agent work the list of what is left, with the upgrade skill, before the pull request is made. Needs claude_code_oauth_token or anthropic_api_key.'
         type: boolean
         default: false
+      app_client_id:
+        description: 'The client ID of a GitHub App that opens the pull request. Needs the secret app_private_key.'
+        type: string
+        default: ''
+      tool_ref:
+        description: 'Run the command from this branch or tag of the design system, not from npm. For trying a change to the command before its release; `version` is then the version of that branch.'
+        type: string
+        default: ''
     secrets:
       token:
         description: 'A token that may push a branch and open a pull request in the repository. Default: the token of the workflow.'
         required: false
+      app_private_key:
+        description: 'The private key of the app in app_client_id.'
+        required: false
       claude_code_oauth_token:
+        description: 'For the agent: a token of a subscription, from `claude setup-token`.'
+        required: false
+      anthropic_api_key:
+        description: 'For the agent: an API key. Used when there is no claude_code_oauth_token.'
         required: false
 
 permissions:
@@ -59,19 +98,49 @@ permissions:
 jobs:
   upgrade:
     runs-on: ubuntu-latest
+    timeout-minutes: 90
+    # One run per repository at a time: two would overwrite each other's branch.
+    concurrency:
+      group: nldd-upgrade-${{ inputs.repository || github.repository }}
     permissions:
       contents: write
       pull-requests: write
     env:
       BRANCH: nldd/design-system-upgrade
+      SOURCE: NederlandseDigitaleDienst/design-system
       REPOSITORY: ${{ inputs.repository || github.repository }}
-      WANTED: ${{ inputs.version }}
-      GH_TOKEN: ${{ secrets.token || github.token }}
     steps:
+      - name: Name the repository
+        id: repository
+        run: |
+          # What the command and the agent read and write next to the project, outside the checkout.
+          echo "TOOLS=$RUNNER_TEMP/nldd" >> "$GITHUB_ENV"
+          echo "owner=${REPOSITORY%%/*}" >> "$GITHUB_OUTPUT"
+          echo "name=${REPOSITORY#*/}" >> "$GITHUB_OUTPUT"
+
+      - name: Token of the app
+        id: app
+        if: inputs.app_client_id != ''
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ inputs.app_client_id }}
+          private-key: ${{ secrets.app_private_key }}
+          owner: ${{ steps.repository.outputs.owner }}
+          repositories: ${{ steps.repository.outputs.name }}
+
+      - name: Find the branch to upgrade
+        id: base
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token || secrets.token || github.token }}
+          BASE: ${{ inputs.base }}
+        run: echo "branch=${BASE:-$(gh api "repos/$REPOSITORY" --jq .default_branch)}" >> "$GITHUB_OUTPUT"
+
       - uses: actions/checkout@v7
         with:
           repository: ${{ inputs.repository || github.repository }}
-          token: ${{ secrets.token || github.token }}
+          ref: ${{ steps.base.outputs.branch }}
+          token: ${{ steps.app.outputs.token || secrets.token || github.token }}
+          persist-credentials: false
 
       - uses: actions/setup-node@v7
         with:
@@ -79,10 +148,22 @@ jobs:
 
       - name: Upgrade
         id: upgrade
+        env:
+          WANTED: ${{ inputs.version }}
+          TOOL_REF: ${{ inputs.tool_ref }}
         run: |
-          version="$(npm view "@nldd/design-system@$WANTED" version)"
+          mkdir -p "$TOOLS"
+          if [ -n "$TOOL_REF" ]; then
+            git clone --quiet --depth 1 --branch "$TOOL_REF" "https://github.com/$SOURCE" "$TOOLS/source"
+            npm ci --prefix "$TOOLS/source" --omit=dev --ignore-scripts --no-audit --no-fund
+            version="$(node --print "require('$TOOLS/source/package.json').version")"
+            nldd() { node "$TOOLS/source/lint/cli.js" "$@"; }
+          else
+            version="$(npm view "@nldd/design-system@$WANTED" version)"
+            nldd() { npx --yes "@nldd/design-system@$version" "$@"; }
+          fi
           echo "version=$version" >> "$GITHUB_OUTPUT"
-          npx --yes "@nldd/design-system@$version" upgrade --install --report "$RUNNER_TEMP/upgrade.md"
+          nldd upgrade --install --report "$TOOLS/upgrade.md"
           if git diff --quiet; then
             echo "Nothing to upgrade."
             echo "changed=false" >> "$GITHUB_OUTPUT"
@@ -93,44 +174,72 @@ jobs:
       # What is certain is done. What is left asks for a choice, and that is what
       # the skill is for: it reads the list and the breaking changes, and decides
       # per place. Off by default: a team reads the list itself, or asks for this.
-      - name: Fetch the upgrade skill
-        if: steps.upgrade.outputs.changed == 'true' && inputs.agent
-        uses: actions/checkout@v7
-        with:
-          repository: NederlandseDigitaleDienst/design-system
-          ref: v${{ steps.upgrade.outputs.version }}
-          sparse-checkout: skills
-          path: .nldd-skills
-
       - name: Work the list
         if: steps.upgrade.outputs.changed == 'true' && inputs.agent
-        uses: anthropics/claude-code-action@v1
-        with:
-          claude_code_oauth_token: ${{ secrets.claude_code_oauth_token }}
-          prompt: |
-            This repository was just upgraded to @nldd/design-system ${{ steps.upgrade.outputs.version }} by `nldd upgrade`.
-            The report is in ${{ runner.temp }}/upgrade.md. Follow .nldd-skills/skills/nldd-design-upgrade/SKILL.md from step 2:
-            work every place under "Nog te doen" and "Niet gelezen", and read the breaking changes it lists.
-            Where you choose, keep what the page did before the upgrade. Tick a box in the report when its place is done,
-            and add a section "Keuzes" at the end of the report with every choice that does not follow from the changelog.
-            Do not commit, do not push, and leave the directory .nldd-skills alone.
-          claude_args: '--allowedTools Bash,Read,Edit,Write,Glob,Grep'
+        env:
+          VERSION: ${{ steps.upgrade.outputs.version }}
+          OAUTH_TOKEN: ${{ secrets.claude_code_oauth_token }}
+          API_KEY: ${{ secrets.anthropic_api_key }}
+        run: |
+          if [ -n "$OAUTH_TOKEN" ]; then
+            export CLAUDE_CODE_OAUTH_TOKEN="$OAUTH_TOKEN"
+          elif [ -n "$API_KEY" ]; then
+            export ANTHROPIC_API_KEY="$API_KEY"
+          else
+            echo "::warning::The agent was asked for, and there is no claude_code_oauth_token or anthropic_api_key. The pull request holds what the command did."
+            exit 0
+          fi
+          unset OAUTH_TOKEN API_KEY
+
+          # The skill of the version the project now has.
+          if [ ! -d "$TOOLS/source" ]; then
+            git clone --quiet --depth 1 --branch "v$VERSION" "https://github.com/$SOURCE" "$TOOLS/source"
+          fi
+
+          npm install --global --no-audit --no-fund @anthropic-ai/claude-code
+          prompt="This repository was just upgraded to @nldd/design-system $VERSION by \`nldd upgrade\`.
+          The report is in $TOOLS/upgrade.md. Follow $TOOLS/source/skills/nldd-design-upgrade/SKILL.md from step 2:
+          work every place under \"Nog te doen\" and \"Niet gelezen\", and read the breaking changes it lists.
+          Where you choose, keep what the page did before the upgrade. Tick a box in the report when its place is done,
+          and add a section \"Keuzes\" at the end of the report with every choice that does not follow from the changelog.
+          The report is the text of a pull request that people read: write what you add to it in Dutch, short and plain.
+          Do not commit and do not push."
+          if ! claude --print "$prompt" --add-dir "$TOOLS" --allowedTools Bash Read Edit Write Glob Grep; then
+            echo "::warning::The agent stopped before it was done. The pull request holds what it did until then."
+            printf '\n> De agent die de lijst afwerkt is niet klaar gekomen. Wat hierboven is afgevinkt, is gedaan; de rest staat nog open.\n' >> "$TOOLS/upgrade.md"
+          fi
 
       - name: Open or update the pull request
         if: steps.upgrade.outputs.changed == 'true'
         env:
+          GH_TOKEN: ${{ steps.app.outputs.token || secrets.token || github.token }}
+          APP: ${{ steps.app.outputs.app-slug }}
+          BASE: ${{ steps.base.outputs.branch }}
           VERSION: ${{ steps.upgrade.outputs.version }}
         run: |
-          rm -rf .nldd-skills
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          # The commit is by whoever opens the pull request.
+          if [ -n "$APP" ]; then
+            name="${APP}[bot]"
+            id="$(gh api "users/$name" --jq .id)"
+          elif name="$(gh api user --jq .login 2>/dev/null)"; then
+            id="$(gh api user --jq .id)"
+          else
+            name='github-actions[bot]'
+            id=41898282
+          fi
+          git config user.name "$name"
+          git config user.email "$id+$name@users.noreply.github.com"
+          gh auth setup-git
+
+          title="chore: designsysteem naar $VERSION"
           git switch --force-create "$BRANCH"
           git add --update
-          git commit --message "chore: designsysteem naar $VERSION"
+          git commit --quiet --message "$title"
           git push --force origin "$BRANCH"
           number="$(gh pr list --repo "$REPOSITORY" --head "$BRANCH" --state open --json number --jq '.[0].number')"
           if [ -n "$number" ]; then
-            gh pr edit "$number" --repo "$REPOSITORY" --title "chore: designsysteem naar $VERSION" --body-file "$RUNNER_TEMP/upgrade.md"
+            gh pr edit "$number" --repo "$REPOSITORY" --title "$title" --body-file "$TOOLS/upgrade.md"
           else
-            gh pr create --repo "$REPOSITORY" --head "$BRANCH" --title "chore: designsysteem naar $VERSION" --body-file "$RUNNER_TEMP/upgrade.md"
+            gh pr create --repo "$REPOSITORY" --base "$BASE" --head "$BRANCH" --title "$title" --body-file "$TOOLS/upgrade.md"
           fi
+          echo "$REPOSITORY naar $VERSION: $(gh pr view "$BRANCH" --repo "$REPOSITORY" --json url --jq .url)" >> "$GITHUB_STEP_SUMMARY"

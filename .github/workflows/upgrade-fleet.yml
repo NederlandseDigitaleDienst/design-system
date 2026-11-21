@@ -4,10 +4,24 @@ name: Upgrade the fleet
 # with a pull request of its own. The work per repository is upgrade.yml.
 #
 # The list is not in this repository: which apps use the design system is
-# theirs to tell. It is the repository variable NLDD_FLEET, a JSON array of
-# owner/name, and the secret NLDD_FLEET_TOKEN is a token of a bot account or an
-# app that may push a branch and open a pull request in each of them. Without
-# the variable this workflow does nothing.
+# theirs to tell. Everything this workflow needs is a variable or a secret of
+# this repository, and without the list it does nothing:
+#
+#   NLDD_FLEET                  variable   the list, a JSON array of owner/name
+#   NLDD_FLEET_APP_CLIENT_ID    variable   the GitHub App that opens the pull requests,
+#   NLDD_FLEET_APP_KEY          secret     and its private key
+#   NLDD_FLEET_TOKEN            secret     or, without an app, a token of a bot account
+#   NLDD_FLEET_AGENT            variable   `true` lets an agent work the list of what is left
+#   CLAUDE_CODE_OAUTH_TOKEN     secret     for the agent, or
+#   ANTHROPIC_API_KEY           secret     an API key
+#
+# The app is installed once per organization, by an owner who picks the
+# repositories. A repository on the list where it is not installed fails on its
+# own and holds up no other.
+#
+# Run by hand, it takes one repository that need not be on the list, and a
+# branch of this repository to take the command from: that is how a change to
+# the command is tried on a real app before its release.
 
 on:
   workflow_run:
@@ -15,23 +29,38 @@ on:
     types: [completed]
   workflow_dispatch:
     inputs:
+      repository:
+        description: 'Only this repository, owner/name. Default: the whole list.'
+        type: string
+        default: ''
       version:
         description: 'The version to upgrade to. Default: the latest on npm.'
         type: string
         default: latest
+      agent:
+        description: 'Let an agent work the list of what is left.'
+        type: choice
+        options: ['as set in NLDD_FLEET_AGENT', 'yes', 'no']
+        default: 'as set in NLDD_FLEET_AGENT'
+      tool_ref:
+        description: 'Take the command from this branch or tag of this repository, not from npm.'
+        type: string
+        default: ''
 
 permissions:
   contents: read
 
 jobs:
   upgrade:
-    if: vars.NLDD_FLEET != '' && (github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success')
+    if: >-
+      (inputs.repository != '' || vars.NLDD_FLEET != '') &&
+      (github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success')
     strategy:
       fail-fast: false
       # A few at a time: a release that breaks something shows in the first pull requests.
       max-parallel: 3
       matrix:
-        repository: ${{ fromJSON(vars.NLDD_FLEET) }}
+        repository: ${{ fromJSON(inputs.repository && format('["{0}"]', inputs.repository) || vars.NLDD_FLEET) }}
     uses: ./.github/workflows/upgrade.yml
     permissions:
       contents: write
@@ -39,5 +68,11 @@ jobs:
     with:
       repository: ${{ matrix.repository }}
       version: ${{ inputs.version || 'latest' }}
+      agent: ${{ inputs.agent == 'yes' || (inputs.agent != 'no' && vars.NLDD_FLEET_AGENT == 'true') }}
+      app_client_id: ${{ vars.NLDD_FLEET_APP_CLIENT_ID }}
+      tool_ref: ${{ inputs.tool_ref }}
     secrets:
       token: ${{ secrets.NLDD_FLEET_TOKEN }}
+      app_private_key: ${{ secrets.NLDD_FLEET_APP_KEY }}
+      claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+      anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
