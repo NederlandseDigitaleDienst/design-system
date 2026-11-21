@@ -258,6 +258,13 @@ describe('nldd upgrade', () => {
 		assert.deepEqual(parts.flatMap(places), places(text));
 	});
 
+	it('comes from the version it is told, where a continued pull request has raised the pins before', async () => {
+		const { result } = await upgrade(project({ ...files, 'package.json': JSON.stringify({ dependencies: { '@nldd/design-system': '^0.25.0' } }, null, 2) }), { from: '0.20.0' });
+		assert.equal(result.from, '0.20.0');
+		assert.deepEqual(result.pinned.map(({ from }) => from), ['0.25.0']);
+		assert.match(formatReport(result), /^# Designsysteem van 0\.20\.0 naar 0\.27\.1/);
+	});
+
 	it('comes from the version the project installs, not from an old mention in a document', async () => {
 		const { result } = await upgrade(project({ ...files, 'README.md': 'Sinds `npm i @nldd/design-system@0.14.0` gebruiken we het designsysteem.\n' }));
 		assert.equal(result.from, '0.20.0');

@@ -51,6 +51,8 @@ const USAGE = `Usage:
     --since <file>                  after the list was worked: read the project again and report what
                                     is left now, next to what an earlier run left. <file> is the JSON
                                     of that run. Changes nothing in the project
+    --from <version>                the version the project came from, where its pins hold another: in a
+                                    pull request that a later release continues, the version of main
     --notes <file>                  with --since: the choices of whoever worked the list, for the
                                     report, under the heading Keuzes
     --no-install                    leave the lockfile to you
@@ -183,6 +185,7 @@ async function runUpgrade(data, paths, options) {
 	const { formatReport, formatSummary, splitReport } = await import('./upgrade-report.js');
 	if (options.notes && !options.since) throw new Error('--notes goes with --since: it is the text of whoever worked the list.');
 	const since = options.since ? JSON.parse(readFileSync(resolve(root, options.since), 'utf8')) : undefined;
+	if (options.from !== undefined && !/^\d+\.\d+\.\d+$/.test(options.from)) throw new Error('--from takes a version, such as 0.16.0.');
 	const config = readConfig(root, knownKeys(data));
 	const severities = resolveSeverities(data, config.rules, {});
 	const upgraded = await upgradeProject(data, {
@@ -194,6 +197,7 @@ async function runUpgrade(data, paths, options) {
 		canonical: createCanonical(data),
 		install: options['no-install'] ? false : options.install ? 'full' : true,
 		since,
+		from: options.from,
 	});
 	if (options.notes && existsSync(resolve(root, options.notes))) upgraded.notes = readFileSync(resolve(root, options.notes), 'utf8');
 	// The running app, where the project has one up: the places the source left undecided.
@@ -333,6 +337,7 @@ async function main() {
 			out: { type: 'string' },
 			report: { type: 'string' },
 			since: { type: 'string' },
+			from: { type: 'string' },
 			notes: { type: 'string' },
 			'no-install': { type: 'boolean' },
 			install: { type: 'boolean' },

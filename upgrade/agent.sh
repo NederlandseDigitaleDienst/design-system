@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Lets an agent work the list of what is left, then reads the project again, so the report says
-# what the linter still finds and not what the agent says it did.
+# Lets an agent work the list of what is left. report.sh reads the project again after it, so the
+# report says what the linter still finds and not what the agent says it did.
 # In: VERSION, MODEL, OAUTH_TOKEN or API_KEY, CLAUDE_CODE_SUBPROCESS_ENV_SCRUB, TOOLS, WORK, PROJECT, SKILLS.
 #
 # The agent may write in the project and in WORK, where it finds the report and leaves its
@@ -72,13 +72,3 @@ esac
 
 # Who worked the list, for whoever reviews it.
 printf '\n_Afgewerkt door een agent: %s, met Claude Code %s._\n' "$MODEL" "$version" >> "$WORK/keuzes.md"
-
-# What is left now, as the linter finds it, with the choices of the agent under it. The linter
-# loads the TypeScript of the project, which the agent could have changed, so it runs confined;
-# the report goes to a directory of its own and is taken from there.
-mkdir -p "$TOOLS/since"
-cp "$WORK/keuzes.md" "$TOOLS/since/keuzes.md"
-CONFINE_RW=("$TOOLS/since")
-confine "$TOOLS/bin/nldd" upgrade --since "$TOOLS/upgrade.json" --notes "$TOOLS/since/keuzes.md" --report "$TOOLS/since/upgrade.md"
-rm -f "$WORK"/upgrade*.md
-cp "$TOOLS"/since/upgrade*.md "$WORK/"

@@ -106,9 +106,11 @@ export function withRendered(result, session, root) {
  * @param {(command: string, args: string[], cwd: string) => { ok: boolean, output?: string, error?: string }} [options.run]
  * @param {object} [options.since] - the result of an earlier run on this project. The project is
  *   then only read: the version, the lockfile and the fixes are that run's, what is left is of now
+ * @param {string} [options.from] - the version the project came from, where its pins say less: in a
+ *   pull request that is continued they hold the version of the run before
  * @returns {Promise<object>} what was done and what is left, as the report and the worklist read it
  */
-export async function upgradeProject(data, { root, target, breaking, config, severities, canonical, install = true, run = runQuietly, since }) {
+export async function upgradeProject(data, { root, target, breaking, config, severities, canonical, install = true, run = runQuietly, since, from: cameFrom }) {
 	if (since && since.to !== target) throw new Error(`The earlier run went to ${since.to}, and this command is ${target}. Run the same version.`);
 	// 1. The version, wherever the project names it.
 	const pinned = [];
@@ -144,7 +146,7 @@ export async function upgradeProject(data, { root, target, breaking, config, sev
 	// Where the project came from is what it installs: a manifest, or a record of the version. A
 	// mention in a document is raised too, but an old one there says nothing about the app.
 	const installed = pinned.filter(({ kind }) => kind === 'manifest' || kind === 'record');
-	const from = since ? since.from : (installed.length > 0 ? installed : pinned).map((pin) => pin.from).sort(compareVersions)[0];
+	const from = since ? since.from : (cameFrom ?? (installed.length > 0 ? installed : pinned).map((pin) => pin.from).sort(compareVersions)[0]);
 
 	// 2. The lockfile of each manifest that changed.
 	const lockfiles = [];

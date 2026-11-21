@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Commits what changed on one branch and opens the pull request, or updates the one that is open.
-# A project that is at the version already has that pull request closed.
-# In: REPOSITORY, BASE, VERSION, CHANGED, APP, GH_TOKEN, TOOLS, WORK, PROJECT. Out: number.
+# Commits what changed on the branch and opens the pull request, or adds to the one that is open.
+# A pull request that holds nothing beyond the default branch any more is closed.
+# In: REPOSITORY, BASE, VERSION, CHANGED, NUMBER, MERGE, GH_TOKEN, TOOLS, WORK, PROJECT. Out: number.
 #
 # This step holds the token, after an agent and the project's own code have run. So it takes its
 # commands from the system only, puts the git configuration back as it was cloned, and runs no hook.
@@ -11,44 +11,64 @@ source "$ACTION/confine.sh"
 
 BRANCH=nldd/design-system-upgrade
 cd "$PROJECT"
-number="$(gh pr list --repo "$REPOSITORY" --head "$BRANCH" --state open --json number --jq '.[0].number')"
+reset_git
+use_identity
+git() { command git -c core.hooksPath=/dev/null "$@"; }
+title="chore: designsysteem naar $VERSION"
+number="${NUMBER:-}"
+merge="${MERGE:-}"
+
 if [ "$CHANGED" != true ]; then
-	if [ -n "$number" ]; then
-		gh pr close "$number" --repo "$REPOSITORY" --delete-branch --comment "Het project staat al op $VERSION. Deze pull request is niet meer nodig."
-	fi
+	echo "Nothing new for $REPOSITORY."
 	exit 0
 fi
 
-reset_git
-git() { command git -c core.hooksPath=/dev/null "$@"; }
-
-# The commit is by whoever opens the pull request.
-if [ -n "$APP" ]; then
-	name="${APP}[bot]"
-	id="$(gh api "users/$name" --jq .id)"
-elif name="$(gh api user --jq .login 2>/dev/null)"; then
-	id="$(gh api user --jq .id)"
-else
-	name='github-actions[bot]'
-	id=41898282
-fi
-# Not in the git configuration, which a later step puts back as it was cloned: it comes along as the environment.
-printf '%s\n%s\n' "$name" "$id+$name@users.noreply.github.com" > "$TOOLS/identity"
-export GIT_AUTHOR_NAME="$name" GIT_COMMITTER_NAME="$name"
-export GIT_AUTHOR_EMAIL="$id+$name@users.noreply.github.com" GIT_COMMITTER_EMAIL="$id+$name@users.noreply.github.com"
-
 # What the repository tracks, and a file made after the command ran: the agent's.
-title="chore: designsysteem naar $VERSION"
-git switch --force-create "$BRANCH"
+git switch --quiet --create "$BRANCH" 2>/dev/null || true
 git add --update
 git ls-files --others --exclude-standard | sort | comm -13 "$TOOLS/untracked" - | xargs --no-run-if-empty --delimiter '\n' git -c core.hooksPath=/dev/null add --
-git commit --quiet --no-verify --message "$title"
-git push --no-verify --force origin "$BRANCH"
+git diff --cached --quiet || git commit --quiet --no-verify --message "$title"
+
+# The project got to the version without this pull request: nothing in it is beyond the default branch.
+if [ -n "$number" ] && [ "${merge%%$'\n'*}" != behind ] && git diff --quiet "origin/$BASE" HEAD; then
+	gh pr close "$number" --repo "$REPOSITORY" --delete-branch --comment "Het project staat al op $VERSION. Deze pull request is niet meer nodig."
+	exit 0
+fi
+
+# Without force where a pull request is open: it keeps every commit on it. A branch left by one
+# that was closed is no one's work any more, and starts again.
+if [ -n "$number" ]; then
+	git push --no-verify origin "HEAD:refs/heads/$BRANCH"
+else
+	git push --no-verify --force origin "HEAD:refs/heads/$BRANCH"
+fi
+
+# The text: the report as it stands, what this run did to a pull request that was open already,
+# and the state the next run continues from.
+{
+	if [ -n "$number" ]; then
+		printf '> Deze pull request liep al. Deze run bracht hem naar %s, bovenop wat er stond. Wat hieronder staat, is de stand van nu.\n' "$VERSION"
+		case "$merge" in
+			behind*)
+				printf '>\n> **Deze branch loopt achter op `%s`.** Die erin mergen gaf een conflict buiten de lockfiles, en dat is aan jullie. Los het op bij het mergen van deze pull request, of sluit hem, dan begint de volgende run opnieuw. Het conflict zit in:\n' "$BASE"
+				tail -n +2 <<< "$merge" | sed 's/^/> /'
+				;;
+			resolved) printf '>\n> `%s` gaf een conflict in de lockfile of `package.json`. Die zijn van `%s` genomen en daarna opnieuw geschreven.\n' "$BASE" "$BASE" ;;
+		esac
+		echo
+	fi
+	cat "$WORK/upgrade.md"
+	echo
+	# With how the site builds, when the agent found it. A file the agent wrote is data: jq reads it, and
+	# a file that is no JSON is left out.
+	state="$(jq --compact-output --slurpfile site "$WORK/site.json" '. + {site: $site[0]}' "$TOOLS/state-new.json" 2>/dev/null || jq --compact-output . "$TOOLS/state-new.json")"
+	printf '<!-- nldd-upgrade-state %s -->\n' "${state//-->/--\\u003e}"
+} > "$TOOLS/body.md"
 
 if [ -n "$number" ]; then
-	gh pr edit "$number" --repo "$REPOSITORY" --title "$title" --body-file "$WORK/upgrade.md"
+	gh pr edit "$number" --repo "$REPOSITORY" --title "$title" --body-file "$TOOLS/body.md"
 else
-	gh pr create --repo "$REPOSITORY" --base "$BASE" --head "$BRANCH" --title "$title" --body-file "$WORK/upgrade.md"
+	gh pr create --repo "$REPOSITORY" --base "$BASE" --head "$BRANCH" --title "$title" --body-file "$TOOLS/body.md"
 	number="$(gh pr view "$BRANCH" --repo "$REPOSITORY" --json number --jq .number)"
 fi
 echo "number=$number" >> "$GITHUB_OUTPUT"

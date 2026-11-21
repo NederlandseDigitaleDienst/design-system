@@ -121,14 +121,16 @@ runs:
       shell: bash
       env:
         GH_TOKEN: ${{ steps.app.outputs.token || inputs.token }}
+        APP: ${{ steps.app.outputs.app-slug }}
         BASE: ${{ inputs.base }}
         WANTED: ${{ inputs.version }}
         FROM_SOURCE: ${{ inputs.from-source }}
       run: bash "$ACTION/upgrade.sh"
 
     # What is certain is done. What is left asks for a choice, and that is what the skill is for.
+    # In a pull request that is continued, only a place that is new calls the agent again.
     - name: Work the list
-      if: steps.upgrade.outputs.changed == 'true' && inputs.agent == 'true'
+      if: steps.upgrade.outputs.changed == 'true' && steps.upgrade.outputs.agent == 'true' && inputs.agent == 'true'
       shell: bash
       env:
         VERSION: ${{ steps.upgrade.outputs.version }}
@@ -139,14 +141,20 @@ runs:
         CLAUDE_CODE_SUBPROCESS_ENV_SCRUB: ${{ inputs.sandbox == 'false' && '0' || '1' }}
       run: bash "$ACTION/agent.sh"
 
+    # The report as it stands after the agent, with the choices of this run and of earlier ones.
+    - name: Read the project again
+      if: steps.upgrade.outputs.changed == 'true'
+      shell: bash
+      run: bash "$ACTION/report.sh"
+
     - name: Open or update the pull request
       id: deliver
       shell: bash
       env:
         GH_TOKEN: ${{ steps.app.outputs.token || inputs.token }}
-        APP: ${{ steps.app.outputs.app-slug }}
         VERSION: ${{ steps.upgrade.outputs.version }}
         CHANGED: ${{ steps.upgrade.outputs.changed }}
+        NUMBER: ${{ steps.upgrade.outputs.number }}
       run: bash "$ACTION/deliver.sh"
 
     # The pictures are an extra: a site that does not build here still gets its pull request.

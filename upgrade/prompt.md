@@ -10,7 +10,9 @@ the project's own scripts or configuration, with the smallest change that makes 
 
 Leave the report as it is: the command writes it again after you. Write {WORK}/keuzes.md instead, a short list
 in Dutch, plain, without a title, for the people who review the pull request: every choice that does not follow from
-the changelog, what you left and why, and what of the project's CI still fails.
+the changelog, what you left and why, and what of the project's CI still fails. If the file is there already, it holds
+the choices of an earlier run on this pull request: keep them, and add yours under them.
+This may be a pull request that was open: then the team and an earlier agent worked here before you. Keep what they did.
 
 If the project builds to a static site, write {WORK}/site.json as well:
 {"build": "<one shell command that builds the site from a clean checkout on this runner, installing what it needs>", "site": "<the directory it writes to>"}.

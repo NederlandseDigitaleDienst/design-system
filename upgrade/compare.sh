@@ -22,7 +22,8 @@ cd "$TOOLS"
 npm install --prefix "$TOOLS/browser" --no-audit --no-fund playwright
 "$TOOLS/browser/node_modules/.bin/playwright" install --with-deps chromium
 
-git -C "$PROJECT" worktree add --quiet --detach "$TOOLS/before" HEAD~1
+# Before is where the branch of the pull request left the default branch, as GitHub shows its diff.
+git -C "$PROJECT" worktree add --quiet --detach "$TOOLS/before" "$(git -C "$PROJECT" merge-base "origin/$BASE" HEAD)"
 git -C "$PROJECT" worktree add --quiet --detach "$TOOLS/after" HEAD
 CONFINE_RW=("$TOOLS/before")
 confine sh -c "cd '$TOOLS/before' && $BUILD"

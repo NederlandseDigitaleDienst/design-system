@@ -38,3 +38,10 @@ reset_git() {
 	rm -rf "$PROJECT/.git/hooks"
 	mkdir "$PROJECT/.git/hooks"
 }
+
+# The name and address a commit of the action carries, written by upgrade.sh.
+use_identity() {
+	local name email
+	{ read -r name; read -r email; } < "$TOOLS/identity"
+	export GIT_AUTHOR_NAME="$name" GIT_COMMITTER_NAME="$name" GIT_AUTHOR_EMAIL="$email" GIT_COMMITTER_EMAIL="$email"
+}
