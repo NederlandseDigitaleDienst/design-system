@@ -211,7 +211,7 @@ Dezelfde regels draaien op vier plekken:
 | Waar | Wat het ziet |
 |------|--------------|
 | Bron (`.vue`, `.tsx`, `.jsx`, `.js`, `.astro`, `.html`, `.j2`, ook Angular, Django en htmx; markup in strings van `.py` en `.js`; `.mdx` en `.md` als je ze noemt) | Vóór de commit, per bestand, alleen wat zeker fout is |
-| Gebouwde HTML (`nldd lint dist`) | Hele pagina's, voor elk framework dat naar HTML bouwt. Scripts in een buildmap (`IGNORED_DIRECTORIES`) slaat hij over: in die chunks staat de CSS van de componenten zelf. Dat gaat op het pad vanaf de projectroot, dus `cd dist && nldd lint` leest ze wel |
+| Gebouwde HTML (`nldd lint dist`) | Hele pagina's, voor elk framework dat naar HTML bouwt. Scripts in een buildmap (`IGNORED_DIRECTORIES`) slaat hij over: in die chunks staat de CSS van de componenten zelf. Dat gaat op het pad vanaf de projectroot, dus `cd dist && nldd lint` leest ze wel; een script dat een eigen variabele van een component leest (`var(--_button-gap)`) is dan nog steeds het component zelf, en wat het zet is geen override |
 | Een draaiende pagina (`nldd lint --url http://localhost:5173`) | Wat een expressie of een variabele invult, en markup die een ander bestand of een andere taal samenstelt. De linter opent de pagina in een browser, schrijft het document op dat hij daar vindt en leest dat als gebouwde HTML. Met de linter van een nieuwere versie is dit de werklijst van een upgrade voor alles wat de bron onbeslist liet. Vraagt Playwright in het project |
 | Browser, in DEV (`src/utilities/dev-checks.ts`) | Echte waarden en wat componenten samen renderen. Alleen met een bundler die `import.meta.env.DEV` zet, zoals Vite; Angular en server-rendered apps hebben de eerste twee rijen |
 

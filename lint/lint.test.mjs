@@ -1781,6 +1781,18 @@ describe('nldd command', () => {
 		assert.match(run(root, 'lint', 'dist/_astro/button.pAKU2ucd.js').stdout, /local-variable-no-override[^]*unknown-attribute/);
 	});
 
+	it('takes a script that reads a component\'s own variable for that component, wherever a build put it', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		mkdirSync(join(root, 'assets/nldd'), { recursive: true });
+		// The styles of a component, as a bundler writes them outside a directory named dist.
+		writeFileSync(join(root, 'assets/nldd/chunk-A1.js'), 'var b = r`\n:host {\n\t--_button-gap: 4px;\n}\n.button {\n\tgap: var(--_button-gap);\n}\n`;\n');
+		// An app that sets the variable reads nothing.
+		writeFileSync(join(root, 'assets/own.js'), 'var b = r`\nnldd-button {\n\t--_button-gap: 4px;\n}\n`;\n');
+		const { stdout } = run(root, 'lint', '.');
+		assert.match(stdout, /assets\/own\.js:3:\d+ {2}warn {2}local-variable-no-override/);
+		assert.doesNotMatch(stdout, /chunk-A1/);
+	});
+
 	it('reports only what is new after accepting a baseline', () => {
 		const root = project();
 		assert.equal(run(root, 'lint', '--update-baseline').status, 0);

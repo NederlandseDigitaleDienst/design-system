@@ -118,7 +118,7 @@ Een eventnaam die via een eigen functie loopt, zoals een hook `useEvent(ref, naa
 
 Draait je project `nldd lint` van de vastgepinde versie, dan krijg je met de upgrade ook de regels van elke versie ertussen. Dat zijn bevindingen over markup die al zo stond, naast wat de upgrade breekt. Los ze op, of neem ze bewust op in de baseline met `--update-baseline`. Een fout (`error`) los je op: die zegt dat iets niet werkt.
 
-Lint je in de buildmap zelf, of heet die map anders dan `dist` of `build`, dan leest de linter ook de gebundelde scripts van het designsysteem en meldt hij de stijlen van de componenten als overschrijvingen van jou. Sluit de map met de bundel dan uit, met `"exclude"` in `.nldd-lint.json`.
+De linter herkent de gebundelde scripts van het designsysteem, waar een build ze ook neerzet. Tot en met 0.27.1 deed hij dat alleen in een map die `dist` of `build` heet. Lint je project met zo'n versie in de buildmap zelf, of heet die map anders, dan meldt hij de stijlen van de componenten als overschrijvingen van jou. Een `"exclude"` in `.nldd-lint.json` voor de map met de bundel was daar het antwoord op, en kan na deze upgrade weg.
 
 ## Voor en na vergelijken
 

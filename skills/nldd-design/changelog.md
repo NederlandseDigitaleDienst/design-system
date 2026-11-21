@@ -43,6 +43,7 @@ here; consult the commit history if you need that level of detail.
 ### Fixed
 
 - **`nldd lint` reads JSX behind `?.` and behind a cast.** What `rows?.map((row) => <nldd-text>…</nldd-text>)` renders was not read at all, so nothing in it was checked, while the same line without the `?` was. `(rows as Row[]).map(…)` and `rows!.map(…)` had the same gap. A project that writes its lists this way gets the findings that were always there.
+- **`nldd lint` knows the design system's own scripts wherever a build puts them.** A chunk with the styles of the components was skipped only in a directory named `dist` or `build`. Linted from inside the build, or in a directory with another name, each variable a component sets on itself was reported as `local-variable-no-override`: 1508 warnings on one site. A script that reads a component's own variable is now taken for that component. An `exclude` for the bundle in `.nldd-lint.json` is no longer needed.
 - **`<nldd-*>` in running text is no unknown element.** A name with a character a tag cannot have names a family of tags, and `unknown-element` reported it.
 
 ## [0.27.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.27.0...v0.27.1) (2026-11-20)

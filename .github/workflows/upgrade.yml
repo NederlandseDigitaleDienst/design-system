@@ -208,6 +208,8 @@ jobs:
           Where you choose, keep what the page did before the upgrade. Tick a box in the report when its place is done,
           and add a section \"Keuzes\" at the end of the report with every choice that does not follow from the changelog.
           The report is the text of a pull request that people read: write what you add to it in Dutch, short and plain.
+          Before you stop, run what the project's own CI runs on a pull request, where that needs no secret and no service:
+          read .github/workflows for it. Fix what the upgrade broke, and name in \"Keuzes\" what still fails and why.
           Do not commit and do not push."
           if ! claude --print "$prompt" --add-dir "$TOOLS" --allowedTools Bash Read Edit Write Glob Grep; then
             echo "::warning::The agent stopped before it was done. The pull request holds what it did until then."

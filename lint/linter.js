@@ -252,6 +252,7 @@ function createPositions(source) {
 /** Files where `//` is no comment: in markup it starts a url, and a built page is one line. */
 const MARKUP_FILE = /\.(html?|j2|jinja2?|tmpl|gohtml|vue|astro|md)$/;
 
+const SCRIPT_FILE = /\.[cm]?js$/;
 const STYLESHEET_FILE = /\.(css|scss|sass|less|styl|pcss)$/;
 
 /** Inside markup, `//` is a comment again in the script of a component and in Sass, Less and Stylus. */
@@ -365,6 +366,20 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 		}
 	}
 
+	/**
+	 * A script that reads a component's own variable is that component: its styles, in a
+	 * chunk of the design system that a build copied or bundled. An app sets such a
+	 * variable and has nothing to read it with, so what this script sets is no override.
+	 * A build directory is skipped by its path; this holds wherever the chunk ends up.
+	 */
+	function isComponentCode(plain, filename) {
+		if (!SCRIPT_FILE.test(filename)) return false;
+		for (const [, name] of plain.matchAll(/var\(\s*--_([a-z][\w-]*)/g)) {
+			if (components.some((component) => name.startsWith(`${component}-`))) return true;
+		}
+		return false;
+	}
+
 	/** Where the design system's own CSS sits in this file: a bundle or a page can hold it next to the app's. */
 	function designSystemRanges(roots) {
 		const ranges = [];
@@ -448,6 +463,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 	 */
 	function cssFindings(source, filename, roots) {
 		const { plain, sheets } = codeRegions(source, filename);
+		if (isComponentCode(plain, filename)) return [];
 		const inDesignSystemCss = designSystemRanges(roots);
 		const allDeclared = declarationsIn(plain);
 		const declared = allDeclared.filter((each) => !inDesignSystemCss(each.offset));
