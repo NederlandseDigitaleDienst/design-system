@@ -180,12 +180,12 @@ export const menuBarItemStyles = css`
 	/* # Icon-only */
 
 	:host([icon-only]) .menu-bar-item,
-	:host([content-priority="icon"][compact]:is([icon]:not([icon=""]), [data-has-icon])) .menu-bar-item {
+	:host([content-priority="icon"]:state(compact):is([icon]:not([icon=""]), [data-has-icon])) .menu-bar-item {
 		padding: var(--primitives-space-8);
 	}
 
 	:host([icon-only]) .menu-bar-item__text,
-	:host([content-priority="icon"][compact]:is([icon]:not([icon=""]), [data-has-icon])) .menu-bar-item__text {
+	:host([content-priority="icon"]:state(compact):is([icon]:not([icon=""]), [data-has-icon])) .menu-bar-item__text {
 		position: absolute;
 		margin: -1px;
 		border: 0;
@@ -197,7 +197,7 @@ export const menuBarItemStyles = css`
 		clip-path: inset(50%);
 	}
 
-	:host([content-priority="text"][compact]) .menu-bar-item__icon {
+	:host([content-priority="text"]:state(compact)) .menu-bar-item__icon {
 		display: none;
 	}
 `;

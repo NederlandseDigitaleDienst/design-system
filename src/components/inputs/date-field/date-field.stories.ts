@@ -21,7 +21,6 @@ export default {
 		},
 	},
 	args: {
-		range: false,
 		size: 'md',
 		width: '',
 		placeholder: '',
@@ -31,21 +30,17 @@ export default {
 		noPicker: false,
 		valid: false,
 		invalid: false,
-		readonly: false,
-		disabled: false,
 		name: 'date',
 		value: '',
+		range: false,
 		min: '',
 		max: '',
 		required: false,
 		autocomplete: '',
+		readonly: false,
+		disabled: false,
 	},
 	argTypes: {
-		range: {
-			control: 'boolean',
-			description: 'Kies een periode: twee invoervelden en een kalender in bereikmodus',
-			table: { defaultValue: { summary: false } },
-		},
 		size: {
 			control: 'select',
 			options: ['sm', 'md'],
@@ -92,16 +87,6 @@ export default {
 			description: 'Markeert het veld als ongeldig',
 			table: { defaultValue: { summary: false } },
 		},
-		readonly: {
-			control: 'boolean',
-			description: 'Alleen-lezen staat',
-			table: { defaultValue: { summary: false } },
-		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde staat',
-			table: { defaultValue: { summary: false } },
-		},
 		name: {
 			control: 'text',
 			description: 'Naam voor formulierverzending',
@@ -109,6 +94,11 @@ export default {
 		value: {
 			control: 'text',
 			description: 'De datum als ISO (jjjj-mm-dd)',
+		},
+		range: {
+			control: 'boolean',
+			description: 'Kies een periode: twee invoervelden en een kalender in bereikmodus',
+			table: { defaultValue: { summary: false } },
 		},
 		min: {
 			control: 'text',
@@ -127,29 +117,39 @@ export default {
 			control: 'text',
 			description: 'Autocomplete-hint, bijvoorbeeld bday',
 		},
+		readonly: {
+			control: 'boolean',
+			description: 'Alleen-lezen staat',
+			table: { defaultValue: { summary: false } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde staat',
+			table: { defaultValue: { summary: false } },
+		},
 	},
 };
 
 const Template = ({
-	range,
 	size,
 	width,
 	placeholder,
-	accessibleLabel, accessibleDescription,
+	accessibleLabel,
+	accessibleDescription,
 	noPicker,
 	valid,
 	invalid,
-	readonly,
-	disabled,
 	name,
 	value,
+	range,
 	min,
 	max,
 	required,
 	autocomplete,
+	readonly,
+	disabled,
 }: Record<string, unknown>) => html`
 	<nldd-date-field
-		?range=${range}
 		size=${size || nothing}
 		width=${width || nothing}
 		placeholder=${placeholder || nothing}
@@ -157,15 +157,16 @@ const Template = ({
 		accessible-description=${accessibleDescription || nothing}
 		?no-picker=${noPicker}
 		?valid=${valid}
-		?readonly=${readonly}
 		?invalid=${invalid}
-		?disabled=${disabled}
 		name=${name || nothing}
 		value=${value || nothing}
+		?range=${range}
 		min=${min || nothing}
 		max=${max || nothing}
 		?required=${required}
 		autocomplete=${autocomplete || nothing}
+		?readonly=${readonly}
+		?disabled=${disabled}
 		@change=${action('change')}
 	></nldd-date-field>
 `;

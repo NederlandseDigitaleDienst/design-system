@@ -14,8 +14,8 @@ export default {
 	tags: ['autodocs'],
 	args: {
 		size: '16',
-		hideBelow: '',
 		hideAbove: '',
+		hideBelow: '',
 	},
 	argTypes: {
 		size: {
@@ -23,15 +23,15 @@ export default {
 			options: ['2', '4', '6', '8', '10', '12', '16', '20', '24', '28', '32', '40', '44', '48', '56', '64', '80', '96', 'flexible'],
 			description: 'Spacer-grootte in pixels, of "flexible" om de resterende ruimte te vullen',
 		},
-		hideBelow: {
-			name: 'hide-below',
-			control: 'text',
-			description: 'Verberg wanneer cells-container smaller is dan deze CSS-lengte (bv. "320px", "20rem")',
-		},
 		hideAbove: {
 			name: 'hide-above',
 			control: 'text',
 			description: 'Verberg wanneer cells-container breder is dan deze CSS-lengte (bv. "1200px")',
+		},
+		hideBelow: {
+			name: 'hide-below',
+			control: 'text',
+			description: 'Verberg wanneer cells-container smaller is dan deze CSS-lengte (bv. "320px", "20rem")',
 		},
 	},
 };
@@ -50,8 +50,8 @@ export const Standaard = {
 					></nldd-text-cell>
 					<nldd-spacer-cell
 						size=${args.size}
-						hide-below=${args.hideBelow || nothing}
 						hide-above=${args.hideAbove || nothing}
+						hide-below=${args.hideBelow || nothing}
 						style=${debugStyle}
 					></nldd-spacer-cell>
 					<nldd-text-cell

@@ -20,21 +20,21 @@
  * @element nldd-token-field
  * @keywords labels
  * @related nldd-combo-box, nldd-checkbox-group
- * @attr {string} values - Initial token values as a comma-separated string (e.g. "nl, be, de"). Not reflected; the live value is the `.values` array property. Values can't contain commas.
  * @attr {string} placeholder - Placeholder shown in the input
- * @attr {string} type - Input type forwarded to the inner input (e.g. 'email')
- * @attr {string} autocomplete - Autocomplete hint forwarded to the inner input
  * @attr {string} accessible-label - Accessible label forwarded as aria-label to the input
- * @attr {boolean} allow-custom - Allow free-typed values (not just menu options). Typing an option's label in full adds that option, with its value, ignoring case and the spaces around it; with two such labels, the first one.
  * @attr {boolean} no-filter - Leaves the options as they are while typing, for a list your server already filtered per keystroke. Without it the field hides options that do not contain the typed text, which also hides a server match on, say, an e-mail address.
+ * @attr {string} token-control - Trailing control per token: 'dismiss' (default, a ✕ that removes it) or 'menu' (a ⌄ opening a per-token action menu supplied by the template prototypes)
  * @attr {boolean} valid - Marks the field valid (shows the valid icon)
  * @attr {boolean} invalid - Marks the field invalid (shows the invalid icon)
+ * @attr {string} name - Name for form submission
+ * @attr {string} values - Initial token values as a comma-separated string (e.g. "nl, be, de"). Not reflected; the live value is the `.values` array property. Values can't contain commas.
+ * @attr {string} type - Input type forwarded to the inner input (e.g. 'email')
+ * @attr {boolean} allow-custom - Allow free-typed values (not just menu options). Typing an option's label in full adds that option, with its value, ignoring case and the spaces around it; with two such labels, the first one.
+ * @attr {boolean} required - Marks the field required (invalid when it has no tokens)
+ * @attr {string} autocomplete - Autocomplete hint forwarded to the inner input
  * @attr {boolean} no-spellcheck - Disables browser spellchecking on the inner input
  * @attr {boolean} readonly - Readonly: static tokens, no input/picker, read-only surface
- * @attr {boolean} required - Marks the field required (invalid when it has no tokens)
  * @attr {boolean} disabled - Disabled state
- * @attr {string} token-control - Trailing control per token: 'dismiss' (default, a ✕ that removes it) or 'menu' (a ⌄ opening a per-token action menu supplied by the template prototypes)
- * @attr {string} name - Name for form submission
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  *
  * @slot - An nldd-menu with nldd-menu-item options; each item's `value`/`text` supplies a token's value and its display label.
@@ -80,9 +80,33 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	 *  would submit the form. See utilities/implicit-submission.ts. */
 	static blocksImplicitSubmission = true;
 
-	// Property order matches the story controls (values kept high, above
-	// placeholder, per the text-field convention). No `size` axis yet — the field
+	// Property order matches the story controls. No `size` axis yet — the field
 	// is md-only for now; a sm variant lands later.
+	@property({ type: String })
+	placeholder = '';
+
+	@property({ type: String, attribute: 'accessible-label' })
+	accessibleLabel = '';
+
+	/** Leaves the options as they are while typing: the list was filtered already, by a server. */
+	@property({ type: Boolean, reflect: true, attribute: 'no-filter' })
+	noFilter = false;
+
+	/** Trailing control on each token: 'dismiss' shows a ✕ that removes it; 'menu'
+	 *  shows a ⌄ that opens a per-token action menu built from the `token-menu`
+	 *  template. Choosing an action fires `token-action` for the app to handle. */
+	@property({ attribute: 'token-control' })
+	tokenControl: TokenFieldControl = 'dismiss';
+
+	@property({ type: Boolean, reflect: true })
+	valid = false;
+
+	@property({ type: Boolean, reflect: true })
+	invalid = false;
+
+	@property({ type: String })
+	name = '';
+
 	/** Selected token values. The attribute is a comma-separated string used to seed
 	 *  the initial values (like native `<input value>`); it is not reflected, so the
 	 *  live source is always the `.values` array property. Values can't contain
@@ -110,19 +134,10 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 
 	private _values: string[] = [];
 
-	@property({ type: String })
-	placeholder = '';
-
 	/** Input type forwarded to the inner input (e.g. 'email' for the right mobile
 	 *  keyboard). Values are still handled as plain strings. */
 	@property({ type: String })
 	type = 'text';
-
-	@property({ type: String })
-	autocomplete = '';
-
-	@property({ type: String, attribute: 'accessible-label' })
-	accessibleLabel = '';
 
 	/** Allow committing free-typed values (not just menu options): a typed value
 	 *  becomes a token on Enter, a trailing comma, or blur. Also governs whether
@@ -130,15 +145,11 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true, attribute: 'allow-custom' })
 	allowCustom = false;
 
-	/** Leaves the options as they are while typing: the list was filtered already, by a server. */
-	@property({ type: Boolean, reflect: true, attribute: 'no-filter' })
-	noFilter = false;
-
 	@property({ type: Boolean, reflect: true })
-	valid = false;
+	required = false;
 
-	@property({ type: Boolean, reflect: true })
-	invalid = false;
+	@property({ type: String })
+	autocomplete = '';
 
 	@property({ type: Boolean, reflect: true, attribute: 'no-spellcheck' })
 	noSpellcheck = false;
@@ -149,19 +160,7 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	readonly = false;
 
 	@property({ type: Boolean, reflect: true })
-	required = false;
-
-	@property({ type: Boolean, reflect: true })
 	disabled = false;
-
-	/** Trailing control on each token: 'dismiss' shows a ✕ that removes it; 'menu'
-	 *  shows a ⌄ that opens a per-token action menu built from the `token-menu`
-	 *  template. Choosing an action fires `token-action` for the app to handle. */
-	@property({ attribute: 'token-control' })
-	tokenControl: TokenFieldControl = 'dismiss';
-
-	@property({ type: String })
-	name = '';
 
 	@property({ type: Object })
 	translations: Partial<NLDDTokenFieldTranslations> = {};

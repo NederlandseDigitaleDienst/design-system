@@ -36,11 +36,16 @@ export default {
 		},
 	},
 	argTypes: {
-		icon: {
+		color: {
 			control: 'select',
-			options: allIconNames,
-			description: 'Naam van het icoon (inclusief aliassen).',
-			table: { defaultValue: { summary: 'circle-dashed' } },
+			options: COLOR_OPTIONS,
+			description: 'Functionele kleur of rijkskleur. `content` neemt de contentkleur van de context, de andere functionele kleuren ook de bijbehorende kleur van het vlak.',
+			table: { defaultValue: { summary: 'content' } },
+		},
+		customColor: {
+			name: 'custom-color',
+			control: 'color',
+			description: 'Een eigen kleur, als CSS-kleurwaarde. Voor een kleur die het designsysteem niet kan kennen. Wint van `color`.',
 		},
 		size: {
 			control: 'select',
@@ -48,39 +53,34 @@ export default {
 			description: '`full` vult de container, `inherit` schaalt mee met de omringende tekst (1em), of een vaste spacer-uitgelijnde maat in px.',
 			table: { defaultValue: { summary: 'full' } },
 		},
-		color: {
-			control: 'select',
-			options: COLOR_OPTIONS,
-			description: 'Functionele kleur of rijkskleur. `content` neemt de contentkleur van de context, de andere functionele kleuren ook de bijbehorende kleur van het vlak.',
-			table: { defaultValue: { summary: 'content' } },
-		},
 		tile: {
 			control: 'boolean',
 			description: 'Teken het icoon op een tegel, een gevuld vlak. `color` en `custom-color` kleuren dan het vlak en het glyph krijgt de contrasterende kleur; `size` meet het vlak.',
 			table: { defaultValue: { summary: false } },
 		},
-		customColor: {
-			name: 'custom-color',
-			control: 'color',
-			description: 'Een eigen kleur, als CSS-kleurwaarde. Voor een kleur die het designsysteem niet kan kennen. Wint van `color`.',
+		icon: {
+			control: 'select',
+			options: allIconNames,
+			description: 'Naam van het icoon (inclusief aliassen).',
+			table: { defaultValue: { summary: 'circle-dashed' } },
 		},
 	},
 	args: {
-		icon: 'heart',
-		size: '24',
 		color: 'content',
-		tile: false,
 		customColor: '',
+		size: '96',
+		tile: false,
+		icon: 'heart',
 	},
 };
 
-const Template = ({ icon, size, tile, color, customColor }: Record<string, any>) => html`
+const Template = ({ color, customColor, size, tile, icon }: Record<string, any>) => html`
 	<nldd-icon
-		icon=${icon}
-		size=${size || nothing}
-		?tile=${tile}
 		color=${color === 'content' ? nothing : color}
 		custom-color=${customColor || nothing}
+		size=${size || nothing}
+		?tile=${tile}
+		icon=${icon}
 	></nldd-icon>
 `;
 

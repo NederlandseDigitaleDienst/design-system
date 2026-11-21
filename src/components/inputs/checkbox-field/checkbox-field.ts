@@ -20,17 +20,17 @@
  * never joins the consumer's form; the field submits on its behalf).
  *
  * @element nldd-checkbox-field
- * @keywords selectievakje, vinkje
+ * @keywords selectievakje, vinkje, toggle, toggles
  * @related nldd-switch-field
+ * @attr {'content'} color - 'content' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.
+ * @attr {string} label - Label text for the checkbox
  * @attr {boolean} checked - Checked state
  * @attr {boolean} indeterminate - Indeterminate state
- * @attr {boolean} disabled - Disabled state
- * @attr {'content'} color - 'content' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.
- * @attr {string} value - Value for form submission
- * @attr {string} name - Name for form submission
- * @attr {string} label - Label text for the checkbox
- * @attr {boolean} required - Required state. In an nldd-checkbox-group, set by the group, it asks for at least one checked box in the group, not for this one.
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
+ * @attr {string} name - Name for form submission
+ * @attr {string} value - Value for form submission
+ * @attr {boolean} required - Required state. In an nldd-checkbox-group, set by the group, it asks for at least one checked box in the group, not for this one.
+ * @attr {boolean} disabled - Disabled state
  *
  * @slot children - nldd-checkbox-field elements with the options under this one.
  *
@@ -60,23 +60,6 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 	static isFormInput = true;
 
 
-	@property({ type: Boolean, reflect: true })
-	checked = false;
-
-	@property({ type: Boolean, reflect: true })
-	indeterminate = false;
-
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
-	@property({ type: String })
-	value = 'on';
-
-	/** Reflected: form association reads the host's name attribute, so setting
-	 *  the property alone must still register the field with the form. */
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	name = '';
-
 	/** 'content' draws the control and its label in the surrounding text color. */
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	color: '' | 'content' = '';
@@ -84,21 +67,11 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: String })
 	label = '';
 
+	@property({ type: Boolean, reflect: true })
+	checked = false;
 
 	@property({ type: Boolean, reflect: true })
-	required = false;
-
-	/** In an nldd-checkbox-group, where `required` is about the group and no
-	 *  single box is announced as required. */
-	get _inGroup(): boolean {
-		return ChoiceGroup.of(this) !== null;
-	}
-
-	/** Set by nldd-checkbox-group: whether any box in the group is checked,
-	 *  which is what `required` asks there. */
-	@state()
-	_groupHasSelection = false;
-
+	indeterminate = false;
 
 	/**
 	 * Marks the control as invalid.
@@ -111,6 +84,32 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 	 */
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
+
+	/** Reflected: form association reads the host's name attribute, so setting
+	 *  the property alone must still register the field with the form. */
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	name = '';
+
+	@property({ type: String })
+	value = 'on';
+
+	@property({ type: Boolean, reflect: true })
+	required = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
+
+	/** In an nldd-checkbox-group, where `required` is about the group and no
+	 *  single box is announced as required. */
+	get _inGroup(): boolean {
+		return ChoiceGroup.of(this) !== null;
+	}
+
+	/** Set by nldd-checkbox-group: whether any box in the group is checked,
+	 *  which is what `required` asks there. */
+	@state()
+	_groupHasSelection = false;
+
 
 	override connectedCallback(): void {
 		super.connectedCallback();

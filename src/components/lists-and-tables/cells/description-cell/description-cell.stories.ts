@@ -11,13 +11,13 @@ export default {
 	component: 'nldd-description-cell',
 	tags: ['autodocs'],
 	args: {
-		verticalAlignment: 'center',
 		width: '',
 		minWidth: '',
 		maxWidth: '',
 		minHeight: '',
-		hideBelow: '',
+		verticalAlignment: 'center',
 		hideAbove: '',
+		hideBelow: '',
 	},
 	argTypes: {
 		width: {
@@ -47,15 +47,15 @@ export default {
 			description: 'Verticale uitlijning van de cel',
 			table: { defaultValue: { summary: 'center' } },
 		},
-		hideBelow: {
-			name: 'hide-below',
-			control: 'text',
-			description: 'Verberg wanneer cells-container smaller is dan deze CSS-lengte (bv. "320px", "20rem")',
-		},
 		hideAbove: {
 			name: 'hide-above',
 			control: 'text',
 			description: 'Verberg wanneer cells-container breder is dan deze CSS-lengte (bv. "1200px")',
+		},
+		hideBelow: {
+			name: 'hide-below',
+			control: 'text',
+			description: 'Verberg wanneer cells-container smaller is dan deze CSS-lengte (bv. "320px", "20rem")',
 		},
 	},
 };
@@ -65,8 +65,8 @@ export const Standaard = {
 		<nldd-description-cell
 			width=${args.width || nothing}
 			vertical-alignment=${args.verticalAlignment}
-			hide-below=${args.hideBelow || nothing}
 			hide-above=${args.hideAbove || nothing}
+			hide-below=${args.hideBelow || nothing}
 		>
 			<p slot="title">Term</p>
 			<p slot="description">Beschrijvingstekst</p>

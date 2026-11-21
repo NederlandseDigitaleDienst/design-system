@@ -48,24 +48,24 @@
  * @related nldd-full-bleed-section
  *
  * @attr {'inherit'|'base'|'tinted'} background - Surface behind the hero (section API)
- * @attr {string} width - Body max-width; 'full' removes the bound (section API)
- * @attr {boolean} grow - Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow.
- * @attr {string} padding-block - Block padding override, also per edge and responsive (section API)
+ * @attr {'accent'|'base'} main-background - Surface color of the panel: 'accent' (default), the accent color of the theme, or 'base', the base surface
  * @attr {string} corner - Rounds one corner of the media area, in the shape language of the Rijkshuisstijl: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right', or empty (or 'auto') to let the hero choose a corner the panel leaves free. With media it applies with `layout="contained"` and the panel in a corner or along a side; with overlap or a centered panel the hero stays rectangular and says so in development. The panel stands against the edge of the image, so a `main-width` in percent (33.33%, 50%) is a share of the image, and gets a corner at half the radius, the one pointing into the image, with more padding along its two sides so the content keeps its distance to the curve. A panel along the same edge as the rounded corner of the image stops before the curve, at the panel's padding from it; a panel along a full side, a `main-width="full"` strip and the panel on mobile stay square. On mobile a bottom corner moves to the top, and the panel stands under the image, as wide as it, instead of overlapping it. Without media the panel is the whole hero: the corner applies in every layout and position, at half the radius, and the hero chooses top-right, or top-left for a panel on the right. The radius comes from the ribbon width: 1.5X on sm, 2X on md and lg, and is never more than a third of the shortest side of the area it rounds, so a low hero keeps a corner rather than a drop. Says so in development when the chosen corner sits under the panel, or with `width="full"`
  * @attr {'contained'|'overlap'} layout - How the panel relates to the image (default: 'overlap'). 'contained' keeps it on the image, in any of the eight positions; 'overlap' lets it fall `overlap-size` over the bottom of the image and run on below as far as its content needs, so the image keeps its height whatever the content. In 'overlap' the image has a fixed height (320px on md, 400px on lg) unless `media-height` or `media-aspect-ratio` is set, and only the horizontal side of `main-position` counts. A panel shorter than `overlap-size` ends inside the image and says so in development
- * @attr {'accent'|'base'} main-background - Surface color of the panel: 'accent' (default), the accent color of the theme, or 'base', the base surface
+ * @attr {string} width - Body max-width; 'full' removes the bound (section API)
+ * @attr {boolean} grow - Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow.
  * @attr {string} main-width - Width of the panel (default: 'auto'). 'auto' follows the content, between 480px and 640px and never wider than the image allows: a short title gets a narrow panel, a paragraph runs on to a readable line length. 'full' makes a strip across the whole image, at the top or the bottom, and is ignored with 'left'/'right'. Any CSS width (e.g. '560px', '60%') sets it exactly on md and lg, still never wider than the image allows; an invalid value falls back to 'auto'
+ * @attr {string} overlap-size - With layout="overlap": how far the panel falls over the bottom of the image, any CSS length (default: 160px). The overlap stays the same whatever the height of the image; a panel shorter than this ends inside the image
+ * @attr {string} padding-block - Block padding override, also per edge and responsive (section API)
  * @attr {'top-left'|'top-center'|'top-right'|'bottom-left'|'bottom-center'|'bottom-right'|'left'|'right'} main-position -
  *   Position of the text panel (default: 'bottom-left'); 'left'/'right' span the full height
- * @attr {string} overlap-size - With layout="overlap": how far the panel falls over the bottom of the image, any CSS length (default: 160px). The overlap stays the same whatever the height of the image; a panel shorter than this ends inside the image
- * @attr {string} media-aspect-ratio - Aspect ratio of the media area (CSS form, '16/9' or '16:9');
- *   default '21/9'. On md/lg it sets the height of the hero, on sm the height of the media area
- * @attr {string} media-height - Fixed height of the media area, any CSS length (e.g. '320px', '40vh'); wins over media-aspect-ratio. An invalid value falls back to the ratio
  * @attr {string} media-src - Source of the media area (an alternative to the media slot);
  *   ignored as soon as the media slot is filled
  * @attr {string} media-srcset - Responsive source set for media-src
  * @attr {string} media-sizes - Source sizes hint for media-src
  * @attr {string} media-alt - Alt text for media-src; empty means decorative
+ * @attr {string} media-aspect-ratio - Aspect ratio of the media area (CSS form, '16/9' or '16:9');
+ *   default '21/9'. On md/lg it sets the height of the hero, on sm the height of the media area
+ * @attr {string} media-height - Fixed height of the media area, any CSS length (e.g. '320px', '40vh'); wins over media-aspect-ratio. An invalid value falls back to the ratio
  *
  * @slot media - Image or illustration (img or nldd-image); fills the area and is clipped.
  * @accepts img
@@ -105,9 +105,8 @@ export type HeroMainBackground = 'accent' | 'base';
 export class NLDDHero extends PageSectionMixin(LitElement) {
 	static override styles = [pageSectionBackgroundStyles, heroStyles, heroCornerStyles];
 
-	/** Width mode: 'full' (removes body max-width) or any CSS length. */
-	@property({ reflect: true, converter: reflectNonDefault<string>('') })
-	width = '';
+	@property({ reflect: true, attribute: 'main-background', converter: reflectNonDefault<HeroMainBackground>('accent') })
+	mainBackground: HeroMainBackground = 'accent';
 
 	/** Rounds one corner of the media area and one of the panel, or without
 	 *  media one corner of the hero. An empty value lets the hero choose the
@@ -118,25 +117,18 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 	@property({ reflect: true, converter: reflectNonDefault<HeroLayout>('overlap') })
 	layout: HeroLayout = 'overlap';
 
-	@property({ reflect: true, attribute: 'main-background', converter: reflectNonDefault<HeroMainBackground>('accent') })
-	mainBackground: HeroMainBackground = 'accent';
+	/** Width mode: 'full' (removes body max-width) or any CSS length. */
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	width = '';
 
 	@property({ reflect: true, attribute: 'main-width', converter: reflectNonDefault<HeroMainWidth>('auto') })
 	mainWidth: HeroMainWidth = 'auto';
 
-	@property({ reflect: true, attribute: 'main-position', converter: reflectNonDefault<HeroMainPosition>('bottom-left') })
-	mainPosition: HeroMainPosition = 'bottom-left';
-
-	/** Media aspect-ratio in CSS form ('16/9' or '16:9'); default '21/9'. Drives
-	 *  the hero height on md/lg and the media strip height on sm. */
-	@property({ reflect: true, attribute: 'media-aspect-ratio', converter: reflectNonDefault<string>('') })
-	mediaAspectRatio = '';
-
 	@property({ reflect: true, attribute: 'overlap-size', converter: reflectNonDefault<string>('') })
 	overlapSize = '';
 
-	@property({ reflect: true, attribute: 'media-height', converter: reflectNonDefault<string>('') })
-	mediaHeight = '';
+	@property({ reflect: true, attribute: 'main-position', converter: reflectNonDefault<HeroMainPosition>('bottom-left') })
+	mainPosition: HeroMainPosition = 'bottom-left';
 
 	/** Hybrid media source: media-src renders an internal <img>, but a slotted
 	 *  media element wins (mirrors nldd-image / nldd-identity). srcset/sizes/alt
@@ -152,6 +144,14 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 
 	@property({ type: String, attribute: 'media-alt' })
 	mediaAlt = '';
+
+	/** Media aspect-ratio in CSS form ('16/9' or '16:9'); default '21/9'. Drives
+	 *  the hero height on md/lg and the media strip height on sm. */
+	@property({ reflect: true, attribute: 'media-aspect-ratio', converter: reflectNonDefault<string>('') })
+	mediaAspectRatio = '';
+
+	@property({ reflect: true, attribute: 'media-height', converter: reflectNonDefault<string>('') })
+	mediaHeight = '';
 
 	@state()
 	_slotHasMedia = false;

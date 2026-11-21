@@ -5,7 +5,7 @@ import { mentionToken, unescapeMentionLabel, decodeMentionId } from './text-edit
 import { isSafeHref } from './text-editor.links.js';
 import { loadTokens } from '../../../test-tokens.js';
 
-type TextEditorEl = HTMLElement & { value: string; updateComplete: Promise<boolean> };
+type TextEditorEl = HTMLElement & { value: string; syntax: string; view: { dispatch(spec: unknown): void }; updateComplete: Promise<boolean> };
 
 async function withValue(markdown: string): Promise<TextEditorEl> {
 	const el = await fixture<TextEditorEl>('<nldd-text-editor accessible-label="Tekst" syntax="visible"></nldd-text-editor>');
@@ -734,6 +734,29 @@ describe('nldd-text-editor', () => {
 		expect(badges.length).toBe(1); // the mention owns its own click, so it's skipped
 		expect(badges[0].getAttribute('href')).toBe('https://example.org');
 		expect(badges[0].getAttribute('target')).toBe('_blank');
+		cleanup(el2);
+	});
+
+	it('toont de bestemming in een tooltip op de badge zolang de syntax verborgen is', async () => {
+		const el2 = await withValue('Zie [site](https://example.org).');
+		const tooltip = () => el2.shadowRoot!.querySelector('.cm-link-badge nldd-tooltip');
+		expect(el2.shadowRoot!.querySelector('.cm-link-badge')).not.toBeNull();
+		expect(tooltip()).toBeNull();
+		el2.syntax = 'hidden';
+		await el2.updateComplete;
+		expect(tooltip()?.getAttribute('text')).toBe('https://example.org');
+		// With the caret in the link its marks show, the URL with them.
+		el2.view.dispatch({ selection: { anchor: 'Zie [si'.length } });
+		expect(tooltip()).toBeNull();
+		cleanup(el2);
+	});
+
+	it('geeft een kale URL geen tooltip: de URL staat er al', async () => {
+		const el2 = await withValue('Zie https://example.org nu.');
+		el2.syntax = 'hidden';
+		await el2.updateComplete;
+		expect(el2.shadowRoot!.querySelector('.cm-link-badge')).not.toBeNull();
+		expect(el2.shadowRoot!.querySelector('.cm-link-badge nldd-tooltip')).toBeNull();
 		cleanup(el2);
 	});
 

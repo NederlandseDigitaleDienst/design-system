@@ -126,6 +126,11 @@ export const barSplitViewStyles = css`
 	 * to 'flex: 1 1 0%', where % resolved to 'auto' inside the
 	 * height-indeterminate bar wrapper — the longhand conversion lost
 	 * that nuance, hence this rule). */
+	::slotted(*) {
+		container-type: inline-size;
+		container-name: layout-container;
+	}
+
 	::slotted([slot="main"]) {
 		min-height: 0;
 		flex-grow: 1;

@@ -24,17 +24,24 @@ export default {
 		},
 	},
 	args: {
+		color: 'content',
 		size: 'md',
 		smCustomSize: '',
 		mdCustomSize: '',
 		lgCustomSize: '',
 		weight: 'regular',
 		lineHeight: 'snug',
-		color: 'content',
 		horizontalAlignment: 'left',
 		text: 'Een korte regel tekst die laat zien hoe de maat, het gewicht en de regelhoogte samen uitpakken.',
 	},
 	argTypes: {
+		color: {
+			control: 'select',
+			options: ['content', 'secondary', 'accent', 'success', 'warning', 'critical'],
+			description:
+				'Tekstkleur. Elke kleur volgt het vlak eromheen (een lijstrij, een menu, een hero) via de context die dat vlak doorgeeft.',
+			table: { defaultValue: { summary: 'content' } },
+		},
 		size: {
 			control: 'select',
 			options: ['xxs', 'xs', 'sm', 'md', 'lg', 'display-6', 'display-5', 'display-4', 'display-3', 'display-2', 'display-1'],
@@ -69,13 +76,6 @@ export default {
 			description: 'Regelhoogte',
 			table: { defaultValue: { summary: 'snug' } },
 		},
-		color: {
-			control: 'select',
-			options: ['content', 'secondary', 'accent', 'success', 'warning', 'critical'],
-			description:
-				'Tekstkleur. Elke kleur volgt het vlak eromheen (een lijstrij, een menu, een hero) via de context die dat vlak doorgeeft.',
-			table: { defaultValue: { summary: 'content' } },
-		},
 		horizontalAlignment: {
 			name: 'horizontal-alignment',
 			control: 'select',
@@ -91,24 +91,24 @@ export default {
 };
 
 const Template = ({
+	color,
 	size,
 	smCustomSize,
 	mdCustomSize,
 	lgCustomSize,
 	weight,
 	lineHeight,
-	color,
 	horizontalAlignment,
 	text,
 }: Record<string, unknown>) => html`
 	<nldd-text
+		color=${color || nothing}
 		size=${size || nothing}
 		sm-custom-size=${smCustomSize || nothing}
 		md-custom-size=${mdCustomSize || nothing}
 		lg-custom-size=${lgCustomSize || nothing}
 		weight=${weight || nothing}
 		line-height=${lineHeight || nothing}
-		color=${color || nothing}
 		horizontal-alignment=${horizontalAlignment || nothing}
 		text="${text}"
 	></nldd-text>

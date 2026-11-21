@@ -170,6 +170,7 @@ export const enUS: Record<TranslationKey, string> = {
 	'components.file-field.show-options-action': 'Show options',
 	'components.file-field.required-error-text': 'A file is required',
 	'components.file-field.accepted-types-text': 'Accepted: {types}',
+	'components.form-field.optional-label': 'Optional',
 	'components.slider.start-value-label': 'Minimum',
 	'components.slider.end-value-label': 'Maximum',
 	'components.swatch-picker-item.lintblauw-text': 'Ribbon blue',
@@ -313,6 +314,7 @@ export const enUS: Record<TranslationKey, string> = {
 	'components.step-bar.status-current-label': 'Current step',
 	'components.step-bar.status-future-label': 'To do',
 	'components.step-bar.compact-text': 'Step {current} of {total}',
+	'components.step-bar.compact-overview-text': '{total} steps',
 	'components.term.source-capitalize': 'Source',
 	'components.term.sheet-dismiss-action': 'Close',
 };

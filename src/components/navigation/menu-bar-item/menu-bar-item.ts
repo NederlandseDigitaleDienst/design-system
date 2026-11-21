@@ -7,20 +7,19 @@
  * another popover element).
  *
  * @element nldd-menu-bar-item
+ * @attr {boolean} icon-only - Hide the text visually (always). The text then shows as a tooltip on hover and focus.
  * @attr {string} text - Text of the item
- * @attr {boolean} current - Mark as the active or current item
- * @attr {string} current-type - aria-current value when current is true ('page', 'step', 'location', 'true'). Default: 'page'
- * @attr {string} href - Optional link URL. Without href it renders as a button.
  * @attr {string} icon - Optional icon name (nldd-icon)
  * @attr {boolean} expandable - Show the disclosure icon and open the slotted `<nldd-menu>` on click. The control then says `aria-haspopup="menu"`, except for a menu with `variant="navigation"`: that is a list of links, so the control only says `aria-expanded`.
- * @attr {boolean} icon-only - Hide the text visually (always). The text then shows as a tooltip on hover and focus.
- * @attr {'icon'|'text'} content-priority - Decides what stays visible in compact mode: 'icon' hides the text, 'text' hides the icon. A bar is compact on a narrow screen and also at 200% zoom on a desktop, so with 'icon' the text is gone there too and shows as a tooltip instead.
- * @attr {boolean} compact - Activates content-priority behavior (set by the parent nldd-menu-bar)
- * @attr {boolean} disabled - Turn interaction off. Avoid it where you can; the design guidelines say why.
- * @attr {string} accessible-label - Override aria-label
  * @attr {string} haspopup - aria-haspopup value (e.g. "menu", "dialog")
- * @attr {boolean} open - Whether the linked popover or menu is open
+ * @attr {string} accessible-label - Override aria-label
+ * @attr {string} current-type - aria-current value when current is true ('page', 'step', 'location', 'true'). Default: 'page'
+ * @attr {'icon'|'text'} content-priority - Decides what stays visible in compact mode: 'icon' hides the text, 'text' hides the icon. A bar is compact on a narrow screen and also at 200% zoom on a desktop, so with 'icon' the text is gone there too and shows as a tooltip instead.
  * @attr {boolean} expanded - Whether the matching popover is open; sets aria-expanded on the button when expandable or haspopup is set. Tracked automatically for a slotted `<nldd-menu>`.
+ * @attr {boolean} open - Whether the linked popover or menu is open
+ * @attr {boolean} current - Mark as the active or current item
+ * @attr {string} href - Optional link URL. Without href it renders as a button.
+ * @attr {boolean} disabled - Turn interaction off. Avoid it where you can; the design guidelines say why.
  *
  * @fires select - On a click on a non-expandable button item (bubbles, composed)
  *
@@ -31,10 +30,11 @@
  *   items work directly, because nothing is cloned anymore.
  */
 
-import { LitElement } from 'lit';
+import { LitElement, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
+import { styleState } from '../../../utilities/element-state.js';
 import { menuBarItemStyles } from './menu-bar-item.styles.js';
 import { template } from './menu-bar-item.template.js';
 import '../../content/icon/icon.js';
@@ -59,17 +59,17 @@ interface PopoverMenu extends HTMLElement {
 export class NLDDMenuBarItem extends LitElement {
 	static override styles = menuBarItemStyles;
 
+	/** @internal Set by nldd-menu-bar and nldd-top-navigation-bar on a narrow
+	 *  screen: turns on content-priority. No attribute: the styles read it as
+	 *  `:state(compact)`. */
+	@property({ attribute: false })
+	compact = false;
+
+	@property({ type: Boolean, attribute: 'icon-only', reflect: true })
+	iconOnly = false;
+
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	text = '';
-
-	@property({ type: Boolean, reflect: true })
-	current = false;
-
-	@property({ reflect: true, attribute: 'current-type', converter: reflectNonDefault<'page' | 'step' | 'location' | 'date' | 'time' | 'true'>('page') })
-	currentType: 'page' | 'step' | 'location' | 'date' | 'time' | 'true' = 'page';
-
-	@property({ type: String })
-	href = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	icon = '';
@@ -77,26 +77,29 @@ export class NLDDMenuBarItem extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	expandable = false;
 
-	@property({ type: Boolean, attribute: 'icon-only', reflect: true })
-	iconOnly = false;
+	@property({ type: String })
+	haspopup = '';
+
+	@property({ type: String, attribute: 'accessible-label' })
+	accessibleLabel = '';
+
+	@property({ reflect: true, attribute: 'current-type', converter: reflectNonDefault<'page' | 'step' | 'location' | 'date' | 'time' | 'true'>('page') })
+	currentType: 'page' | 'step' | 'location' | 'date' | 'time' | 'true' = 'page';
 
 	@property({ reflect: true, attribute: 'content-priority', converter: reflectNonDefault<string>('') })
 	contentPriority = '';
 
 	@property({ type: Boolean, reflect: true })
-	compact = false;
+	expanded = false;
+
+	@property({ type: Boolean, reflect: true })
+	current = false;
+
+	@property({ type: String })
+	href = '';
 
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
-
-	@property({ type: String, attribute: 'accessible-label' })
-	accessibleLabel = '';
-
-	@property({ type: String })
-	haspopup = '';
-
-	@property({ type: Boolean, reflect: true })
-	expanded = false;
 
 	/**
 	 * Direct element reference to the popover this item invokes. The IDL-only
@@ -144,6 +147,11 @@ export class NLDDMenuBarItem extends LitElement {
 		// node even before the custom element has upgraded; the toggle
 		// listener attaches to the stable DOM node and survives upgrade.)
 		this._wireMenu();
+	}
+
+	override willUpdate(changed: PropertyValues): void {
+		super.willUpdate(changed);
+		if (changed.has('compact')) styleState(this, 'compact', this.compact);
 	}
 
 	override firstUpdated(): void {

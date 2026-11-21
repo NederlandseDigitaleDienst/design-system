@@ -32,39 +32,9 @@ export default {
 			control: 'text',
 			description: 'Optional fixed width (any CSS length, bv. "240px"). Leeg = stretch.',
 		},
-		name: {
-			control: 'text',
-			description: 'Form field name',
-		},
-		value: {
-			control: 'text',
-			description: 'Input value',
-		},
 		placeholder: {
 			control: 'text',
 			description: 'Placeholder text',
-		},
-		autocomplete: {
-			control: 'select',
-			options: ['(geen)', 'off', 'current-password', 'new-password'],
-			mapping: { '(geen)': '' },
-			description: 'Browser autofill hint (HTML autocomplete attribute)',
-			table: { defaultValue: { summary: '(geen)' } },
-		},
-		masked: {
-			control: 'boolean',
-			description: 'Whether the password is masked',
-			table: { defaultValue: { summary: true } },
-		},
-		valid: {
-			control: 'boolean',
-			description: 'Valid state',
-			table: { defaultValue: { summary: false } },
-		},
-		invalid: {
-			control: 'boolean',
-			description: 'Invalid state',
-			table: { defaultValue: { summary: false } },
 		},
 		accessibleLabel: {
 			name: 'accessible-label',
@@ -81,15 +51,28 @@ export default {
 			control: false,
 			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
 		},
-		readonly: {
+		valid: {
 			control: 'boolean',
-			description: 'Alleen-lezen toestand: de waarde blijft leesbaar en selecteerbaar, maar is hier niet te wijzigen',
+			description: 'Valid state',
 			table: { defaultValue: { summary: false } },
 		},
-		disabled: {
+		invalid: {
 			control: 'boolean',
-			description: 'Disabled state',
+			description: 'Invalid state',
 			table: { defaultValue: { summary: false } },
+		},
+		masked: {
+			control: 'boolean',
+			description: 'Whether the password is masked',
+			table: { defaultValue: { summary: true } },
+		},
+		name: {
+			control: 'text',
+			description: 'Form field name',
+		},
+		value: {
+			control: 'text',
+			description: 'Input value',
 		},
 		minlength: {
 			control: 'number',
@@ -110,48 +93,65 @@ export default {
 			description: 'Verplichte toestand',
 			table: { defaultValue: { summary: false } },
 		},
+		autocomplete: {
+			control: 'select',
+			options: ['(geen)', 'off', 'current-password', 'new-password'],
+			mapping: { '(geen)': '' },
+			description: 'Browser autofill hint (HTML autocomplete attribute)',
+			table: { defaultValue: { summary: '(geen)' } },
+		},
+		readonly: {
+			control: 'boolean',
+			description: 'Alleen-lezen toestand: de waarde blijft leesbaar en selecteerbaar, maar is hier niet te wijzigen',
+			table: { defaultValue: { summary: false } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Disabled state',
+			table: { defaultValue: { summary: false } },
+		},
 	},
 	args: {
 		size: 'md',
 		width: '',
-		name: 'password',
-		value: '',
 		placeholder: 'Wachtwoord',
-		autocomplete: '',
-		masked: true,
-		valid: false,
-		invalid: false,
 		accessibleLabel: '',
 		accessibleDescription: '',
 		accessibleDescribedBy: '',
-		readonly: false,
-		disabled: false,
+		valid: false,
+		invalid: false,
+		masked: true,
+		name: 'password',
+		value: '',
 		minlength: null,
 		maxlength: null,
 		pattern: '',
 		required: false,
+		autocomplete: '',
+		readonly: false,
+		disabled: false,
 	},
 };
 
-const Template = ({ size, name, value, placeholder, autocomplete, masked, valid, invalid, accessibleLabel, accessibleDescription, readonly, disabled, minlength, maxlength, pattern, required, width }: Record<string, any>) => html`
+const Template = ({ size, width, placeholder, accessibleLabel, accessibleDescription, valid, invalid, masked, name, value, minlength, maxlength, pattern, required, autocomplete, readonly, disabled }: Record<string, any>) => html`
 	<nldd-password-field
-		minlength=${minlength ?? nothing}
-		maxlength=${maxlength ?? nothing}
-		.value=${value}
-		.placeholder=${placeholder}
 		size=${size}
-		?valid=${valid}
-		?readonly=${readonly}
-		?invalid=${invalid}
-		?disabled=${disabled}
-		pattern=${pattern || nothing}
-		.masked=${masked}
-		name=${name}
-		?required=${required}
-		autocomplete=${autocomplete}
 		width=${width}
+		.placeholder=${placeholder}
 		accessible-label=${accessibleLabel || nothing}
 		accessible-description=${accessibleDescription || nothing}
+		?valid=${valid}
+		?invalid=${invalid}
+		.masked=${masked}
+		name=${name}
+		.value=${value}
+		minlength=${minlength ?? nothing}
+		maxlength=${maxlength ?? nothing}
+		pattern=${pattern || nothing}
+		?required=${required}
+		autocomplete=${autocomplete}
+		?readonly=${readonly}
+		?disabled=${disabled}
 	></nldd-password-field>
 `;
 
@@ -163,8 +163,8 @@ export const ZonderMasked = {
 	name: 'Zonder masked',
 	render: Template,
 	args: {
-		value: 'zichtbaar-wachtwoord',
 		masked: false,
+		value: 'zichtbaar-wachtwoord',
 	},
 };
 
@@ -172,8 +172,8 @@ export const ToestandValid = {
 	name: 'Toestand valid',
 	render: Template,
 	args: {
-		value: 'sterk-wachtwoord-123',
 		valid: true,
+		value: 'sterk-wachtwoord-123',
 	},
 };
 
@@ -181,8 +181,8 @@ export const ToestandInvalid = {
 	name: 'Toestand invalid',
 	render: Template,
 	args: {
-		value: '123',
 		invalid: true,
+		value: '123',
 	},
 };
 
@@ -190,8 +190,8 @@ export const ToestandDisabled = {
 	name: 'Toestand disabled',
 	render: Template,
 	args: {
-		value: 'uitgeschakeld-wachtwoord',
 		disabled: true,
+		value: 'uitgeschakeld-wachtwoord',
 	},
 };
 

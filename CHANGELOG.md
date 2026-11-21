@@ -9,6 +9,44 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Breaking
+
+- **`no-highlight-border` on `nldd-button` and `nldd-icon-button` is gone.** Only a group that draws one border around its buttons used it, such as `nldd-button-bar`, the split button and the pagination, and they now drop that border themselves without an attribute. Remove it from your markup: `nldd lint --fix` does that, and reports it as `button-no-highlight-border-no-effect`.
+- **`optional-label` on `nldd-form-field` is gone: the text of the optional badge is the translation key `components.form-field.optional-label`.** It is UI text, like the other texts of the package, so it goes through `translations` or `setTranslations()`: `<nldd-form-field optional translations='{"components.form-field.optional-label": "Niet verplicht"}'>`. English, Frisian and Papiamentu have a text for it. `nldd lint --fix` moves an `optional-label` into `translations` and reports it as `form-field-optional-label-no-effect`.
+- **Attributes that a component set on its children are gone.** They were never yours to set, but as attributes they showed as controls, in the manifest and in `reference.md`. The parent now passes them on without an attribute, and the child styles itself with a custom state. CSS of your own that selected on one of them no longer matches:
+  - `form-label-alignment` on `nldd-form-field` and `nldd-form-actions`. Set `label-alignment` on the form, or on a field to give that field its own.
+  - `size`, `show-item-labels`, `fluid`, `solo-fluid`, `shrinkable` and `shrunk` on `nldd-toolbar-item`, and `size` on `nldd-toolbar-title`.
+  - `compact` on `nldd-menu-bar-item`. Set `compact` on the `nldd-menu-bar`.
+  - `reorderable` on `nldd-list-item`. Set `reorderable` on the `nldd-list`.
+  - `unmet` and `visible` on `nldd-validation-item`. The `unmet` on the control, with the ids the app sets, stays.
+  - `variant`, `appearance`, `size`, `group-name` and `input-type` on the items of `nldd-segmented-control`, and `size` on the items of `nldd-swatch-picker`.
+- **`nldd-split-view-pane` is gone: what was in it goes straight in the split view.** The pane was a layer between a split view and its content that did nothing a split view cannot do itself. Put the page, or the container with a toolbar, in the slot with the attributes the pane had: `<nldd-page slot="main" landmarks="page">`. The split view gives it the room of its column, makes it a layout container and hides the back button of its title bar where the pane before it is in view. `nldd lint --fix` takes the pane away where it holds one element, and reports the others as `split-view-pane-not-found`.
+  - `has-content` and `hide-back` go. An `nldd-navigation-split-view` now counts every pane as content; set `empty` on the element in `main` or `secondary-sidebar` when it says nothing is chosen yet, so a phone shows the list before it.
+  - `background` goes on the page itself: `<nldd-page slot="primary-sidebar" background="tinted">`.
+  - The import `@nldd/design-system/split-view-pane` and the class `NLDDSplitViewPane` are gone.
+
+### Changed
+
+- **`nldd-step-bar` without a current step shows every step as still to do.** With no `status="current"`, step 1 used to be current. A bar can now show what is coming before a process starts, and the compact view says "3 stappen" instead of "Stap 1 van 3". A bar that leaned on step 1 being current loses its `aria-current`: mark that step with `status="current"`.
+- **`nldd-toolbar` fills its row.** In a flex row, beside a close button say, it shrank to its content: the actions stood against the title, and on a narrow row it pushed its neighbour out instead of moving an action to the overflow menu. It now takes the room its parent gives it and shrinks with it. In block flow and in a grid nothing changes.
+- **`nldd-menu` opens on the current choice.** A menu that scrolls showed its first items, so a selected item further down was out of sight. It now opens with that item one and a half rows from the edge on the side of its button, with the choices before it still in view. A keyboard user starts on it too. Only the menu scrolls, never the page behind it.
+- **The open-link button of `nldd-text-editor` shows where the link goes.** With the syntax hidden, the URL of a `[text](url)` link is nowhere on screen; hovering the button now shows it in a tooltip. Where the URL is in view (a bare URL, the marks of a link the caret is in, `syntax="visible"`) there is none.
+
+### Fixed
+
+- **`nldd-collection` no longer adds a page footer to the page.** The block with Previous and Next was a `<footer>`, which Safari announces as the footer of the whole page, once for every scrolling row (WCAG 1.3.1).
+- **`nldd-container` keeps a `role="list"` from your own markup.** Since 0.23.0 a container without `list` removed it on its first render, leaving its children as list items without a list (WCAG 1.3.1). It now only takes back a role that `list` set.
+- **`nldd-tab-bar` has one tab stop when a router sets `current` after the first render.** The first tab stayed in the tab order next to the current one.
+- **A page in a sheet, modal dialog, window or popover scrolls inside an `nldd-shell`.** It could take the shell's document scrolling, before the overlay around it had loaded, so everything below its first screen was out of reach. A page in an overlay now always scrolls itself. A page without a sticky header whose content scrolls and holds nothing to focus now gets a tab stop of its own, as a page with a sticky header already did, so the keyboard can scroll it too (WCAG 2.1.1).
+- **`nldd-toolbar` follows `hidden` into its overflow menu.** An item hidden after the first render stayed in the menu, and one shown again stayed out of it.
+- **`nldd-avatar-group` stays under a sticky header.** The stacked avatars painted over an `nldd-page` header as the page scrolled.
+- **The highlight border of `nldd-card` stays on top of an image.** An image up to the edge of the card covered it.
+- **`nldd-date-picker` no longer scrolls the page when it opens.** Only its calendar moves to the selected date.
+- **`nldd-tooltip` keeps its text on one line inside text that keeps its white space.** In a `white-space: pre-wrap` context, such as a code block or an editor, the line breaks of its own template showed as empty lines above the text.
+- **The thumbs of an `nldd-slider` range stack again after one was dragged past the other.** Dragged back in the same move, the thumb jumped from one side of the other to the other side and never landed on its value.
+- **`nldd-time-picker` no longer flickers in Safari when an arrow key changes the time.** The selection showed the old number again for a few frames while the column moved to the new one.
+- **`nldd-tooltip` follows a resize.** It stayed where it was, even when its trigger was gone, in a toolbar that is only there at another width. A tooltip shown by hover now goes, as on a scroll, and so does one whose trigger is hidden.
+
 ## [0.27.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.27.0...v0.27.1) (2026-11-20)
 
 ### Added

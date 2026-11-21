@@ -47,12 +47,12 @@ export default {
 	args: {
 		width: '',
 		smFullHeight: false,
+		centered: false,
 		placement: 'bottom-start',
 		top: '',
 		right: '',
 		bottom: '',
 		left: '',
-		centered: false,
 		accessibleLabel: 'Toelichting bij Aanvraag A-1042',
 		open: false,
 	},
@@ -66,6 +66,11 @@ export default {
 			name: 'sm-full-height',
 			control: 'boolean',
 			description: 'Op sm, waar de popover een bottom sheet is, de volle hoogte vullen in plaats van mee te krimpen met de inhoud.',
+			table: { defaultValue: { summary: false } },
+		},
+		centered: {
+			control: 'boolean',
+			description: 'Centreert de popover op het scherm, los van zijn anker. Een rand die je zet wint op zijn eigen as.',
 			table: { defaultValue: { summary: false } },
 		},
 		placement: {
@@ -95,11 +100,6 @@ export default {
 			control: 'text',
 			description: 'Afstand tot de linkerrand van het scherm. Zie `top`.',
 		},
-		centered: {
-			control: 'boolean',
-			description: 'Centreert de popover op het scherm, los van zijn anker. Een rand die je zet wint op zijn eigen as.',
-			table: { defaultValue: { summary: false } },
-		},
 		accessibleLabel: {
 			name: 'accessible-label',
 			control: 'text',
@@ -114,7 +114,7 @@ export default {
 	},
 };
 
-const Template = ({ width, smFullHeight, placement, top, right, bottom, left, centered, accessibleLabel, open }: Record<string, any>) => {
+const Template = ({ width, smFullHeight, centered, placement, top, right, bottom, left, accessibleLabel, open }: Record<string, any>) => {
 	const [, updateArgs] = useArgs();
 	return html`
 		<nldd-button
@@ -125,12 +125,12 @@ const Template = ({ width, smFullHeight, placement, top, right, bottom, left, ce
 			width=${width || nothing}
 			?sm-full-height=${smFullHeight}
 			id="popover-default"
+			?centered=${centered}
 			placement=${placement}
 			top=${top || nothing}
 			right=${right || nothing}
 			bottom=${bottom || nothing}
 			left=${left || nothing}
-			?centered=${centered}
 			accessible-label=${accessibleLabel}
 			?open=${open}
 			@open=${() => updateArgs({ open: true })}

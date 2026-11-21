@@ -7,24 +7,24 @@
  * @keywords wachtwoord
  * @related nldd-one-time-code-field, nldd-text-field
  *
- * @attr {string} value - The input value
- * @attr {string} placeholder - Placeholder text
- * @attr {string} input-id - Sets the id on the native input. Set automatically by nldd-form-field.
  * @attr {'md'|'sm'} size - 'md' (default) | 'sm'. Set automatically by nldd-form-field.
+ * @attr {string} width - Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container.
+ * @attr {string} placeholder - Placeholder text
+ * @attr {string} accessible-label - Accessible label forwarded to the inner input. Set automatically by nldd-form-field.
  * @attr {boolean} valid - Marks the field as valid
  * @attr {boolean} invalid - Marks the field as invalid
- * @attr {boolean} disabled - Disabled state
  * @attr {boolean} masked - Whether the password is masked (default: true)
- * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
- * @attr {boolean} readonly - Readonly state
- * @attr {boolean} required - Required state
  * @attr {string} name - Input name for form submission
- * @attr {string} autocomplete - Autocomplete hint
- * @attr {string} accessible-label - Accessible label forwarded to the inner input. Set automatically by nldd-form-field.
- * @attr {string} width - Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container.
- * @attr {string} pattern - Regular expression the value has to match, as the native `pattern`.
+ * @attr {string} input-id - Sets the id on the native input. Set automatically by nldd-form-field.
+ * @attr {string} value - The input value
  * @attr {number} minlength - Fewest characters the value may have.
  * @attr {number} maxlength - Most characters the value may have.
+ * @attr {string} pattern - Regular expression the value has to match, as the native `pattern`.
+ * @attr {boolean} required - Required state
+ * @attr {string} autocomplete - Autocomplete hint
+ * @attr {boolean} readonly - Readonly state
+ * @attr {boolean} disabled - Disabled state
+ * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  *
  * @fires input - When the input value changes ({ detail: { value } })
  * @fires change - When the input value is committed ({ detail: { value } })
@@ -70,14 +70,16 @@ export class NLDDPasswordField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ reflect: true, converter: reflectNonDefault<'md' | 'sm'>('md') })
 	size: 'md' | 'sm' = 'md';
 
-	@property({ type: String })
-	value = '';
-
-	@property({ type: String, attribute: 'input-id' })
-	inputId = '';
+	/** Optional fixed width (any CSS length). When unset, the field stretches to fill its container. */
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	width = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	placeholder = '';
+
+	/** Accessible label forwarded to the inner <input>. Set automatically by nldd-form-field. */
+	@property({ type: String, attribute: 'accessible-label' })
+	accessibleLabel = '';
 
 	@property({ type: Boolean, reflect: true })
 	valid = false;
@@ -86,43 +88,16 @@ export class NLDDPasswordField extends DescribedBy(FormAssociated(LitElement)) {
 	invalid = false;
 
 	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
-	@property({ type: Boolean, reflect: true })
 	masked = true;
-
-	/** Override one or more translation keys. Unset keys fall back to Dutch. */
-	@property({ type: Object })
-	translations: Partial<NLDDPasswordFieldTranslations> = {};
-
-	@property({ type: Boolean, reflect: true })
-	readonly = false;
-
-	@property({ type: Boolean, reflect: true })
-	required = false;
 
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
 
+	@property({ type: String, attribute: 'input-id' })
+	inputId = '';
+
 	@property({ type: String })
-	autocomplete = '';
-
-	/** Accessible label forwarded to the inner <input>. Set automatically by nldd-form-field. */
-	@property({ type: String, attribute: 'accessible-label' })
-	accessibleLabel = '';
-
-
-	/** Optional fixed width (any CSS length). When unset, the field stretches to fill its container. */
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	width = '';
-
-	@query('.password-field__input')
-	private _input!: HTMLInputElement;
-
-
-	/** Regular expression the value has to match, as the native `pattern`. */
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	pattern = '';
+	value = '';
 
 	/** Fewest characters the value may have, as the native `minlength`. */
 	@property({ type: Number, reflect: true })
@@ -131,6 +106,30 @@ export class NLDDPasswordField extends DescribedBy(FormAssociated(LitElement)) {
 	/** Most characters the value may have, as the native `maxlength`. */
 	@property({ type: Number, reflect: true })
 	maxlength?: number;
+
+	/** Regular expression the value has to match, as the native `pattern`. */
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	pattern = '';
+
+	@property({ type: Boolean, reflect: true })
+	required = false;
+
+	@property({ type: String })
+	autocomplete = '';
+
+	@property({ type: Boolean, reflect: true })
+	readonly = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
+
+	/** Override one or more translation keys. Unset keys fall back to Dutch. */
+	@property({ type: Object })
+	translations: Partial<NLDDPasswordFieldTranslations> = {};
+
+	@query('.password-field__input')
+	private _input!: HTMLInputElement;
+
 
 	override updated(changed: PropertyValues): void {
 		if (changed.has('width')) {

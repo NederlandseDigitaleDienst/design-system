@@ -6,19 +6,19 @@
  *
  * @element nldd-segmented-control
  * @related nldd-radio-button-group, nldd-toggle-button-group, nldd-tab-bar
- * @attr {string} value - Selected value for radio type
  * @prop {string[]} values - Selected values for checkbox type (property binding only, not an attribute)
+ * @attr {'text'|'icon'|'icon-and-text'} variant - Content type for all items: 'text' | 'icon' | 'icon-and-text' (default: 'text')
  * @attr {'neutral-tinted'|'neutral-base'} appearance - Visual style, color included: 'neutral-tinted' | 'neutral-base' (default: 'neutral-tinted'). neutral-base is for a tinted surface. For a quiet row without a track, use nldd-toggle-button-group with type="radio" and a transparent appearance.
  * @attr {'sm'|'md'|'lg'} size - Control size: 'sm' | 'md' | 'lg' (default: 'md')
- * @attr {'radio'|'checkbox'} type - Selection mode: 'radio' | 'checkbox' (default: 'radio').
- * @attr {'text'|'icon'|'icon-and-text'} variant - Content type for all items: 'text' | 'icon' | 'icon-and-text' (default: 'text')
- * @attr {boolean} disabled - Disabled state for all items
  * @attr {string} width - Width mode: 'full' (stretches to container), 'fit-content' (per-item content size), or any CSS length (e.g. '240px')
- * @attr {string} name - Name for form submission
  * @attr {string} accessible-label - Accessible name for the group, set as aria-label
  * @attr {string} accessible-labeled-by - Id of an external label element, set as aria-labelledby on the group
- * @attr {boolean} required - Marks the group as required. Enforced in radio mode; in checkbox mode only announced.
  * @attr {boolean} invalid - Marks the group as invalid. Announced with aria-invalid; nothing is drawn for it.
+ * @attr {string} name - Name for form submission
+ * @attr {string} value - Selected value for radio type
+ * @attr {'radio'|'checkbox'} type - Selection mode: 'radio' | 'checkbox' (default: 'radio').
+ * @attr {boolean} required - Marks the group as required. Enforced in radio mode; in checkbox mode only announced.
+ * @attr {boolean} disabled - Disabled state for all items
  *
  * @fires change - When selection changes; detail: { value: string } for radio, detail: { values: string[] } for checkbox
  *
@@ -27,21 +27,16 @@
  * ---
  *
  * @element nldd-segmented-control-item
- * @attr {string} value - Value for this item
- * @attr {boolean} selected - Whether this item is selected (set by parent)
- * @attr {boolean} disabled - Disabled state
  * @attr {string} text - Text label (shown for variant "text" and "icon-and-text"; used as aria-label and tooltip for variant "icon")
  * @attr {string} icon - Icon name for nldd-icon
  * @attr {string} shortcut - Keyboard shortcut hint shown in the tooltip, e.g. 'Cmd+B'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up the handling in your app. Part of the accessible name ("Vet Cmd B"), as in nldd-menu-item. Hidden on touch-only devices, where it isn't invokable.
  * @attr {string} shortcut-mac - Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`).
  * @attr {string} shortcut-windows - Override of `shortcut` on Windows (falls back to `shortcut`).
  * @attr {string} shortcut-linux - Override of `shortcut` on Linux (falls back to `shortcut`).
- * @attr {'neutral-tinted'|'neutral-base'} appearance - Visual style: 'neutral-tinted' | 'neutral-base' (default: 'neutral-tinted'). Set by nldd-segmented-control.
- * @attr {'sm'|'md'|'lg'} size - Control size: 'sm' | 'md' | 'lg' (default: 'md'). Set by nldd-segmented-control.
- * @attr {'text'|'icon'|'icon-and-text'} variant - Content type: 'text' | 'icon' | 'icon-and-text' (default: 'text'). Set by nldd-segmented-control.
- * @attr {'radio'|'checkbox'} input-type - Selection mode: 'radio' | 'checkbox' (default: 'radio'). In radio mode the item is the radio itself, in checkbox mode it renders a native checkbox. Set by nldd-segmented-control.
- * @attr {string} group-name - Name of the group for form submission, put on the native checkbox. Set by nldd-segmented-control.
+ * @attr {boolean} selected - Whether this item is selected (set by parent)
+ * @attr {string} value - Value for this item
  * @attr {boolean} required - Required state of the native checkbox. In radio mode the group carries the constraint.
+ * @attr {boolean} disabled - Disabled state
  *
  * @slot icon - Slot for a custom icon (e.g. custom SVG). Wins over `icon`.
  *
@@ -68,11 +63,16 @@ import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
 import { ShortcutAvailabilityController, shortcutLabel } from '../../../utilities/shortcut.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
+import { styleValueState } from '../../../utilities/element-state.js';
 
 export type SegmentedControlAppearance = 'neutral-tinted' | 'neutral-base';
 export type SegmentedControlSize = 'sm' | 'md' | 'lg';
 export type SegmentedControlType = 'radio' | 'checkbox';
 export type SegmentedControlVariant = 'text' | 'icon' | 'icon-and-text';
+
+const VARIANTS: readonly SegmentedControlVariant[] = ['text', 'icon', 'icon-and-text'];
+const APPEARANCES: readonly SegmentedControlAppearance[] = ['neutral-tinted', 'neutral-base'];
+const SIZES: readonly SegmentedControlSize[] = ['sm', 'md', 'lg'];
 
 
 // # nldd-segmented-control-item
@@ -80,41 +80,20 @@ export type SegmentedControlVariant = 'text' | 'icon' | 'icon-and-text';
 @customElement('nldd-segmented-control-item')
 export class NLDDSegmentedControlItem extends LitElement {
 
-	@property({ type: Boolean, reflect: true })
-	required = false;
 	static override styles = segmentedControlItemStyles;
 
-	@property({ type: String })
-	value = '';
-
-	@property({ type: Boolean, reflect: true })
-	selected = false;
-
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
-	/** Set by nldd-segmented-control. Not part of the public API. */
-	@property({ reflect: true, converter: reflectNonDefault<SegmentedControlAppearance>('neutral-tinted') })
-	appearance: SegmentedControlAppearance = 'neutral-tinted';
-
-	/** Control size: 'sm' | 'md' | 'lg'. Set by nldd-segmented-control. Not part of the public API. */
-	@property({ reflect: true, converter: reflectNonDefault<SegmentedControlSize>('md') })
-	size: SegmentedControlSize = 'md';
-
-	/** Set by nldd-segmented-control. Not part of the public API. */
-	@property({ reflect: true, attribute: 'variant', converter: reflectNonDefault<SegmentedControlVariant>('text') })
+	/** @internal Set by nldd-segmented-control: the content type of every item.
+	 *  The styles read it as `:state(variant-text)` and so on. */
+	@property({ attribute: false })
 	variant: SegmentedControlVariant = 'text';
 
-	/** Set by nldd-segmented-control. Not part of the public API. */
-	@property({ reflect: true, attribute: 'input-type', converter: reflectNonDefault<SegmentedControlType>('radio') })
-	inputType: SegmentedControlType = 'radio';
+	/** @internal Set by nldd-segmented-control, read as `:state(appearance-…)`. */
+	@property({ attribute: false })
+	appearance: SegmentedControlAppearance = 'neutral-tinted';
 
-	/** Set by nldd-segmented-control. Not part of the public API.
-	 *
-	 * The attribute name is stated: without it Lit derives `groupname`, all
-	 * lowercase, while the documentation has always promised `group-name`. */
-	@property({ type: String, attribute: 'group-name' })
-	groupName = '';
+	/** @internal Set by nldd-segmented-control, read as `:state(size-…)`. */
+	@property({ attribute: false })
+	size: SegmentedControlSize = 'md';
 
 	/** Text label for the item. Used as visible text and as aria-label/tooltip for icon variant. */
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
@@ -136,6 +115,28 @@ export class NLDDSegmentedControlItem extends LitElement {
 
 	@property({ reflect: true, attribute: 'shortcut-linux', converter: reflectNonDefault<string>('') })
 	shortcutLinux = '';
+
+	@property({ type: Boolean, reflect: true })
+	selected = false;
+
+	/** @internal Set by nldd-segmented-control: the name of the group, put on
+	 *  the native checkbox. */
+	@property({ attribute: false })
+	groupName = '';
+
+	@property({ type: String })
+	value = '';
+
+	/** @internal Set by nldd-segmented-control: in radio mode the item is the
+	 *  radio itself, in checkbox mode it renders a native checkbox. */
+	@property({ attribute: false })
+	inputType: SegmentedControlType = 'radio';
+
+	@property({ type: Boolean, reflect: true })
+	required = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	/** Set by nldd-segmented-control in radio mode: this item's place in the
 	 *  group, which it cannot count by itself. */
@@ -182,6 +183,13 @@ export class NLDDSegmentedControlItem extends LitElement {
 	private _onRadioBlur = (): void => {
 		this._tooltip?._handleTriggerLeave();
 	};
+
+	override willUpdate(changedProperties: Map<string, unknown>): void {
+		super.willUpdate(changedProperties);
+		if (changedProperties.has('variant') || !this.hasUpdated) styleValueState(this, 'variant', this.variant, VARIANTS);
+		if (changedProperties.has('appearance') || !this.hasUpdated) styleValueState(this, 'appearance', this.appearance, APPEARANCES);
+		if (changedProperties.has('size') || !this.hasUpdated) styleValueState(this, 'size', this.size, SIZES);
+	}
 
 	override updated(): void {
 		this._syncRadioAria();
@@ -289,6 +297,71 @@ export class NLDDSegmentedControlItem extends LitElement {
 @customElement('nldd-segmented-control')
 export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 
+	static override styles = segmentedControlStyles;
+
+	static formProperties = ['value', 'values'];
+
+	/** Says this is the control an nldd-form-field is about, so the field can
+	 *  find it, name it and move focus into it. See nldd-form-field. */
+	static isFormInput = true;
+
+
+	/**
+	 * Selected values for checkbox type.
+	 * Use property binding: .values=${['New York', 'Amsterdam']}
+	 * Does not reflect to an attribute, so it is safe for values containing spaces or special characters.
+	 */
+	@property({ type: Array, attribute: false })
+	values: string[] = [];
+
+	/** Content type applied to all items: text, icon, or icon-and-text. Per-item mixing is not supported. */
+	@property({ reflect: true, attribute: 'variant', converter: reflectNonDefault<SegmentedControlVariant>('text') })
+	variant: SegmentedControlVariant = 'text';
+
+	@property({ reflect: true, converter: reflectNonDefault<SegmentedControlAppearance>('neutral-tinted') })
+	appearance: SegmentedControlAppearance = 'neutral-tinted';
+
+	@property({ reflect: true, converter: reflectNonDefault<SegmentedControlSize>('md') })
+	size: SegmentedControlSize = 'md';
+
+	/**
+	 * Width mode: 'full' (stretch to container, equal-width items),
+	 * 'fit-content' (per-item content size), or any CSS length (e.g. '240px',
+	 * '50%') which sets the host width with equal-width items. Default is
+	 * content-based outer with equal-width items.
+	 */
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	width = '';
+
+	/** Accessible name for the group (aria-label). */
+	@property({ type: String, attribute: 'accessible-label' })
+	accessibleLabel = '';
+
+	/** ID of an external label element (aria-labelledby). */
+	@property({ type: String, attribute: 'accessible-labeled-by' })
+	accessibleLabeledBy = '';
+
+	/**
+	 * Marks the group as invalid.
+	 *
+	 * Announced and not drawn, and on the group and not on an item: a red ring
+	 * around one option would say that option is wrong, while it is the question
+	 * that is unanswered. What is wrong belongs in an
+	 * nldd-validation-list, in words.
+	 */
+	@property({ type: Boolean, reflect: true })
+	invalid = false;
+
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	name = '';
+
+	/** Selected value for radio type. */
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	value = '';
+
+	@property({ reflect: true, converter: reflectNonDefault<SegmentedControlType>('radio') })
+	type: SegmentedControlType = 'radio';
+
 	/**
 	 * Marks the group as required: something has to be selected.
 	 *
@@ -306,74 +379,8 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 	@property({ type: Boolean, reflect: true })
 	required = false;
 
-	/**
-	 * Marks the group as invalid.
-	 *
-	 * Announced and not drawn, and on the group and not on an item: a red ring
-	 * around one option would say that option is wrong, while it is the question
-	 * that is unanswered. What is wrong belongs in an
-	 * nldd-validation-list, in words.
-	 */
-	@property({ type: Boolean, reflect: true })
-	invalid = false;
-
-
-	static override styles = segmentedControlStyles;
-
-	static formProperties = ['value', 'values'];
-
-	/** Says this is the control an nldd-form-field is about, so the field can
-	 *  find it, name it and move focus into it. See nldd-form-field. */
-	static isFormInput = true;
-
-
-	/** Selected value for radio type. */
-	@property({ reflect: true, converter: reflectNonDefault<string>('') })
-	value = '';
-
-	/**
-	 * Selected values for checkbox type.
-	 * Use property binding: .values=${['New York', 'Amsterdam']}
-	 * Does not reflect to an attribute, so it is safe for values containing spaces or special characters.
-	 */
-	@property({ type: Array, attribute: false })
-	values: string[] = [];
-
-	@property({ reflect: true, converter: reflectNonDefault<SegmentedControlAppearance>('neutral-tinted') })
-	appearance: SegmentedControlAppearance = 'neutral-tinted';
-
-	@property({ reflect: true, converter: reflectNonDefault<SegmentedControlSize>('md') })
-	size: SegmentedControlSize = 'md';
-
-	@property({ reflect: true, converter: reflectNonDefault<SegmentedControlType>('radio') })
-	type: SegmentedControlType = 'radio';
-
-	/** Content type applied to all items: text, icon, or icon-and-text. Per-item mixing is not supported. */
-	@property({ reflect: true, attribute: 'variant', converter: reflectNonDefault<SegmentedControlVariant>('text') })
-	variant: SegmentedControlVariant = 'text';
-
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
-
-	/**
-	 * Width mode: 'full' (stretch to container, equal-width items),
-	 * 'fit-content' (per-item content size), or any CSS length (e.g. '240px',
-	 * '50%') which sets the host width with equal-width items. Default is
-	 * content-based outer with equal-width items.
-	 */
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	width = '';
-
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	name = '';
-
-	/** Accessible name for the group (aria-label). */
-	@property({ type: String, attribute: 'accessible-label' })
-	accessibleLabel = '';
-
-	/** ID of an external label element (aria-labelledby). */
-	@property({ type: String, attribute: 'accessible-labeled-by' })
-	accessibleLabeledBy = '';
 
 	/** The name this group wrote onto its host, so it only takes back its own. */
 	private _appliedLabel: string | null = null;

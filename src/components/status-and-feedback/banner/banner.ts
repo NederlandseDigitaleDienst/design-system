@@ -33,10 +33,10 @@
  *
  * @attr {'neutral'|'accent'|'success'|'warning'|'critical'} variant - Color and default icon (default: 'neutral')
  * @attr {'sm'|'md'} size - Banner size (default: 'md'). 'sm' tightens the padding to 8px, drops the icon to 24px and uses a smaller dismiss button, for a bar that sits between chrome and content rather than a standalone page-level notice. The typography is unchanged.
- * @attr {string} icon - Icon override. Default per variant: neutral → info-circle-filled, accent → info-circle-filled, success → check-mark-circle-filled, warning → exclamation-triangle-filled, critical → exclamation-circle-filled
  * @attr {string} text - Main text (heading or paragraph, depending on heading-level)
  * @attr {string} supporting-text - Supporting text below the heading
  * @attr {1|2|3|4|5|6} heading-level - Renders text as h1–h6; absent renders a p
+ * @attr {string} icon - Icon override. Default per variant: neutral → info-circle-filled, accent → info-circle-filled, success → check-mark-circle-filled, warning → exclamation-triangle-filled, critical → exclamation-circle-filled
  * @attr {boolean} dismissible - Show a close button in the top-right; emits `dismiss` when clicked
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  *
@@ -80,9 +80,6 @@ export class NLDDBanner extends LitElement {
 	size: BannerSize = 'md';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
-	icon = '';
-
-	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	text = '';
 
 	@property({ reflect: true, attribute: 'supporting-text', converter: reflectNonDefault<string>('') })
@@ -90,6 +87,9 @@ export class NLDDBanner extends LitElement {
 
 	@property({ type: Number, reflect: true, attribute: 'heading-level' })
 	headingLevel: 1 | 2 | 3 | 4 | 5 | 6 | null = null;
+
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	icon = '';
 
 	@property({ type: Boolean, reflect: true })
 	dismissible = false;

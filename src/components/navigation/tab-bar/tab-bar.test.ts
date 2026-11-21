@@ -604,6 +604,29 @@ describe('nldd-tab-bar – keyboard navigation', () => {
 		expect(innerB.getAttribute('tabindex')).toBe('-1');
 	});
 
+	it('moves the single tab stop when current is set after the first render', async () => {
+		el = await fixture<NLDDTabBar>(`
+			<nldd-tab-bar navigation accessible-label="Weergaven">
+				<nldd-tab-bar-item href="#a" text="Een"></nldd-tab-bar-item>
+				<nldd-tab-bar-item href="#b" text="Twee"></nldd-tab-bar-item>
+				<nldd-tab-bar-item href="#c" text="Drie"></nldd-tab-bar-item>
+			</nldd-tab-bar>
+		`);
+		await waitForUpdate(el);
+		const items = getItems(el);
+		const stops = async () => {
+			await Promise.all(items.map(item => item.updateComplete));
+			return items.map(item => item.shadowRoot!.querySelector('a')!.getAttribute('tabindex'));
+		};
+		items[2].setAttribute('current', '');
+		await waitForUpdate(el);
+		expect(await stops()).toEqual(['-1', '-1', '0']);
+		items[2].removeAttribute('current');
+		items[1].setAttribute('current', '');
+		await waitForUpdate(el);
+		expect(await stops()).toEqual(['-1', '0', '-1']);
+	});
+
 	it('the current tab has tabindex="0"', async () => {
 		el = await fixture<NLDDTabBar>(threeTabBar());
 		await waitForUpdate(el);

@@ -20,13 +20,13 @@
  * @element nldd-just-in-time-education
  * @keywords coach mark, onboarding, tour, uitleg, rondleiding
  * @related nldd-tooltip, nldd-popover, nldd-inline-dialog
- * @attr {boolean} active - Show the coach mark. Driven by the app; false by default.
+ * @attr {'auto'|'top'|'bottom'|'left'|'right'} placement - 'auto' | 'top' | 'bottom' | 'left' | 'right' (default 'auto').
  * @attr {string} text - Title of the callout.
  * @attr {string} supporting-text - Supporting text under the title.
- * @attr {'auto'|'top'|'bottom'|'left'|'right'} placement - 'auto' | 'top' | 'bottom' | 'left' | 'right' (default 'auto').
- * @attr {boolean} dismissable - Show the dismiss button and allow closing with one click or key press outside the coach mark. False by default: the consumer then manages closing itself.
- * @attr {string} arrow-length - Arrow length, and therefore the distance between card and control, as a CSS length (e.g. `333px`, `30vh`). Empty = the DS default; anything under 40px is clamped.
  * @attr {boolean} no-arrow - Hide the arrow; the card then sits close against the control.
+ * @attr {string} arrow-length - Arrow length, and therefore the distance between card and control, as a CSS length (e.g. `333px`, `30vh`). Empty = the DS default; anything under 40px is clamped.
+ * @attr {boolean} dismissable - Show the dismiss button and allow closing with one click or key press outside the coach mark. False by default: the consumer then manages closing itself.
+ * @attr {boolean} active - Show the coach mark. Driven by the app; false by default.
  *
  * @slot - The control the coach mark points at (stays in the normal flow).
  *
@@ -82,8 +82,8 @@ export class NLDDJustInTimeEducation extends withTranslations<NLDDJustInTimeEduc
 		'data-arrow-side', 'data-arrow-collapsed', 'style', 'class', 'id', 'role', 'slot', 'hidden',
 	]);
 
-	@property({ type: Boolean, reflect: true })
-	active = false;
+	@property({ reflect: true, converter: reflectNonDefault<Placement>('auto') })
+	placement: Placement = 'auto';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	text = '';
@@ -91,17 +91,17 @@ export class NLDDJustInTimeEducation extends withTranslations<NLDDJustInTimeEduc
 	@property({ reflect: true, attribute: 'supporting-text', converter: reflectNonDefault<string>('') })
 	supportingText = '';
 
-	@property({ reflect: true, converter: reflectNonDefault<Placement>('auto') })
-	placement: Placement = 'auto';
-
-	@property({ type: Boolean, reflect: true })
-	dismissable = false;
+	@property({ type: Boolean, reflect: true, attribute: 'no-arrow' })
+	noArrow = false;
 
 	@property({ reflect: true, attribute: 'arrow-length', converter: reflectNonDefault<string>('') })
 	arrowLength = '';
 
-	@property({ type: Boolean, reflect: true, attribute: 'no-arrow' })
-	noArrow = false;
+	@property({ type: Boolean, reflect: true })
+	dismissable = false;
+
+	@property({ type: Boolean, reflect: true })
+	active = false;
 
 	private _cleanupAutoUpdate: (() => void) | null = null;
 	private _attachTimeout: ReturnType<typeof setTimeout> | null = null;

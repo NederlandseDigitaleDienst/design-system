@@ -393,8 +393,34 @@ describe('nldd-list', () => {
 			</nldd-list>
 		`);
 		await waitForUpdate(el);
-		expect(el.querySelector('#a')?.hasAttribute('reorderable')).toBe(false);
-		expect(el.querySelector('#b')?.hasAttribute('reorderable')).toBe(false);
+		for (const id of ['#a', '#b']) {
+			const item = el.querySelector(id) as HTMLElement & { reorderable: boolean };
+			expect(item.reorderable).toBe(false);
+			expect(item.hasAttribute('reorderable')).toBe(false);
+			expect(item.matches(':state(reorderable)')).toBe(false);
+		}
+	});
+
+	it('passes reorderable on as a state that shows the reorder handle', async () => {
+		el = await fixture(`
+			<nldd-list>
+				<nldd-list-item id="a"><span reorder-handle>handle</span></nldd-list-item>
+			</nldd-list>
+		`);
+		await waitForUpdate(el);
+		const item = el.querySelector('#a') as HTMLElement & { reorderable: boolean };
+		const handle = item.querySelector('[reorder-handle]') as HTMLElement;
+		expect(item.matches(':state(reorderable)')).toBe(false);
+		expect(getComputedStyle(handle).display).toBe('none');
+
+		el.setAttribute('reorderable', '');
+		await waitForUpdate(el);
+		await (item as unknown as { updateComplete: Promise<unknown> }).updateComplete;
+		expect(item.reorderable).toBe(true);
+		expect(item.hasAttribute('reorderable')).toBe(false);
+		expect(item.matches(':state(reorderable)')).toBe(true);
+		expect(getComputedStyle(handle).display).not.toBe('none');
+		expect(getComputedStyle(handle).cursor).toBe('grab');
 	});
 
 

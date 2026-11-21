@@ -179,8 +179,8 @@ export const MetWoordmerk = {
 export const MetTerugknop = {
 	render: Template,
 	args: {
-		backHref: '/',
 		backText: 'Aanvragen',
+		backHref: '/',
 		noGlobalMenu: true,
 	},
 };

@@ -26,7 +26,7 @@ export function radioButtonFieldTemplate(component: NLDDRadioButtonField): Templ
 					decorative
 					?checked=${component.checked}
 					?disabled=${component.disabled}
-					?focus-ring=${component._focusRing}
+					.focusRing=${component._focusRing}
 				></nldd-radio-button>
 			</div>
 			<span class="radio-button-field__label">

@@ -310,21 +310,36 @@ describe('nldd-slider', () => {
 		});
 
 		it('takes a dragged thumb past the other one, and on as that end until it is let go', async () => {
-			el = await fixture<NLDDSlider>('<nldd-slider range start-value="20" end-value="60"></nldd-slider>');
+			const unloadTokens = loadTokens();
+			el = await fixture<NLDDSlider>('<nldd-slider range min="0" max="100" start-value="20" end-value="60" style="width: 400px"></nldd-slider>');
+			await waitForUpdate(el);
 			const [start, end] = inputs(el);
+			const control = el.shadowRoot!.querySelector<HTMLElement>('.slider__control')!;
+			const rect = control.getBoundingClientRect();
+			const thumb = parseFloat(getComputedStyle(control).getPropertyValue('--_slider-thumb-size'));
+			const at = (value: number) => rect.left + thumb / 2 + (rect.width - thumb) * value / 100;
+			// The browser moves the dragged input and fires pointer moves, both.
+			const drag = (value: number) => {
+				window.dispatchEvent(new PointerEvent('pointermove', { clientX: at(value) }));
+				slide(start, value, false);
+			};
 			start.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true, button: 0 }));
 			start.focus();
-			slide(start, 70, false);
+			drag(70);
 			expect([el._start, el._end]).toEqual([60, 70]);
 			expect(el.shadowRoot!.activeElement).toBe(end);
-			slide(start, 80, false);
+			drag(80);
 			expect([el._start, el._end]).toEqual([60, 80]);
-			slide(start, 40, false);
+			// The dragged input now holds 60, so on 60 it fires nothing: the pointer stacks the thumbs.
+			window.dispatchEvent(new PointerEvent('pointermove', { clientX: at(60) }));
+			expect([el._start, el._end]).toEqual([60, 60]);
+			drag(40);
 			expect([el._start, el._end]).toEqual([40, 60]);
 			expect(el.shadowRoot!.activeElement).toBe(start);
 			window.dispatchEvent(new PointerEvent('pointerup'));
 			slide(start, 90);
 			expect([el._start, el._end]).toEqual([60, 60]);
+			unloadTokens();
 		});
 
 		it('moves focus to the other thumb without a focus ring while it is dragged', async () => {

@@ -13,13 +13,13 @@
  * @related nldd-badge, nldd-tag
  *
  * @attr {string} text - Token text. Content in the default slot wins.
- * @attr {'none' | 'dismiss' | 'menu'} control - Control type (default: 'none')
  * @attr {string} dismiss-text - Accessible label for the dismiss button. Unset, it names the token: `Verwijder "{text}"`, so a row of tokens does not read as a row of identical buttons.
+ * @attr {'none' | 'dismiss' | 'menu'} control - Control type (default: 'none')
  * @attr {string} menu-text - Accessible label for the menu button. Unset, it is `Toon opties voor "{text}"`.
- * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  * @attr {boolean} roving - Inside a roving-focus container (e.g. nldd-token-field): the host is the single tab stop, so the trailing control is not separately tabbable.
  * @attr {boolean} expanded - Reflects whether the token's menu or popover is open (control="menu"); managed by the token.
  * @attr {boolean} disabled - Disabled state. Avoid it where you can; the design guidelines say why.
+ * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  *
  * @slot - Token text. Wins over `text`.
  * @slot menu - An nldd-menu or nldd-popover that the token opens from its menu button (control="menu"). A menu holds actions or a choice of values; a popover holds what a menu cannot, such as a field to edit the value in. The button says which kind it opens.
@@ -53,17 +53,14 @@ export class NLDDToken extends LitElement {
 	@property({ type: String })
 	text = '';
 
-	@property({ reflect: true, converter: reflectNonDefault<TokenControl>('none') })
-	control: TokenControl = 'none';
-
 	@property({ type: String, attribute: 'dismiss-text' })
 	dismissText = '';
 
+	@property({ reflect: true, converter: reflectNonDefault<TokenControl>('none') })
+	control: TokenControl = 'none';
+
 	@property({ type: String, attribute: 'menu-text' })
 	menuText = '';
-
-	@property({ type: Object })
-	translations: Partial<NLDDTokenTranslations> = {};
 
 	/** Inside a roving-focus container (e.g. nldd-token-field): the host carries the
 	 *  single tab stop and manages focus itself, so the trailing control (dismiss or
@@ -77,6 +74,9 @@ export class NLDDToken extends LitElement {
 
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
+
+	@property({ type: Object })
+	translations: Partial<NLDDTokenTranslations> = {};
 
 	/** @internal What the menu button opens, for its aria-haspopup. */
 	@state()

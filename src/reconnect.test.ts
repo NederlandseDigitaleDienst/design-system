@@ -110,7 +110,7 @@ function deepContains(root: Element, node: Node): boolean {
 }
 
 const CASES: Record<string, string> = {
-	'nldd-form-field': '<nldd-form-field label="Naam"><input><nldd-validation-list><nldd-validation-item visible>Verplicht</nldd-validation-item></nldd-validation-list></nldd-form-field>',
+	'nldd-form-field': '<nldd-form-field label="Naam"><input><nldd-validation-list><nldd-validation-item hint>Verplicht</nldd-validation-item></nldd-validation-list></nldd-form-field>',
 	'nldd-banner': '<nldd-banner><span>Tekst</span></nldd-banner>',
 	'nldd-status-bar': '<nldd-status-bar><span>Tekst</span></nldd-status-bar>',
 	'nldd-menu (anchor)': '<div><button id="reconnect-anchor">Open</button><nldd-menu anchor="reconnect-anchor"><nldd-menu-item text="Een"></nldd-menu-item></nldd-menu></div>',

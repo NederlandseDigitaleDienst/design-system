@@ -126,7 +126,7 @@ export const radioButtonStyles = css`
 	}
 
 	:host(:focus-visible) .radio-button__outer-shape,
-	:host([focus-ring]) .radio-button__outer-shape {
+	:host(:state(focus-ring)) .radio-button__outer-shape {
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
 		box-shadow: var(--semantics-focus-ring-box-shadow);

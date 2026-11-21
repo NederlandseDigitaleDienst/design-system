@@ -53,21 +53,21 @@
  * @keywords schuifregelaar
  * @related nldd-number-field
  * @attr {'xs'|'sm'|'md'} size - Slider size: 'xs' | 'sm' | 'md' (default: 'md'), with the height of the other controls of that size. Set automatically by nldd-form-field.
- * @attr {boolean} range - Picks a range, with a thumb for each end: `start-value` and `end-value` in place of `value`
- * @attr {string} histogram - Counts drawn as bars above the track, one per bucket of (max - min) / n, comma- or space-separated; as a property, an array of numbers. The bars within the chosen value or range are colored.
  * @attr {string} start-icon - Icon at the start of the track, such as a quiet speaker for a volume. A click on it moves the value a tenth of the range down (not in a range).
  * @attr {string} end-icon - Icon at the end of the track. A click on it moves the value a tenth of the range up (not in a range).
  * @attr {string} accessible-label - Accessible name; a range adds "minimum" and "maximum" to it for its thumbs. Set automatically by nldd-form-field.
+ * @attr {string} histogram - Counts drawn as bars above the track, one per bucket of (max - min) / n, comma- or space-separated; as a property, an array of numbers. The bars within the chosen value or range are colored.
  * @attr {string} tooltip-timing - When the value shows above the thumb: 'instant' (the default: on hover, keyboard focus and while dragging) or 'never', for a slider whose value shows elsewhere, such as in fields above it
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
- * @attr {boolean} disabled - Disabled state
  * @attr {string} name - Name for form submission
  * @attr {number} value - The value (default: the middle between min and max)
  * @attr {number} start-value - The start of a range (default: min)
  * @attr {number} end-value - The end of a range (default: max)
+ * @attr {boolean} range - Picks a range, with a thumb for each end: `start-value` and `end-value` in place of `value`
  * @attr {number} min - Smallest value (default: 0)
  * @attr {number} max - Largest value (default: 100)
  * @attr {number} step - Step between values (default: 1)
+ * @attr {boolean} disabled - Disabled state
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  *
  * @prop {(value: number) => string} formatValue - Turns a value into the text of its tooltip and of what a screen reader hears
@@ -127,17 +127,6 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ reflect: true, converter: reflectNonDefault<Size>('md') })
 	size: Size = 'md';
 
-	@property({ type: Boolean, reflect: true })
-	range = false;
-
-	@property({
-		converter: {
-			fromAttribute: (value: string | null) => (value ?? '').split(/[\s,]+/).filter(Boolean).map(Number).filter((n) => Number.isFinite(n)),
-			toAttribute: (value: number[]) => value.join(','),
-		},
-	})
-	histogram: number[] = [];
-
 	@property({ type: String, attribute: 'start-icon' })
 	startIcon = '';
 
@@ -147,14 +136,19 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
+	@property({
+		converter: {
+			fromAttribute: (value: string | null) => (value ?? '').split(/[\s,]+/).filter(Boolean).map(Number).filter((n) => Number.isFinite(n)),
+			toAttribute: (value: number[]) => value.join(','),
+		},
+	})
+	histogram: number[] = [];
+
 	@property({ reflect: true, attribute: 'tooltip-timing', converter: reflectNonDefault<'instant' | 'never'>('instant') })
 	tooltipTiming: 'instant' | 'never' = 'instant';
 
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
-
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
 
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
@@ -168,6 +162,9 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Number, attribute: 'end-value' })
 	endValue: number | undefined = undefined;
 
+	@property({ type: Boolean, reflect: true })
+	range = false;
+
 	@property({ type: Number })
 	min = 0;
 
@@ -176,6 +173,9 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 
 	@property({ type: Number })
 	step = 1;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	@property({ type: Object })
 	translations: Partial<NLDDSliderTranslations> = {};
@@ -320,12 +320,22 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 		event.stopPropagation();
 		const input = event.target as HTMLInputElement;
 		const dragged = input === this._dragInput && this._dragThumb;
+		// Past the other thumb the dragged input holds the other end's value, so
+		// it fires nothing on that value: the pointer moves the thumb too.
+		if (dragged && this._trackThumb) {
+			const landed = this._set(this._trackThumb, parseFloat(input.value), undefined, true);
+			if (landed !== this._trackThumb && landed !== 'value') this._grab(landed);
+			this._emit('input');
+			return;
+		}
 		const moved = dragged || thumb;
 		const landed = this._set(moved, parseFloat(input.value), input, !!dragged || this._arrowKey);
 		if (landed !== moved && landed !== 'value') {
 			if (dragged) {
 				this._dragThumb = landed;
+				this._trackThumb = landed;
 				this._held = landed;
+				window.addEventListener('pointermove', this._handleTrackMove);
 			}
 			this._focusThumb(landed, !!dragged);
 		}
@@ -451,7 +461,8 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 
 	private _handlePointerUp = (): void => {
 		this._active = false;
-		const thumb = this._trackThumb;
+		// A native drag has its own change event.
+		const thumb = this._dragInput ? null : this._trackThumb;
 		this._stopPress();
 		if (thumb) this._emit('change');
 	};

@@ -45,18 +45,6 @@ export default {
 				defaultValue: { summary: 'md' },
 			},
 		},
-		name: {
-			control: 'text',
-			description: 'Naam voor formulierverwerking, doorgestuurd naar alle knoppen',
-		},
-		type: {
-			control: 'select',
-			options: ['button', 'checkbox', 'radio'],
-			description: 'Selectiemodus',
-			table: {
-				defaultValue: { summary: 'checkbox' },
-			},
-		},
 		accessibleLabel: {
 			name: 'accessible-label',
 			control: 'text',
@@ -71,6 +59,18 @@ export default {
 			control: 'boolean',
 			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
 			table: { defaultValue: { summary: false } },
+		},
+		name: {
+			control: 'text',
+			description: 'Naam voor formulierverwerking, doorgestuurd naar alle knoppen',
+		},
+		type: {
+			control: 'select',
+			options: ['button', 'checkbox', 'radio'],
+			description: 'Selectiemodus',
+			table: {
+				defaultValue: { summary: 'checkbox' },
+			},
 		},
 		required: {
 			control: 'boolean',
@@ -88,11 +88,11 @@ export default {
 	args: {
 		appearance: 'neutral-tinted',
 		size: 'md',
-		name: 'groep',
-		type: 'checkbox',
 		accessibleLabel: '',
 		accessibleLabeledBy: '',
 		invalid: false,
+		name: 'groep',
+		type: 'checkbox',
 		required: false,
 		disabled: false,
 	},
@@ -100,14 +100,14 @@ export default {
 
 const Template = (args: Record<string, any>) => html`
 	<nldd-toggle-button-group
-		type=${args.type}
-		name=${args.name}
 		appearance=${args.appearance}
 		size=${args.size}
+		accessible-label=${args.accessibleLabel || nothing}
 		?invalid=${args.invalid}
+		name=${args.name}
+		type=${args.type}
 		?required=${args.required}
 		?disabled=${args.disabled}
-		accessible-label=${args.accessibleLabel || nothing}
 	>
 		<nldd-toggle-button
 			value="mijn-zaken"

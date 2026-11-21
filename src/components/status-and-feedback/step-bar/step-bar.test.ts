@@ -40,7 +40,7 @@ describe('nldd-step-bar', () => {
 		expect(items().map(item => item.resolvedStatus)).toEqual(['past', 'past', 'current']);
 	});
 
-	it('maakt stap 1 de huidige als geen stap status="current" heeft', async () => {
+	it('maakt geen stap de huidige als geen stap status="current" heeft', async () => {
 		el = await fixture<NLDDStepBar>(`
 			<nldd-step-bar>
 				<nldd-step-bar-item text="Een"></nldd-step-bar-item>
@@ -48,7 +48,11 @@ describe('nldd-step-bar', () => {
 			</nldd-step-bar>
 		`);
 		await waitForUpdate(el);
-		expect(items().map(item => item.resolvedStatus)).toEqual(['current', 'future']);
+		expect(items().map(item => item.resolvedStatus)).toEqual(['future', 'future']);
+		expect(el.querySelector('[aria-current]')).toBeNull();
+		const text = el.shadowRoot!.querySelector('.step-bar__compact-text')!.textContent ?? '';
+		expect(text.trim()).toBe('2 stappen');
+		expect(el.shadowRoot!.querySelectorAll('.step-bar__compact-bar-segment[data-filled]')).toHaveLength(0);
 	});
 
 	it('laat de laatste stap met status="current" winnen', async () => {
@@ -71,7 +75,7 @@ describe('nldd-step-bar', () => {
 			</nldd-step-bar>
 		`);
 		await waitForUpdate(el);
-		expect(items().map(item => item.resolvedStatus)).toEqual(['current', 'future']);
+		expect(items().map(item => item.resolvedStatus)).toEqual(['future', 'future']);
 	});
 
 	it('laat een eigen status van een item winnen van de afleiding', async () => {
@@ -201,7 +205,7 @@ describe('nldd-step-bar', () => {
 	it('past een translations-override toe op de compacte tekst', async () => {
 		const el = await fixture<NLDDStepBar>(`
 			<nldd-step-bar>
-				<nldd-step-bar-item text="Een"></nldd-step-bar-item>
+				<nldd-step-bar-item text="Een" status="current"></nldd-step-bar-item>
 				<nldd-step-bar-item text="Twee"></nldd-step-bar-item>
 			</nldd-step-bar>
 		`);

@@ -31,17 +31,17 @@ export default {
 	args: {
 		variant: 'control',
 		size: 'md',
-		accept: '',
-		multiple: false,
-		directory: false,
 		accessibleLabel: 'Bijlage',
 		accessibleDescription: '',
 		accessibleDescribedBy: '',
 		valid: false,
 		invalid: false,
-		disabled: false,
 		name: '',
+		accept: '',
+		multiple: false,
+		directory: false,
 		required: false,
+		disabled: false,
 	},
 	argTypes: {
 		variant: {
@@ -55,20 +55,6 @@ export default {
 			options: ['md', 'sm'],
 			description: 'Veldmaat',
 			table: { defaultValue: { summary: 'md' } },
-		},
-		accept: {
-			control: 'text',
-			description: 'Toegestane bestandstypen, doorgegeven aan de input (bijv. ".pdf,image/*")',
-		},
-		multiple: {
-			control: 'boolean',
-			description: 'Meerdere bestanden kiezen',
-			table: { defaultValue: { summary: false } },
-		},
-		directory: {
-			control: 'boolean',
-			description: 'Ook een map kiezen: kiezen opent een menu met bestanden of een map',
-			table: { defaultValue: { summary: false } },
 		},
 		accessibleLabel: {
 			name: 'accessible-label',
@@ -95,18 +81,32 @@ export default {
 			description: 'Markeert het veld als ongeldig',
 			table: { defaultValue: { summary: false } },
 		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde staat',
-			table: { defaultValue: { summary: false } },
-		},
 		name: {
 			control: 'text',
 			description: 'Naam waaronder het bestand wordt ingediend',
 		},
+		accept: {
+			control: 'text',
+			description: 'Toegestane bestandstypen, doorgegeven aan de input (bijv. ".pdf,image/*")',
+		},
+		multiple: {
+			control: 'boolean',
+			description: 'Meerdere bestanden kiezen',
+			table: { defaultValue: { summary: false } },
+		},
+		directory: {
+			control: 'boolean',
+			description: 'Ook een map kiezen: kiezen opent een menu met bestanden of een map',
+			table: { defaultValue: { summary: false } },
+		},
 		required: {
 			control: 'boolean',
 			description: 'Verplicht; ongeldig zolang er geen bestand is gekozen',
+			table: { defaultValue: { summary: false } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde staat',
 			table: { defaultValue: { summary: false } },
 		},
 	},
@@ -116,30 +116,30 @@ export default {
 export const Standaard = ({
 	variant,
 	size,
-	accept,
-	multiple,
-	directory,
 	accessibleLabel,
 	accessibleDescription,
 	valid,
 	invalid,
-	disabled,
 	name,
+	accept,
+	multiple,
+	directory,
 	required,
+	disabled,
 }: Record<string, unknown>) => html`
 	<nldd-file-field
 		variant=${variant === 'control' ? nothing : variant}
 		size=${size || nothing}
-		accept=${accept || nothing}
-		?multiple=${multiple}
-		?directory=${directory}
 		accessible-label=${accessibleLabel || nothing}
 		accessible-description=${accessibleDescription || nothing}
 		?valid=${valid}
 		?invalid=${invalid}
-		?disabled=${disabled}
 		name=${name || nothing}
+		accept=${accept || nothing}
+		?multiple=${multiple}
+		?directory=${directory}
 		?required=${required}
+		?disabled=${disabled}
 	></nldd-file-field>
 `;
 

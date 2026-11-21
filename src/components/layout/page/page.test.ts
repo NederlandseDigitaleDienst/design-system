@@ -4,7 +4,6 @@ import { loadTokens } from '../../../test-tokens.js';
 import './page.js';
 import '../sheet/sheet.js';
 import '../split-views/side-by-side-split-view/side-by-side-split-view.js';
-import '../split-views/split-view-pane/split-view-pane.js';
 import '../split-views/bar-split-view/bar-split-view.js';
 
 describe('nldd-page', () => {
@@ -376,8 +375,8 @@ describe('nldd-page', () => {
 		it('is a region in a pane, so the second page does not claim the document', async () => {
 			el = await fixture(`
 				<nldd-side-by-side-split-view panes="2">
-					<nldd-split-view-pane slot="pane-1"><nldd-page id="een"></nldd-page></nldd-split-view-pane>
-					<nldd-split-view-pane slot="pane-2"><nldd-page id="twee"></nldd-page></nldd-split-view-pane>
+					<nldd-page slot="pane-1" id="een"></nldd-page>
+					<nldd-page slot="pane-2" id="twee"></nldd-page>
 				</nldd-side-by-side-split-view>
 			`);
 			for (const page of el.querySelectorAll('nldd-page')) await waitForUpdate(page as HTMLElement);
@@ -407,8 +406,8 @@ describe('nldd-page', () => {
 		it('lets landmarks="page" promote the pane that holds the primary content', async () => {
 			el = await fixture(`
 				<nldd-side-by-side-split-view panes="2">
-					<nldd-split-view-pane slot="pane-1"><nldd-page landmarks="page"></nldd-page></nldd-split-view-pane>
-					<nldd-split-view-pane slot="pane-2"><nldd-page></nldd-page></nldd-split-view-pane>
+					<nldd-page slot="pane-1" landmarks="page"></nldd-page>
+					<nldd-page slot="pane-2"></nldd-page>
 				</nldd-side-by-side-split-view>
 			`);
 			const [een, twee] = [...el.querySelectorAll('nldd-page')] as HTMLElement[];
@@ -457,8 +456,8 @@ describe('nldd-page', () => {
 		it('is no second main when the other pages are regions', async () => {
 			el = await fixture(`
 				<nldd-side-by-side-split-view panes="2">
-					<nldd-split-view-pane slot="pane-1"><nldd-page landmarks="page"></nldd-page></nldd-split-view-pane>
-					<nldd-split-view-pane slot="pane-2"><nldd-page></nldd-page></nldd-split-view-pane>
+					<nldd-page slot="pane-1" landmarks="page"></nldd-page>
+					<nldd-page slot="pane-2"></nldd-page>
 				</nldd-side-by-side-split-view>
 			`);
 			for (const page of el.querySelectorAll('nldd-page')) await waitForUpdate(page as HTMLElement);
@@ -556,6 +555,25 @@ describe('nldd-page – sticky bars and focus', () => {
 				</nldd-page>`);
 			await settle();
 			expect(scroller(wrapper).getAttribute('tabindex')).toBe('0');
+		});
+
+		it('puts the tab stop on the host when the host scrolls, without a sticky header', async () => {
+			wrapper = await fixture(`
+				<nldd-page style="display:block;height: 200px;">
+					<div style="height: 900px;">Tekst</div>
+				</nldd-page>`);
+			await settle();
+			expect(wrapper.getAttribute('tabindex')).toBe('0');
+			expect(scroller(wrapper).hasAttribute('tabindex')).toBe(false);
+			wrapper.querySelector('div')!.style.height = '10px';
+			await settle();
+			expect(wrapper.hasAttribute('tabindex')).toBe(false);
+		});
+
+		it('leaves a tabindex from the markup on the host alone', async () => {
+			wrapper = await fixture('<nldd-page tabindex="-1" style="display:block;height: 200px;"><div>Tekst</div></nldd-page>');
+			await settle();
+			expect(wrapper.getAttribute('tabindex')).toBe('-1');
 		});
 
 		it('takes none when it does not scroll', async () => {

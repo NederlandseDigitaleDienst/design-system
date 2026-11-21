@@ -28,30 +28,6 @@ export default {
 			control: 'text',
 			description: 'Label tekst',
 		},
-		value: {
-			control: 'text',
-			description: 'Waarde voor formulierverwerking',
-		},
-		checked: {
-			control: 'boolean',
-			description: 'Aangevinkte toestand',
-			table: { defaultValue: { summary: false } },
-		},
-		invalid: {
-			control: 'boolean',
-			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
-			table: { defaultValue: { summary: false } },
-		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde toestand',
-			table: { defaultValue: { summary: false } },
-		},
-		required: {
-			control: 'boolean',
-			description: 'Verplichte staat.',
-			table: { defaultValue: { summary: false } },
-		},
 
 		accessibleDescription: {
 			name: 'accessible-description',
@@ -63,30 +39,54 @@ export default {
 			control: false,
 			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
 		},
+		checked: {
+			control: 'boolean',
+			description: 'Aangevinkte toestand',
+			table: { defaultValue: { summary: false } },
+		},
+		invalid: {
+			control: 'boolean',
+			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
+			table: { defaultValue: { summary: false } },
+		},
+		value: {
+			control: 'text',
+			description: 'Waarde voor formulierverwerking',
+		},
+		required: {
+			control: 'boolean',
+			description: 'Verplichte staat.',
+			table: { defaultValue: { summary: false } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde toestand',
+			table: { defaultValue: { summary: false } },
+		},
 	},
 	args: {
 		color: '',
 		label: 'Radio button field',
-		value: 'option-1',
-		checked: false,
-		invalid: false,
-		disabled: false,
-		required: false,
 		accessibleDescription: '',
 		accessibleDescribedBy: '',
+		checked: false,
+		invalid: false,
+		value: 'option-1',
+		required: false,
+		disabled: false,
 	},
 };
 
-const Template = ({ color, label, value, checked, invalid, disabled, required, accessibleDescription }: Record<string, any>) => html`
+const Template = ({ color, label, accessibleDescription, checked, invalid, value, required, disabled }: Record<string, any>) => html`
 	<nldd-radio-button-field
 		color=${color || nothing}
 		label=${label}
+		accessible-description=${accessibleDescription || nothing}
 		?checked=${checked}
 		?invalid=${invalid}
+		value=${value}
 		?required=${required}
 		?disabled=${disabled}
-		value=${value}
-		accessible-description=${accessibleDescription || nothing}
 	></nldd-radio-button-field>
 `;
 

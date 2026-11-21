@@ -59,6 +59,16 @@ export default {
 			options: ['', ...ICONS],
 			description: 'Icoonnaam links van de tekst op de primaire actieknop',
 		},
+		popovertarget: {
+			control: false,
+			description: 'Id van een `nldd-menu` of `nldd-popover` elders op de pagina dat de chevron opent en naast zich neerzet. Een overlay in de `popup`-slot wint.',
+		},
+		loadingText: {
+			name: 'loading-text',
+			control: 'text',
+			description: 'Wat de schermlezer aankondigt tijdens loading, zoals "Aan het bewaren"',
+			table: { defaultValue: { summary: 'Laden' } },
+		},
 		shortcut: {
 			control: 'text',
 			description: 'Sneltoets achter de tekst van de hoofdactie, bijvoorbeeld `Ctrl+S`. Alleen weergave: de toets zelf koppel je in je app.',
@@ -78,9 +88,12 @@ export default {
 			control: 'text',
 			description: 'Sneltoets op Linux en ChromeOS, als die afwijkt van `shortcut`.',
 		},
-		popovertarget: {
-			control: false,
-			description: 'Id van een `nldd-menu` of `nldd-popover` elders op de pagina dat de chevron opent en naast zich neerzet. Een overlay in de `popup`-slot wint.',
+		loading: {
+			control: 'boolean',
+			description: 'Laadtoestand van de hoofdactie; de chevron blijft bruikbaar',
+			table: {
+				defaultValue: { summary: false },
+			},
 		},
 		type: {
 			control: 'select',
@@ -100,19 +113,6 @@ export default {
 			mapping: { '(geen)': null, download: '', 'download="aanvraag-A-1042.pdf"': 'aanvraag-A-1042.pdf' },
 			description: 'Slaat het bestand op in plaats van het te openen (alleen met href); een waarde wordt de bestandsnaam',
 		},
-		loading: {
-			control: 'boolean',
-			description: 'Laadtoestand van de hoofdactie; de chevron blijft bruikbaar',
-			table: {
-				defaultValue: { summary: false },
-			},
-		},
-		loadingText: {
-			name: 'loading-text',
-			control: 'text',
-			description: 'Wat de schermlezer aankondigt tijdens loading, zoals "Aan het bewaren"',
-			table: { defaultValue: { summary: 'Laden' } },
-		},
 		disabled: {
 			control: 'boolean',
 			description: 'Disabled state',
@@ -127,16 +127,16 @@ export default {
 		width: '',
 		text: 'Bewaar',
 		icon: '',
+		popovertarget: '',
+		loadingText: '',
 		shortcut: '',
 		shortcutMac: '',
 		shortcutWindows: '',
 		shortcutLinux: '',
-		popovertarget: '',
+		loading: false,
 		type: 'button',
 		href: '',
 		download: '(geen)',
-		loading: false,
-		loadingText: '',
 		disabled: false,
 	},
 };
@@ -160,22 +160,22 @@ const menu = html`
 	</nldd-menu>
 `;
 
-const Template = ({ appearance, size, width, text, icon, shortcut, shortcutMac, shortcutWindows, shortcutLinux, type, href, download, loading, loadingText, disabled }: Record<string, any>) => html`
+const Template = ({ appearance, size, width, text, icon, loadingText, shortcut, shortcutMac, shortcutWindows, shortcutLinux, loading, type, href, download, disabled }: Record<string, any>) => html`
 	<nldd-split-button
 		appearance=${appearance}
 		size=${size}
 		width=${width || nothing}
 		text=${text}
 		icon=${icon || nothing}
+		loading-text=${loadingText || nothing}
 		shortcut=${shortcut || nothing}
 		shortcut-mac=${shortcutMac || nothing}
 		shortcut-windows=${shortcutWindows || nothing}
 		shortcut-linux=${shortcutLinux || nothing}
+		?loading=${loading}
 		type=${type}
 		href=${href || nothing}
 		download=${download ?? nothing}
-		?loading=${loading}
-		loading-text=${loadingText || nothing}
 		?disabled=${disabled}
 		@action-click=${action('action-click')}
 	>${menu}</nldd-split-button>

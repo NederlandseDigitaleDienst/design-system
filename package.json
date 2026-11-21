@@ -283,10 +283,6 @@
       "types": "./dist/components/layout/split-views/split-view-divider/split-view-divider.d.ts",
       "default": "./dist/components/layout/split-views/split-view-divider/split-view-divider.js"
     },
-    "./split-view-pane": {
-      "types": "./dist/components/layout/split-views/split-view-pane/split-view-pane.d.ts",
-      "default": "./dist/components/layout/split-views/split-view-pane/split-view-pane.js"
-    },
     "./page": {
       "types": "./dist/components/layout/page/page.d.ts",
       "default": "./dist/components/layout/page/page.js"
@@ -618,6 +614,7 @@
     "check:server-import": "node scripts/check-server-import.js",
     "validate:host-styles": "node scripts/validate-host-styles.js",
     "validate:component-api": "node scripts/validate-component-api.js",
+    "validate:control-order": "node scripts/check-control-order.js",
     "validate:skill-markup": "node scripts/validate-skill-markup.js",
     "validate:changelog": "node scripts/validate-changelog.js",
     "lint:stories": "node scripts/lint-stories.js",

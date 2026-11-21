@@ -3,7 +3,6 @@ import { page } from 'vitest/browser';
 import { fixture, cleanup, waitForUpdate } from '../../../../test-utils.js';
 import type { NLDDNavigationSplitView } from './navigation-split-view.js';
 import './navigation-split-view.js';
-import '../split-view-pane/split-view-pane.js';
 
 async function setWidth(el: NLDDNavigationSplitView, width: number) {
 	vi.spyOn(el, 'getBoundingClientRect').mockReturnValue({ width } as DOMRect);
@@ -15,10 +14,10 @@ async function setWidth(el: NLDDNavigationSplitView, width: number) {
 async function fixtureAllPanes(width = 1280) {
 	const el = await fixture<NLDDNavigationSplitView>(`
 		<nldd-navigation-split-view>
-			<nldd-split-view-pane slot="primary-sidebar"></nldd-split-view-pane>
-			<nldd-split-view-pane slot="secondary-sidebar"></nldd-split-view-pane>
-			<nldd-split-view-pane slot="main" has-content></nldd-split-view-pane>
-			<nldd-split-view-pane slot="inspector"></nldd-split-view-pane>
+			<div slot="primary-sidebar"></div>
+			<div slot="secondary-sidebar" empty></div>
+			<div slot="main"></div>
+			<div slot="inspector"></div>
 		</nldd-navigation-split-view>
 	`);
 	await setWidth(el, width);
@@ -90,7 +89,7 @@ describe('nldd-navigation-split-view – inspector sheet', () => {
 	it('does not set inspector-auto-hidden when no inspector slotted', async () => {
 		el = await fixture<NLDDNavigationSplitView>(`
 			<nldd-navigation-split-view>
-				<nldd-split-view-pane slot="main" has-content></nldd-split-view-pane>
+				<div slot="main"></div>
 			</nldd-navigation-split-view>
 		`);
 		await setWidth(el, 1280);
@@ -129,8 +128,8 @@ describe('nldd-navigation-split-view – single column', () => {
 	it('renders no seam divider when only one pane is visible (full-stack)', async () => {
 		el = await fixture<NLDDNavigationSplitView>(`
 			<nldd-navigation-split-view>
-				<nldd-split-view-pane slot="primary-sidebar" has-content></nldd-split-view-pane>
-				<nldd-split-view-pane slot="main"></nldd-split-view-pane>
+				<div slot="primary-sidebar"></div>
+				<div slot="main" empty></div>
 			</nldd-navigation-split-view>
 		`);
 		await setWidth(el, 320);
@@ -141,8 +140,8 @@ describe('nldd-navigation-split-view – single column', () => {
 	it('renders a seam divider between two visible panes', async () => {
 		el = await fixture<NLDDNavigationSplitView>(`
 			<nldd-navigation-split-view>
-				<nldd-split-view-pane slot="primary-sidebar" has-content></nldd-split-view-pane>
-				<nldd-split-view-pane slot="main" has-content></nldd-split-view-pane>
+				<div slot="primary-sidebar"></div>
+				<div slot="main"></div>
 			</nldd-navigation-split-view>
 		`);
 		await setWidth(el, 1280);
@@ -178,10 +177,8 @@ describe('nldd-navigation-split-view – sheet height at sm', () => {
 		await page.viewport(390, 800);
 		const el = await fixture<NLDDNavigationSplitView>(`
 			<nldd-navigation-split-view ${attr} ${INSET}>
-				<nldd-split-view-pane slot="${slot}" has-content>
-					<div style="height: 200px"></div>
-				</nldd-split-view-pane>
-				<nldd-split-view-pane slot="main" has-content></nldd-split-view-pane>
+				<div slot="${slot}" style="height: 200px"></div>
+				<div slot="main"></div>
 			</nldd-navigation-split-view>
 		`);
 		await waitForUpdate(el);
@@ -206,15 +203,62 @@ describe('nldd-navigation-split-view – sheet height at sm', () => {
 		await page.viewport(390, 800);
 		el = await fixture<NLDDNavigationSplitView>(`
 			<nldd-navigation-split-view primary-sidebar-as-sheet ${INSET}>
-				<nldd-split-view-pane slot="primary-sidebar" has-content>
-					<div style="height: 4000px"></div>
-				</nldd-split-view-pane>
-				<nldd-split-view-pane slot="main" has-content></nldd-split-view-pane>
+				<div slot="primary-sidebar" style="height: 4000px"></div>
+				<div slot="main"></div>
 			</nldd-navigation-split-view>
 		`);
 		await waitForUpdate(el);
 		await el.showPrimarySidebarSheet();
 		const sheet = el.shadowRoot!.querySelector('.navigation-split-view__primary-sidebar-sheet')!;
 		expect(sheet.getBoundingClientRect().height).toBeLessThan(800);
+	});
+});
+
+describe('nldd-navigation-split-view – panes slotted straight in', () => {
+	let el: NLDDNavigationSplitView;
+
+	afterEach(() => { cleanup(el); vi.restoreAllMocks(); });
+
+	const backDisplay = (slot: string) =>
+		getComputedStyle(el.querySelector(`[slot="${slot}"]`)!).getPropertyValue('--context-back-button-display').trim();
+
+	it('stacked, shows main unless it says nothing is chosen with empty', async () => {
+		el = await fixture<NLDDNavigationSplitView>(`
+			<nldd-navigation-split-view>
+				<div slot="primary-sidebar"></div>
+				<div slot="main"></div>
+			</nldd-navigation-split-view>
+		`);
+		await setWidth(el, 320);
+		expect(el._showMain).toBe(true);
+		expect(el._showPrimarySidebar).toBe(false);
+
+		el.querySelector('[slot="main"]')!.setAttribute('empty', '');
+		await setWidth(el, 320);
+		expect(el._showMain).toBe(false);
+		expect(el._showPrimarySidebar).toBe(true);
+	});
+
+	it('hides the back buttons of main and the secondary sidebar while the pane before them is in view', async () => {
+		el = await fixture<NLDDNavigationSplitView>(`
+			<nldd-navigation-split-view>
+				<div slot="primary-sidebar"></div>
+				<div slot="secondary-sidebar"></div>
+				<div slot="main"></div>
+			</nldd-navigation-split-view>
+		`);
+		await setWidth(el, 1600);
+		expect(backDisplay('secondary-sidebar')).toBe('none');
+		expect(backDisplay('main')).toBe('none');
+
+		await setWidth(el, 320);
+		expect(backDisplay('main')).not.toBe('none');
+	});
+
+	it('gives what is slotted in a layout container, as the pane did', async () => {
+		el = await fixtureAllPanes();
+		const main = el.querySelector('[slot="main"]')!;
+		expect(getComputedStyle(main).containerName).toBe('layout-container');
+		expect(getComputedStyle(main).containerType).toBe('inline-size');
 	});
 });

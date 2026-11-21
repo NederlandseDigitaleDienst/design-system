@@ -41,17 +41,17 @@ describe('patroon: applicatie', () => {
 		expect(shell.tagName).toBe('NLDD-SHELL');
 		const bar = shell.firstElementChild!;
 		expect(bar.tagName).toBe('NLDD-BAR-SPLIT-VIEW');
-		// De balk van het scherm staat buiten de panelen, in een eigen pane per
-		// breekpunt: op md met een zoekknop, vanaf lg met een zoekveld, en op sm
-		// een balk die ná de inhoud staat en dus onderaan komt.
-		const panesInBar = [...bar.querySelectorAll(':scope > nldd-split-view-pane')];
+		// De balk van het scherm staat buiten de panelen, in een eigen container
+		// per breekpunt: op md met een zoekknop, vanaf lg met een zoekveld, en op
+		// sm een balk die ná de inhoud staat en dus onderaan komt.
+		const panesInBar = [...bar.children];
 		expect(panesInBar.map((pane) => pane.getAttribute('slot'))).toEqual(['toolbar-md', 'toolbar-lg', 'main', 'toolbar-sm']);
 		const [mdBar, lgBar, , phoneBar] = panesInBar;
 		expect(mdBar.getAttribute('only')).toBe('md');
 		expect(lgBar.getAttribute('above')).toBe('lg');
 		expect(phoneBar.getAttribute('only')).toBe('sm');
 		for (const strip of [mdBar, lgBar]) {
-			expect(strip.querySelector('nldd-container[padding]')).not.toBeNull();
+			expect(strip.matches('nldd-container[padding]')).toBe(true);
 			expect(strip.querySelector('nldd-toolbar')).not.toBeNull();
 			expect(strip.querySelector('nldd-tab-bar')).not.toBeNull();
 		}
@@ -70,17 +70,17 @@ describe('patroon: applicatie', () => {
 		const account = lgBar.querySelector('[icon="account"]')!;
 		expect(account.hasAttribute('expandable')).toBe(true);
 		expect(account.querySelector('nldd-menu[slot="popup"]')).not.toBeNull();
-		const nav = bar.querySelector('nldd-split-view-pane[slot="main"] > nldd-navigation-split-view')!;
+		const nav = bar.querySelector(':scope > nldd-navigation-split-view[slot="main"]')!;
 		expect(nav).not.toBeNull();
-		const panes = [...nav.querySelectorAll(':scope > nldd-split-view-pane')];
+		const panes = [...nav.children];
 		expect(panes.map((pane) => pane.getAttribute('slot'))).toEqual(['primary-sidebar', 'main']);
-		expect(panes.every((pane) => pane.querySelector(':scope > nldd-page') !== null)).toBe(true);
+		expect(panes.every((pane) => pane.localName === 'nldd-page')).toBe(true);
 	});
 
 	it('houdt één main over, bij het paneel met de hoofdinhoud', () => {
 		const mains = [...root.querySelectorAll('nldd-page')].filter((page) => page.shadowRoot!.querySelector('main.page__main'));
 		expect(mains.length).toBe(1);
-		expect(mains[0].closest('nldd-split-view-pane')!.getAttribute('slot')).toBe('main');
+		expect(mains[0].getAttribute('slot')).toBe('main');
 	});
 
 	it('laat elke werkbalkknop terugvallen op het overflow-menu', () => {
@@ -104,7 +104,7 @@ describe('patroon: applicatie', () => {
 	});
 
 	it('wijst elke rij naar wat die opent', () => {
-		const rows = [...root.querySelectorAll('nldd-navigation-split-view > nldd-split-view-pane[slot="main"] nldd-list-item')];
+		const rows = [...root.querySelectorAll('nldd-navigation-split-view > [slot="main"] nldd-list-item')];
 		expect(rows.length).toBeGreaterThan(1);
 		expect(rows.every((row) => row.querySelector('nldd-icon-cell[icon="chevron-right"]') !== null)).toBe(true);
 	});
@@ -115,7 +115,7 @@ describe('patroon: applicatie', () => {
 	});
 
 	it('geeft de lijst een eigen werkbalk, binnen het paneel', () => {
-		const pane = root.querySelector('nldd-navigation-split-view > nldd-split-view-pane[slot="main"]')!;
+		const pane = root.querySelector('nldd-navigation-split-view > [slot="main"]')!;
 		const toolbar = pane.querySelector('nldd-toolbar')!;
 		expect(toolbar).not.toBeNull();
 		expect(toolbar.querySelector('nldd-button[text="Nieuw dossier"]')).not.toBeNull();

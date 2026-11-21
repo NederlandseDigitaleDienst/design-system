@@ -50,6 +50,7 @@ export const tooltipStyles = css`
 	.tooltip {
 		pointer-events: var(--context-tooltip-pointer-events);
 		position: fixed;
+		white-space: normal;
 		opacity: 0;
 		margin: 0;
 		border: none;

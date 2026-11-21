@@ -93,6 +93,8 @@ export const sideBySideSplitViewStyles = css`
 		flex-grow: 1;
 		flex-shrink: 1;
 		flex-basis: 0;
+		container-type: inline-size;
+		container-name: layout-container;
 	}
 
 	/* Column item inside the pane: keep its content height so a tall page spans

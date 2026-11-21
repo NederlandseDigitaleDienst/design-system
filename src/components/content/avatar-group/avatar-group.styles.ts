@@ -31,6 +31,7 @@ export const avatarGroupStyles = css`
 		--_avatar-group-overflow-icon-scale: 0.5;
 
 		display: inline-flex;
+		isolation: isolate;
 		width: var(--_avatar-group-width);
 		min-width: min(var(--_avatar-group-width), var(--_avatar-group-min-width));
 		max-width: 100%;

@@ -24,35 +24,27 @@ export default {
 		},
 	},
 	args: {
-		name: 'Bart van de Biezen',
-		initials: '',
-		type: 'person',
-		size: '40',
 		color: 'neutral',
+		size: '40',
 		iconAligned: false,
-		src: '',
 		icon: '',
-		tooltipTiming: 'delay',
-		decorative: false,
-		href: '',
+		initials: '',
+		src: '',
 		button: false,
-		target: '',
 		accessibleLabel: '',
+		decorative: false,
+		tooltipTiming: 'delay',
+		name: 'Bart van de Biezen',
+		type: 'person',
+		href: '',
+		target: '',
 	},
 	argTypes: {
-		name: {
-			control: 'text',
-			description: 'Naam; levert de afgeleide initialen en het toegankelijke label',
-		},
-		initials: {
-			control: 'text',
-			description: 'Expliciete initialen (overschrijft de afleiding uit name)',
-		},
-		type: {
+		color: {
 			control: 'select',
-			options: ['person', 'organization'],
-			description: 'Bepaalt vorm en terugval-icoon',
-			table: { defaultValue: { summary: 'person' } },
+			options: ['neutral', 'content'],
+			description: 'neutral (neutrale vulling) of content (vulling in de tekstkleur van de context, contrasttekst)',
+			table: { defaultValue: { summary: 'neutral' } },
 		},
 		size: {
 			control: 'select',
@@ -60,26 +52,39 @@ export default {
 			description: 'full schaalt mee met de container, of een vaste maat in px (spacer-uitgelijnd)',
 			table: { defaultValue: { summary: 'full' } },
 		},
-		color: {
-			control: 'select',
-			options: ['neutral', 'content'],
-			description: 'neutral (neutrale vulling) of content (vulling in de tekstkleur van de context, contrasttekst)',
-			table: { defaultValue: { summary: 'neutral' } },
-		},
 		iconAligned: {
 			name: 'icon-aligned',
 			control: 'boolean',
 			description: 'Krimpt de schijf naar 5/6 zodat de avatar optisch met een icoon uitlijnt',
 			table: { defaultValue: { summary: 'false' } },
 		},
-		src: {
-			control: 'text',
-			description: 'Afbeeldingsbron; valt bij een laadfout terug op initialen/icoon',
-		},
 		icon: {
 			control: 'select',
 			options: ICONS,
 			description: 'Overschrijft het type-afhankelijke terugval-icoon',
+		},
+		initials: {
+			control: 'text',
+			description: 'Expliciete initialen (overschrijft de afleiding uit name)',
+		},
+		src: {
+			control: 'text',
+			description: 'Afbeeldingsbron; valt bij een laadfout terug op initialen/icoon',
+		},
+		button: {
+			control: 'boolean',
+			description: 'Maakt de avatar een knop; genegeerd zodra href is gezet',
+			table: { defaultValue: { summary: 'false' } },
+		},
+		accessibleLabel: {
+			name: 'accessible-label',
+			control: 'text',
+			description: 'Naam van de link of knop; zonder deze wordt name gebruikt',
+		},
+		decorative: {
+			control: 'boolean',
+			description: 'Verbergt de avatar voor hulpsoftware',
+			table: { defaultValue: { summary: 'false' } },
 		},
 		tooltipTiming: {
 			name: 'tooltip-timing',
@@ -90,19 +95,19 @@ export default {
 				defaultValue: { summary: 'delay' },
 			},
 		},
-		decorative: {
-			control: 'boolean',
-			description: 'Verbergt de avatar voor hulpsoftware',
-			table: { defaultValue: { summary: 'false' } },
+		name: {
+			control: 'text',
+			description: 'Naam; levert de afgeleide initialen en het toegankelijke label',
+		},
+		type: {
+			control: 'select',
+			options: ['person', 'organization'],
+			description: 'Bepaalt vorm en terugval-icoon',
+			table: { defaultValue: { summary: 'person' } },
 		},
 		href: {
 			control: 'text',
 			description: 'Maakt de avatar een link naar deze URL; de vorm zelf wordt de link, dus het klikgebied en de focusring volgen hem',
-		},
-		button: {
-			control: 'boolean',
-			description: 'Maakt de avatar een knop; genegeerd zodra href is gezet',
-			table: { defaultValue: { summary: 'false' } },
 		},
 		target: {
 			control: 'select',
@@ -111,30 +116,25 @@ export default {
 			description: 'Link target (alleen gebruikt als href is gezet)',
 			table: { defaultValue: { summary: '(geen)' } },
 		},
-		accessibleLabel: {
-			name: 'accessible-label',
-			control: 'text',
-			description: 'Naam van de link of knop; zonder deze wordt name gebruikt',
-		},
 	},
 };
 
 const Template = (args: Record<string, any>) => html`
 	<nldd-avatar
-		name=${args.name || nothing}
-		initials=${args.initials || nothing}
-		type=${args.type || nothing}
-		size=${args.size || nothing}
 		color=${args.color || nothing}
+		size=${args.size || nothing}
 		?icon-aligned=${args.iconAligned}
-		src=${args.src || nothing}
 		icon=${args.icon || nothing}
-		tooltip-timing=${args.tooltipTiming || nothing}
-		?decorative=${args.decorative}
-		href=${args.href || nothing}
+		initials=${args.initials || nothing}
+		src=${args.src || nothing}
 		?button=${args.button}
-		target=${args.target || nothing}
 		accessible-label=${args.accessibleLabel || nothing}
+		?decorative=${args.decorative}
+		tooltip-timing=${args.tooltipTiming || nothing}
+		name=${args.name || nothing}
+		type=${args.type || nothing}
+		href=${args.href || nothing}
+		target=${args.target || nothing}
 	></nldd-avatar>
 `;
 

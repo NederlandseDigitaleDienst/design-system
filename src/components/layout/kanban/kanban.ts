@@ -42,8 +42,8 @@
  *
  * @element nldd-kanban
  * @keywords board, bord
- * @attr {string} accessible-label - Accessible name of the board (default: "Bord")
  * @attr {string} height - Fixed height as a CSS length (e.g. '480px'): every column takes it, and scrolls its items once they do not fit. To fill a page or a pane, set the height in your layout instead (flex, or `height: 100%`)
+ * @attr {string} accessible-label - Accessible name of the board (default: "Bord")
  * @attr {boolean} readonly - Items cannot be dragged or moved with the keyboard; they still work, and `moveItem()` still moves
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  *
@@ -135,11 +135,11 @@ const scrollObserver = sharedResizeObserver<NLDDKanban>((boards) => {
 export class NLDDKanban extends withTranslations(LitElement, nlddKanbanTranslations) {
 	static override styles = kanbanStyles;
 
-	@property({ type: String, attribute: 'accessible-label' })
-	accessibleLabel = '';
-
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	height = '';
+
+	@property({ type: String, attribute: 'accessible-label' })
+	accessibleLabel = '';
 
 	@property({ type: Boolean, reflect: true })
 	readonly = false;

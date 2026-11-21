@@ -8,12 +8,12 @@
  * @element nldd-document-tab-bar
  * @keywords tabbladen
  * @related nldd-tab-bar
+ * @attr {boolean} navigation - Renders a nav landmark instead of tablist; use when items have hrefs
  * @attr {string} accessible-label - Accessible name for the navigation landmark
  * @attr {object} translations - Translation overrides; unset keys fall back to Dutch. Available keys: 'components.document-tab-bar.show-more-tabs-action' (default: 'Toon meer tabbladen')
  *
  * @migration The `overflow-button-label` attribute has been removed.
  *            Use `translations` property instead: `.translations=${{ 'components.document-tab-bar.show-more-tabs-action': 'Tabs' }}`
- * @attr {boolean} navigation - Renders a nav landmark instead of tablist; use when items have hrefs
  *
  * The tabs can always be put in another order: drag one, or move the focused
  * tab with Shift+Arrow left or right. The bar moves the element itself and
@@ -40,11 +40,11 @@
  * ---
  *
  * @element nldd-document-tab-bar-item
- * @attr {boolean} selected - Selected state (managed by nldd-document-tab-bar)
  * @attr {string} text - Primary text
- * @attr {string} supporting-text - Supporting text
  * @attr {string} short-text - Short primary text (visible below 200px width)
+ * @attr {string} supporting-text - Supporting text
  * @attr {string} short-supporting-text - Short supporting text (visible below 200px width)
+ * @attr {boolean} selected - Selected state (managed by nldd-document-tab-bar)
  * @attr {string} href - Optional link URL; renders an anchor instead of a div
  *
  * @fires select - Fired when the item is activated; detail: { item }
@@ -103,20 +103,20 @@ export class NLDDDocumentTabBarItem extends LitElement {
 	private static _idCounter = 0;
 	readonly _id = `nldd-document-tab-bar-item-${NLDDDocumentTabBarItem._idCounter++}`;
 
-	@property({ type: Boolean, reflect: true })
-	selected = false;
-
 	@property({ reflect: true, attribute: 'text', converter: reflectNonDefault<string>('') })
 	text = '';
-
-	@property({ reflect: true, attribute: 'supporting-text', converter: reflectNonDefault<string>('') })
-	supportingText = '';
 
 	@property({ reflect: true, attribute: 'short-text', converter: reflectNonDefault<string>('') })
 	shortText = '';
 
+	@property({ reflect: true, attribute: 'supporting-text', converter: reflectNonDefault<string>('') })
+	supportingText = '';
+
 	@property({ reflect: true, attribute: 'short-supporting-text', converter: reflectNonDefault<string>('') })
 	shortSupportingText = '';
+
+	@property({ type: Boolean, reflect: true })
+	selected = false;
 
 	@property({ type: String })
 	href = '';
@@ -232,11 +232,11 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 	private static _idCounter = 0;
 	readonly _id = `nldd-document-tab-bar-${NLDDDocumentTabBar._idCounter++}`;
 
-	@property({ type: String, attribute: 'accessible-label' })
-	accessibleLabel = '';
-
 	@property({ type: Boolean, reflect: true })
 	navigation = false;
+
+	@property({ type: String, attribute: 'accessible-label' })
+	accessibleLabel = '';
 
 	@state()
 	_overflowCount = 0;

@@ -1,10 +1,7 @@
-import { currentContext, describeEvent } from '../runtime.js';
-
 /**
- * Stands in for `action` from `storybook/actions`: returns a handler that
- * reports the event on the example it was created for.
+ * Stands in for `action` from `storybook/actions`. The site shows no event log,
+ * so the handler does nothing; the stories keep their listeners as examples.
  */
-export function action(name: string): (...args: unknown[]) => void {
-	const context = currentContext();
-	return (...args) => context?.log(name, describeEvent(args[0]));
+export function action(_name: string): (...args: unknown[]) => void {
+	return () => {};
 }

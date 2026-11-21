@@ -35,9 +35,9 @@ export default {
 		},
 	},
 	args: {
-		size: 'md',
 		color: 'critical',
 		customColor: '',
+		size: 'md',
 		pulse: false,
 		text: '',
 		number: '3',
@@ -47,14 +47,6 @@ export default {
 		decorative: false,
 	},
 	argTypes: {
-		size: {
-			control: 'select',
-			options: ['sm', 'md'],
-			description: 'Grootte',
-			table: {
-				defaultValue: { summary: 'md' },
-			},
-		},
 		color: {
 			control: 'select',
 			options: COLORS,
@@ -67,6 +59,14 @@ export default {
 			name: 'custom-color',
 			control: 'text',
 			description: 'Een eigen kleur, als CSS-waarde. Wint van `color`.',
+		},
+		size: {
+			control: 'select',
+			options: ['sm', 'md'],
+			description: 'Grootte',
+			table: {
+				defaultValue: { summary: 'md' },
+			},
 		},
 		pulse: {
 			control: 'boolean',
@@ -117,13 +117,13 @@ export default {
 	},
 };
 
-const Template = ({ size, color, customColor, pulse, text, number, max, icon, accessibleLabel, decorative }: Record<string, any>) => {
+const Template = ({ color, customColor, size, pulse, text, number, max, icon, accessibleLabel, decorative }: Record<string, any>) => {
 	const parsed = number === '' || number === null || number === undefined ? undefined : Number(number);
 	return html`
 		<nldd-badge
-			size=${size}
 			color=${color}
 			custom-color=${customColor || nothing}
+			size=${size}
 			?pulse=${pulse}
 			text=${text || nothing}
 			number=${Number.isFinite(parsed) ? parsed! : nothing}

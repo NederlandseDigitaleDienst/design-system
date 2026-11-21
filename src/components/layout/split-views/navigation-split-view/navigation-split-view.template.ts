@@ -1,5 +1,6 @@
 /* eslint-disable lit-a11y/click-events-have-key-events -- native dialog handles keyboard via @cancel */
 import { html, TemplateResult, nothing } from 'lit';
+import { classMap } from 'lit/directives/class-map.js';
 import type { NLDDNavigationSplitView } from './navigation-split-view.js';
 import '../split-view-divider/split-view-divider.js';
 
@@ -24,13 +25,13 @@ export function navigationSplitViewTemplate(component: NLDDNavigationSplitView):
 			` : nothing}
 			${dividerAfterPrimary ? html`<nldd-split-view-divider orientation="vertical"></nldd-split-view-divider>` : nothing}
 			${showSecondary ? html`
-				<div class="navigation-split-view__secondary-sidebar-pane">
+				<div class=${classMap({ 'navigation-split-view__secondary-sidebar-pane': true, 'navigation-split-view__pane--no-back': component._hidesBack('secondary-sidebar') })}>
 					<slot name="secondary-sidebar"></slot>
 				</div>
 			` : nothing}
 			${dividerAfterSecondary ? html`<nldd-split-view-divider orientation="vertical"></nldd-split-view-divider>` : nothing}
 			${showMain ? html`
-				<div class="navigation-split-view__main-pane">
+				<div class=${classMap({ 'navigation-split-view__main-pane': true, 'navigation-split-view__pane--no-back': component._hidesBack('main') })}>
 					<slot name="main"></slot>
 				</div>
 			` : nothing}

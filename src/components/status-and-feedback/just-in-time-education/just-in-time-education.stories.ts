@@ -18,15 +18,21 @@ export default {
 		},
 	},
 	args: {
+		placement: 'auto',
 		text: 'Zoek een aanvraag om te openen',
 		supportingText: 'Markeer een aanvraag als favoriet om die later snel terug te vinden.',
-		placement: 'auto',
-		arrowLength: '',
 		noArrow: false,
+		arrowLength: '',
 		dismissable: false,
 		active: true,
 	},
 	argTypes: {
+		placement: {
+			control: 'select',
+			options: ['auto', 'top', 'bottom', 'left', 'right'],
+			description: 'Kant van de callout ten opzichte van het control',
+			table: { defaultValue: { summary: 'auto' } },
+		},
 		text: {
 			control: 'text',
 			description: 'Titel van de callout',
@@ -36,23 +42,17 @@ export default {
 			control: 'text',
 			description: 'Ondersteunende tekst onder de titel',
 		},
-		placement: {
-			control: 'select',
-			options: ['auto', 'top', 'bottom', 'left', 'right'],
-			description: 'Kant van de callout ten opzichte van het control',
-			table: { defaultValue: { summary: 'auto' } },
+		noArrow: {
+			name: 'no-arrow',
+			control: 'boolean',
+			description: 'Verberg de pijl; de card staat dan dicht tegen het control',
+			table: { defaultValue: { summary: false } },
 		},
 		arrowLength: {
 			name: 'arrow-length',
 			control: 'text',
 			description: 'Pijllengte / afstand tussen card en control, als CSS-lengte (bijv. 333px, 30vh); leeg = DS-standaard. Onder 40px wordt geklemd.',
 			table: { defaultValue: { summary: '64px' } },
-		},
-		noArrow: {
-			name: 'no-arrow',
-			control: 'boolean',
-			description: 'Verberg de pijl; de card staat dan dicht tegen het control',
-			table: { defaultValue: { summary: false } },
 		},
 		dismissable: {
 			control: 'boolean',
@@ -68,29 +68,29 @@ export default {
 };
 
 const Template = ({
+	placement,
 	text,
 	supportingText,
-	placement,
-	arrowLength,
 	noArrow,
+	arrowLength,
 	dismissable,
 	active,
 }: {
+	placement: string;
 	text: string;
 	supportingText: string;
-	placement: string;
-	arrowLength: string;
 	noArrow: boolean;
+	arrowLength: string;
 	dismissable: boolean;
 	active: boolean;
 }) => html`
 	<div style="display: flex; justify-content: center; padding-block: 48px; background: var(--semantics-surfaces-tinted-background-color); --context-background-color: var(--semantics-surfaces-tinted-background-color);">
 		<nldd-just-in-time-education
+			placement=${placement || nothing}
 			text=${text || nothing}
 			supporting-text=${supportingText || nothing}
-			placement=${placement || nothing}
-			arrow-length=${arrowLength || nothing}
 			?no-arrow=${noArrow}
+			arrow-length=${arrowLength || nothing}
 			?dismissable=${dismissable}
 			?active=${active}
 		>

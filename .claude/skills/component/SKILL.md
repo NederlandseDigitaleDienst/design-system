@@ -399,7 +399,9 @@ export const ToestandChecked = {
 
 ### Canonieke control volgorde
 
-Per component: pak alleen de keys die je gebruikt en zet ze in deze volgorde. De groepering is een mentaal model — de daadwerkelijke `args`/`argTypes` is een platte lijst.
+Per component: pak alleen de keys die je gebruikt en zet ze in deze volgorde. De groepering is een mentaal model — de daadwerkelijke `args`/`argTypes` is een platte lijst. `npm run validate:control-order` controleert de `@attr`-regels en de `@property`-declaraties tegen deze lijst; een naam die er niet in staat, zet je erbij in de groep waar hij hoort. Een naam die in één component iets anders betekent (de `max` van `nldd-avatar-group`), staat in `MEANINGS` in `scripts/check-control-order.js`.
+
+`readonly` en `disabled` staan als laatste, achter Form. Ze overschrijven wat erboven staat: een uitgeschakelde control doet niets meer van wat de andere keys instellen. En je gebruikt ze liever niet (de ontwerprichtlijnen zeggen waarom), dus ze horen niet bovenaan in de controls.
 
 **Sorteer op wat een key doet, niet op hoe hij heet.** De groepen zijn het model, de namenlijsten eronder zijn voorbeelden. Twee componenten kunnen dezelfde naam voor iets anders gebruiken, en dan wint de betekenis. `max` is daar het schoolvoorbeeld van, en staat op drie plekken:
 
@@ -409,57 +411,95 @@ Per component: pak alleen de keys die je gebruikt en zet ze in deze volgorde. De
 
 ```
 [1. Visueel dominant]
-variant, appearance, color, background, level, status, size, compact,
-minor, pulse, layout,
+variant, appearance, destructive, color, customColor, iconColor,
+background, mainBackground, scheme, level, status, size, smSize, mdSize,
+lgSize, smCustomSize, mdCustomSize, lgCustomSize, weight, lineHeight,
+shape, corner, tile, compact, minor, pulse, line, dividers, dividerStart,
+dividerEnd, noRibbon, layout, labelAlignment, formLabelAlignment,
+columns, smColumns, mdColumns, lgColumns, columnCount, smColumnCount, mdColumnCount, lgColumnCount,
 panes, iconOnly, responsive, showItemLabels, inspectorAsSheet,
-sidebarAsSheet, noLogo
+sidebarAsSheet, primarySidebarAsSheet, inspectorAutoHidden, noLogo, noBlink
 
 [2. Sizing]
-resize, rows, width, minWidth, maxWidth, height, minHeight, fullWidth,
-itemMinWidth, itemMaxWidth, containerSize
+resize, rows, width, minWidth, maxWidth, height, minHeight, maxHeight,
+fullWidth, smFullHeight, grow, fluid, soloFluid, shrinkable, mainWidth,
+overlapSize, itemMinWidth, itemMaxWidth, containerSize
 
 [3. Space]
-spacing, padding, paddingInline, paddingBlock, paddingTop, paddingRight,
-paddingBottom, paddingLeft
+spacing, gap, smGap, mdGap, lgGap, padding, paddingInline, paddingBlock,
+paddingTop, paddingRight, paddingBottom, paddingLeft
 + smPadding…, mdPadding…, lgPadding…, layoutAreaXxxxPadding…
 
 [4. Alignment and position]
-horizontalAlignment, verticalAlignment, direction, orientation, placement,
-labelAlignment, top, right, bottom, left, position
+horizontalAlignment, verticalAlignment, align, centered, iconAligned,
+direction, orientation, placement, mainPosition,
+markerOffset, top, right, bottom, left, position, stickyTop, stickyBottom,
+order, smOrder, mdOrder, lgOrder,
+above, below, only, hideAbove, hideBelow, hideOn
 
 [5. Main content]
-text, supportingText, overline, label, supportingLabel, optional,
-placeholder, number, headingLevel,
-icon, startIcon, endIcon, containerColor,
-quote, attribution, cite, keys,
+text, shortText, supportingText, shortSupportingText, overline, label,
+supportingLabel, optional, placeholder, number, details, hint, headingLevel,
+icon, startIcon, endIcon, selectedIcon, containerColor,
+initials, src, srcset, sizes, alt, image, imageSrcset, avatarSrc,
+avatarSrcset, avatarAlt, mediaSrc, mediaSrcset, mediaSizes, mediaAlt,
+mediaAspectRatio, mediaHeight, aspectRatio, objectFit, objectPosition,
+lqip, decoding, fetchPriority, caption, credit,
+quote, attribution, cite, definition, source, sourceHref, keys, macKeys,
+windowsKeys, linuxKeys, language, diff, hyphens,
 logoTitle, logoSubtitle, logoSupportingText1, logoSupportingText2, logoHref,
-websiteTitle, websiteHref, backText, backHref, dismissText
+websiteTitle, websiteHref, sidebarLabel, backText, backHref, dismissText
 
 [6. Key behavior]
-control, expandable
+control, button, checkbox, radio, navigation, embedded, expandable,
+disclosure, popupType, haspopup, popovertarget, interestfor, controls,
+selectable, reorderable, exclusive, collapsible
 
 [7. A11y]
-accessibleLabel
+accessibleLabel, accessibleLabeledBy, accessibleDescription,
+accessibleDescribedBy, inspectorAccessibleLabel,
+primarySidebarAccessibleLabel, decorative, role, landmarks, list,
+rowHeader, currentType
 
 [8. Elements]
-showSearchButton, hideSpinButtons, hasDragHandle, maxItems
+showSearchButton, searchButton, hideSpinButtons, noPicker, noFilter,
+noCopy, lineNumbers, weekNumbers, histogram, hasDragHandle, reorderHandle,
+noArrow, arrowLength, noBackdrop, mdTitleBar, dismissible, dismissable,
+tokenControl, hideLgText, maxItems
 
 [9. Elements content]
-showText, hideText, overflowText
+showText, hideText, overflowText, menuText, tooltipText, emptyText,
+emptySupportingText, loadingText, valueText, valueFormat, valueDisplay,
+shortcut, shortcutMac, shortcutWindows, shortcutLinux
 
 [10. Elements A11y]
 showAccessibleLabel, hideAccessibleLabel
 
 [11. Behavior]
 modeless, movable, stickyHeader, stickyFooter, hasContent, alwaysVisible,
-showLoadMore, lazyLoad, collapseAnchor, contentPriority
+showLoadMore, lazyLoad, collapseAnchor, contentPriority, priority, anchor,
+noTab, roving, timing, tooltipTiming, duration, noLightDismiss, noCollapse,
+wrap, singleLine, uppercase, syntax, annotatable, query,
+queryMarkMode, aliases, filterFn, firstDayOfWeek, hrefPattern,
+textEditorFor, textEditorCommand, sidebarSectionOnly
 
 [12. States]
-selected, checked, indeterminate, open, valid, invalid, masked, readonly, current, disabled
+selected, checked, indeterminate, expanded, collapsed, open, active,
+loading, complete, shrunk, valid, invalid, judging, unmet, masked,
+current, empty, visible, hidden, copyUnavailable
 
 [13. Form]
-name, value, type, min, max, step, required, total,
-autocomplete, noSpellcheck, href, target, method, action, novalidate
+form, for, name, inputId, groupName, value, values, startValue, endValue,
+start, end, range, type, inputType, keyboard, enterKey, min, max, step,
+minlength, maxlength, length, pattern, match, format, accept, multiple,
+directory, allowCustom, required, total, autocomplete, noSpellcheck,
+href, target, rel, download, method, action, enctype, novalidate
+
+[14. Overrides]
+readonly, disabled
+
+[15. Development]
+debugOs, debugSafeTriangle
 ```
 
 **Open punt**: `type` staat onder Form (HTML input type, vaakste betekenis). Voor `segmented-control` heeft het een andere semantiek (radio/checkbox-modus); kan later via een rename naar bijv. `selectionMode` opgelost worden.
