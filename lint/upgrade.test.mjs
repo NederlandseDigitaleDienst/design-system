@@ -416,6 +416,15 @@ describe('text where only a line of text may stand', () => {
 		assert.match(await fixedOf('<p>Status: <nldd-text weight="bold">in behandeling</nldd-text></p>\n'), /<nldd-text weight="bold"><span>in behandeling<\/span><\/nldd-text>/);
 		assert.match(await fixedOf('<div><nldd-text>Dakisolatie</nldd-text></div>\n'), /<nldd-text><p>Dakisolatie<\/p><\/nldd-text>/);
 	});
+
+	it('gets a `<span>` where the app cuts the text off at the end of a line, so the ellipsis still shows', async () => {
+		const { applyFixes } = await import('./fix.js');
+		const fixedOf = async (source, file = 'page.html') => applyFixes(source, (await createLinter(DATA).lintSource(source, file)).findings).source;
+		assert.match(await fixedOf('<div class="row hug-truncate"><nldd-text>Dossier D-318</nldd-text></div>\n'), /<nldd-text><span>Dossier D-318<\/span>/);
+		assert.match(await fixedOf('<nldd-text style="white-space: nowrap; text-overflow: ellipsis">Dossier D-318</nldd-text>\n'), /<span>Dossier D-318<\/span>/);
+		assert.match(await fixedOf('export const A = () => <nldd-text truncate>Dossier D-318</nldd-text>;\n', 'a.tsx'), /<span>Dossier D-318<\/span>/);
+		assert.match(await fixedOf('<div class="truncated-list"><section><div><nldd-text>Dakisolatie</nldd-text></div></section></div>\n'), /<p>Dakisolatie<\/p>/, 'three levels up is too far to say');
+	});
 });
 
 describe('a fix around a hole that can only be text', () => {

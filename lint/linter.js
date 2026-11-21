@@ -316,6 +316,10 @@ function linkedFile(href, filename) {
 }
 
 /** Elements that hold a line of text and no block: a `<p>` inside one is invalid, or splits the line. */
+/** An attribute that says the app cuts the text off: a name such as `truncate`, a class such as `hug-truncate`, or a style. */
+const CUT_OFF = /(^|[\s_-])(truncat\w*|ellipsis|nowrap|line-clamp)\b|text-overflow|white-space\s*:\s*nowrap/i;
+const cutsOff = (node) => [...node.attrs].some(([name, value]) => /^(truncate|ellipsis)$/i.test(name) || (typeof value === 'string' && CUT_OFF.test(value)));
+
 const LINE_ONLY = new Set(['button', 'p', 'span', 'a', 'label', 'summary', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'nldd-text', 'nldd-title', 'nldd-button', 'nldd-link']);
 
 export function createLinter(data = loadData(), { wrappers = {}, severities: configured = {}, projectTokens = [], undecided = () => false, types } = {}) {
@@ -605,9 +609,14 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 		return { findings: withoutCovered(findings), counts, open };
 	}
 
-	/** Whether an element stands where only a line of text may: in a button, a paragraph, a heading, or the text of another component. */
+	/**
+	 * Whether an element stands where only a line of text may: in a button, a paragraph, a
+	 * heading, or the text of another component. Or where the app cuts its text off at the
+	 * end of a line: an ellipsis reaches the text of an inline element, not that of a `<p>`.
+	 */
 	function standsInLine(node) {
 		for (let at = node.parent; at; at = at.parent) if (LINE_ONLY.has(at.name)) return true;
+		for (let at = node, depth = 0; at?.attrs && depth < 3; at = at.parent, depth++) if (cutsOff(at)) return true;
 		return false;
 	}
 
