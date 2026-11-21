@@ -138,6 +138,7 @@ Wil je toch handmatig iets toevoegen (bijv. iets dat semantic-release niet uit d
 
 - Zet de entry **direct bovenaan**, boven het nieuwste versieblok. **Geen `## Unreleased`-kopje** — dat past niet in het door semantic-release gegenereerde format.
 - Gebruik de Keep-a-Changelog-secties (`### Added`, `### Fixed`, `### Breaking`, …), zoals de bestaande versieblokken.
+- Elke regel onder `### Breaking` van de komende release zegt hoe een upgrade de plekken vindt: hij noemt in backticks de regel die ze meldt (`title-size-renamed`), of een token, event of vertaalkey die weg is, want die meldt de linter zelf. Kan geen regel het, schrijf dan `No rule:` en waarom. `validate:changelog` faalt anders. Zo'n wijziging staat in de pull request van `nldd upgrade` alleen als regel uit de changelog, en iemand zoekt elke plek met de hand; van de 48 brekende wijzigingen in 0.12 tot 0.27 waren dat er 34.
 - Regenereer daarna de skill-kopie: `npm run generate:skill-changelog` (of `npm run generate:skill-docs`). `skills/nldd-design/changelog.md` is een gegenereerde kopie van de root-CHANGELOG en moet in sync blijven.
 
 ## Iconen
