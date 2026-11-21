@@ -36,6 +36,8 @@ here; consult the commit history if you need that level of detail.
 - **The highlight border of `nldd-card` stays on top of an image.** An image up to the edge of the card covered it.
 - **`nldd-date-picker` no longer scrolls the page when it opens.** Only its calendar moves to the selected date.
 - **`nldd-tooltip` keeps its text on one line inside text that keeps its white space.** In a `white-space: pre-wrap` context, such as a code block or an editor, the line breaks of its own template showed as empty lines above the text.
+- **The thumbs of an `nldd-slider` range stack again after one was dragged past the other.** Dragged back in the same move, the thumb jumped from one side of the other to the other side and never landed on its value.
+- **`nldd-time-picker` no longer flickers in Safari when an arrow key changes the time.** The selection showed the old number again for a few frames while the column moved to the new one.
 - **`nldd-tooltip` follows a resize.** It stayed where it was, even when its trigger was gone, in a toolbar that is only there at another width. A tooltip shown by hover now goes, as on a scroll, and so does one whose trigger is hidden.
 
 ## [0.27.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.27.0...v0.27.1) (2026-11-20)

@@ -320,12 +320,20 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 		event.stopPropagation();
 		const input = event.target as HTMLInputElement;
 		const dragged = input === this._dragInput && this._dragThumb;
+		// Past the other thumb the dragged input holds the other end's value, so
+		// it fires nothing on that value: the pointer moves the thumb from there.
+		if (dragged && this._trackThumb) {
+			this._set(this._trackThumb, this._trackThumb === 'start' ? this._start : this._end);
+			return;
+		}
 		const moved = dragged || thumb;
 		const landed = this._set(moved, parseFloat(input.value), input, !!dragged || this._arrowKey);
 		if (landed !== moved && landed !== 'value') {
 			if (dragged) {
 				this._dragThumb = landed;
+				this._trackThumb = landed;
 				this._held = landed;
+				window.addEventListener('pointermove', this._handleTrackMove);
 			}
 			this._focusThumb(landed, !!dragged);
 		}
@@ -451,7 +459,8 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 
 	private _handlePointerUp = (): void => {
 		this._active = false;
-		const thumb = this._trackThumb;
+		// A native drag has its own change event.
+		const thumb = this._dragInput ? null : this._trackThumb;
 		this._stopPress();
 		if (thumb) this._emit('change');
 	};
