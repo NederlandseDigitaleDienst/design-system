@@ -14,6 +14,16 @@ the changelog, what you left and why, and what of the project's CI still fails. 
 the choices of an earlier run on this pull request: keep them, and add yours under them.
 This may be a pull request that was open: then the team and an earlier agent worked here before you. Keep what they did.
 
+Where the design system itself stands in the way, write a finding in {WORK}/issues/, one file per finding, for an
+issue on the design system: a first line `# <title>`, a second line `blocking: true` or `blocking: false`, then the
+text. Blocking means the upgrade cannot be done right within what the design system offers: something looks or
+works worse after it, and the app cannot mend that without a workaround. A wish or a gap that this upgrade does not
+make worse is not blocking. The title names the component and what it does wrong, in the words another app would
+find too, such as "nldd-table: een cel met een knop krijgt geen ruimte". Write in Dutch, as an issue for the
+maintainers: what happens, what you expected, which version, and how to see it in a few lines of nldd-* markup.
+Name no app, no repository, no organization and no file or path of this project: the issue is public.
+Do not write a finding for what the app does wrong; fix that.
+
 If the project builds to a static site, write {WORK}/site.json as well:
 {"build": "<one shell command that builds the site from a clean checkout on this runner, installing what it needs>", "site": "<the directory it writes to>"}.
 Run that command once to see that it works. Leave the file out for an app that needs a server or a backend.

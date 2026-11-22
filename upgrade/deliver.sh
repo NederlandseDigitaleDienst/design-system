@@ -67,6 +67,7 @@ fi
 	cat "$TOOLS/note.md"
 	tail -n +3 "$WORK/upgrade.md"
 	echo
+	cat "$WORK/issues-section.md" 2> /dev/null || true
 	# What Dependabot and Renovate do from now on, and their pull requests that do the same as this one.
 	duplicates="$(gh pr list --repo "$REPOSITORY" --state open --json number,title,author --jq '.[] | select(.author.login | test("dependabot|renovate")) | select(.title | contains("@nldd/design-system")) | "#\(.number)"' | paste -sd ' ')"
 	if [ "$(jq length "$TOOLS/bots.json")" -gt 0 ] || [ -n "$duplicates" ]; then
@@ -80,7 +81,9 @@ fi
 	fi
 	# With how the site builds, when the agent found it. A file the agent wrote is data: jq reads it, and
 	# a file that is no JSON is left out.
-	state="$(jq --compact-output --slurpfile site "$WORK/site.json" '. + {site: $site[0]}' "$TOOLS/state-new.json" 2>/dev/null || jq --compact-output . "$TOOLS/state-new.json")"
+	# And the findings that still block, which the next run looks up again.
+	jq --slurpfile pending "$TOOLS/pending.json" --arg blocked "${BLOCKED:-false}" '. + {pending: $pending[0], blocked: ($blocked == "true")}' "$TOOLS/state-new.json" > "$TOOLS/state-with.json"
+	state="$(jq --compact-output --slurpfile site "$WORK/site.json" '. + {site: $site[0]}' "$TOOLS/state-with.json" 2>/dev/null || jq --compact-output . "$TOOLS/state-with.json")"
 	printf '<!-- nldd-upgrade-state %s -->\n' "${state//-->/--\\u003e}"
 } > "$TOOLS/body.md"
 
@@ -91,6 +94,16 @@ else
 	number="$(gh pr view "$BRANCH" --repo "$REPOSITORY" --json number --jq .number)"
 fi
 echo "number=$number" >> "$GITHUB_OUTPUT"
+# Which pull request the findings of this run come from, for the job of the fleet that links them back.
+jq --null-input --arg repository "$REPOSITORY" --argjson number "$number" '{repository: $repository, number: $number}' > "$TOOLS/findings/source.json"
+
+# A pull request that waits for the design system is a draft, so it is not merged by accident. The
+# first run after the release that solves it makes it ready again; one the team made a draft stays.
+if [ "${BLOCKED:-false}" = true ]; then
+	gh pr ready "$number" --repo "$REPOSITORY" --undo > /dev/null 2>&1 || true
+elif [ "$(jq --raw-output '.blocked // false' "$TOOLS/state.json" 2> /dev/null || echo false)" = true ]; then
+	gh pr ready "$number" --repo "$REPOSITORY" > /dev/null 2>&1 || true
+fi
 
 # A report too long for one text continues in comments. Those of an earlier run go first.
 gh api --paginate "repos/$REPOSITORY/issues/$number/comments" --jq '.[] | select(.body | startswith("<!-- nldd-upgrade")) | .id' |

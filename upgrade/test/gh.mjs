@@ -34,9 +34,16 @@ const [group, verb] = args;
 if (group === 'auth') process.exit(0);
 if (group === 'api') {
 	const route = args.find((arg) => arg.startsWith('repos/') || arg.startsWith('users/') || arg === 'user');
+	if (route === undefined && args.includes('search/issues')) {
+		const query = args[args.indexOf('-f') + 1].replace(/^q=/, '');
+		const fingerprint = query.split(' ').pop();
+		out({ items: (state.issues ?? []).filter(({ body }) => body.includes(fingerprint)).map(({ number }) => ({ number })) });
+		process.exit(0);
+	}
 	if (route === 'user') process.exit(1);
 	if (route.startsWith('users/')) out({ id: 1 });
 	else if (/^repos\/[^/]+\/[^/]+$/.test(route)) out({ default_branch: 'main' });
+	else if (/^repos\/NederlandseDigitaleDienst\/design-system\/issues\/\d+$/.test(route)) out((state.issues ?? []).find(({ number }) => String(number) === route.split('/').pop()));
 	else if (/\/issues\/\d+\/events$/.test(route)) {
 		const p = pr(route.split('/')[4]);
 		out(p.closedBy ? [{ event: 'closed', actor: { login: p.closedBy } }] : []);
@@ -61,6 +68,9 @@ if (group === 'api') {
 		save();
 	} else if (verb === 'close') {
 		Object.assign(pr(args[2]), { state: 'closed', closedBy: 'github-actions[bot]', closing: option('--comment') });
+		save();
+	} else if (verb === 'ready') {
+		pr(args[2]).draft = args.includes('--undo');
 		save();
 	} else if (verb === 'comment') {
 		pr(args[2]).comments.push({ id: state.comment++, body: body() });

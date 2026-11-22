@@ -65,6 +65,9 @@ inputs:
   sandbox:
     description: 'Keep the key for the model out of the commands the agent runs, by running them in a sandbox. Some builds do not run in it. Turn it off only for a repository whose content you trust as your own.'
     default: 'true'
+  findings:
+    description: 'What becomes of what the agent finds the design system cannot do: `link`, a link in the pull request that opens the issue filled in, or `fleet`, the findings go to the job of the fleet that files them.'
+    default: link
   build:
     description: 'The command that builds the site, from a clean checkout. With `site`, the pull request gets pictures of what changed. Default: what the agent finds.'
     default: ''
@@ -151,6 +154,16 @@ runs:
       shell: bash
       run: bash "$ACTION/report.sh"
 
+    # What the agent found the design system cannot do. A finding that blocks makes this a draft.
+    - name: Weigh the findings
+      id: findings
+      if: steps.upgrade.outputs.changed == 'true'
+      shell: bash
+      env:
+        GH_TOKEN: ${{ steps.app.outputs.token || inputs.token }}
+        FINDINGS: ${{ inputs.findings }}
+      run: bash "$ACTION/issues.sh"
+
     - name: Open or update the pull request
       id: deliver
       shell: bash
@@ -159,7 +172,17 @@ runs:
         VERSION: ${{ steps.upgrade.outputs.version }}
         CHANGED: ${{ steps.upgrade.outputs.changed }}
         NUMBER: ${{ steps.upgrade.outputs.number }}
+        BLOCKED: ${{ steps.findings.outputs.blocked }}
       run: bash "$ACTION/deliver.sh"
+
+    # The job of the fleet files the findings once for all repositories, and links them back here.
+    - name: Keep the findings for the fleet
+      if: steps.deliver.outputs.number != '' && inputs.findings == 'fleet'
+      uses: actions/upload-artifact@v7
+      with:
+        name: nldd-findings-${{ steps.repository.outputs.owner }}-${{ steps.repository.outputs.name }}
+        path: ${{ runner.temp }}/nldd/findings
+        if-no-files-found: ignore
 
     # The pictures are an extra: a site that does not build here still gets its pull request.
     - name: Photograph the site before and after

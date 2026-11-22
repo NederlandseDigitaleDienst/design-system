@@ -12,6 +12,12 @@ Mis je een component of een variant, beschrijf dan het probleem in je interface 
 
 Voor kwetsbaarheden geldt een andere route. Die staan in [`SECURITY.md`](./SECURITY.md) en horen niet in een openbaar issue.
 
+### Issues uit upgrades
+
+De agent die apps naar een nieuwe versie brengt (de vloot, zie de [pagina over upgraden](https://design.digitaledienst.overheid.nl/upgraden/)) meldt wat het designsysteem niet kan. Zo'n issue heeft het label `uit-upgrade` en noemt geen app; in de tijdlijn staan de pull requests die erop wachten.
+
+Met het label `blocking` houdt het een upgrade tegen: die pull requests staan op concept tot een release het oplost. Zo'n issue gaat voor. Sluit het als opgelost met de commit die het oplost, dan zet de eerste run na de release de pull requests weer op klaar. Sluit je het als niet gepland, dan blokkeert het niet meer, en kiest elk team zelf hoe het verder gaat.
+
 ### Een patroon voorstellen
 
 Een patroon is geen component: het beschrijft hoe je bestaande componenten samenstelt tot iets dat een taak afhandelt. De set staat in [`skills/nldd-design-build/patterns/`](../skills/nldd-design-build/patterns/).

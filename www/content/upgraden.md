@@ -44,6 +44,16 @@ npx @nldd/design-system@latest upgrade --since upgrade.json --report upgrade.md
 
 De tweede run verandert niets aan je project. Hij leest het opnieuw en zegt per regel hoeveel plekken er waren en hoeveel er nu zijn.
 
+## Workarounds die weg kunnen
+
+Bouw je om iets heen wat het designsysteem nog niet kan, zet dan het issue erbij, in een commentaar naast de workaround: `NLDD #447`, `design-system#447` of het adres van het issue.
+
+```js
+// Weg als NLDD #447 is opgelost: de zijbalk blijft nog niet staan bij scrollen.
+```
+
+`nldd upgrade` vindt die commentaren in elk bestand en vraagt GitHub naar het issue. Is het opgelost in de versie waar je heen gaat, dan staat de workaround onder "Workarounds" in het verslag: die kan weg. Kijk wel na of de oplossing dekt wat je workaround deed.
+
 ## Voor en na vergelijken
 
 De linter ziet niet alles. `nldd compare` fotografeert twee versies van je site en omlijnt wat veranderde.
@@ -96,6 +106,16 @@ De agent krijgt geen token van je repository. Zijn opdrachten draaien in een san
 
 Bouwt je project naar een statische site, dan komen er ook beelden van voor en na onder de pull request. De agent zoekt uit hoe je site bouwt, of je geeft het mee met `build` en `site`.
 
+### Als het designsysteem in de weg staat
+
+Soms kan een upgrade niet goed binnen wat het designsysteem biedt: na de upgrade ziet iets er slechter uit of werkt het minder, en dat is alleen met een workaround te verhelpen. Dan schrijft de agent een bevinding voor een issue op het designsysteem, zonder je app te noemen, en zegt hij of die de upgrade blokkeert.
+
+- **Een blokkerende bevinding zet de pull request op concept**, met bovenaan dat hij wacht op het designsysteem. Merge hem niet eerder.
+- **De eerste run na de release die het oplost**, zet hem weer op klaar. Tot dan staat de bevinding in de tekst van de pull request, met het issue erbij.
+- **Een bevinding die niet blokkeert**, wordt alleen gemeld.
+
+Draai je de action zelf, dan krijg je per bevinding een link die het issue ingevuld opent. Lees het na en open het. Staat je repository op de lijst van het designsysteem, dan doet de vloot dat voor je: zie hieronder.
+
 ## Na een release, zonder dat je iets doet
 
 Het designsysteem kan je repository na elke release zelf een pull request sturen: meteen na een release die iets kan breken, en op maandagochtend voor de kleinere releases van die week. Daarvoor installeer je de app en meld je je repository aan. De app **NLDD Designsysteem** opent die pull request, en daarom draait je eigen CI erop.
@@ -137,12 +157,16 @@ Deze repositories staan er nu op:
 
 {{fleetList}}
 
+### Issues voor het designsysteem
+
+Wat de agents in de hele vloot vinden, komt na elke ronde samen in één job van het designsysteem. Die opent per probleem één issue, met het label `uit-upgrade`, en `blocking` als het een upgrade tegenhoudt. Vond een andere app hetzelfde, ook in andere woorden, dan komt het als reactie bij het issue dat er al is. Elke pull request die erop wacht, krijgt een reactie met het issue, en het issue toont die pull requests. Een issue met `blocking` krijgt voorrang bij de beheerders: zolang het openstaat, wachten upgrades erop.
+
 ### Wat de app mag
 
 | Recht | Waarvoor |
 |---|---|
 | Inhoud, schrijven | De branch `nldd/design-system-upgrade` pushen, en de beelden van voor en na op `refs/nldd/pictures` |
-| Pull requests, schrijven | De pull request openen, bijwerken of sluiten, en de reacties eronder |
+| Pull requests, schrijven | De pull request openen, bijwerken of sluiten, op concept zetten, en de reacties eronder |
 | Workflows, schrijven | Een versie bijwerken die in een workflow staat, zoals de versie in een `npx`-regel |
 | Metadata, lezen | Dit vraagt elke app |
 

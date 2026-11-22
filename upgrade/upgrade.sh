@@ -43,6 +43,11 @@ fi
 chmod +x "$TOOLS/bin/nldd"
 echo "$TOOLS/bin" >> "$GITHUB_PATH"
 echo "version=$version" >> "$GITHUB_OUTPUT"
+# For the later steps: node as this job set it up, and when the version was published, if it was.
+{
+	echo "NODE=$(command -v node)"
+	echo "RELEASED=$(npm view @nldd/design-system time --json 2> /dev/null | jq --raw-output --arg version "$version" '.[$version] // empty' || true)"
+} >> "$GITHUB_ENV"
 
 number="$(gh pr list --repo "$REPOSITORY" --head "$BRANCH" --state open --json number --jq '.[0].number')"
 echo "number=$number" >> "$GITHUB_OUTPUT"

@@ -15,6 +15,7 @@ name: Upgrade the fleet
 # repository or a secret of its environment `fleet`:
 #
 #   NLDD_FLEET_APP_CLIENT_ID    variable   the GitHub App that opens the pull requests,
+#   NLDD_FLEET_APP_ID           variable   its numeric id, for the job that links issues back,
 #   NLDD_FLEET_APP_KEY          secret     and its private key
 #   NLDD_FLEET_TOKEN            secret     or, without an app, a token of a bot account
 #   NLDD_FLEET_MODEL            variable   the model of the agent. Default: claude-opus-5-5
@@ -145,3 +146,74 @@ jobs:
           build: ${{ matrix.target.build }}
           site: ${{ matrix.target.site }}
           from-source: ${{ inputs.from_source }}
+          findings: fleet
+
+  # What the agents found the design system cannot do, filed once for the whole fleet. One run of this
+  # job at a time, across every run of the fleet: it is the only place that posts, and it reads what
+  # is there just before it does, so two runs that find the same thing do not file it twice.
+  issues:
+    needs: [list, upgrade]
+    if: always() && needs.list.outputs.targets != '[]' && needs.list.outputs.targets != ''
+    runs-on: ubuntu-latest
+    environment: fleet
+    concurrency:
+      group: nldd-fleet-issues
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: nldd-findings-*
+          path: ${{ runner.temp }}/findings
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Token of the app for the design system
+        id: app
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.NLDD_FLEET_APP_CLIENT_ID }}
+          private-key: ${{ secrets.NLDD_FLEET_APP_KEY }}
+          owner: NederlandseDigitaleDienst
+          repositories: design-system
+
+      # A model reads the findings next to the issues of the last ninety days and says which say the
+      # same in other words. It only reads, and writes one file; the script does the posting.
+      - name: Which findings an issue says already
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          FINDINGS: ${{ runner.temp }}/findings
+          WORK: ${{ runner.temp }}/dedupe
+        run: |
+          mkdir -p "$WORK"
+          if [ -z "$CLAUDE_CODE_OAUTH_TOKEN$ANTHROPIC_API_KEY" ] || ! find "$FINDINGS" -name '*.json' ! -name source.json | grep -q .; then
+            echo '{}' > "$WORK/decisions.json"
+            exit 0
+          fi
+          since="$(date --utc --date '90 days ago' +%Y-%m-%dT%H:%M:%SZ)"
+          gh api --paginate --slurp "repos/NederlandseDigitaleDienst/design-system/issues?state=all&since=$since&per_page=100" |
+            jq '[.[][] | select(.pull_request | not) | {number, title, state, body: ((.body // "") | .[0:1500])}]' > "$WORK/issues.json"
+          find "$FINDINGS" -name '*.json' ! -name source.json -exec cat {} + | jq --slurp 'unique_by(.fingerprint) | map({fingerprint, title, body})' > "$WORK/findings.json"
+          npm install --global --no-audit --no-fund "@anthropic-ai/claude-code@2.1.330"
+          cd "$WORK"
+          claude --print --model claude-opus-5-5 --restricted --strict-mcp-config --tools Read Write --allowedTools Read Write \
+            "findings.json holds problems found in the design system, issues.json the issues of its repository of the last ninety days. For each finding, decide whether an issue says the same problem, in other words too: the same component doing the same wrong thing. Write decisions.json: an object from the fingerprint of a finding to the number of that issue, for those findings only. Leave out a finding no issue covers. When in doubt, leave it out: a new issue is better than one that mixes two problems." ||
+            echo '{}' > decisions.json
+          jq --exit-status 'type == "object"' decisions.json > /dev/null || echo '{}' > decisions.json
+
+      - name: File the findings and tell the pull requests
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          APP_ID: ${{ vars.NLDD_FLEET_APP_ID }}
+          APP_KEY: ${{ secrets.NLDD_FLEET_APP_KEY }}
+          VERSION: ${{ inputs.version || 'latest' }}
+        run: |
+          version="$(npm view "@nldd/design-system@$VERSION" version)"
+          node upgrade/file-issues.mjs "$RUNNER_TEMP/findings" "$version" "$RUNNER_TEMP/dedupe/decisions.json" | tee -a "$GITHUB_STEP_SUMMARY"

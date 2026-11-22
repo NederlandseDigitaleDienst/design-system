@@ -50,7 +50,7 @@ function world() {
 	mkdirSync(stubs);
 	writeFileSync(join(root, 'gitconfig'), `[url "file://${github}/"]\n\tinsteadOf = https://github.com/\n[init]\n\tdefaultBranch = main\n[user]\n\tname = Team\n\temail = team@example.org\n`);
 	stub(stubs, 'gh', `#!/bin/sh\nexec node ${join(action, 'test', 'gh.mjs')} "$@"\n`);
-	stub(stubs, 'npm', `#!/bin/sh\nif [ "$1" = view ]; then echo ${version}; fi\nexit 0\n`);
+	stub(stubs, 'npm', `#!/bin/sh\nif [ "$1" = view ] && [ "$3" = time ]; then echo '{"${version}": "2026-11-20T00:00:00Z"}'; elif [ "$1" = view ]; then echo ${version}; fi\nexit 0\n`);
 	stub(stubs, 'npx', `#!/bin/sh\nshift 2\nexec node ${cli} "$@"\n`);
 	// The sandbox stands back: what it keeps out is not what these tests are about.
 	stub(stubs, 'bwrap', '#!/bin/sh\nwhile [ "$1" != -- ]; do shift; done\nshift\nexec "$@"\n');
@@ -81,7 +81,7 @@ function world() {
 	git(seed, 'push', '--quiet', 'origin', 'main');
 
 	/** One run of the action, its steps in order, as action.yml has them. */
-	function run() {
+	function run({ drafts = {} } = {}) {
 		const tools = mkdtempSync(join(root, 'run-'));
 		const files = { GITHUB_ENV: join(tools, 'env'), GITHUB_OUTPUT: join(tools, 'out'), GITHUB_PATH: join(tools, 'path'), GITHUB_STEP_SUMMARY: join(tools, 'summary') };
 		let stepEnv = { ...env, ...files, REPOSITORY: 'team/app', ACTION: action, TOOLS: join(tools, 'nldd'), WORK: join(tools, 'work'), PROJECT: join(tools, 'project'), GH_TOKEN: 'token' };
@@ -96,8 +96,15 @@ function world() {
 			return Object.assign(outputs, { [name]: readCommands(files.GITHUB_OUTPUT) })[name];
 		};
 		const upgrade = step('upgrade.sh', { APP: '', BASE: '', WANTED: 'latest', FROM_SOURCE: 'false' });
-		if (upgrade.changed === 'true') step('report.sh', {});
-		const deliver = step('deliver.sh', { VERSION: upgrade.version, CHANGED: upgrade.changed, NUMBER: upgrade.number ?? '' });
+		let findings = {};
+		if (upgrade.changed === 'true') {
+			// What an agent would write: drafts of issues for the design system.
+			mkdirSync(join(stepEnv.WORK, 'issues'), { recursive: true });
+			for (const [name, text] of Object.entries(drafts)) writeFileSync(join(stepEnv.WORK, 'issues', name), text);
+			step('report.sh', {});
+			findings = step('issues.sh', { FINDINGS: 'link' });
+		}
+		const deliver = step('deliver.sh', { VERSION: upgrade.version, CHANGED: upgrade.changed, NUMBER: upgrade.number ?? '', BLOCKED: findings.blocked ?? '' });
 		return { upgrade, deliver };
 	}
 
@@ -128,7 +135,7 @@ describe('the action, step by step', { skip: process.platform !== 'linux' && 'th
 		const [pr] = state().prs;
 		assert.equal(pr.title, `chore: designsysteem naar ${version}`);
 		assert.match(pr.body, new RegExp(`^# Designsysteem van 0\\.20\\.0 naar ${version.replaceAll('.', '\\.')}\\n\\n- \\*\\*1 plek vraagt om een keuze`));
-		assert.match(pr.body, /<!-- nldd-upgrade-state \{"from":"0\.20\.0","places":\{"title-color-no-effect\|page\.html\|nldd-title":1\}\} -->\n$/);
+		assert.match(pr.body, /<!-- nldd-upgrade-state \{"from":"0\.20\.0","places":\{"title-color-no-effect\|page\.html\|nldd-title":1\},"pending":\[\],"blocked":false\} -->\n$/);
 		assert.match(show(BRANCH, 'page.html'), /size="display-2"/);
 		assert.match(show(BRANCH, 'package.json'), new RegExp(`"\\^${version}"`));
 	});
@@ -140,6 +147,26 @@ describe('the action, step by step', { skip: process.platform !== 'linux' && 'th
 		assert.match(show(BRANCH, '.github/dependabot.yml'), /# The app\.[^]*ignore:\n\s+# Comes as a pull request[^\n]*\n\s+- dependency-name: "@nldd\/design-system"/);
 		const body = state().prs.find(({ head }) => head === BRANCH).body;
 		assert.match(body, /## Dependabot en Renovate[^]*- `\.github\/dependabot\.yml`: een uitzondering voor dit pakket, zodat Dependabot het niet meer ophoogt\.\n- #7 hoogt alleen de versie op/);
+	});
+
+	it('holds a pull request back as a draft while a finding blocks it, and makes it ready when a release solves it', () => {
+		const { run, state, editState, commit } = world();
+		const title = 'nldd-table: een cel met een knop krijgt geen ruimte';
+		run({ drafts: { 'tabel.md': `# ${title}\nblocking: true\n\nIn een smalle kolom valt de knop over de rand.\n` } });
+		let pr = state().prs.find(({ head }) => head === BRANCH);
+		assert.equal(pr.draft, true);
+		assert.match(pr.body, /## Voor het designsysteem\n\n\*\*Deze pull request wacht op het designsysteem\.\*\*[^]*- \*\*Blokkeert:\*\* nldd-table: een cel met een knop krijgt geen ruimte\. \[Open het issue\]\(https:\/\/github\.com\/NederlandseDigitaleDienst\/design-system\/issues\/new\?labels=uit-upgrade,blocking&title=/);
+		assert.match(pr.body, /"pending":\[\{"fingerprint":"[0-9a-f]{12}","title":"nldd-table: een cel met een knop krijgt geen ruimte"\}\],"blocked":true/);
+		const fingerprint = /"fingerprint":"([0-9a-f]{12})"/.exec(pr.body)[1];
+
+		// The issue is filed with the marker, and closed as done before the release.
+		editState((now) => (now.issues = [{ number: 31, state: 'closed', state_reason: 'completed', closed_at: '2026-11-19T00:00:00Z', body: `Tekst.\n<!-- nldd-finding ${fingerprint} -->` }]));
+		commit('main', 'notes.md', (text) => `${text}Een week later.\n`, 'Iets op main');
+		run();
+		pr = state().prs.find(({ head }) => head === BRANCH);
+		assert.equal(pr.draft, false);
+		assert.match(pr.body, /- \*\*Opgelost:\*\* nldd-table: een cel met een knop krijgt geen ruimte, in NederlandseDigitaleDienst\/design-system#31\./);
+		assert.match(pr.body, /"pending":\[\],"blocked":false/);
 	});
 
 	it('continues an open pull request: the team\'s commit stays, the default branch comes in, nothing is forced', () => {

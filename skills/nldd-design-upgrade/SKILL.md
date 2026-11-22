@@ -158,6 +158,10 @@ Een upgrade is klaar als dit allemaal waar is:
 - de eigen controles van het project slagen: de build, de tests en wat er in de CI draait;
 - een keuze die niet uit de changelog volgt, staat apart in de pull request.
 
+## Als het designsysteem in de weg staat
+
+Kan iets na de upgrade niet goed binnen wat het designsysteem biedt, en is het alleen met een workaround te verhelpen, dan is dat een issue op het designsysteem, geen werk in de app. Het blokkeert de upgrade als de pagina er slechter uitziet of minder werkt dan ervoor. Meld het zoals [`nldd-design-contribute`](../nldd-design-contribute/SKILL.md) zegt, met een titel die het component en het gedrag noemt, en zonder de app te noemen: het issue is openbaar. Bouw je toch een workaround, zet dan het issue in een commentaar ernaast (`NLDD #447`), zodat een volgende upgrade ziet wanneer hij weg kan. Werk je als agent in de action, schrijf het dan als bevinding zoals de opdracht van de action zegt: de action meldt het en houdt de pull request tegen.
+
 ## De volgende keer vanzelf
 
 Staat er in `.github/workflows` nog geen stap met `NederlandseDigitaleDienst/design-system/upgrade`, stel dan voor die toe te voegen, of de repository aan te melden in `fleet.json` van het designsysteem: dan komt de volgende upgrade als pull request, met dit deel al gedaan. Zet hem er niet ongevraagd in, want het team kiest of er een agent meedoet en met welk token. Hoe het moet, staat op [Upgraden](https://design.digitaledienst.overheid.nl/upgraden/). Werk je zelf als agent in die action, sla dit dan over.
