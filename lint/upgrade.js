@@ -19,6 +19,7 @@ import { BUILT_IN_RULES } from './rule-data.js';
 import { applyBaseline, findFiles, readBaseline, relativePath } from './project.js';
 import { lintProject } from './session.js';
 import { createTypes } from './types.js';
+import { WORKAROUND_EXTENSIONS, issueOnGitHub, judgeWorkarounds, workaroundsIn } from './workarounds.js';
 
 /**
  * The breaking changes after `from`, up to `target`, that name a component the
@@ -106,11 +107,12 @@ export function withRendered(result, session, root) {
  * @param {(command: string, args: string[], cwd: string) => { ok: boolean, output?: string, error?: string }} [options.run]
  * @param {object} [options.since] - the result of an earlier run on this project. The project is
  *   then only read: the version, the lockfile and the fixes are that run's, what is left is of now
+ * @param {(number: number) => Promise<object | undefined>} [options.askIssue] - what GitHub says about an issue of the design system
  * @param {string} [options.from] - the version the project came from, where its pins say less: in a
  *   pull request that is continued they hold the version of the run before
  * @returns {Promise<object>} what was done and what is left, as the report and the worklist read it
  */
-export async function upgradeProject(data, { root, target, breaking, config, severities, canonical, install = true, run = runQuietly, since, from: cameFrom }) {
+export async function upgradeProject(data, { root, target, breaking, config, severities, canonical, install = true, run = runQuietly, since, from: cameFrom, askIssue = issueOnGitHub }) {
 	if (since && since.to !== target) throw new Error(`The earlier run went to ${since.to}, and this command is ${target}. Run the same version.`);
 	// 1. The version, wherever the project names it.
 	const pinned = [];
@@ -198,6 +200,23 @@ export async function upgradeProject(data, { root, target, breaking, config, sev
 	}
 
 	// 5. The breaking changes on the way that name something this project uses.
+	// 6. Workarounds that wait for an issue of the design system, and whether this release solved it.
+	// Every file of the project, not only those with a component: a workaround often reaches into one from a script.
+	const waiting = findFiles([], root, config.exclude, WORKAROUND_EXTENSIONS).flatMap((filename) => {
+		const source = readFileSync(filename, 'utf8');
+		return /design-system|NLDD #/i.test(source) ? workaroundsIn(source).map((place) => ({ file: relativePath(root, filename), ...place })) : [];
+	});
+	let released;
+	if (waiting.length > 0) {
+		const times = run('npm', ['view', PACKAGE, 'time', '--json'], root);
+		try {
+			released = times.ok ? JSON.parse(times.output)[target] : undefined;
+		} catch {
+			released = undefined;
+		}
+	}
+	const workarounds = await judgeWorkarounds(waiting, askIssue, released);
+
 	const text = session.results.map(({ source }) => source).join('\n');
 	const changes = from ? breakingFor(breaking, from, target, text) : { total: 0, touching: [] };
 
@@ -213,6 +232,7 @@ export async function upgradeProject(data, { root, target, breaking, config, sev
 		standing: [...standing.values()].sort(bySize),
 		unread,
 		breaking: { total: changes.total, touching: changes.touching },
+		workarounds,
 		types: { projects: types.projects(), without: types.without() },
 	};
 }

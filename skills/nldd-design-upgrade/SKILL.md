@@ -53,6 +53,7 @@ Het verslag is je werklijst. Het heeft deze delen:
 | Niet gelezen | Bestanden met componenten die de linter niet kan lezen. Loop ze zelf na op de oude namen uit de changelog |
 | Brekende wijzigingen onderweg | Lees ze. Niet elke wijziging heeft een lintregel: een andere maat of een ander gedrag vind je alleen hier |
 | Niet te beslissen in de bron | Plekken waar de inhoud van een element uit een variabele of een onderdeel van de app komt. Open ze en kijk wat daar rendert: tekst hoort in zijn element, een element mag blijven |
+| Workarounds | Plekken die naar een issue van het designsysteem verwijzen. Is het issue opgelost in de doelversie of eerder, dan kan de workaround weg: gebruik het component zoals het nu is, en kijk na of de oplossing dekt wat de workaround deed |
 | Stond er al | Waarschuwingen van regels die de app ook had in de versie waar hij vandaan komt. Ze horen niet bij deze upgrade. Zie [De linter in je eigen CI](#de-linter-in-je-eigen-ci) |
 
 Verifieer bij twijfel tegen [`reference.md`](../nldd-design/reference.md) of een attribuut, slot of event in de doelversie bestaat zoals je verwacht. Die referentie hoort bij de versie van de plugin, en die kan ouder zijn dan je doel.

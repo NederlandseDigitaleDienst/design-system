@@ -294,6 +294,24 @@ describe('nldd upgrade', () => {
 		assert.match(formatReport({ ...after, breaking: { total: 0, touching: [] } }), /^# Designsysteem van 0\.20\.0 naar 0\.27\.1\n\n- \*\*Klaar om te mergen\*\*/);
 	});
 
+	it('lists a workaround whose issue this release solved, and leaves one that waits or was not planned', async () => {
+		const issues = {
+			101: { state: 'closed', reason: 'completed', closedAt: '2026-11-01T00:00:00Z' },
+			102: { state: 'open' },
+			103: { state: 'closed', reason: 'not_planned', closedAt: '2026-11-01T00:00:00Z' },
+			104: { state: 'closed', reason: 'completed', closedAt: '2026-12-24T00:00:00Z' },
+		};
+		const page = '<!-- nldd-lint-disable-next-line unknown-attribute -- https://github.com/NederlandseDigitaleDienst/design-system/issues/101, 0.20.0, it cannot yet -->\n<nldd-title heading-level="2" text="Aanvraag A-1042"></nldd-title>\n';
+		const script = '// Remove once NLDD #102 is fixed.\nconst a = 1;\n// Reported as NederlandseDigitaleDienst/design-system#103 and design-system#104.\n';
+		const run = (command, args) => ({ ok: true, output: args.includes('time') ? JSON.stringify({ '0.27.1': '2026-11-20T00:00:00Z' }) : '' });
+		const result = await upgradeProject(DATA, { root: project({ ...files, 'page.html': page, 'static/side.js': script }), target: '0.27.1', breaking: {}, config: {}, severities, run, askIssue: async (number) => issues[number] });
+		const byIssue = Object.fromEntries(result.workarounds.map(({ issue, status, file, line }) => [issue, [status, `${file}:${line}`]]));
+		assert.deepEqual(byIssue, { 101: ['solved', 'page.html:1'], 102: ['open', 'static/side.js:1'], 103: ['open', 'static/side.js:3'], 104: ['open', 'static/side.js:3'] });
+		const report = formatReport(result);
+		assert.match(report, /- \*\*1 workaround kan weg:\*\*/);
+		assert.match(report, /## Workarounds\n\n4 plekken verwijzen naar een issue van het designsysteem\.\n1 issue is opgelost in 0\.27\.1 of eerder[^\n]*\n\n- \[ \] `page\.html:1`: \[#101\]\(https:\/\/github\.com\/NederlandseDigitaleDienst\/design-system\/issues\/101\) is opgelost/);
+	});
+
 	it('installs what the lockfile lists when asked to, so the types of the project can be read', async () => {
 		const { ran } = await upgrade(project(files), { install: 'full' });
 		assert.deepEqual(ran, ['npm install --ignore-scripts --no-audit --no-fund']);

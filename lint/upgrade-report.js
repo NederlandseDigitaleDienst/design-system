@@ -101,6 +101,20 @@ function notesUnder(notes) {
 	return lines.map((line) => (/^#{1,6} /.test(line) ? deeper + line : line)).join('\n').trim();
 }
 
+/** Workarounds that link an issue of the design system: those this release solved may go. */
+function workaroundSection({ workarounds = [], to }) {
+	if (workarounds.length === 0) return [];
+	const solved = workarounds.filter(({ status }) => status === 'solved');
+	const unknown = workarounds.filter(({ status }) => status === 'unknown');
+	const lines = ['## Workarounds', '', `${plural(workarounds.length, 'plek verwijst', 'plekken verwijzen')} naar een issue van het designsysteem.`];
+	if (solved.length > 0) {
+		lines.push(`${plural(solved.length, 'issue is', 'issues zijn')} opgelost in ${to} of eerder, dus de workaround daar kan weg: gebruik het component zoals het nu is, en kijk na of de oplossing dekt wat de workaround deed.`, '');
+		for (const { file, line, issue } of solved) lines.push(`- [ ] \`${file}:${line}\`: [#${issue}](https://github.com/NederlandseDigitaleDienst/design-system/issues/${issue}) is opgelost`);
+	}
+	if (unknown.length > 0) lines.push('', `Van ${plural(unknown.length, 'plek', 'plekken')} kon de stand van het issue niet worden opgevraagd.`);
+	return lines;
+}
+
 /** The first sentence of an entry: its bold lead, or its first line. */
 const leadOf = (text) => text.split('\n')[0].replace(/^\*\*(.+?)\*\*.*$/, '$1').replace(/[.,:]$/, '');
 
@@ -169,7 +183,7 @@ function renderedSection({ rendered }) {
  * What the reader has to do, before anything about how the upgrade went: whether this can be
  * merged as it is, and where a choice waits. The sections below say the rest.
  */
-function summaryLines({ work, unread, undecided, breaking, rendered }) {
+function summaryLines({ work, unread, undecided, breaking, rendered, workarounds = [] }) {
 	const count = (entries) => entries.reduce((sum, { places }) => sum + places.length, 0);
 	const choices = count(work) + unread.length + (rendered ? count(rendered.rules) : 0);
 	const open = count(undecided);
@@ -177,6 +191,8 @@ function summaryLines({ work, unread, undecided, breaking, rendered }) {
 	if (choices === 0 && open === 0) lines.push('- **Klaar om te mergen**, als de checks van het project slagen. De linter van deze versie vindt niets meer wat deze upgrade vraagt.');
 	if (choices > 0) lines.push(`- **${plural(choices, 'plek vraagt', 'plekken vragen')} om een keuze.** Ze staan onder "Nog te doen".`);
 	if (open > 0) lines.push(`- **${plural(open, 'plek', 'plekken')} kan de linter niet beslissen in de bron.** Kijk ze na in de draaiende app.`);
+	const solved = workarounds.filter(({ status }) => status === 'solved').length;
+	if (solved > 0) lines.push(`- **${plural(solved, 'workaround kan', 'workarounds kunnen')} weg:** het issue waar ${solved === 1 ? 'hij' : 'ze'} op wachtte${solved === 1 ? '' : 'n'}, is opgelost.`);
 	if (breaking.touching.length > 0) lines.push(`- **${plural(breaking.touching.length, 'brekende wijziging noemt', 'brekende wijzigingen noemen')} een component dat jullie gebruiken.** Niet elke heeft een regel; lees ze door.`);
 	return lines;
 }
@@ -188,7 +204,7 @@ function summaryLines({ work, unread, undecided, breaking, rendered }) {
 export function formatReport(result) {
 	const title = result.from ? `# Designsysteem van ${result.from} naar ${result.to}` : `# Designsysteem naar ${result.to}`;
 	const notes = result.notes?.trim() ? ['## Keuzes', '', notesUnder(result.notes)] : [];
-	const sections = [versionSection(result), fixedSection(result), sinceSection(result), workSection(result), notes, undecidedSection(result), renderedSection(result), breakingSection(result), standingSection(result)].filter((lines) => lines.length > 0);
+	const sections = [versionSection(result), fixedSection(result), sinceSection(result), workSection(result), workaroundSection(result), notes, undecidedSection(result), renderedSection(result), breakingSection(result), standingSection(result)].filter((lines) => lines.length > 0);
 	const closing = result.rendered
 		? ['## Kijken', '', 'Leg oud en nieuw naast elkaar:', '', '```', 'npx nldd compare <oud> <nieuw> --out vergelijking', '```']
 		: [
