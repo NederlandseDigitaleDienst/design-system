@@ -67,6 +67,17 @@ fi
 	cat "$TOOLS/note.md"
 	tail -n +3 "$WORK/upgrade.md"
 	echo
+	# What Dependabot and Renovate do from now on, and their pull requests that do the same as this one.
+	duplicates="$(gh pr list --repo "$REPOSITORY" --state open --json number,title,author --jq '.[] | select(.author.login | test("dependabot|renovate")) | select(.title | contains("@nldd/design-system")) | "#\(.number)"' | paste -sd ' ')"
+	if [ "$(jq length "$TOOLS/bots.json")" -gt 0 ] || [ -n "$duplicates" ]; then
+		echo '## Dependabot en Renovate'
+		echo
+		echo 'Deze pull requests nemen `@nldd/design-system` over, met de fixes erbij. De andere afhankelijkheden houden Dependabot en Renovate gewoon bij.'
+		echo
+		jq --raw-output '.[] | if .written then "- `\(.file)`: een uitzondering voor dit pakket, zodat \(.bot) het niet meer ophoogt." else "- `\(.file)` kon de action niet schrijven. Zet onder `packageRules`: `{ \"matchPackageNames\": [\"@nldd/design-system\"], \"enabled\": false }`." end' "$TOOLS/bots.json"
+		[ -z "$duplicates" ] || echo "- $duplicates hoogt alleen de versie op, zonder de fixes. Sluit die als je deze merget."
+		echo
+	fi
 	# With how the site builds, when the agent found it. A file the agent wrote is data: jq reads it, and
 	# a file that is no JSON is left out.
 	state="$(jq --compact-output --slurpfile site "$WORK/site.json" '. + {site: $site[0]}' "$TOOLS/state-new.json" 2>/dev/null || jq --compact-output . "$TOOLS/state-new.json")"

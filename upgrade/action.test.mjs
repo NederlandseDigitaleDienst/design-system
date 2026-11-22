@@ -62,6 +62,7 @@ function world() {
 		PATH: `${stubs}:${process.env.PATH}`,
 		NLDD_SYSTEM_PATH: `${stubs}:${process.env.PATH}`,
 		GH_STATE: join(root, 'gh.json'),
+		NLDD_YAML_MODULE: join(action, '..', 'node_modules', 'yaml'),
 	};
 	const git = (cwd, ...args) => execFileSync('git', args, { cwd, env, encoding: 'utf8' }).trim();
 
@@ -73,6 +74,8 @@ function world() {
 	writeFileSync(join(seed, 'package.json'), `${JSON.stringify({ name: 'app', dependencies: { '@nldd/design-system': '^0.20.0' } }, null, 2)}\n`);
 	writeFileSync(join(seed, 'page.html'), '<nldd-title size="2" heading-level="2" text="Aanvraag A-1042"></nldd-title>\n<nldd-title color="inherit" heading-level="2" text="Dossier D-318"></nldd-title>\n');
 	writeFileSync(join(seed, 'notes.md'), 'Aantekeningen.\n');
+	mkdirSync(join(seed, '.github'));
+	writeFileSync(join(seed, '.github', 'dependabot.yml'), 'version: 2\nupdates:\n  # The app.\n  - package-ecosystem: npm\n    directory: /\n    schedule:\n      interval: weekly\n');
 	git(seed, 'add', '.');
 	git(seed, 'commit', '--quiet', '-m', 'start');
 	git(seed, 'push', '--quiet', 'origin', 'main');
@@ -98,7 +101,7 @@ function world() {
 		return { upgrade, deliver };
 	}
 
-	const state = () => JSON.parse(readFileSync(env.GH_STATE, 'utf8'));
+	const state = () => (existsSync(env.GH_STATE) ? JSON.parse(readFileSync(env.GH_STATE, 'utf8')) : { prs: [], next: 1, comment: 1 });
 	const editState = (change) => {
 		const now = state();
 		change(now);
@@ -128,6 +131,15 @@ describe('the action, step by step', { skip: process.platform !== 'linux' && 'th
 		assert.match(pr.body, /<!-- nldd-upgrade-state \{"from":"0\.20\.0","places":\{"title-color-no-effect\|page\.html\|nldd-title":1\}\} -->\n$/);
 		assert.match(show(BRANCH, 'page.html'), /size="display-2"/);
 		assert.match(show(BRANCH, 'package.json'), new RegExp(`"\\^${version}"`));
+	});
+
+	it('leaves the package to the action in the configuration of Dependabot, and names a pull request of the bot that does the same', () => {
+		const { run, state, show, editState } = world();
+		editState((now) => now.prs.push({ number: 7, head: 'dependabot/npm_and_yarn/nldd/design-system-0.28.0', title: 'chore(deps): bump @nldd/design-system from 0.20.0 to 0.28.0', state: 'open', author: 'app/dependabot', comments: [] }));
+		run();
+		assert.match(show(BRANCH, '.github/dependabot.yml'), /# The app\.[^]*ignore:\n\s+# Comes as a pull request[^\n]*\n\s+- dependency-name: "@nldd\/design-system"/);
+		const body = state().prs.find(({ head }) => head === BRANCH).body;
+		assert.match(body, /## Dependabot en Renovate[^]*- `\.github\/dependabot\.yml`: een uitzondering voor dit pakket, zodat Dependabot het niet meer ophoogt\.\n- #7 hoogt alleen de versie op/);
 	});
 
 	it('continues an open pull request: the team\'s commit stays, the default branch comes in, nothing is forced', () => {
@@ -168,6 +180,7 @@ describe('the action, step by step', { skip: process.platform !== 'linux' && 'th
 		run();
 		commit('main', 'package.json', () => show(BRANCH, 'package.json') + '\n', 'Zelf geüpgraded');
 		commit('main', 'page.html', () => show(BRANCH, 'page.html') + '\n', 'Zelf aangepast');
+		commit('main', '.github/dependabot.yml', () => show(BRANCH, '.github/dependabot.yml') + '\n', 'Zelf de uitzondering gezet');
 		run();
 		assert.equal(state().prs[0].state, 'closed');
 		assert.match(state().prs[0].closing, /Het project staat al op/);

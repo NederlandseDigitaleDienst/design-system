@@ -117,6 +117,11 @@ fi
 # TypeScript to read its types. That is code of the project, so it runs confined, without the token.
 CONFINE_RW=("$PROJECT" "$WORK")
 confine "$TOOLS/bin/nldd" upgrade --install ${from:+--from "$from"} --report "$WORK/upgrade.md" --format json > "$TOOLS/upgrade.json"
+# Dependabot and Renovate leave this package to the action: an exception in the configuration the
+# project has, in this pull request, for the team to see. The yaml library keeps the comments.
+npm install --prefix "$TOOLS/yaml" --no-audit --no-fund --ignore-scripts yaml@2.9.1 > /dev/null
+node "$ACTION/bots.mjs" "$PROJECT" "${NLDD_YAML_MODULE:-$TOOLS/yaml/node_modules/yaml}" > "$TOOLS/bots.json"
+
 # What the next run continues from: written here, where node is the one this job set up.
 node "$ACTION/state.mjs" write "$TOOLS/upgrade.json" > "$TOOLS/state-new.json"
 

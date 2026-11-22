@@ -56,7 +56,9 @@ Een versie is een map met een gebouwde site, of het adres van een draaiende app.
 
 ## Een pull request bij elke release
 
-De action `upgrade` draait de opdracht in je repository en opent een pull request met het verslag als tekst. Staat die pull request nog open bij een nieuwere release, dan gaat de action erop verder: `main` gaat erin, de nieuwe versie komt erbovenop, en wat jij of de agent er al deed blijft staan. Botst `main` met de branch buiten de lockfiles, dan gaat hij verder zonder `main` en zegt hij waar het conflict zit. Staat je project er al zonder deze pull request, dan sluit hij hem. Sluit je hem zelf zonder te mergen, dan vraagt hij het pas weer bij de volgende minor. Zet dit in `.github/workflows/nldd-upgrade.yml`:
+De action `upgrade` draait de opdracht in je repository en opent een pull request met het verslag als tekst. Staat die pull request nog open bij een nieuwere release, dan gaat de action erop verder: `main` gaat erin, de nieuwe versie komt erbovenop, en wat jij of de agent er al deed blijft staan. Botst `main` met de branch buiten de lockfiles, dan gaat hij verder zonder `main` en zegt hij waar het conflict zit. Staat je project er al zonder deze pull request, dan sluit hij hem. Sluit je hem zelf zonder te mergen, dan vraagt hij het pas weer bij de volgende minor.
+
+Gebruik je Dependabot of Renovate, dan zet de eerste pull request in hun configuratie een uitzondering voor `@nldd/design-system`. Zij zouden alleen de versie ophogen, zonder de fixes, en een release die iets breekt zou je build breken. De andere afhankelijkheden houden ze gewoon bij. Zet dit in `.github/workflows/nldd-upgrade.yml`:
 
 ```yaml
 on:

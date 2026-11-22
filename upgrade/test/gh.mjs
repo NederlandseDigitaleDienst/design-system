@@ -28,7 +28,7 @@ const out = (value) => {
 	process.exit(run.status);
 };
 const pr = (ref) => state.prs.find(({ number, head }) => String(number) === String(ref) || head === ref);
-const view = (p) => ({ number: p.number, title: p.title, body: p.body, mergedAt: p.merged ? '2026-11-21T00:00:00Z' : null, url: `https://github.com/test/pull/${p.number}` });
+const view = (p) => ({ number: p.number, title: p.title, body: p.body, author: { login: p.author ?? 'app/nldd' }, mergedAt: p.merged ? '2026-11-21T00:00:00Z' : null, url: `https://github.com/test/pull/${p.number}` });
 
 const [group, verb] = args;
 if (group === 'auth') process.exit(0);
@@ -48,7 +48,8 @@ if (group === 'api') {
 } else if (group === 'pr') {
 	if (verb === 'list') {
 		const wanted = option('--state');
-		const list = state.prs.filter((p) => p.head === option('--head') && (wanted === 'open' ? p.state === 'open' : p.state === 'closed')).reverse();
+		const head = option('--head');
+		const list = state.prs.filter((p) => (!head || p.head === head) && (wanted === 'open' ? p.state === 'open' : p.state === 'closed')).reverse();
 		out(list.slice(0, Number(option('--limit') ?? 30)).map(view));
 	} else if (verb === 'view') out(view(pr(args[2])));
 	else if (verb === 'create') {
