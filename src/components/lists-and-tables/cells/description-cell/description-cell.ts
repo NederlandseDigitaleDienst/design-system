@@ -32,10 +32,10 @@
  * @element nldd-description-cell
  * @attr {string} width - 'full' | 'fit-content' | CSS length (e.g. '200px', '20rem'). Default: 'full'
  * @attr {string} min-width - Minimum width: a CSS length (e.g. '80px', '5rem'), or `min-content` or `max-content`. Wins over the default floor, `width` and `max-width`
- * @attr {boolean} hyphens - Breaks a word of at least 6 letters by syllable, with a hyphen, as `hyphens` on nldd-text does. Needs a `lang` on the page (`lang="nl"` on `<html>`): without one the browser does not hyphenate, and a long word still breaks between two letters. Reaches text in the two slots, not an `nldd-text` in them: that has a `hyphens` of its own.
  * @attr {string} max-width - Maximum width as CSS length (e.g. '300px', '20rem')
  * @attr {string} min-height - Minimum height as CSS length (e.g. '44px', '3rem')
  * @attr {'top' | 'center' | 'bottom'} vertical-alignment - Vertical alignment (default: 'center')
+ * @attr {boolean} hyphens - Breaks a word of at least 6 letters by syllable, with a hyphen, as `hyphens` on nldd-text does. Needs a `lang` on the page (`lang="nl"` on `<html>`): without one the browser does not hyphenate, and a long word still breaks between two letters. Reaches text in the two slots, not an `nldd-text` in them: that has a `hyphens` of its own.
  *
  * @slot title - The label displayed above the description
  * @slot description - The description content
@@ -69,11 +69,11 @@ export class NLDDDescriptionCell extends ReorderHandleMixin(RowHeaderMixin(Visib
 	@property({ type: String, reflect: true, attribute: 'min-height' })
 	minHeight?: string;
 
-	@property({ type: Boolean, reflect: true })
-	hyphens = false;
-
 	@property({ reflect: true, attribute: 'vertical-alignment', converter: reflectNonDefault<VerticalAlignment>('center') })
 	verticalAlignment: VerticalAlignment = 'center';
+
+	@property({ type: Boolean, reflect: true })
+	hyphens = false;
 
 	override updated(changed: Map<string, unknown>) {
 		super.updated(changed);

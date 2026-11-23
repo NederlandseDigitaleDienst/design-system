@@ -44,7 +44,6 @@
  * @attr {string} size - Visual size of the title: 'display-1' to 'display-6', from large to small (unset: looks like 'display-5', and becomes 'display-6' in an `nldd-table-row`, where a title the size of the other cells reads better). Unlike nldd-title, `heading-level` does not set it: every row in a list looks the same, whatever its level
  * @attr {string} width - 'full' | 'fit-content' | CSS length (e.g. '200px', '20rem'). Default: 'full'
  * @attr {string} min-width - Minimum width: a CSS length (e.g. '80px', '5rem'), or `min-content` or `max-content`. Wins over the default floor, `width` and `max-width`
- * @attr {boolean} hyphens - Breaks a word of at least 6 letters by syllable, with a hyphen, as `hyphens` on nldd-text does. Needs a `lang` on the page (`lang="nl"` on `<html>`): without one the browser does not hyphenate, and a long word still breaks between two letters.
  * @attr {string} max-width - Maximum width as CSS length (e.g. '300px', '20rem')
  * @attr {string} min-height - Minimum height as CSS length (e.g. '44px', '3rem')
  * @attr {'left' | 'center' | 'right'} horizontal-alignment - Horizontal alignment (default: 'left')
@@ -54,6 +53,7 @@
  * @attr {string} supporting-text - Optional supporting text displayed below the title. Supports **bold**. Falls back to `supporting-text` slot.
  * @attr {string} overline - Optional overline text displayed above the title. Supports **bold**. Falls back to `overline` slot.
  * @attr {number} heading-level - Heading level for the title element: 1–6 (default: none, renders a <p>)
+ * @attr {boolean} hyphens - Breaks a word of at least 6 letters by syllable, with a hyphen, as `hyphens` on nldd-text does. Needs a `lang` on the page (`lang="nl"` on `<html>`): without one the browser does not hyphenate, and a long word still breaks between two letters.
  *
  * @slot overline - A `<p>` of your own for an overline that is more than text. Wins over `overline`.
  * @slot - (default) A heading (`h1`–`h6`) or `<p>` of your own for a title that is more than text. Wins over `text`.
@@ -118,9 +118,6 @@ export class NLDDTitleCell extends ReorderHandleMixin(RowHeaderMixin(VisibilityM
 	@property({ type: String, reflect: true, attribute: 'min-height' })
 	minHeight?: string;
 
-	@property({ type: Boolean, reflect: true })
-	hyphens = false;
-
 	@property({ reflect: true, attribute: 'horizontal-alignment', converter: reflectNonDefault<HorizontalAlignment>('left') })
 	horizontalAlignment: HorizontalAlignment = 'left';
 
@@ -139,6 +136,9 @@ export class NLDDTitleCell extends ReorderHandleMixin(RowHeaderMixin(VisibilityM
 	/** Heading level for the title element (1–6). When not set, renders a <p>. */
 	@property({ type: Number, attribute: 'heading-level' })
 	headingLevel: number | undefined = undefined;
+
+	@property({ type: Boolean, reflect: true })
+	hyphens = false;
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	query = '';

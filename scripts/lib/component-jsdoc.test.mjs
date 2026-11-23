@@ -83,3 +83,10 @@ test('keeps the indentation of the code, from the JSDoc source', async () => {
 	const [component] = parse(extractComponentBlocks(source)[0]);
 	assert.match(component.summary, /\n {2}<nldd-cell><\/nldd-cell>\n/);
 });
+
+test('keeps a code fence in the description of a tag on one line, for its table cell', () => {
+	const block = ['@element nldd-thing', '', '@attr {string} text - Its text, such as:', '```html', '<nldd-thing', '\ttext="Hallo"', '></nldd-thing>', '```', '', 'A thing.'].join('\n');
+	const [component] = parse(block);
+	assert.equal(component.attrs[0].description, 'Its text, such as: ```html <nldd-thing text="Hallo" ></nldd-thing> ```');
+	assert.equal(component.summary, '');
+});

@@ -7940,22 +7940,22 @@
             },
             {
               "kind": "field",
-              "name": "hyphens",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "hyphens",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "text",
               "type": {
                 "text": "string"
               },
               "default": "''",
               "attribute": "text",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hyphens",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "hyphens",
               "reflects": true
             }
           ],
@@ -8048,15 +8048,6 @@
               "description": "Alignment of the text within the block: 'left' | 'center' | 'right' (default: 'left'). Aligns the words; `horizontal-alignment` on nldd-container moves the box."
             },
             {
-              "name": "hyphens",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "hyphens",
-              "description": "Breaks a word of at least 6 letters by syllable, with a hyphen, as `hyphens` on nldd-rich-text does. Needs a `lang` on the page (`lang=\"nl\"` on `<html>`): without one the browser does not hyphenate, and a long word still breaks between two letters. A display size hyphenates regardless of this attribute."
-            },
-            {
               "name": "text",
               "type": {
                 "text": "string"
@@ -8064,6 +8055,15 @@
               "default": "''",
               "fieldName": "text",
               "description": "The text, when it is plain text. The component draws it as a `<p>`. Content in the slot wins."
+            },
+            {
+              "name": "hyphens",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hyphens",
+              "description": "Breaks a word of at least 6 letters by syllable, with a hyphen, as `hyphens` on nldd-rich-text does. Needs a `lang` on the page (`lang=\"nl\"` on `<html>`): without one the browser does not hyphenate, and a long word still breaks between two letters. A display size hyphenates regardless of this attribute."
             }
           ],
           "superclass": {
@@ -44413,22 +44413,22 @@
             },
             {
               "kind": "field",
-              "name": "hyphens",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "hyphens",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "verticalAlignment",
               "type": {
                 "text": "VerticalAlignment"
               },
               "default": "'center'",
               "attribute": "vertical-alignment",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hyphens",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "hyphens",
               "reflects": true
             },
             {
@@ -44518,15 +44518,6 @@
               "description": "Minimum height as CSS length (e.g. '44px', '3rem')"
             },
             {
-              "name": "hyphens",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "hyphens",
-              "description": "Breaks a word of at least 6 letters by syllable, with a hyphen, as `hyphens` on nldd-text does. Needs a `lang` on the page (`lang=\"nl\"` on `<html>`): without one the browser does not hyphenate, and a long word still breaks between two letters. Reaches text in the two slots, not an `nldd-text` in them: that has a `hyphens` of its own."
-            },
-            {
               "name": "vertical-alignment",
               "type": {
                 "text": "VerticalAlignment"
@@ -44537,6 +44528,15 @@
                 "text": "'bottom' | 'center' | 'top'"
               },
               "description": "Vertical alignment (default: 'center')"
+            },
+            {
+              "name": "hyphens",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hyphens",
+              "description": "Breaks a word of at least 6 letters by syllable, with a hyphen, as `hyphens` on nldd-text does. Needs a `lang` on the page (`lang=\"nl\"` on `<html>`): without one the browser does not hyphenate, and a long word still breaks between two letters. Reaches text in the two slots, not an `nldd-text` in them: that has a `hyphens` of its own."
             },
             {
               "name": "reorder-handle",
@@ -45509,16 +45509,6 @@
             },
             {
               "kind": "field",
-              "name": "hyphens",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "hyphens",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "horizontalAlignment",
               "type": {
                 "text": "HorizontalAlignment"
@@ -45565,6 +45555,16 @@
               },
               "default": "''",
               "attribute": "overline",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hyphens",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "hyphens",
               "reflects": true
             },
             {
@@ -45697,15 +45697,6 @@
               "description": "Minimum height as CSS length (e.g. '44px', '3rem')"
             },
             {
-              "name": "hyphens",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "hyphens",
-              "description": "Breaks a word of at least 6 letters by syllable, with a hyphen, as `hyphens` on nldd-text does. Needs a `lang` on the page (`lang=\"nl\"` on `<html>`): without one the browser does not hyphenate, and a long word still breaks between two letters."
-            },
-            {
               "name": "horizontal-alignment",
               "type": {
                 "text": "HorizontalAlignment"
@@ -45755,6 +45746,15 @@
               "default": "''",
               "fieldName": "overline",
               "description": "Optional overline text displayed above the main content. Supports **bold**. Falls back to `overline` slot."
+            },
+            {
+              "name": "hyphens",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hyphens",
+              "description": "Breaks a word of at least 6 letters by syllable, with a hyphen, as `hyphens` on nldd-text does. Needs a `lang` on the page (`lang=\"nl\"` on `<html>`): without one the browser does not hyphenate, and a long word still breaks between two letters."
             },
             {
               "name": "query",
@@ -45947,16 +45947,6 @@
             },
             {
               "kind": "field",
-              "name": "hyphens",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "hyphens",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "horizontalAlignment",
               "type": {
                 "text": "HorizontalAlignment"
@@ -46014,6 +46004,16 @@
               "default": "undefined",
               "description": "Heading level for the title element (1–6). When not set, renders a <p>.",
               "attribute": "heading-level"
+            },
+            {
+              "kind": "field",
+              "name": "hyphens",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "hyphens",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -46144,15 +46144,6 @@
               "description": "Minimum height as CSS length (e.g. '44px', '3rem')"
             },
             {
-              "name": "hyphens",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "hyphens",
-              "description": "Breaks a word of at least 6 letters by syllable, with a hyphen, as `hyphens` on nldd-text does. Needs a `lang` on the page (`lang=\"nl\"` on `<html>`): without one the browser does not hyphenate, and a long word still breaks between two letters."
-            },
-            {
               "name": "horizontal-alignment",
               "type": {
                 "text": "HorizontalAlignment"
@@ -46211,6 +46202,15 @@
               "default": "undefined",
               "description": "Heading level for the title element: 1–6 (default: none, renders a <p>)",
               "fieldName": "headingLevel"
+            },
+            {
+              "name": "hyphens",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hyphens",
+              "description": "Breaks a word of at least 6 letters by syllable, with a hyphen, as `hyphens` on nldd-text does. Needs a `lang` on the page (`lang=\"nl\"` on `<html>`): without one the browser does not hyphenate, and a long word still breaks between two letters."
             },
             {
               "name": "query",

@@ -100,5 +100,9 @@ export const wrapCodeText = css`
 	overflow-wrap: anywhere;
 `;
 
-/** A set with `!important` on each declaration, for a `::slotted()` rule after `slottedReset`. */
+/**
+ * A set with `!important` on each declaration, for a `::slotted()` rule after `slottedReset`.
+ * It splits on `;`, so it holds only for sets of plain declarations: a `;` inside a value,
+ * in a `url()` or a string, would break it.
+ */
 export const important = (set: CSSResult): CSSResult => unsafeCSS(set.cssText.replace(/;/g, ' !important;'));

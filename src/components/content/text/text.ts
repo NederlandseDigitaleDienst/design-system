@@ -56,9 +56,9 @@
  * @attr {'regular'|'medium'|'bold'} weight - Font weight: 'regular' | 'medium' | 'bold' (default: 'regular'). With 'bold' a slotted `<strong>` no longer stands out: there is nothing bolder in the scale.
  * @attr {'flat'|'tight'|'snug'|'loose'} line-height - Line height: 'flat' | 'tight' | 'snug' | 'loose' (default: 'snug')
  * @attr {'left'|'center'|'right'} horizontal-alignment - Alignment of the text within the block: 'left' | 'center' | 'right' (default: 'left'). Aligns the words; `horizontal-alignment` on nldd-container moves the box.
- * @attr {boolean} hyphens - Breaks a word of at least 6 letters by syllable, with a hyphen, as `hyphens` on nldd-rich-text does. Needs a `lang` on the page (`lang="nl"` on `<html>`): without one the browser does not hyphenate, and a long word still breaks between two letters. A display size hyphenates regardless of this attribute.
  *
  * @attr {string} text - The text, when it is plain text. The component draws it as a `<p>`. Content in the slot wins.
+ * @attr {boolean} hyphens - Breaks a word of at least 6 letters by syllable, with a hyphen, as `hyphens` on nldd-rich-text does. Needs a `lang` on the page (`lang="nl"` on `<html>`): without one the browser does not hyphenate, and a long word still breaks between two letters. A display size hyphenates regardless of this attribute.
  * @slot - Text that is more than plain text, in a `<p>` of your own, or a `<span>` for text that is no paragraph (a label, a number). Inline elements in it look as they do in nldd-rich-text: `<strong>` and `<b>` take the bold weight from the scale, `<em>` and `<i>` are italic, `<a>` is an underlined link, `<code>` sits on a tinted surface in the monospace font, `<mark>` is highlighted, `<q>` is quoted in italics, and an element with `data-mention` is a mention (`<a href="…" data-mention>` as the tinted token, `<span data-mention>` without the tint; write the name without the `@`). Components such as `nldd-tag` are left alone. That styling comes from a global stylesheet, `dist/css/text.css` or `global.css`, which includes it: a shadow root cannot reach inside a slotted element.
  * @accepts p, span, strong, b, em, i, a, code, mark, q
  */
@@ -117,11 +117,11 @@ export class NLDDText extends LitElement {
 	})
 	horizontalAlignment: HorizontalAlignment = 'left';
 
-	@property({ type: Boolean, reflect: true })
-	hyphens = false;
-
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	text = '';
+
+	@property({ type: Boolean, reflect: true })
+	hyphens = false;
 
 	/** The valid custom size per breakpoint, worked out before the first paint. */
 	private _customSizes: Partial<Record<Breakpoint, string>> = {};

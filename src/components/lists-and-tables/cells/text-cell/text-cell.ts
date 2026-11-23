@@ -60,7 +60,6 @@
  * @attr {'sm'|'md'} size - Cell size: 'sm' | 'md' (default: 'md')
  * @attr {string} width - 'full' | 'fit-content' | CSS length (e.g. '200px', '20rem'). Default: 'full'
  * @attr {string} min-width - Minimum width: a CSS length (e.g. '80px', '5rem'), or `min-content` or `max-content`. Wins over the default floor, `width` and `max-width`
- * @attr {boolean} hyphens - Breaks a word of at least 6 letters by syllable, with a hyphen, as `hyphens` on nldd-text does. Needs a `lang` on the page (`lang="nl"` on `<html>`): without one the browser does not hyphenate, and a long word still breaks between two letters.
  * @attr {string} max-width - Maximum width as CSS length (e.g. '200px', '20rem')
  * @attr {string} min-height - Minimum height as CSS length (e.g. '44px', '3rem')
  * @attr {'left'|'center'|'right'} horizontal-alignment - Horizontal alignment: 'left' | 'center' | 'right' (default: 'left')
@@ -69,6 +68,7 @@
  * @attr {string} text - Main text content. Supports **bold** syntax for inline bold segments. Content in the default slot wins.
  * @attr {string} supporting-text - Optional supporting text displayed below the main content. Supports **bold**. Falls back to `supporting-text` slot.
  * @attr {string} overline - Optional overline text displayed above the main content. Supports **bold**. Falls back to `overline` slot.
+ * @attr {boolean} hyphens - Breaks a word of at least 6 letters by syllable, with a hyphen, as `hyphens` on nldd-text does. Needs a `lang` on the page (`lang="nl"` on `<html>`): without one the browser does not hyphenate, and a long word still breaks between two letters.
  *
  * @slot overline - A `<p>` of your own for an overline that is more than text. Wins over `overline`.
  * @slot - (default) A `<p>` of your own for main text that is more than text. Wins over `text`.
@@ -130,9 +130,6 @@ export class NLDDTextCell extends ReorderHandleMixin(RowHeaderMixin(VisibilityMi
 	@property({ type: String, reflect: true, attribute: 'min-height' })
 	minHeight?: string;
 
-	@property({ type: Boolean, reflect: true })
-	hyphens = false;
-
 	@property({ reflect: true, attribute: 'horizontal-alignment', converter: reflectNonDefault<HorizontalAlignment>('left') })
 	horizontalAlignment: HorizontalAlignment = 'left';
 
@@ -147,6 +144,9 @@ export class NLDDTextCell extends ReorderHandleMixin(RowHeaderMixin(VisibilityMi
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	overline = '';
+
+	@property({ type: Boolean, reflect: true })
+	hyphens = false;
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	query = '';
