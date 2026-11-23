@@ -6,6 +6,8 @@
 npx @nldd/design-system lint src
 ```
 
+`nldd lint` is geen ESLint-plugin en vervangt je eigen linter niet. ESLint, Biome of Oxlint kijken naar je JavaScript; `nldd lint` kijkt naar hoe je de componenten gebruikt, ook in templates en gebouwde HTML, waar die linters niet komen. Draai ze naast elkaar.
+
 ## Wat hij vindt
 
 - Tags, attributen, slots, waarden en iconen die niet bestaan, of niet meer.
