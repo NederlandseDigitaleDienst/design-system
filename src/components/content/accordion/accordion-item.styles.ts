@@ -1,5 +1,6 @@
 import { css } from 'lit';
 import { inheritedTextReset, surfaceContent } from '../../../assets/styles/shadow-resets.js';
+import { wrapUiText } from '../../../assets/styles/text-wrap.js';
 
 export const accordionItemStyles = css`
 	:host {
@@ -137,7 +138,7 @@ export const accordionItemStyles = css`
 	.accordion-item__title {
 		min-width: 0;
 		flex: 1 1 0;
-		overflow-wrap: break-word;
+		${wrapUiText}
 	}
 
 	.accordion-item__disclosure-icon {

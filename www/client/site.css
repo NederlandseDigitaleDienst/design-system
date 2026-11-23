@@ -4,12 +4,11 @@
  * its frame stand, and the API tables that nldd-rich-text does not fit yet.
  */
 
-/* ## Code in tables and lists */
+/* ## Code in the API tables */
 
 /* Outside the layer below: the stylesheet of nldd-rich-text is not in a
    layer, so a rule in one would lose from it. */
-[data-site-api] td code,
-nldd-rich-text td code {
+[data-site-api] td code {
 	white-space: nowrap;
 	word-break: normal;
 	overflow-wrap: normal;

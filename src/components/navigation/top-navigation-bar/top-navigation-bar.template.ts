@@ -81,11 +81,11 @@ export function template(component: NLDDTopNavigationBar) {
 							<a class="top-navigation-bar__website-title"
 								href="${safeWebsiteHref}"
 							>
-								${component.websiteTitle}
+								<span class="top-navigation-bar__website-title-text">${component.websiteTitle}</span>
 							</a>
 						` : html`
 							<span class="top-navigation-bar__website-title">
-								${component.websiteTitle}
+								<span class="top-navigation-bar__website-title-text">${component.websiteTitle}</span>
 							</span>
 						`}
 					</div>

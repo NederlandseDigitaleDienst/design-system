@@ -2,6 +2,9 @@ import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { page } from 'vitest/browser';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import './skip-link.js';
+import { loadTokens } from '../../../test-tokens.js';
+import { wrapUiText } from '../../../assets/styles/text-wrap.js';
+import { wrapOf, wrapOfSets } from '../../../assets/styles/text-wrap.fixtures.js';
 
 describe('nldd-skip-link', () => {
 	let el: HTMLElement;
@@ -260,5 +263,40 @@ describe('nldd-skip-link op 320 px', () => {
 		// the host while the text runs past it.
 		expect(control.getBoundingClientRect().right).toBeLessThanOrEqual(320);
 		expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(320);
+	});
+});
+
+describe('nldd-skip-link – breaking long words', () => {
+	let el: HTMLElement;
+	let removeTokens: () => void;
+
+	beforeEach(() => {
+		removeTokens = loadTokens();
+	});
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		removeTokens();
+	});
+
+	for (const href of ['', ' href="#doel"']) {
+		it(`blijft gefocust binnen een smal vak${href ? ' als link' : ''}`, async () => {
+			el = await fixture(`<div style="width: 120px"><nldd-skip-link text="Sla inhoudsopgave over"${href}></nldd-skip-link><main id="doel" tabindex="-1">x</main></div>`);
+			const link = el.querySelector('nldd-skip-link') as HTMLElement;
+			await waitForUpdate(link);
+			const control = link.shadowRoot!.querySelector('.skip-link__control') as HTMLElement;
+			control.focus();
+			await waitForUpdate(link);
+
+			const block = link.shadowRoot!.querySelector('.skip-link') as HTMLElement;
+			expect(control.getBoundingClientRect().right).toBeLessThanOrEqual(block.getBoundingClientRect().right + 0.5);
+			expect(block.getBoundingClientRect().right).toBeLessThanOrEqual(link.getBoundingClientRect().right + 0.5);
+		});
+	}
+
+	it('breekt de tekst als knoptekst', async () => {
+		el = await fixture('<nldd-skip-link text="Sla over"></nldd-skip-link>');
+		await waitForUpdate(el);
+		expect(wrapOf(el.shadowRoot!.querySelector('.skip-link__text')!)).toEqual(wrapOfSets(wrapUiText));
 	});
 });

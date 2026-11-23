@@ -1,19 +1,26 @@
 import { css } from 'lit';
 import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { wrapUiText } from '../../../assets/styles/text-wrap.js';
 
 /* The chevron separator rendered after each breadcrumb item; the item host
    defines --_breadcrumbs-item-separator-vertical-offset. */
 const separatorStyles = css`
+	/* Inline, not inline-block: Chrome breaks a line before an atomic inline even
+	   after a word joiner. The icon is out of flow, in the padding. */
 	.breadcrumbs__separator {
-		display: inline-flex;
 		position: relative;
-		top: var(--_breadcrumbs-item-separator-vertical-offset);
-		margin-inline: var(--primitives-space-2);
+		padding-inline-start: calc(var(--primitives-space-4) + var(--primitives-space-16));
 		--context-content-color: var(--semantics-content-secondary-color);
 		color: var(--semantics-content-secondary-color);
+	}
+
+	.breadcrumbs__separator nldd-icon {
+		position: absolute;
+		inset-inline-start: var(--primitives-space-4);
+		top: calc(50% + var(--_breadcrumbs-item-separator-vertical-offset));
 		width: var(--primitives-space-16);
 		height: var(--primitives-space-16);
-		flex-shrink: 0;
+		translate: 0 -50%;
 	}
 `;
 
@@ -30,14 +37,8 @@ export const breadcrumbsStyles = css`
 		display: none;
 	}
 
-	.breadcrumbs {
-		display: flex;
-	}
-
 	.breadcrumbs__items {
-		display: flex;
-		flex-wrap: wrap;
-		row-gap: var(--primitives-space-4);
+		font: var(--primitives-font-body-md-regular-snug);
 	}
 `;
 
@@ -49,8 +50,7 @@ export const breadcrumbsItemStyles = css`
 		--_breadcrumbs-item-separator-vertical-offset: 0.05em;
 
 		${inheritedTextReset}
-		display: inline-flex;
-		align-items: center;
+		display: inline;
 	}
 
 	:host([hidden]) {
@@ -58,8 +58,7 @@ export const breadcrumbsItemStyles = css`
 	}
 
 	.breadcrumbs__item {
-		display: inline-flex;
-		align-items: center;
+		${wrapUiText}
 		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--primitives-font-body-md-regular-tight);

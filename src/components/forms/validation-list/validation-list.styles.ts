@@ -1,4 +1,5 @@
 import { css } from 'lit';
+import { wrapBodyText } from '../../../assets/styles/text-wrap.js';
 
 
 export const validationListStyles = css`
@@ -44,6 +45,7 @@ export const validationItemStyles = css`
 		--context-content-color: var(--_validation-item-content-color);
 		color: var(--_validation-item-content-color);
 		font: var(--_validation-item-font);
+		${wrapBodyText}
 		text-wrap: pretty;
 	}
 

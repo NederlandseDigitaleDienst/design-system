@@ -1,5 +1,6 @@
 import { css } from 'lit';
 import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { wrapUiText } from '../../../assets/styles/text-wrap.js';
 
 export const buttonStyles = css`
 	:host {
@@ -408,6 +409,7 @@ export const buttonStyles = css`
 		text-align: center;
 		text-decoration: none;
 		text-wrap: pretty;
+		${wrapUiText}
 		transition:
 			background-color var(--primitives-transition-duration-fast) var(--primitives-transition-easing-default),
 			color var(--primitives-transition-duration-fast) var(--primitives-transition-easing-default)

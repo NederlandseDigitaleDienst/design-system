@@ -1,5 +1,6 @@
 import { css } from 'lit';
 import { inheritedTextReset, surfaceContent } from '../../../assets/styles/shadow-resets.js';
+import { wrapUiText } from '../../../assets/styles/text-wrap.js';
 
 export const admonitionStyles = css`
 	:host {
@@ -172,7 +173,7 @@ export const admonitionStyles = css`
 		margin: 0;
 		min-width: 0;
 		flex: 1 1 0;
-		overflow-wrap: break-word;
+		${wrapUiText}
 		font: inherit;
 	}
 

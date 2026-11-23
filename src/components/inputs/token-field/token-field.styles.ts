@@ -112,8 +112,8 @@ export const tokenFieldStyles = css`
 		gap: var(--_token-field-gap);
 		flex-grow: 1;
 		flex-shrink: 1;
-		flex-basis: var(--_token-field-input-min-width);
-		min-width: var(--_token-field-input-min-width);
+		flex-basis: min(var(--_token-field-input-min-width), 100%);
+		min-width: min(var(--_token-field-input-min-width), 100%);
 	}
 
 

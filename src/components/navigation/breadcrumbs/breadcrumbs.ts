@@ -5,8 +5,10 @@
  * `<nav>` landmark wrapping a `<div role="list">` (with each item carrying
  * `role="listitem"`). Explicit ARIA roles travel reliably across the slot
  * boundary where the implicit `<ol>`/`<li>` mapping is inconsistent across
- * AT + browser combos. The trail wraps onto multiple lines when it doesn't
- * fit, so it adapts to any width.
+ * AT + browser combos. The trail flows as text: when it doesn't fit, it
+ * wraps between items and within a long item, which breaks as the text of a
+ * button (a word of at least 12 letters by syllable). A chevron stays on the
+ * line of the last word of its item.
  *
  * @element nldd-breadcrumbs
  * @keywords breadcrumb, kruimelpad

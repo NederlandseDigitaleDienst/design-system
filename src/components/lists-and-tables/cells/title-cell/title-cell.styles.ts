@@ -1,4 +1,5 @@
 import { css } from 'lit';
+import { hyphenateBodyText, wrapBodyText } from '../../../../assets/styles/text-wrap.js';
 import { inheritedTextReset, slottedBlockReset } from '../../../../assets/styles/shadow-resets.js';
 
 export const titleCellStyles = css`
@@ -20,6 +21,7 @@ export const titleCellStyles = css`
 		--_title-cell-font: var(--primitives-font-display-5-sm);
 
 		${inheritedTextReset}
+		${wrapBodyText}
 		/* !important: shields the row padding from consumer universal resets, which beat normal :host declarations per CSS Scoping. */
 		padding-block: var(--context-cell-padding-block, 0px) !important;
 		display: flex;
@@ -35,12 +37,18 @@ export const titleCellStyles = css`
 		display: none;
 	}
 
+	:host([hyphens]) {
+		${hyphenateBodyText}
+	}
+
 
 	/* # Width */
 
 	:host([width="full"]),
 	:host(:not([width])),
 	:host([width=""]) {
+		--_title-cell-min-width: var(--context-cell-min-width, var(--primitives-area-160));
+
 		flex-grow: 1;
 		flex-shrink: 1;
 		flex-basis: 0;
@@ -54,9 +62,8 @@ export const titleCellStyles = css`
 
 		width: fit-content;
 		flex-grow: 0;
-		/* Krimpen mag: fit-content betekent min(max-content, max(min-content,
-		   beschikbaar)), en met flex-shrink: 0 hield de cel zijn inhoudsbreedte
-		   vast en duwde hij alles erachter de rij uit. */
+		/* Shrinking is allowed: with flex-shrink: 0 the cell kept the width of
+		   its text and pushed everything after it out of the row. */
 		flex-shrink: 1;
 		flex-basis: auto;
 	}
@@ -67,6 +74,12 @@ export const titleCellStyles = css`
 
 	:host([max-width]) {
 		flex-basis: var(--_title-cell-max-width);
+	}
+
+	:host([max-width][width="full"]),
+	:host([max-width]:not([width])),
+	:host([max-width][width=""]) {
+		--_title-cell-min-width: min(var(--context-cell-min-width, var(--primitives-area-160)), var(--_title-cell-max-width));
 	}
 
 
@@ -167,7 +180,6 @@ export const titleCellStyles = css`
 		--context-content-color: var(--_title-cell-secondary-color);
 		color: var(--_title-cell-secondary-color);
 		font: var(--primitives-font-body-xs-regular-tight);
-		overflow-wrap: anywhere;
 		text-wrap: pretty;
 	}
 
@@ -182,7 +194,6 @@ export const titleCellStyles = css`
 		--context-content-color: var(--_title-cell-color);
 		color: var(--_title-cell-color);
 		font: var(--_title-cell-font);
-		overflow-wrap: break-word;
 		text-wrap: balance;
 	}
 
@@ -200,7 +211,6 @@ export const titleCellStyles = css`
 		--context-content-color: var(--_title-cell-secondary-color);
 		color: var(--_title-cell-secondary-color);
 		font: var(--primitives-font-body-sm-regular-tight);
-		overflow-wrap: anywhere;
 		text-wrap: pretty;
 	}
 

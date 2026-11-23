@@ -5,6 +5,8 @@ import { fixture, cleanup } from '../../../test-utils.js';
 import variablesCss from '../../../assets/styles/variables.css?raw';
 import colorsCss from '../../../assets/styles/colors.generated.css?raw';
 import richTextCss from './rich-text.css?raw';
+import { hyphenateBodyText, wrapBodyText, wrapCodeText, wrapDisplayText, wrapUiText } from '../../../assets/styles/text-wrap.js';
+import { wrapOf, wrapOfSets } from '../../../assets/styles/text-wrap.fixtures.js';
 import './rich-text.js';
 
 describe('nldd-rich-text', () => {
@@ -199,7 +201,7 @@ describe('nldd-rich-text headings', () => {
 		wrap.innerHTML = '<nldd-rich-text><h2>Zorgtoeslagverantwoordelijkheid</h2></nldd-rich-text>';
 		document.body.append(wrap);
 		const heading = wrap.querySelector('h2')!;
-		expect(getComputedStyle(heading).overflowWrap).toBe('break-word');
+		expect(getComputedStyle(heading).overflowWrap).toBe('anywhere');
 		expect(heading.scrollWidth).toBeLessThanOrEqual(heading.clientWidth);
 	});
 
@@ -624,5 +626,132 @@ describe('nldd-rich-text details', () => {
 		const p = el.querySelector('p')!.getBoundingClientRect();
 		const textStart = summary.getBoundingClientRect().left + parseFloat(getComputedStyle(summary).paddingLeft);
 		expect(p.left).toBeCloseTo(textStart, 0);
+	});
+});
+
+// rich-text.css is plain CSS and cannot import the sets of text-wrap.ts, so it
+// writes them out. These tests keep both the same.
+describe('nldd-rich-text breaking long words', () => {
+	let styles: HTMLStyleElement[] = [];
+	let wrap: HTMLElement;
+
+	beforeAll(() => {
+		styles = [variablesCss, richTextCss].map((css) => {
+			const style = document.createElement('style');
+			style.textContent = css;
+			document.head.appendChild(style);
+			return style;
+		});
+	});
+
+	afterAll(() => {
+		styles.forEach((s) => s.remove());
+	});
+
+	afterEach(() => {
+		if (wrap) wrap.remove();
+	});
+
+	const render = (html: string, width = 600): HTMLElement => {
+		wrap = document.createElement('div');
+		wrap.style.width = `${width}px`;
+		wrap.innerHTML = html;
+		document.body.append(wrap);
+		return wrap;
+	};
+
+	const BODY = '<p>Tekst</p><ul><li>Tekst</li></ul><dl><dt>Term</dt><dd>Tekst</dd></dl>';
+
+	it('geeft lopende tekst wrapBodyText', () => {
+		render(`<nldd-rich-text>${BODY}</nldd-rich-text>`);
+		const expected = wrapOfSets(wrapBodyText);
+		for (const tag of ['p', 'li', 'dt', 'dd']) {
+			expect(wrapOf(wrap.querySelector(tag)!), tag).toEqual(expected);
+		}
+	});
+
+	it('geeft lopende tekst met `hyphens` ook hyphenateBodyText', () => {
+		render(`<nldd-rich-text hyphens>${BODY}</nldd-rich-text>`);
+		const expected = wrapOfSets(wrapBodyText, hyphenateBodyText);
+		for (const tag of ['p', 'li', 'dd']) {
+			expect(wrapOf(wrap.querySelector(tag)!), tag).toEqual(expected);
+		}
+	});
+
+	it('geeft koppen wrapDisplayText', () => {
+		render('<nldd-rich-text><h1>Kop</h1><h2>Kop</h2><h3>Kop</h3><h4>Kop</h4><h5>Kop</h5><h6>Kop</h6></nldd-rich-text>');
+		const expected = wrapOfSets(wrapDisplayText);
+		for (const tag of ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']) {
+			expect(wrapOf(wrap.querySelector(tag)!), tag).toEqual(expected);
+		}
+	});
+
+	it('geeft de summary van een details wrapUiText', () => {
+		render('<nldd-rich-text><details><summary>Vraag</summary><p>Antwoord</p></details></nldd-rich-text>');
+		expect(wrapOf(wrap.querySelector('summary')!)).toEqual(wrapOfSets(wrapUiText));
+	});
+
+	it('geeft een citaat wrapDisplayText, zoals nldd-blockquote', () => {
+		render('<nldd-rich-text><blockquote><p>Citaat</p></blockquote></nldd-rich-text>');
+		expect(wrapOf(wrap.querySelector('blockquote > p')!)).toEqual(wrapOfSets(wrapDisplayText));
+	});
+
+	it('geeft inline code wrapCodeText', () => {
+		render('<nldd-rich-text><p><code>a</code></p><dl><dt>Veld</dt><dd><code>b</code></dd></dl></nldd-rich-text>');
+		const expected = wrapOfSets(wrapCodeText);
+		for (const code of wrap.querySelectorAll('code')) {
+			expect(wrapOf(code)['overflow-wrap']).toBe(expected['overflow-wrap']);
+		}
+	});
+
+	// #425: a hash in a dd ran out of the column; its grid column kept the
+	// width of the longest word.
+	it('houdt een hash in een dd binnen een smalle kolom', () => {
+		render('<nldd-rich-text><dl><dt>Controlegetal</dt><dd>9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08</dd></dl></nldd-rich-text>', 200);
+		const dd = wrap.querySelector('dd')!;
+		expect(dd.getBoundingClientRect().right).toBeLessThanOrEqual(wrap.getBoundingClientRect().right + 1);
+		expect(dd.scrollWidth).toBeLessThanOrEqual(dd.clientWidth);
+	});
+
+	it('houdt code in een dd binnen een smalle kolom', () => {
+		render('<nldd-rich-text><dl><dt>Veld</dt><dd><code>type_spec.precision_and_scale</code></dd></dl></nldd-rich-text>', 160);
+		const dd = wrap.querySelector('dd')!;
+		expect(dd.scrollWidth).toBeLessThanOrEqual(dd.clientWidth);
+	});
+
+	it('geeft tabelcellen wrapBodyText, en een td met `hyphens` ook hyphenateBodyText', () => {
+		render('<nldd-rich-text hyphens><table><tr><th>Kop</th><td>Tekst</td></tr></table></nldd-rich-text>');
+		expect(wrapOf(wrap.querySelector('th')!)).toEqual(wrapOfSets(wrapBodyText));
+		expect(wrapOf(wrap.querySelector('td')!)).toEqual(wrapOfSets(wrapBodyText, hyphenateBodyText));
+	});
+
+	const URL_TABLE = '<nldd-rich-text><table><thead><tr><th>Dataset</th><th>Endpoint</th><th>Formaat</th><th>Licentie</th><th>Bijgewerkt</th></tr></thead><tbody><tr><td>Gemeentegrenzen</td><td>https://api.example.nl/v1/datasets/gemeentegrenzen/features</td><td>GeoJSON</td><td>CC0</td><td>2026-11-01</td></tr></tbody></table></nldd-rich-text>';
+
+	// #433: from a container of 641px the table switched to display: table and
+	// ran out of its box instead of scrolling.
+	it.each([360, 720])('laat een te brede tabel op %ipx binnen zijn kader scrollen', (width) => {
+		render(URL_TABLE, width);
+		const table = wrap.querySelector('table')!;
+		expect(table.getBoundingClientRect().right).toBeLessThanOrEqual(wrap.getBoundingClientRect().right + 1);
+		expect(table.scrollWidth).toBeGreaterThan(table.clientWidth);
+	});
+
+	// #487: every cell kept 160px, so two short columns scrolled on a phone.
+	it('past een tabel met twee korte kolommen op 288px', () => {
+		render('<nldd-rich-text><table><thead><tr><th>Component</th><th>Doel</th></tr></thead><tbody><tr><td><code>nldd-notification</code></td><td>Meldt iets kort aan de gebruiker</td></tr><tr><td><code>nldd-banner</code></td><td>Een bericht over de hele pagina</td></tr></tbody></table></nldd-rich-text>', 288);
+		const table = wrap.querySelector('table')!;
+		expect(table.scrollWidth).toBeLessThanOrEqual(table.clientWidth);
+	});
+
+	it('sluit een smalle tabel om zijn inhoud', () => {
+		render('<nldd-rich-text><table><tr><th>Aanvraag</th><td>A-1042</td></tr></table></nldd-rich-text>', 720);
+		expect(wrap.querySelector('table')!.getBoundingClientRect().width).toBeLessThan(400);
+	});
+
+	it('laat een dd ook naast zijn dt binnen de kolom', () => {
+		render('<nldd-rich-text><dl><dt>Controlegetal</dt><dd>9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08</dd></dl></nldd-rich-text>', 720);
+		const dd = wrap.querySelector('dd')!;
+		expect(getComputedStyle(wrap.querySelector('dl')!).gridTemplateColumns.split(' ')).toHaveLength(2);
+		expect(dd.getBoundingClientRect().right).toBeLessThanOrEqual(wrap.getBoundingClientRect().right + 1);
 	});
 });

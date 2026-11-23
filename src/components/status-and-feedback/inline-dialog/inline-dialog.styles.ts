@@ -1,5 +1,6 @@
 import { css } from 'lit';
 import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { wrapBodyText, wrapUiText } from '../../../assets/styles/text-wrap.js';
 
 export const inlineDialogStyles = css`
 	:host {
@@ -67,6 +68,7 @@ export const inlineDialogStyles = css`
 	.inline-dialog {
 		box-sizing: border-box;
 		display: flex;
+		min-width: 0;
 		max-width: var(--primitives-area-480);
 		flex-direction: column;
 		flex-grow: 1;
@@ -105,7 +107,9 @@ export const inlineDialogStyles = css`
 		text-align: center;
 		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
+		max-width: 100%;
 		font: var(--_inline-dialog-text-font);
+		${wrapUiText}
 		text-wrap: balance;
 	}
 
@@ -119,7 +123,9 @@ export const inlineDialogStyles = css`
 		text-align: center;
 		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
+		max-width: 100%;
 		font: var(--_inline-dialog-supporting-text-font);
+		${wrapBodyText}
 		text-wrap: balance;
 	}
 

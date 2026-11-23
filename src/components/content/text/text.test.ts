@@ -8,6 +8,8 @@ import '../title/title.js';
 import '../rich-text/rich-text.js';
 import richTextCss from '../rich-text/rich-text.css?raw';
 import textCss from './text.css?raw';
+import { wrapCodeText } from '../../../assets/styles/text-wrap.js';
+import { wrapOf, wrapOfSets } from '../../../assets/styles/text-wrap.fixtures.js';
 
 const withTextCss = (): (() => void) => {
 	const style = document.createElement('style');
@@ -232,5 +234,88 @@ describe('nldd-text – display sizes and custom size', () => {
 		await text('lg-custom-size="huge"');
 		expect(el.hasAttribute('data-lg-custom-size')).toBe(false);
 		expect(el.matches(':state(invalid-custom-size)')).toBe(true);
+	});
+});
+
+describe('nldd-text – breaking long words', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const rightOfText = (node: Node): number => {
+		const range = document.createRange();
+		range.selectNodeContents(node);
+		return Math.max(...[...range.getClientRects()].map((r) => r.right));
+	};
+
+	// A Dutch compound wider than a narrow box used to run out of it (#473).
+	it('breekt een woord dat breder is dan het vak, in elke gewone maat', async () => {
+		for (const size of ['xxs', 'xs', 'sm', 'md', 'lg']) {
+			el = await fixture(`<nldd-text size="${size}" style="width: 120px"><p>Arbeidsongeschiktheidsverzekering</p></nldd-text>`);
+			await waitForUpdate(el);
+			const p = el.querySelector('p')!;
+			expect(rightOfText(p.firstChild!), size).toBeLessThanOrEqual(el.getBoundingClientRect().right + 1);
+			cleanup(el);
+		}
+		el = undefined as unknown as HTMLElement;
+	});
+
+	// break-word, not anywhere: the minimum width stays the longest word, so a
+	// box that sizes to its content does not shrink the text to one letter.
+	it('houdt het langste woord als minimale breedte', async () => {
+		el = await fixture('<nldd-text style="width: min-content"><p>Aanvraag indienen</p></nldd-text>');
+		await waitForUpdate(el);
+		const p = el.querySelector('p')!;
+		expect(getComputedStyle(p).overflowWrap).toBe('break-word');
+		expect(p.getClientRects().length).toBeGreaterThan(0);
+		const range = document.createRange();
+		range.selectNodeContents(p.firstChild!);
+		const lines = new Set([...range.getClientRects()].map((r) => Math.round(r.top))).size;
+		expect(lines).toBe(2);
+	});
+
+	it('breekt alleen op lettergrepen met `hyphens`', async () => {
+		el = await fixture('<nldd-text><p>Tekst</p></nldd-text>');
+		await waitForUpdate(el);
+		expect(getComputedStyle(el.querySelector('p')!).hyphens).toBe('manual');
+
+		el.setAttribute('hyphens', '');
+		await waitForUpdate(el);
+		expect((el as HTMLElement & { hyphens: boolean }).hyphens).toBe(true);
+		expect(getComputedStyle(el.querySelector('p')!).hyphens).toBe('auto');
+	});
+
+	it('breekt een display-maat altijd op lettergrepen, met anywhere als vangnet', async () => {
+		el = await fixture('<nldd-text size="display-1"><p>Arbeidsongeschiktheid</p></nldd-text>');
+		await waitForUpdate(el);
+		const style = getComputedStyle(el.querySelector('p')!);
+		expect(style.hyphens).toBe('auto');
+		expect(style.overflowWrap).toBe('anywhere');
+	});
+});
+
+// text.css is plain CSS and cannot import the sets of text-wrap.ts.
+describe('nldd-text – inline code follows wrapCodeText', () => {
+	let el: HTMLElement;
+	let removeCss: () => void;
+
+	beforeAll(() => {
+		removeCss = withTextCss();
+	});
+
+	afterAll(() => {
+		removeCss();
+	});
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it('geeft een code in het slot wrapCodeText', async () => {
+		el = await fixture('<nldd-text><p>Zet <code>type_spec.precision</code> op de kolom.</p></nldd-text>');
+		await waitForUpdate(el);
+		expect(wrapOf(el.querySelector('code')!)['overflow-wrap']).toBe(wrapOfSets(wrapCodeText)['overflow-wrap']);
 	});
 });

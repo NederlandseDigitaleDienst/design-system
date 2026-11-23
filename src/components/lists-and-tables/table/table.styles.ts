@@ -115,6 +115,8 @@ export const tableRowStyles = css`
 		   to the cell's box; inline padding stays here because it insets the row
 		   content from the frame without moving the full-bleed divider. */
 		--context-cell-padding-block: var(--semantics-tables-row-padding-block);
+		/* The columns set the width of a cell, so it drops its floor. */
+		--context-cell-min-width: 0px;
 		--_table-row-padding-inline: var(--semantics-tables-row-padding-inline);
 		--_table-row-divider-color: var(--semantics-tables-border-color);
 		--_table-row-divider-thickness: var(--semantics-tables-border-width);

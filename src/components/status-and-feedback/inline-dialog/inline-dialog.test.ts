@@ -1,6 +1,9 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import './inline-dialog.js';
+import { loadTokens } from '../../../test-tokens.js';
+import { wrapBodyText, wrapUiText } from '../../../assets/styles/text-wrap.js';
+import { wrapOf, wrapOfSets } from '../../../assets/styles/text-wrap.fixtures.js';
 
 describe('nldd-inline-dialog', () => {
 	let el: HTMLElement;
@@ -226,5 +229,39 @@ describe('nldd-inline-dialog', () => {
 			await waitForUpdate(el);
 			expect(block(el).classList.contains('inline-dialog--left-aligned')).toBe(true);
 		});
+	});
+});
+
+describe('nldd-inline-dialog – breaking long words', () => {
+	let el: HTMLElement;
+	let removeTokens: () => void;
+
+	beforeEach(() => { removeTokens = loadTokens(); });
+	afterEach(() => { cleanup(el); removeTokens(); });
+
+	const WORD = 'Arbeidsongeschiktheidsverzekering';
+
+	it.each([
+		['centered', ''],
+		['left-aligned', 'horizontal-alignment="left" size="lg"'],
+	])('keeps the title and the supporting text inside 200px, %s', async (_name, attrs) => {
+		el = await fixture(`<div style="width: 200px"><nldd-inline-dialog ${attrs} text="Geen ${WORD}" supporting-text="Uw ${WORD}aanvraag is niet gevonden"></nldd-inline-dialog></div>`);
+		const dialog = el.querySelector('nldd-inline-dialog')!;
+		await waitForUpdate(dialog as HTMLElement);
+		const box = el.getBoundingClientRect();
+		for (const part of dialog.shadowRoot!.querySelectorAll('.inline-dialog__text, .inline-dialog__supporting-text')) {
+			const range = document.createRange();
+			range.selectNodeContents(part);
+			const rect = range.getBoundingClientRect();
+			expect(rect.left).toBeGreaterThanOrEqual(box.left - 1);
+			expect(rect.right).toBeLessThanOrEqual(box.right + 1);
+		}
+	});
+
+	it('gives the title wrapUiText and the supporting text wrapBodyText', async () => {
+		el = await fixture('<nldd-inline-dialog text="Geen resultaten" supporting-text="Pas de filters aan."></nldd-inline-dialog>');
+		await waitForUpdate(el);
+		expect(wrapOf(el.shadowRoot!.querySelector('.inline-dialog__text')!)).toEqual(wrapOfSets(wrapUiText));
+		expect(wrapOf(el.shadowRoot!.querySelector('.inline-dialog__supporting-text')!)).toEqual(wrapOfSets(wrapBodyText));
 	});
 });

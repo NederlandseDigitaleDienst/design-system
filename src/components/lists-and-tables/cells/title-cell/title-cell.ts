@@ -24,11 +24,27 @@
  * Note that `query` highlighting and `**bold**` parsing only apply to the
  * attribute path; slotted content is rendered as-is.
  *
+ * ### Width and breaking
+ * A cell of `width="full"` takes the room the row has left, but not less than
+ * 160px, so its text stays readable: about 20 characters. In a row too narrow
+ * for that the row runs wider than its box, which is the sign to hide a cell
+ * at that width (`hide-below`) or to combine two. In `nldd-table` the columns
+ * set the width, so a cell there has no floor. A `width="fit-content"` cell is
+ * as wide as its text on one line, and never narrower than its longest word.
+ * `min-width` always wins: `0` lets the cell shrink freely, so a long URL
+ * breaks; `min-content` keeps the longest word whole; `max-content` keeps the
+ * text on one line. A `max-width` below 160px lowers the floor with it.
+ *
+ * Text breaks at spaces and hyphens. A word wider than the cell breaks between
+ * two letters, without a hyphen. Set `hyphens` to break long words by
+ * syllable instead.
+ *
  * @element nldd-title-cell
  * @attr {'content' | 'secondary' | 'accent' | 'success' | 'warning' | 'critical'} color - Text color variant (default: 'content'). `secondary` demotes the title to match the muted overline/supporting-text. `accent`, `success`, `warning` and `critical` tint all three regions so the cell reads as a coherent state.
  * @attr {string} size - Visual size of the title: 'display-1' to 'display-6', from large to small (unset: looks like 'display-5', and becomes 'display-6' in an `nldd-table-row`, where a title the size of the other cells reads better). Unlike nldd-title, `heading-level` does not set it: every row in a list looks the same, whatever its level
  * @attr {string} width - 'full' | 'fit-content' | CSS length (e.g. '200px', '20rem'). Default: 'full'
- * @attr {string} min-width - Minimum width as CSS length (e.g. '80px', '5rem')
+ * @attr {string} min-width - Minimum width: a CSS length (e.g. '80px', '5rem'), or `min-content` or `max-content`. Wins over the default floor, `width` and `max-width`
+ * @attr {boolean} hyphens - Breaks a word of at least 6 letters by syllable, with a hyphen, as `hyphens` on nldd-text does. Needs a `lang` on the page (`lang="nl"` on `<html>`): without one the browser does not hyphenate, and a long word still breaks between two letters.
  * @attr {string} max-width - Maximum width as CSS length (e.g. '300px', '20rem')
  * @attr {string} min-height - Minimum height as CSS length (e.g. '44px', '3rem')
  * @attr {'left' | 'center' | 'right'} horizontal-alignment - Horizontal alignment (default: 'left')
@@ -101,6 +117,9 @@ export class NLDDTitleCell extends ReorderHandleMixin(RowHeaderMixin(VisibilityM
 
 	@property({ type: String, reflect: true, attribute: 'min-height' })
 	minHeight?: string;
+
+	@property({ type: Boolean, reflect: true })
+	hyphens = false;
 
 	@property({ reflect: true, attribute: 'horizontal-alignment', converter: reflectNonDefault<HorizontalAlignment>('left') })
 	horizontalAlignment: HorizontalAlignment = 'left';

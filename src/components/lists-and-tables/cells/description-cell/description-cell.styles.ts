@@ -1,4 +1,5 @@
 import { css } from 'lit';
+import { hyphenateBodyText, wrapBodyText } from '../../../../assets/styles/text-wrap.js';
 import { slottedReset, inheritedTextReset } from '../../../../assets/styles/shadow-resets.js';
 
 export const descriptionCellStyles = css`
@@ -16,6 +17,7 @@ export const descriptionCellStyles = css`
 		--_description-cell-min-height: 0;
 
 		${inheritedTextReset}
+		${wrapBodyText}
 		/* !important: shields the row padding from consumer universal resets, which beat normal :host declarations per CSS Scoping. */
 		padding-block: var(--context-cell-padding-block, 0px) !important;
 		display: flex;
@@ -31,12 +33,18 @@ export const descriptionCellStyles = css`
 		display: none;
 	}
 
+	:host([hyphens]) {
+		${hyphenateBodyText}
+	}
+
 
 	/* # Width */
 
 	:host([width="full"]),
 	:host(:not([width])),
 	:host([width=""]) {
+		--_description-cell-min-width: var(--context-cell-min-width, var(--primitives-area-160));
+
 		flex-grow: 1;
 		flex-shrink: 1;
 		flex-basis: 0;
@@ -50,9 +58,8 @@ export const descriptionCellStyles = css`
 
 		width: fit-content;
 		flex-grow: 0;
-		/* Krimpen mag: fit-content betekent min(max-content, max(min-content,
-		   beschikbaar)), en met flex-shrink: 0 hield de cel zijn inhoudsbreedte
-		   vast en duwde hij alles erachter de rij uit. */
+		/* Shrinking is allowed: with flex-shrink: 0 the cell kept the width of
+		   its text and pushed everything after it out of the row. */
 		flex-shrink: 1;
 		flex-basis: auto;
 	}
@@ -63,6 +70,12 @@ export const descriptionCellStyles = css`
 
 	:host([max-width]) {
 		flex-basis: var(--_description-cell-max-width);
+	}
+
+	:host([max-width][width="full"]),
+	:host([max-width]:not([width])),
+	:host([max-width][width=""]) {
+		--_description-cell-min-width: min(var(--context-cell-min-width, var(--primitives-area-160)), var(--_description-cell-max-width));
 	}
 
 

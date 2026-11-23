@@ -11,16 +11,12 @@ export function template(component: NLDDSkipLink) {
 				<a class="skip-link__control"
 					href=${safeHref}
 					@click=${component._handleLinkClick}
-				>
-					${component._text}
-				</a>
+				><span class="skip-link__text">${component._text}</span></a>
 			` : html`
 				<button class="skip-link__control"
 					type="button"
 					@click=${component._handleClick}
-				>
-					${component._text}
-				</button>
+				><span class="skip-link__text">${component._text}</span></button>
 			`}
 		</div>
 		<slot @slotchange=${component._handleSlotChange}></slot>

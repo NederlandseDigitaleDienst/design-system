@@ -2,6 +2,9 @@ import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { fixture, cleanup, waitForUpdate, until } from '../../../test-utils.js';
 import './notification.js';
+import { loadTokens } from '../../../test-tokens.js';
+import { wrapBodyText, wrapUiText } from '../../../assets/styles/text-wrap.js';
+import { wrapOf, wrapOfSets } from '../../../assets/styles/text-wrap.fixtures.js';
 import '../../actions/button/button.js';
 import '../../layout/sheet/sheet.js';
 import '../modal-dialog/modal-dialog.js';
@@ -684,5 +687,38 @@ describe('NLDDNotification.show()', () => {
 
 		expect(shown.element.parentElement).toBe(area());
 		expect(shown.element.text).toBe('Klaar');
+	});
+});
+
+describe('nldd-notification – breaking long words', () => {
+	const WORD = 'Arbeidsongeschiktheidsverzekering';
+	let el: NLDDNotification;
+	let removeTokens: () => void;
+
+	beforeEach(() => { removeTokens = loadTokens(); });
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		clearRegion();
+		removeTokens();
+	});
+
+	it('keeps a long text and supporting text inside a narrow notification', async () => {
+		el = await maak(`<nldd-notification text="${WORD}" supporting-text="${WORD}aanvraag"></nldd-notification>`);
+		el.style.width = '200px';
+		await new Promise((r) => requestAnimationFrame(r));
+		const right = el.shadowRoot!.querySelector('.notification')!.getBoundingClientRect().right;
+		for (const selector of ['.notification__text', '.notification__supporting-text']) {
+			const range = document.createRange();
+			range.selectNodeContents(el.shadowRoot!.querySelector(selector)!);
+			expect(range.getBoundingClientRect().right - right, selector).toBeLessThanOrEqual(1);
+		}
+	});
+
+	it('gives the text wrapUiText and the supporting text wrapBodyText', async () => {
+		el = await maak(`<nldd-notification text="Aanvraag A-1042" supporting-text="Dakisolatie"></nldd-notification>`);
+		const root = el.shadowRoot!;
+		expect(wrapOf(root.querySelector('.notification__text')!)).toEqual(wrapOfSets(wrapUiText));
+		expect(wrapOf(root.querySelector('.notification__supporting-text')!)).toEqual(wrapOfSets(wrapBodyText));
 	});
 });

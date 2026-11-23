@@ -1,5 +1,8 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import { loadTokens } from '../../../test-tokens.js';
+import { wrapBodyText, wrapUiText } from '../../../assets/styles/text-wrap.js';
+import { wrapOf, wrapOfSets } from '../../../assets/styles/text-wrap.fixtures.js';
 import './identity.js';
 
 const AVATAR = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 40 40\'%3E%3Crect width=\'40\' height=\'40\'/%3E%3C/svg%3E';
@@ -233,5 +236,48 @@ describe('nldd-identity that swaps its box for a filled slot', () => {
 		await waitForUpdate(el);
 		expect([...el.shadowRoot!.querySelectorAll('slot')]).toEqual(slots);
 		expect(changes).toBe(0);
+	});
+});
+
+describe('nldd-identity – breaking long words', () => {
+	const WORD = 'Arbeidsongeschiktheidsverzekering';
+	const AVATAR = 'data:image/gif;base64,R0lGODlhAQABAAAAACw=';
+	let el: HTMLElement;
+	let unloadTokens: () => void;
+
+	beforeEach(() => {
+		unloadTokens = loadTokens();
+	});
+
+	afterEach(() => {
+		cleanup(el);
+		unloadTokens();
+	});
+
+	/** How far the text of `selector` runs past the right edge of `box`, in px. */
+	function overflowOf(identity: HTMLElement, selector: string, box: Element): number {
+		const range = document.createRange();
+		range.selectNodeContents(identity.shadowRoot!.querySelector(selector)!);
+		return range.getBoundingClientRect().right - box.getBoundingClientRect().right;
+	}
+
+	it.each([
+		['with an avatar', `avatar-src="${AVATAR}"`],
+		['without an avatar', ''],
+	])('keeps a long name and supporting text inside 160px, %s', async (_name, avatar) => {
+		el = await fixture(`<div style="width: 160px"><nldd-identity ${avatar} text="${WORD}" supporting-text="${WORD}adviseur"></nldd-identity></div>`);
+		const identity = el.querySelector('nldd-identity')!;
+		await waitForUpdate(identity);
+		await new Promise((r) => requestAnimationFrame(r));
+		expect(overflowOf(identity, '.identity__text', el)).toBeLessThanOrEqual(1);
+		expect(overflowOf(identity, '.identity__supporting-text', el)).toBeLessThanOrEqual(1);
+	});
+
+	it('gives the name wrapUiText and the supporting text wrapBodyText', async () => {
+		el = await fixture(`<nldd-identity text="Dossier D-318" supporting-text="Team Uitvoering"></nldd-identity>`);
+		await waitForUpdate(el);
+		const root = el.shadowRoot!;
+		expect(wrapOf(root.querySelector('.identity__text')!)).toEqual(wrapOfSets(wrapUiText));
+		expect(wrapOf(root.querySelector('.identity__supporting-text')!)).toEqual(wrapOfSets(wrapBodyText));
 	});
 });

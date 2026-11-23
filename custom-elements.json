@@ -3323,7 +3323,7 @@
                   }
                 }
               ],
-              "description": "Filter items based on a query string.\n\nMatching items are kept visible. Non-matching items are hidden. Matching\nitems receive `query=<query>` so their text-cell bolds the non-typed\nremainder (predictive completion, the ARIA APG pattern for combobox).\n\nWhen the query is empty, all items are shown and `query` is cleared.\n\nWith `hide: false` nothing is hidden and every item gets the `query`, for\na list someone else already filtered, such as a server answering per\nkeystroke. Text without the query in it is shown as it is."
+              "description": "Filter items based on a query string.\n\nMatching items are kept visible. Non-matching items are hidden. Matching\nitems receive `query=<query>` so their text bolds the non-typed\nremainder (predictive completion, the ARIA APG pattern for combobox).\n\nWhen the query is empty, all items are shown and `query` is cleared.\n\nWith `hide: false` nothing is hidden and every item gets the `query`, for\na list someone else already filtered, such as a server answering per\nkeystroke. Text without the query in it is shown as it is."
             },
             {
               "kind": "method",
@@ -7393,7 +7393,7 @@
               },
               "default": "false",
               "fieldName": "hyphens",
-              "description": "Opt-in automatic hyphenation for running text (p, li, dd). Needs a correct `lang` on the page (`lang=\"nl\"` on `<html>`, for instance): without language information the browser does not hyphenate. An `overflow-wrap: break-word` safety net on headings, p and li is always on, independent of this attribute, so a word wider than the column breaks instead of overflowing. Headings are hyphenated regardless of this attribute, but only a word of at least 12 letters, as in `nldd-title`, so a short word moves to the next line whole. A soft hyphen (`&shy;`) adds a place to break of your own."
+              "description": "Opt-in automatic hyphenation for running text (p, li, dd, td). Needs a correct `lang` on the page (`lang=\"nl\"` on `<html>`, for instance): without language information the browser does not hyphenate. Without this attribute, a word wider than the column still breaks between two letters, in p, li, dt and dd, so no text runs out of it. In a table a column is never narrower than its longest word: the table scrolls instead. Inline `code` breaks between any two characters, also in a table cell. Headings are hyphenated regardless of this attribute, but only a word of at least 12 letters, as in `nldd-title`, so a short word moves to the next line whole. A soft hyphen (`&shy;`) adds a place to break of your own."
             },
             {
               "name": "translations",
@@ -7855,7 +7855,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "One run of body text at a size from the type scale. It is what you reach for where an app would otherwise write a bare `<p>` and inherit whatever the page happens to set: a line under a title, a sentence in a panel, a caption. Every combination it offers exists as a token, so it cannot invent typography: it only names what the scale already has. The three axes are the same three the tokens carry: size, weight and line height. Plain text goes in `text`, and the component draws a `<p>` for it. Text with a link, a `<strong>` or a tag goes in the slot, in a `<p>` of your own, or a `<span>` where the text is no paragraph, such as a label or a number. What is in the slot is in the HTML before any script runs; `text` is drawn in the browser. On a page of a website that has to read without script, use the slot. The element in the slot takes the text style of the component: a font, margin or other style the page sets on it does not apply. Not for headings, which is `nldd-title`, and not for a block of prose with its own rhythm, spacing and media widths, which is `nldd-rich-text`. This is one run of text and nothing around it. For large letters that are not a heading, such as a number or a statement on a landing page, take a display size: `display-6` to `display-1` are the sizes of `nldd-title`, with its weight, typeface and line height, and they follow the breakpoint as a title does. `weight` and `line-height` belong to the body sizes and do nothing at a display size. For a statement larger than `display-1`, give each breakpoint a size of its own with `sm-custom-size`, `md-custom-size` and `lg-custom-size`. Color follows the context channel a list item, menu or table sets on its content, so text inside a row travels with that row as it is hovered or selected. Standalone that channel is unset and the semantic color answers. A line stops at `--semantics-text-max-width`, 40em, so it holds the same number of characters at every size and a wide column does not turn one sentence into a ruler. Override that variable, or `max-width` on the element, where a line is meant to run the full width: a label in a table cell, a value beside its own heading.",
+          "description": "One run of body text at a size from the type scale. It is what you reach for where an app would otherwise write a bare `<p>` and inherit whatever the page happens to set: a line under a title, a sentence in a panel, a caption. Every combination it offers exists as a token, so it cannot invent typography: it only names what the scale already has. The three axes are the same three the tokens carry: size, weight and line height. Plain text goes in `text`, and the component draws a `<p>` for it. Text with a link, a `<strong>` or a tag goes in the slot, in a `<p>` of your own, or a `<span>` where the text is no paragraph, such as a label or a number. What is in the slot is in the HTML before any script runs; `text` is drawn in the browser. On a page of a website that has to read without script, use the slot. The element in the slot takes the text style of the component: a font, margin or other style the page sets on it does not apply. Not for headings, which is `nldd-title`, and not for a block of prose with its own rhythm, spacing and media widths, which is `nldd-rich-text`. This is one run of text and nothing around it. For large letters that are not a heading, such as a number or a statement on a landing page, take a display size: `display-6` to `display-1` are the sizes of `nldd-title`, with its weight, typeface and line height, and they follow the breakpoint as a title does. `weight` and `line-height` belong to the body sizes and do nothing at a display size. For a statement larger than `display-1`, give each breakpoint a size of its own with `sm-custom-size`, `md-custom-size` and `lg-custom-size`. Color follows the context channel a list item, menu or table sets on its content, so text inside a row travels with that row as it is hovered or selected. Standalone that channel is unset and the semantic color answers. A line stops at `--semantics-text-max-width`, 40em, so it holds the same number of characters at every size and a wide column does not turn one sentence into a ruler. Override that variable, or `max-width` on the element, where a line is meant to run the full width: a label in a table cell, a value beside its own heading. Text breaks at spaces and hyphens. A word wider than the line, such as a long compound, a URL or a code, breaks between two letters, so no text runs out of a narrow box. Set `hyphens` to break long words by syllable instead, with a hyphen. A display size always does that for a word of at least 12 letters. A soft hyphen (`&shy;`) in the text marks a break of your own at any size.",
           "name": "NLDDText",
           "members": [
             {
@@ -7936,6 +7936,16 @@
               },
               "default": "'left'",
               "attribute": "horizontal-alignment",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hyphens",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "hyphens",
               "reflects": true
             },
             {
@@ -8038,6 +8048,15 @@
               "description": "Alignment of the text within the block: 'left' | 'center' | 'right' (default: 'left'). Aligns the words; `horizontal-alignment` on nldd-container moves the box."
             },
             {
+              "name": "hyphens",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hyphens",
+              "description": "Breaks a word of at least 6 letters by syllable, with a hyphen, as `hyphens` on nldd-rich-text does. Needs a `lang` on the page (`lang=\"nl\"` on `<html>`): without one the browser does not hyphenate, and a long word still breaks between two letters. A display size hyphenates regardless of this attribute."
+            },
+            {
               "name": "text",
               "type": {
                 "text": "string"
@@ -8105,7 +8124,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A title bar with an optional overline, title, and supporting text on the left, and a slot at the end of the title line on the right. The title comes from `text`, with `heading-level` for its place in the heading structure. The level also sets the size: an h2 looks like `display-2`. Set `size` where the look should differ from the level, such as a section heading that is smaller than its place. A heading of your own in the default slot sets the level the same way, so `<h2>` there looks like `display-2` without a `heading-level`. A title without a level is no heading and shows as body text, whatever its `size`: give it a level, or for large letters that are not a heading use nldd-text with a display size. `overline` and `supporting-text` go above and below it. Each of the three has a slot in the same place for content that is more than text. The slot takes the element the attribute draws: a heading, or a `<p>` for a title that is no heading, and a `<p>` for the overline and the supporting text. Put inline markup inside that element. A filled slot takes the place of the attribute. Each of the three chooses for itself, so a heading in the slot can go with plain `supporting-text`. Both grow and shrink with the size of the title, and keep to the width of a line of reading (40em), with balanced lines. The supporting text is a line or two, not a paragraph. What is in a slot is in the HTML the server sends; what comes from an attribute is drawn in the browser. On a page of a website, which search engines, link previews and reader mode read without script, put the heading in the default slot. In an application `text` with `heading-level` is enough. Inline elements in a slotted heading or `<p>` (a link, strong, em, code, mark, q) look as they do in nldd-text. A shadow root cannot reach inside a slotted element, so that styling comes from a global stylesheet: `dist/css/title.css`, or `global.css`, which includes it. A word too long for the line is hyphenated by syllable, with the `lang` of the page: only a word of at least 12 letters, with at least 5 on each side, so a short word moves to the next line whole. A soft hyphen (`&shy;`) adds a place to break of your own, also where the browser has no dictionary for the language: `overheids&shy;informatie`, or `\\u00AD` in a string set from script, where an entity is not read. Most browsers then break that word only there; Safari may still pick a syllable of its own.",
+          "description": "A title bar with an optional overline, title, and supporting text on the left, and a slot at the end of the title line on the right. The title comes from `text`, with `heading-level` for its place in the heading structure. The level also sets the size: an h2 looks like `display-2`. Set `size` where the look should differ from the level, such as a section heading that is smaller than its place. A heading of your own in the default slot sets the level the same way, so `<h2>` there looks like `display-2` without a `heading-level`. A title without a level is no heading and shows as body text, whatever its `size`: give it a level, or for large letters that are not a heading use nldd-text with a display size. `overline` and `supporting-text` go above and below it. Each of the three has a slot in the same place for content that is more than text. The slot takes the element the attribute draws: a heading, or a `<p>` for a title that is no heading, and a `<p>` for the overline and the supporting text. Put inline markup inside that element. A filled slot takes the place of the attribute. Each of the three chooses for itself, so a heading in the slot can go with plain `supporting-text`. Both grow and shrink with the size of the title, and keep to the width of a line of reading (40em), with balanced lines. The supporting text is a line or two, not a paragraph. What is in a slot is in the HTML the server sends; what comes from an attribute is drawn in the browser. On a page of a website, which search engines, link previews and reader mode read without script, put the heading in the default slot. In an application `text` with `heading-level` is enough. Inline elements in a slotted heading or `<p>` (a link, strong, em, code, mark, q) look as they do in nldd-text. A shadow root cannot reach inside a slotted element, so that styling comes from a global stylesheet: `dist/css/title.css`, or `global.css`, which includes it. A word too long for the line is hyphenated by syllable, with the `lang` of the page: only a word of at least 12 letters, with at least 5 on each side, so a short word moves to the next line whole. A soft hyphen (`&shy;`) adds a place to break of your own, also where the browser has no dictionary for the language: `overheids&shy;informatie`, or `\\u00AD` in a string set from script, where an entity is not read. Most browsers then break that word only there; Safari may still pick a syllable of its own. The overline and the supporting text are not hyphenated: a word wider than their line breaks between two letters, as in `nldd-text`.",
           "name": "NLDDTitle",
           "members": [
             {
@@ -44351,7 +44370,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A cell component for displaying a title-description pair in lists. `vertical-alignment=\"center\"` (default) stretches the cell to fill the full row height and centers its content within that space. Use `min-height` to set a minimum centered region. For strict top alignment without a minimum height, use `vertical-alignment=\"top\"`.",
+          "description": "A cell component for displaying a title-description pair in lists. `vertical-alignment=\"center\"` (default) stretches the cell to fill the full row height and centers its content within that space. Use `min-height` to set a minimum centered region. For strict top alignment without a minimum height, use `vertical-alignment=\"top\"`. A cell of `width=\"full\"` takes the room the row has left, but not less than 160px, so its text stays readable: about 20 characters. In a row too narrow for that the row runs wider than its box, which is the sign to hide a cell at that width (`hide-below`) or to combine two. In `nldd-table` the columns set the width, so a cell there has no floor. A `width=\"fit-content\"` cell is as wide as its text on one line, and never narrower than its longest word. `min-width` always wins: `0` lets the cell shrink freely, so a long URL breaks; `min-content` keeps the longest word whole; `max-content` keeps the text on one line. A `max-width` below 160px lowers the floor with it. Text breaks at spaces and hyphens. A word wider than the cell breaks between two letters, without a hyphen. Set `hyphens` to break long words by syllable instead. The cell gives the element in a slot its font and color, and styles nothing inside it. For a link, code or bold text in the description, put an `nldd-text` in the slot, with a `<p>` in it: that brings the inline styles of nldd-text, and its own rules for breaking.",
           "name": "NLDDDescriptionCell",
           "members": [
             {
@@ -44390,6 +44409,16 @@
                 "text": "string | undefined"
               },
               "attribute": "min-height",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hyphens",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "hyphens",
               "reflects": true
             },
             {
@@ -44470,7 +44499,7 @@
                 "text": "string | undefined"
               },
               "fieldName": "minWidth",
-              "description": "Minimum width as CSS length (e.g. '80px', '5rem')"
+              "description": "Minimum width: a CSS length (e.g. '80px', '5rem'), or `min-content` or `max-content`. Wins over the default floor, `width` and `max-width`"
             },
             {
               "name": "max-width",
@@ -44487,6 +44516,15 @@
               },
               "fieldName": "minHeight",
               "description": "Minimum height as CSS length (e.g. '44px', '3rem')"
+            },
+            {
+              "name": "hyphens",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hyphens",
+              "description": "Breaks a word of at least 6 letters by syllable, with a hyphen, as `hyphens` on nldd-text does. Needs a `lang` on the page (`lang=\"nl\"` on `<html>`): without one the browser does not hyphenate, and a long word still breaks between two letters. Reaches text in the two slots, not an `nldd-text` in them: that has a `hyphens` of its own."
             },
             {
               "name": "vertical-alignment",
@@ -45409,7 +45447,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A cell component for displaying text content in lists with configurable alignment, size and color. This is the most fundamental list cell component. `vertical-alignment=\"center\"` (default) stretches the cell to fill the full row height and centers its content within that space. Use `min-height` to set a minimum centered region. For strict top alignment without a minimum height, use `vertical-alignment=\"top\"`. Each text region (overline, main text, supporting text) takes plain text in its attribute, which the cell draws as a `<p>`, or a `<p>` of your own in its slot. Use the slot when you need components mixed with text, such as `<nldd-link>`, `<nldd-tag>` or `<nldd-icon>`, and put them in that `<p>`: the paragraph is then in the HTML before any script runs. The slot wins over the attribute. Each region chooses for itself, so an attribute and a slot stand side by side: plain text in `overline`, a `<p>` with a tag in the default slot. The cell does not style plain HTML: for bold, write `**bold**` in the attribute, and for code put an `<nldd-text>` in the `<p>`, with the `<code>` in a `<span>` of its own. The element in a slot takes the text style of the cell: a font, margin or other style the page sets on it does not apply. Note that `query` highlighting and `**bold**` parsing only apply to the attribute path; slotted content is rendered as-is.",
+          "description": "A cell component for displaying text content in lists with configurable alignment, size and color. This is the most fundamental list cell component. `vertical-alignment=\"center\"` (default) stretches the cell to fill the full row height and centers its content within that space. Use `min-height` to set a minimum centered region. For strict top alignment without a minimum height, use `vertical-alignment=\"top\"`. Each text region (overline, main text, supporting text) takes plain text in its attribute, which the cell draws as a `<p>`, or a `<p>` of your own in its slot. Use the slot when you need components mixed with text, such as `<nldd-link>`, `<nldd-tag>` or `<nldd-icon>`, and put them in that `<p>`: the paragraph is then in the HTML before any script runs. The slot wins over the attribute. Each region chooses for itself, so an attribute and a slot stand side by side: plain text in `overline`, a `<p>` with a tag in the default slot. The cell does not style plain HTML: for bold, write `**bold**` in the attribute, and for code put an `<nldd-text>` in the `<p>`, with the `<code>` in a `<span>` of its own. The element in a slot takes the text style of the cell: a font, margin or other style the page sets on it does not apply. Note that `query` highlighting and `**bold**` parsing only apply to the attribute path; slotted content is rendered as-is. A cell of `width=\"full\"` takes the room the row has left, but not less than 160px, so its text stays readable: about 20 characters. In a row too narrow for that the row runs wider than its box, which is the sign to hide a cell at that width (`hide-below`) or to combine two. In `nldd-table` the columns set the width, so a cell there has no floor. A `width=\"fit-content\"` cell is as wide as its text on one line, and never narrower than its longest word. `min-width` always wins: `0` lets the cell shrink freely, so a long URL breaks; `min-content` keeps the longest word whole; `max-content` keeps the text on one line. A `max-width` below 160px lowers the floor with it. `fit-content` is for short text of a known length: a label, a status, an amount. A long value, such as a URL, goes in the `full` cell, beside a label of `fit-content`. The value then takes the room the label leaves and breaks within it, and the label only breaks between its words when the value would otherwise drop below its floor: ```html <nldd-list-item> <nldd-text-cell width=\"fit-content\" text=\"Bestand\"></nldd-text-cell> <nldd-spacer-cell></nldd-spacer-cell> <nldd-text-cell text=\"https://mijndienst.example.nl/aanvragen/A-1042/besluit\"></nldd-text-cell> </nldd-list-item> ``` Text breaks at spaces and hyphens. A word wider than the cell breaks between two letters, without a hyphen. Set `hyphens` to break long words by syllable instead.",
           "name": "NLDDTextCell",
           "members": [
             {
@@ -45467,6 +45505,16 @@
                 "text": "string | undefined"
               },
               "attribute": "min-height",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hyphens",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "hyphens",
               "reflects": true
             },
             {
@@ -45630,7 +45678,7 @@
                 "text": "string | undefined"
               },
               "fieldName": "minWidth",
-              "description": "Minimum width as CSS length (e.g. '80px', '5rem')"
+              "description": "Minimum width: a CSS length (e.g. '80px', '5rem'), or `min-content` or `max-content`. Wins over the default floor, `width` and `max-width`"
             },
             {
               "name": "max-width",
@@ -45647,6 +45695,15 @@
               },
               "fieldName": "minHeight",
               "description": "Minimum height as CSS length (e.g. '44px', '3rem')"
+            },
+            {
+              "name": "hyphens",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hyphens",
+              "description": "Breaks a word of at least 6 letters by syllable, with a hyphen, as `hyphens` on nldd-text does. Needs a `lang` on the page (`lang=\"nl\"` on `<html>`): without one the browser does not hyphenate, and a long word still breaks between two letters."
             },
             {
               "name": "horizontal-alignment",
@@ -45828,7 +45885,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A cell component for displaying a title with optional overline and supporting text in lists. `vertical-alignment=\"center\"` (default) stretches the cell to fill the full row height and centers its content within that space. Use `min-height` to set a minimum centered region. For strict top alignment without a minimum height, use `vertical-alignment=\"top\"`. Each text region (overline, title, supporting text) takes plain text in its attribute, or the element itself in its slot: a heading (`h1`–`h6`) or a `<p>` for the title, a `<p>` for the other two, as the cell draws them for the attribute. Use the slot when you need inline elements like `<nldd-tag>`, `<nldd-icon>` or other components mixed with text, and put them in that element: the heading is then in the HTML before any script runs. The slot wins over the attribute, and `heading-level` only applies to the attribute. Each region chooses for itself, so an attribute and a slot stand side by side: plain text in `supporting-text`, a heading with a tag in the default slot. The element in a slot takes the text style of the cell: a font, margin or other style the page sets on it does not apply. Note that `query` highlighting and `**bold**` parsing only apply to the attribute path; slotted content is rendered as-is.",
+          "description": "A cell component for displaying a title with optional overline and supporting text in lists. `vertical-alignment=\"center\"` (default) stretches the cell to fill the full row height and centers its content within that space. Use `min-height` to set a minimum centered region. For strict top alignment without a minimum height, use `vertical-alignment=\"top\"`. Each text region (overline, title, supporting text) takes plain text in its attribute, or the element itself in its slot: a heading (`h1`–`h6`) or a `<p>` for the title, a `<p>` for the other two, as the cell draws them for the attribute. Use the slot when you need inline elements like `<nldd-tag>`, `<nldd-icon>` or other components mixed with text, and put them in that element: the heading is then in the HTML before any script runs. The slot wins over the attribute, and `heading-level` only applies to the attribute. Each region chooses for itself, so an attribute and a slot stand side by side: plain text in `supporting-text`, a heading with a tag in the default slot. The element in a slot takes the text style of the cell: a font, margin or other style the page sets on it does not apply. Note that `query` highlighting and `**bold**` parsing only apply to the attribute path; slotted content is rendered as-is. A cell of `width=\"full\"` takes the room the row has left, but not less than 160px, so its text stays readable: about 20 characters. In a row too narrow for that the row runs wider than its box, which is the sign to hide a cell at that width (`hide-below`) or to combine two. In `nldd-table` the columns set the width, so a cell there has no floor. A `width=\"fit-content\"` cell is as wide as its text on one line, and never narrower than its longest word. `min-width` always wins: `0` lets the cell shrink freely, so a long URL breaks; `min-content` keeps the longest word whole; `max-content` keeps the text on one line. A `max-width` below 160px lowers the floor with it. Text breaks at spaces and hyphens. A word wider than the cell breaks between two letters, without a hyphen. Set `hyphens` to break long words by syllable instead.",
           "name": "NLDDTitleCell",
           "members": [
             {
@@ -45886,6 +45943,16 @@
                 "text": "string | undefined"
               },
               "attribute": "min-height",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hyphens",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "hyphens",
               "reflects": true
             },
             {
@@ -46058,7 +46125,7 @@
                 "text": "string | undefined"
               },
               "fieldName": "minWidth",
-              "description": "Minimum width as CSS length (e.g. '80px', '5rem')"
+              "description": "Minimum width: a CSS length (e.g. '80px', '5rem'), or `min-content` or `max-content`. Wins over the default floor, `width` and `max-width`"
             },
             {
               "name": "max-width",
@@ -46075,6 +46142,15 @@
               },
               "fieldName": "minHeight",
               "description": "Minimum height as CSS length (e.g. '44px', '3rem')"
+            },
+            {
+              "name": "hyphens",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hyphens",
+              "description": "Breaks a word of at least 6 letters by syllable, with a hyphen, as `hyphens` on nldd-text does. Needs a `lang` on the page (`lang=\"nl\"` on `<html>`): without one the browser does not hyphenate, and a long word still breaks between two letters."
             },
             {
               "name": "horizontal-alignment",
@@ -47882,7 +47958,7 @@
         },
         {
           "kind": "class",
-          "description": "A trail of `nldd-breadcrumbs-item`s separated by `›`, rendered as a `<nav>` landmark wrapping a `<div role=\"list\">` (with each item carrying `role=\"listitem\"`). Explicit ARIA roles travel reliably across the slot boundary where the implicit `<ol>`/`<li>` mapping is inconsistent across AT + browser combos. The trail wraps onto multiple lines when it doesn't fit, so it adapts to any width.",
+          "description": "A trail of `nldd-breadcrumbs-item`s separated by `›`, rendered as a `<nav>` landmark wrapping a `<div role=\"list\">` (with each item carrying `role=\"listitem\"`). Explicit ARIA roles travel reliably across the slot boundary where the implicit `<ol>`/`<li>` mapping is inconsistent across AT + browser combos. The trail flows as text: when it doesn't fit, it wraps between items and within a long item, which breaks as the text of a button (a word of at least 12 letters by syllable). A chevron stays on the line of the last word of its item.",
           "name": "NLDDBreadcrumbs",
           "members": [
             {
@@ -52659,7 +52735,7 @@
               "expandedType": {
                 "text": "'inline' | 'none' | 'tooltip'"
               },
-              "description": "Where the value shows: inline in the caption, in a tooltip on the bar, or hidden (default: 'inline')"
+              "description": "Where the value shows: inline in the caption, in a tooltip on the bar, or hidden (default: 'inline'). Inline, the value stays on one line, at the end of the last line of the text, and the text breaks beside it, a word of at least 12 letters by syllable"
             },
             {
               "name": "indeterminate",
@@ -53463,7 +53539,7 @@
         },
         {
           "kind": "class",
-          "description": "Shows where you are in a process of several steps: a row of discs with a number (or a check mark on what is done), a label under each and a line connecting them. Other systems call this a stepper or a progress indicator. Mark the step you are on with `status=\"current\"`. The parent derives the rest from its position: `past` before it, `future` after. With none marked, no step is current and every step is still to do. With more than one, the last one wins and a warning goes to the console in a dev build: a flow that forgets to clear the previous step still points at the furthest one. A `status=\"past\"` or `status=\"future\"` on another step overrides what is derived for that step, for flows that jump back or skip a step. One attribute, the same three values as `nldd-step-cell`, so a flow reads in one vocabulary whether it runs across or down. A bar without a current step shows what is coming, for instance on the page before a process starts. Use that sparingly: what someone needs there is the button that starts the task, and a bar that shows no progress tells little. Mark a step as soon as the process has begun. Horizontal only, for 3 to 5 steps and 7 at most: each step needs room for its label, and with more of them you count instead of seeing at a glance how far you are. For more steps, or steps under each other, build an `nldd-list` with an `nldd-step-cell` and an `nldd-title-cell` per row: vertical steps usually carry more than a title, and a list row already does that. When the bar is no wider than the sm breakpoint, or than 120px per step, whichever is wider (a container query, so measured on the component itself rather than on the viewport), it folds into one line of text plus a segmented bar. A label that is too long for its step breaks at a syllable. The full list of steps stays in the DOM, only visually hidden, so assistive software hears no less than a wide screen shows. A step that is a link or a button is out of the tab order then: Tab would land on something you cannot see (WCAG 2.4.7). Accessibility: a `nav` with a label, holding a `role=\"list\"` with a `role=\"listitem\"` per step. The current step gets `aria-current=\"step\"`, the only notion WAI-ARIA has for this. \"Done\" and \"still to do\" do not exist as ARIA tokens and travel along as visually hidden text instead.",
+          "description": "Shows where you are in a process of several steps: a row of discs with a number (or a check mark on what is done), a label under each and a line connecting them. Other systems call this a stepper or a progress indicator. Mark the step you are on with `status=\"current\"`. The parent derives the rest from its position: `past` before it, `future` after. With none marked, no step is current and every step is still to do. With more than one, the last one wins and a warning goes to the console in a dev build: a flow that forgets to clear the previous step still points at the furthest one. A `status=\"past\"` or `status=\"future\"` on another step overrides what is derived for that step, for flows that jump back or skip a step. One attribute, the same three values as `nldd-step-cell`, so a flow reads in one vocabulary whether it runs across or down. A bar without a current step shows what is coming, for instance on the page before a process starts. Use that sparingly: what someone needs there is the button that starts the task, and a bar that shows no progress tells little. Mark a step as soon as the process has begun. Horizontal only, for 3 to 5 steps and 7 at most: each step needs room for its label, and with more of them you count instead of seeing at a glance how far you are. For more steps, or steps under each other, build an `nldd-list` with an `nldd-step-cell` and an `nldd-title-cell` per row: vertical steps usually carry more than a title, and a list row already does that. When the bar is no wider than the sm breakpoint, or than 120px per step, whichever is wider (a container query, so measured on the component itself rather than on the viewport), it folds into one line of text plus a segmented bar. A label of 12 letters or more that is too long for its step breaks at a syllable, in either form; a shorter word stays whole, and the count beside the title in the folded form stays on one line. The full list of steps stays in the DOM, only visually hidden, so assistive software hears no less than a wide screen shows. A step that is a link or a button is out of the tab order then: Tab would land on something you cannot see (WCAG 2.4.7). Accessibility: a `nav` with a label, holding a `role=\"list\"` with a `role=\"listitem\"` per step. The current step gets `aria-current=\"step\"`, the only notion WAI-ARIA has for this. \"Done\" and \"still to do\" do not exist as ARIA tokens and travel along as visually hidden text instead.",
           "name": "NLDDStepBar",
           "members": [
             {

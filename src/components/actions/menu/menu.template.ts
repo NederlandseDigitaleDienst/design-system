@@ -64,12 +64,8 @@ export function menuTemplate(this: NLDDMenu, isEmpty: boolean, variant: MenuVari
 							@click=${this._handleBack}
 							@mouseenter=${this._handleBackMouseenter}
 						>
-							<nldd-icon-cell
-								size="20"
-								icon="chevron-left"
-							></nldd-icon-cell>
-							<nldd-spacer-cell size="6"></nldd-spacer-cell>
-							<nldd-text-cell text=${this._parentItem!.text}></nldd-text-cell>
+							<span class="menu__back-button-icon"><nldd-icon icon="chevron-left"></nldd-icon></span>
+							<span class="menu__back-button-text">${this._parentItem!.text}</span>
 						</button>
 						<!-- Pure visual divider; role="none" keeps strict ARIA validators
 						     quiet (a focusable role="separator" inside a menu would need

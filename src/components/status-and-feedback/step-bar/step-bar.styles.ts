@@ -1,6 +1,7 @@
 import { css, unsafeCSS, type CSSResult } from 'lit';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { wrapUiText } from '../../../assets/styles/text-wrap.js';
 
 const smMax = unsafeCSS(queryBreakpoints.smMax);
 
@@ -99,6 +100,8 @@ export const stepBarStyles = css`
 	}
 
 	.step-bar__compact-title {
+		min-width: 0;
+		${wrapUiText}
 		text-wrap: pretty;
 	}
 
@@ -243,9 +246,9 @@ export const stepBarItemStyles = css`
 	.step-bar__item-title {
 		--context-content-color: var(--_step-bar-title-color);
 		color: var(--_step-bar-title-color);
+		max-width: 100%;
 		font: var(--primitives-font-body-sm-regular-flat);
-		overflow-wrap: anywhere;
-		hyphens: auto;
+		${wrapUiText}
 		text-wrap: balance;
 	}
 

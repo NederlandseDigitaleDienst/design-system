@@ -2,6 +2,8 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate, installUniversalReset, until, reduceMotion } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
 import './menu.js';
+import { wrapUiText } from '../../../assets/styles/text-wrap.js';
+import { wrapOf, wrapOfSets } from '../../../assets/styles/text-wrap.fixtures.js';
 import '../button/button.js';
 import '../../inputs/combo-box/combo-box.js';
 import '../../inputs/token-field/token-field.js';
@@ -2228,6 +2230,39 @@ describe('nldd-menu drill-in status announcements (WCAG 4.1.3)', () => {
 		cleanup(root);
 	});
 
+	it('draws the back button without cells, and breaks its text inside it', async () => {
+		const removeTokens = loadTokens();
+		forceDrillIn(true);
+		const root = await fixture<HTMLElement>(`
+			<nldd-menu>
+				<nldd-menu-item text="Arbeidsongeschiktheidsverzekeringsaanvraag">
+					<nldd-menu>
+						<nldd-menu-item text="Open"></nldd-menu-item>
+					</nldd-menu>
+				</nldd-menu-item>
+			</nldd-menu>
+		`);
+		await waitForUpdate(root);
+		const item = root.querySelector(':scope > nldd-menu-item') as HTMLElement;
+		const submenu = item.querySelector(':scope > nldd-menu') as HTMLElement;
+		(root as HTMLElement & { showPopover: () => void }).showPopover();
+		await waitForUpdate(root);
+		openSubmenu(item, submenu);
+		await waitForUpdate(submenu);
+
+		const backButton = submenu.shadowRoot!.querySelector<HTMLElement>('.menu__back-button')!;
+		expect(backButton.querySelector('nldd-icon-cell, nldd-spacer-cell, nldd-text-cell')).toBeNull();
+		const text = backButton.querySelector('.menu__back-button-text')!;
+		expect(text.textContent).toBe('Arbeidsongeschiktheidsverzekeringsaanvraag');
+		expect(wrapOf(text)).toEqual(wrapOfSets(wrapUiText));
+		backButton.style.width = '160px';
+		expect(backButton.scrollWidth).toBeLessThanOrEqual(160);
+		expect(text.getBoundingClientRect().width).toBeGreaterThan(0);
+
+		cleanup(root);
+		removeTokens();
+	});
+
 	it('announces the destination level on ArrowLeft from a deeper submenu', async () => {
 		forceDrillIn(true);
 		const root = await fixture<HTMLElement>(`
@@ -4080,5 +4115,24 @@ describe('nldd-menu – opens on the current choice', () => {
 		expect(menu.getBoundingClientRect().bottom).toBeLessThanOrEqual(document.getElementById('opener')!.getBoundingClientRect().top + 1);
 		expect(Math.abs(area.top + scroller.clientHeight - selected.bottom - selected.height * 1.5)).toBeLessThan(2);
 		menu.hidePopover();
+	});
+});
+
+describe('nldd-menu-item – breaking long words', () => {
+	let el: HTMLElement;
+	let removeTokens: () => void;
+
+	beforeEach(() => { removeTokens = loadTokens(); });
+	afterEach(() => { cleanup(el); removeTokens(); });
+
+	it('breaks its text and details with wrapUiText, inside a menu of 280px', async () => {
+		el = await fixture('<div style="width: 280px"><nldd-menu-item text="Arbeidsongeschiktheidsverzekeringsaanvraag" details="Dakisolatie"></nldd-menu-item></div>');
+		const item = el.querySelector('nldd-menu-item') as HTMLElement & { updateComplete: Promise<unknown> };
+		await item.updateComplete;
+		const root = item.shadowRoot!;
+		expect(wrapOf(root.querySelector('.menu__item-text')!)).toEqual(wrapOfSets(wrapUiText));
+		expect(wrapOf(root.querySelector('.menu__item-details')!)).toEqual(wrapOfSets(wrapUiText));
+		const box = root.querySelector('.menu__item')!;
+		expect(box.scrollWidth).toBeLessThanOrEqual(Math.ceil(box.getBoundingClientRect().width));
 	});
 });

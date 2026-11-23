@@ -1,5 +1,6 @@
 import { css } from 'lit';
 import { slottedReset, inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { wrapBodyText } from '../../../assets/styles/text-wrap.js';
 
 export const imageStyles = css`
 	:host {
@@ -421,7 +422,7 @@ export const imageStyles = css`
 
 	.image__error-text {
 		max-width: 100%;
-		overflow-wrap: anywhere;
+		${wrapBodyText}
 	}
 
 
@@ -434,10 +435,17 @@ export const imageStyles = css`
 		--context-content-color: var(--_image-caption-color);
 		color: var(--_image-caption-color);
 		font: var(--_image-caption-font);
+		${wrapBodyText}
 		text-wrap: pretty;
 	}
 
+	.image__caption > slot {
+		display: block;
+		min-width: 0;
+	}
+
 	.image__credit {
+		min-width: 0;
 		--context-content-color: var(--_image-credit-color);
 		color: var(--_image-credit-color);
 		font: var(--_image-credit-font);

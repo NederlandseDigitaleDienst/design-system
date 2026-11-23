@@ -5,6 +5,8 @@ import type { NLDDAccordion } from './accordion.js';
 import type { NLDDAccordionItem } from './accordion-item.js';
 import './accordion.js';
 import './accordion-item.js';
+import { wrapUiText } from '../../../assets/styles/text-wrap.js';
+import { wrapOf, wrapOfSets } from '../../../assets/styles/text-wrap.fixtures.js';
 
 const items = (count: number, open: number[] = []) => Array.from({ length: count }, (_, index) => `
 	<nldd-accordion-item text="Vraag ${index + 1}"${open.includes(index) ? ' open' : ''}><p>Antwoord</p></nldd-accordion-item>
@@ -154,5 +156,18 @@ describe('nldd-accordion', () => {
 		expect(lines).toBeGreaterThanOrEqual(2);
 		expect(height).toBeCloseTo(lines * line + 2 * padding, 0);
 		expect(part(long, 'disclosure-icon').top - part(long, 'title').top).toBeCloseTo((line - part(long, 'disclosure-icon').height) / 2, 0);
+	});
+});
+
+describe('nldd-accordion-item – breaking long words', () => {
+	let el: HTMLElement;
+
+	afterEach(() => cleanup(el));
+
+	it('gives the title wrapUiText', async () => {
+		el = await fixture('<nldd-accordion><nldd-accordion-item text="Vraag"><p>Antwoord</p></nldd-accordion-item></nldd-accordion>');
+		const item = el.querySelector('nldd-accordion-item')!;
+		await item.updateComplete;
+		expect(wrapOf(item.shadowRoot!.querySelector('.accordion-item__title')!)).toEqual(wrapOfSets(wrapUiText));
 	});
 });

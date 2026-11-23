@@ -15,17 +15,22 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
-## [0.28.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.28.0...v0.28.1) (2026-11-23)
-
 ### Added
 
-- **`nldd explain` names the WCAG success criterion a rule guards.** 62 rules carry one, and they come from four groups: a vague link text is a rule of `copy`, a control inside a control one of `structure`. `nldd rules --json` has it as `wcag`.
-- **Every lint rule has a page in the documentation**, at `/linter/<rule>/`: its level, where it runs, markup that passes and markup that fails, and the selector it is. The lists of rules on a component, a pattern and the linter page link to it.
-- **The accessibility page says who does what for every WCAG 2.2 success criterion at level A and AA**, and lists the lint rules per criterion. New in what is yours to check: a title per page, the focus order of the whole page, and zoom to 200% next to components from elsewhere.
+- **`hyphens` on `nldd-text`** breaks a long word by syllable, with a hyphen, as `hyphens` on `nldd-rich-text` already does. It needs a `lang` on the page. The display sizes hyphenate as before, with or without it.
+- **`hyphens` on `nldd-text-cell`, `nldd-title-cell` and `nldd-description-cell`** does the same for the text in a cell.
+
+### Changed
+
+- **A cell of `width="full"` is never narrower than 160px**, in `nldd-text-cell`, `nldd-title-cell` and `nldd-description-cell`, so its text stays readable. Beside a `fit-content` cell with a long value it used to shrink to nothing. A row too narrow for its cells now runs wider than its box: hide a cell at that width with `hide-below`, combine two, or set a `min-width` of your own, which always wins. A `max-width` below 160px lowers the floor with it, and in `nldd-table` the columns set the width as before.
+- **A `fit-content` cell is never narrower than its longest word**, so a short value such as "In behandeling" breaks between words, not inside one. A long URL then stays whole: set `min-width="0"` on the cell to let it break. `min-width="max-content"` keeps the text on one line.
 
 ### Fixed
 
-- **The accessibility page said a small control is 32 pixels high.** A small button or field is 34. No control is smaller than 24.
+- **A long word in `nldd-text` no longer runs out of a narrow box.** A compound, URL or code wider than the line now breaks between two letters at every body size, as text in `nldd-rich-text` does. Before, only the display sizes did that, and a card or column narrower than one word lost the end of it (WCAG 1.4.10).
+- **A long word in a `dt` or `dd` of `nldd-rich-text` no longer runs out of the column**, such as a hash or a URL. The columns of a definition list no longer widen to their longest word either.
+- **Inline `code` breaks when it is wider than the line**, in `nldd-rich-text` and in `nldd-text`. Before, it only did in a table cell of `nldd-rich-text`, and a tag name in a `dd` or a sentence ran out of a narrow column.
+- **A long word in `nldd-description-cell` no longer runs out of the cell.** It breaks between two letters, as in the other cells.
 
 ## [0.28.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.27.1...v0.28.0) (2026-11-21)
 

@@ -1,4 +1,5 @@
 import { css } from 'lit';
+import { hyphenateBodyText, wrapBodyText } from '../../../../assets/styles/text-wrap.js';
 import { inheritedTextReset, slottedBlockReset } from '../../../../assets/styles/shadow-resets.js';
 
 export const textCellStyles = css`
@@ -21,6 +22,7 @@ export const textCellStyles = css`
 		--_text-cell-font: var(--primitives-font-body-md-regular-tight);
 
 		${inheritedTextReset}
+		${wrapBodyText}
 		/* !important: shields the row padding from consumer universal resets, which beat normal :host declarations per CSS Scoping. */
 		padding-block: var(--context-cell-padding-block, 0px) !important;
 		display: flex;
@@ -36,12 +38,18 @@ export const textCellStyles = css`
 		display: none;
 	}
 
+	:host([hyphens]) {
+		${hyphenateBodyText}
+	}
+
 
 	/* # Width */
 
 	:host([width="full"]),
 	:host(:not([width])),
 	:host([width=""]) {
+		--_text-cell-min-width: var(--context-cell-min-width, var(--primitives-area-160));
+
 		flex-grow: 1;
 		flex-shrink: 1;
 		flex-basis: 0;
@@ -55,9 +63,8 @@ export const textCellStyles = css`
 
 		width: fit-content;
 		flex-grow: 0;
-		/* Krimpen mag: fit-content betekent min(max-content, max(min-content,
-		   beschikbaar)), en met flex-shrink: 0 hield de cel zijn inhoudsbreedte
-		   vast en duwde hij alles erachter de rij uit. */
+		/* Shrinking is allowed: with flex-shrink: 0 the cell kept the width of
+		   its text and pushed everything after it out of the row. */
 		flex-shrink: 1;
 		flex-basis: auto;
 	}
@@ -68,6 +75,12 @@ export const textCellStyles = css`
 
 	:host([max-width]) {
 		flex-basis: var(--_text-cell-max-width);
+	}
+
+	:host([max-width][width="full"]),
+	:host([max-width]:not([width])),
+	:host([max-width][width=""]) {
+		--_text-cell-min-width: min(var(--context-cell-min-width, var(--primitives-area-160)), var(--_text-cell-max-width));
 	}
 
 
@@ -153,7 +166,6 @@ export const textCellStyles = css`
 		--context-content-color: var(--_text-cell-secondary-color);
 		color: var(--_text-cell-secondary-color);
 		font: var(--_text-cell-secondary-font);
-		overflow-wrap: anywhere;
 		text-wrap: pretty;
 	}
 
@@ -165,7 +177,6 @@ export const textCellStyles = css`
 		--context-content-color: var(--_text-cell-color);
 		color: var(--_text-cell-color);
 		font: var(--_text-cell-font);
-		overflow-wrap: anywhere;
 		text-wrap: pretty;
 	}
 
@@ -183,7 +194,6 @@ export const textCellStyles = css`
 		--context-content-color: var(--_text-cell-secondary-color);
 		color: var(--_text-cell-secondary-color);
 		font: var(--_text-cell-secondary-font);
-		overflow-wrap: anywhere;
 		text-wrap: pretty;
 	}
 

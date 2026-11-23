@@ -1,6 +1,7 @@
 import { css, unsafeCSS, type CSSResult } from 'lit';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 import { slottedBlockReset } from '../../../assets/styles/shadow-resets.js';
+import { hyphenateBodyText, wrapBodyText, wrapDisplayText } from '../../../assets/styles/text-wrap.js';
 
 const smMax = unsafeCSS(queryBreakpoints.smMax);
 const mdMin = unsafeCSS(queryBreakpoints.mdMin);
@@ -62,8 +63,6 @@ export const textStyles = css`
 		--_text-line-height: var(--primitives-line-height-snug);
 		--_text-max-width: var(--semantics-text-max-width);
 		--_text-font: var(--_text-font-weight) var(--_text-font-size) / var(--_text-line-height) var(--primitives-font-family-body);
-		--_text-hyphenate-limit-before: 5;
-		--_text-hyphenate-limit-after: 5;
 		--_text-sm-custom-size: initial;
 		--_text-md-custom-size: initial;
 		--_text-lg-custom-size: initial;
@@ -79,10 +78,15 @@ export const textStyles = css`
 		text-align: var(--_text-align);
 		font: var(--_text-font);
 		text-wrap: pretty;
+		${wrapBodyText}
 	}
 
 	:host([hidden]) {
 		display: none;
+	}
+
+	:host([hyphens]) {
+		${hyphenateBodyText}
 	}
 
 
@@ -121,13 +125,8 @@ export const textStyles = css`
 	:host([data-lg-custom-size]) {
 		--_text-max-width: 40ch;
 
-		overflow-wrap: anywhere;
 		text-wrap: balance;
-		-webkit-hyphens: auto;
-		hyphens: auto;
-		-webkit-hyphenate-limit-before: var(--_text-hyphenate-limit-before);
-		-webkit-hyphenate-limit-after: var(--_text-hyphenate-limit-after);
-		hyphenate-limit-chars: 12 var(--_text-hyphenate-limit-before) var(--_text-hyphenate-limit-after);
+		${wrapDisplayText}
 	}
 
 
