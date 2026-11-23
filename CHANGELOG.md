@@ -9,6 +9,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.28.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.28.0...v0.28.1) (2026-11-23)
+
 ### Added
 
 - **`nldd explain` names the WCAG success criterion a rule guards.** 62 rules carry one, and they come from four groups: a vague link text is a rule of `copy`, a control inside a control one of `structure`. `nldd rules --json` has it as `wcag`.
