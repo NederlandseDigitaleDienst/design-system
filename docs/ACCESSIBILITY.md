@@ -18,36 +18,36 @@ Wie met dit systeem bouwt, maakt webcontent met een hulpmiddel. Daar bestaat een
 | B.2.4 Sjablonen zijn toegankelijk | De [patronen](https://design.digitaledienst.overheid.nl/patronen/), elk met een sectie Toegankelijkheid |
 | B.3.1 Hulp bij het controleren | [`nldd lint`](https://design.digitaledienst.overheid.nl/linter/), op broncode, op gebouwde pagina's en in de browser |
 | B.3.2 Hulp bij het herstellen | Elke melding zegt wat er moet veranderen, en `nldd explain` laat zien hoe het goed is |
-| B.4.1 Die hulp staat standaard aan | Tijdens het ontwikkelen staan de meldingen vanzelf in de console |
-| B.4.2 De documentatie doet het voor | Elk voorbeeld op deze site gaat door axe |
+| B.4.1 Die hulp staat standaard aan, en in het zicht | Tijdens het ontwikkelen verschijnen meldingen over toegankelijkheid in de console. De regels van een component staan ook op zijn eigen pagina, op de tab Lintregels |
+| B.4.2 De documentatie geeft het goede voorbeeld | Herbruikbare en geteste voorbeelden zijn beschikbaar, bij elk component en elk patroon |
 
 ## Wat de componenten zelf doen
 
 - **Rol, naam en toestand.** Elk component zet de rol en de `aria`-attributen op het element dat ze nodig heeft, ook in een shadow root (4.1.2).
-- **Toetsenbord.** Wat je kunt aanklikken, kun je met het toetsenbord bedienen. Een lijst, een menu of een tabbalk is één tabstop, en binnen de groep ga je verder met de pijltjestoetsen (2.1.1).
-- **Focus.** De focusring komt uit één token en heeft in elk thema minstens 4,5:1 contrast met de achtergrond (2.4.7). Een sheet en een modal dialog houden de focus bij zich, sluiten met Escape en geven de focus terug aan waar je vandaan kwam (2.1.2, 2.4.3). `nldd-page` schuift wat focus krijgt onder zijn vaste balken vandaan (2.4.11).
+- **Toetsenbord.** Wat je kunt aanklikken, kun je met het toetsenbord bedienen. [Widgets](https://developer.mozilla.org/en-US/docs/Web/Accessibility/Guides/Keyboard-navigable_JavaScript_widgets) zoals menu's zijn één tabstop, en binnen de groep ga je verder met de pijltjestoetsen (2.1.1).
+- **Focus.** De focusring komt uit één token en heeft in elk thema minstens 4,5:1 contrast met de achtergrond (2.4.7). Een sheet en een modal dialog houden de focus bij zich, sluiten met Escape en geven de focus terug aan waar je vandaan kwam (2.1.2, 2.4.3). Een `nldd-page` kan een balk hebben die blijft staan terwijl de inhoud scrolt. Krijgt een element focus dat achter die balk zou vallen, dan scrolt de pagina het in beeld (2.4.11).
 - **Formaat.** Een knop en een veld zijn standaard 44 pixels hoog. Geen control is kleiner dan de 24 pixels die WCAG 2.2 voor een aanwijsgebied vraagt, ook een checkbox en de kleinste knop niet (2.5.8).
-- **Contrast op een vlak.** Een vlak geeft zijn tekstkleur door aan wat erin staat, dus tekst op een gekleurd of getint vlak houdt zijn contrast (1.4.3). Zet daarvoor `background` op het component.
-- **Tekstgrootte.** Lettergroottes staan in `rem` en volgen de instelling van de browser (1.4.4). De kleinste breedte die we ondersteunen is 320 pixels (1.4.10).
-- **Beweging en contrastmodus.** Animaties volgen `prefers-reduced-motion`. In de contrastmodus van het besturingssysteem (`forced-colors`) blijven randen, toestanden en de focusring zichtbaar.
+- **Contrast op een gekleurde achtergrond.** Geef je een component een achtergrondkleur met het attribuut `background`, dan krijgt de tekst erin vanzelf een kleur die daar genoeg contrast mee heeft (1.4.3).
+- **Tekstgrootte.** Wanneer gebruikers tekstvergroting in hun browser gebruiken, blijft content leesbaar en functionaliteit bruikbaar (1.4.4). De kleinste breedte die we ondersteunen is 320 pixels (1.4.10).
+- **Beweging en contrastinstellingen.** Animaties volgen `prefers-reduced-motion`. Bij gebruik van contrastinstellingen van het besturingssysteem (`forced-colors`) blijven randen, toestanden en de focusring zichtbaar.
 - **Meldingen.** Een [`nldd-status-bar`](https://design.digitaledienst.overheid.nl/componenten/status-bar/), een [`nldd-banner`](https://design.digitaledienst.overheid.nl/componenten/banner/) en een [`nldd-notification`](https://design.digitaledienst.overheid.nl/componenten/notification/) melden zichzelf aan een schermlezer (4.1.3). Een notificatie telt niet af terwijl je hem leest, en een kritieke verdwijnt nooit vanzelf (2.2.1).
-- **Wat verschijnt bij hover.** Een tooltip sluit met Escape, ook als de focus ergens anders staat (1.4.13).
+- **Wat verschijnt bij hover of focus.** Een tooltip verdwijnt niet als je er met je muis overheen gaat, blijft staan tot de hover of focus wordt weggehaald, en sluit met Escape, ook als de focus ergens anders staat (1.4.13).
 - **Standaardteksten.** Ingebouwde teksten, zoals de naam van een sluitknop, zijn Nederlands en zet je in één keer om naar een andere taal. Zie [Vertalingen](https://design.digitaledienst.overheid.nl/vertalingen/).
 
 ## Wat jij nog moet doen
 
-Dit zie je alleen op de pagina, en geen component kan het voor je doen.
+Niet alle toegankelijkheid kan binnen componenten geregeld worden. Deze zaken neem je zelf mee tijdens de implementatie van het component.
 
 - **Geef een naam aan wat geen zichtbare tekst heeft.** Een knop met alleen een icoon, een kaart die een link is en een lijst krijgen een `accessible-label`.
 - **Houd de koppen op orde.** Eén `h1` per pagina, en geen niveau overslaan. `heading-level` op een titel is wat hij is en bepaalt zijn standaardgrootte. Moet hij kleiner, geef hem dan een `size` en geen lager niveau.
 - **Geef elke pagina een eigen titel.** De `<title>` zegt waar deze pagina over gaat en verschilt van die van de andere pagina's. In een app die zonder herladen navigeert, zet je hem bij elke route opnieuw.
 - **Beschrijf afbeeldingen.** Een afbeelding die iets zegt krijgt een `alt`; een afbeelding die alleen sfeer is krijgt `decorative`.
-- **Schrijf links en knoppen die op zichzelf staan.** "Lees meer over dakisolatie" zegt waar een link heen gaat, "Lees meer" niet.
+- **Schrijf links en knoppen die op zichzelf staan.** "Alles over dakisolatie" zegt waar een link heen gaat, "Lees meer" niet.
 - **Zet de taal.** Een `lang` op de pagina, en op elk stuk tekst in een andere taal.
 - **Koppel een label aan elk veld.** Zet een invoerveld in een `nldd-form-field`, dan zitten het label, de hulptekst en de validatie eraan vast. Vraagt het veld om gegevens van de gebruiker zelf, zet dan ook `autocomplete`.
-- **Schrijf de markup in de volgorde waarin je leest.** Wat op een breed scherm naast elkaar staat, staat op een smal scherm onder elkaar, in de volgorde van de markup. Een schermlezer en de Tab-toets volgen die ook.
-- **Loop de pagina langs met Tab.** Of de focusvolgorde logisch is, weet je pas op de hele pagina. Let op wat je zelf verplaatst: de focus na een routewissel, en na het sluiten van iets wat je zelf opende.
-- **Zoom in tot 200% en test op 320 pixels breed.** Met alleen componenten uit dit systeem hoort dat goed te gaan. Naast een bestaand CMS, een andere bibliotheek of een chatwidget van een derde is het niet meer vanzelfsprekend: daar botsen vaste hoogtes en vaste elementen.
+- **Schrijf de markup in een logische volgorde.** Wat op een breed scherm naast elkaar staat, staat op een smal scherm onder elkaar, in de volgorde van de markup. Een schermlezer en de Tab-toets volgen die ook.
+- **Loop de pagina langs met Tab.** Of de focusvolgorde logisch is, weet je pas op de hele pagina. Soms verplaatst een pagina de focus voor je: denk aan de focus na een routewissel, en na het sluiten van een modal.
+- **Zoom in tot 200% en test op 320 pixels breed.** Met alleen componenten uit dit systeem hoort dat goed te gaan. Test dit extra goed als je integreert met een bestaand CMS, een ander designsysteem of andere externe componenten die je inlaadt, denk aan een chatwidget.
 - **Geef wie niet kan slepen een andere weg.** Een bord en een sorteerbare lijst verplaatsen ook met het toetsenbord. De knop of het menu voor de muis maak je zelf; [`nldd-kanban`](https://design.digitaledienst.overheid.nl/componenten/kanban/) heeft daarvoor `moveItem()`.
 
 Wat een component precies doet en vraagt, staat op zijn eigen pagina. Elk patroon heeft een sectie Toegankelijkheid, met wat je gratis krijgt en wat jij nog moet doen.
@@ -68,26 +68,28 @@ De linter meldt alleen wat zeker fout is. Een naam die er staat maar niets zegt,
 
 Alle succescriteria van WCAG 2.2 op niveau A en AA. "Systeem" betekent dat je het met alleen onze componenten niet stuk krijgt, "Samen" dat het systeem een deel doet en jij de rest, "Jij" dat het systeem er niet bij kan.
 
+Elke rij is een samenvatting: ze zegt waar het systeem helpt en waar het ophoudt, niet alles wat het criterium vraagt. Een criterium als 1.3.1 of 1.4.11 dekt veel meer gevallen dan hier in twee zinnen passen. Lees voor de volledige eis [WCAG 2.2](https://www.w3.org/Translations/WCAG22-nl/) zelf.
+
 ### Waarneembaar
 
 | Succescriterium | Wie | Wat |
 |---|---|---|
 | 1.1.1 Niet-tekstuele content (A) | Samen | De linter meldt een afbeelding zonder `alt` en een icoonknop zonder naam. De tekst schrijf jij. |
 | 1.2.1 tot en met 1.2.5 Op tijd gebaseerde media (A en AA) | Jij | Het systeem heeft geen speler voor audio of video. Ondertitels, transcripties en audiodescriptie horen bij je media. |
-| 1.3.1 Info en relaties (A) | Samen | Componenten zetten rollen, lijsten en landmarks. Jij kiest het kopniveau en zet velden in een `nldd-form-field`. |
-| 1.3.2 Betekenisvolle volgorde (A) | Jij | De volgorde van je markup is de leesvolgorde, op elk schermformaat. |
+| 1.3.1 Info en relaties (A) | Samen | Een breed criterium: structuur en verbanden die je ziet, staan ook in de code. Een component zet de rol van wat het zelf is, zoals een lijst, een tabel, een kop of een groep velden. Jij kiest het component dat bij de inhoud past, het kopniveau, en zet velden in een `nldd-form-field`. |
+| 1.3.2 Betekenisvolle volgorde (A) | Jij | Hulptechnologie volgt de volgorde van je markup. Zorg dat die logisch is, op elk schermformaat. |
 | 1.3.3 Zintuiglijke eigenschappen (A) | Jij | Verwijs in tekst niet naar plaats, vorm of kleur alleen, zoals "de knop rechts". |
 | 1.3.4 Weergavestand (AA) | Systeem | Geen component legt een stand vast. |
 | 1.3.5 Identificeer het doel van de input (AA) | Jij | Zet `autocomplete` op velden die om gegevens van de gebruiker zelf vragen. |
 | 1.4.1 Gebruik van kleur (A) | Samen | Kleur versterkt de betekenis en draagt hem niet. Dat vraagt jouw tekst: een statusbalk en een destructief menu-item zeggen in woorden wat ze zijn. Zie ook [Bekende afwijkingen](#bekende-afwijkingen). |
 | 1.4.2 Geluidsbediening (A) | Jij | Geen component speelt geluid af. |
 | 1.4.3 Contrast (minimum) (AA) | Samen | De tokens en elk thema zijn op 4,5:1 voor tekst gekozen, in licht en donker. Eigen kleuren en tekst op een afbeelding controleer je zelf. |
-| 1.4.4 Herschalen van tekst (AA) | Samen | Lettergroottes staan in `rem`. Test je pagina op 200%. |
+| 1.4.4 Herschalen van tekst (AA) | Samen | Tekst in componenten vergroot mee met de browser, zonder verlies van inhoud of functie. Test je eigen pagina op 200%. |
 | 1.4.5 Afbeeldingen van tekst (AA) | Jij | Zet tekst als tekst op de pagina. |
-| 1.4.10 Reflow (AA) | Samen | Componenten werken vanaf 320 pixels breed. Wat in een werkbalk niet past gaat naar het overloopmenu, als jij het daar een plek geeft. |
-| 1.4.11 Contrast van niet-tekstuele content (AA) | Samen | Selectie en markering hebben minstens 3:1, de focusring 4,5:1. Zie ook [Bekende afwijkingen](#bekende-afwijkingen). |
+| 1.4.10 Reflow (AA) | Samen | Componenten werken vanaf 320 pixels breed. Een actie die niet meer in een `nldd-toolbar` past, gaat naar het overloopmenu van die balk, als jij hem daar een plek geeft. |
+| 1.4.11 Contrast van niet-tekstuele content (AA) | Samen | Geldt voor alles wat je moet kunnen zien om een control of een grafiek te begrijpen: randen, toestanden, iconen, de focusring. In onze componenten hebben selectie en markering minstens 3:1 en de focusring 4,5:1. Eigen iconen, grafieken en kleuren controleer je zelf. Zie ook [Bekende afwijkingen](#bekende-afwijkingen). |
 | 1.4.12 Tekstafstand (AA) | Samen | Dit testen we nog niet automatisch. Controleer het op je pagina en meld wat wegvalt. |
-| 1.4.13 Content bij hover of focus (AA) | Systeem | Een tooltip sluit met Escape, zonder dat de focus verschuift. |
+| 1.4.13 Content bij hover of focus (AA) | Samen | Drie eisen: je kunt de extra content sluiten zonder de aanwijzer of de focus te verplaatsen, je kunt er met de aanwijzer overheen, en ze blijft staan tot je weggaat. `nldd-tooltip` voldoet aan alle drie. Wat je zelf bij hover of focus laat verschijnen, toets je zelf. |
 
 ### Bedienbaar
 
