@@ -7,14 +7,14 @@
  * @element nldd-tooltip
  * @keywords hint
  * @related nldd-popover, nldd-just-in-time-education, nldd-term
+ * @attr {'top'|'bottom'|'left'|'right'} placement - Position: 'top' | 'bottom' | 'left' | 'right' (default: 'bottom'; automatically 'top' on touch devices)
  * @attr {string} text - Tooltip text
  * @attr {string} shortcut - Keyboard shortcut hint shown after the text, e.g. 'Cmd+P'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key. Joins the description of a light-DOM trigger. Hidden on touch-only devices, where it isn't invokable.
  * @attr {string} shortcut-mac - Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`).
  * @attr {string} shortcut-windows - Override of `shortcut` on Windows (falls back to `shortcut`).
  * @attr {string} shortcut-linux - Override of `shortcut` on Linux (falls back to `shortcut`).
- * @attr {boolean} open - Forces the tooltip visible, whatever hover or focus does. Use it for programmatic feedback ("Copied", for instance). Reset it to false to restore the hover behavior.
- * @attr {'top'|'bottom'|'left'|'right'} placement - Position: 'top' | 'bottom' | 'left' | 'right' (default: 'bottom'; automatically 'top' on touch devices)
  * @attr {string} timing - When the tooltip appears on hover: 'instant' shows it right away, without a show delay or a fade, also on the way out. 'delay' (the default) shows it after the standard show delay (700ms). 'never' never shows it: hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. Focus shows it at once, except the focus a press gives a button, so a click does not flash it up.
+ * @attr {boolean} open - Forces the tooltip visible, whatever hover or focus does. Use it for programmatic feedback ("Copied", for instance). Reset it to false to restore the hover behavior.
  *
  * Escape closes a tooltip that hover or focus opened, wherever focus is: the
  * pointer can rest on a button while focus sits somewhere else (WCAG 1.4.13).
@@ -85,6 +85,14 @@ function clippingBoundary(trigger: Element): Element[] | 'clippingAncestors' {
 	return 'clippingAncestors';
 }
 
+/** Whether a trigger is on the screen. One with `display: contents` has no
+ *  box of its own, so what is in it counts. */
+function shown(trigger: Element): boolean {
+	if (trigger.checkVisibility()) return true;
+	if (getComputedStyle(trigger).display !== 'contents') return false;
+	return [...trigger.children].some(shown);
+}
+
 
 type Placement = 'top' | 'bottom' | 'left' | 'right';
 type Timing = 'instant' | 'delay' | 'never';
@@ -105,6 +113,9 @@ const DEFAULT_HIDE_DELAY_MS = 50;
 export class NLDDTooltip extends LitElement {
 	static override styles = tooltipStyles;
 
+	@property({ reflect: true, converter: reflectNonDefault<Placement>('bottom') })
+	placement: Placement = 'bottom';
+
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	text = '';
 
@@ -120,15 +131,12 @@ export class NLDDTooltip extends LitElement {
 	@property({ reflect: true, attribute: 'shortcut-linux', converter: reflectNonDefault<string>('') })
 	shortcutLinux = '';
 
+	@property({ reflect: true, converter: reflectNonDefault<Timing>('delay') })
+	timing: Timing = 'delay';
+
 	/** Programmatically force the tooltip visible regardless of hover/focus. */
 	@property({ type: Boolean, reflect: true })
 	open = false;
-
-	@property({ reflect: true, converter: reflectNonDefault<Placement>('bottom') })
-	placement: Placement = 'bottom';
-
-	@property({ reflect: true, converter: reflectNonDefault<Timing>('delay') })
-	timing: Timing = 'delay';
 
 	private get _effectivePlacement(): Placement {
 		return this.placement;
@@ -393,7 +401,13 @@ export class NLDDTooltip extends LitElement {
 		this._boundary = undefined;
 		clearTimeout(this._fadeTimer);
 		this._stopScroll?.();
-		this._stopScroll = onAncestorScroll(this, this._handleScroll);
+		const stopScroll = onAncestorScroll(this, this._handleScroll);
+		// A resize moves the trigger just as a scroll does, or hides it.
+		window.addEventListener('resize', this._handleScroll);
+		this._stopScroll = () => {
+			stopScroll();
+			window.removeEventListener('resize', this._handleScroll);
+		};
 	}
 
 	/** It fades out beside its trigger, with the text it had. Stopped at once,
@@ -407,11 +421,17 @@ export class NLDDTooltip extends LitElement {
 		}, cssTimeToMs(getComputedStyle(this).getPropertyValue('--_tooltip-hide-duration')));
 	}
 
-	/** A hover tooltip goes when the page scrolls: it is fixed to the screen,
+	/** A hover tooltip goes when the page scrolls or resizes: it is fixed to the screen,
 	 *  and the pointer leaves its trigger without a mouseleave until the
 	 *  scrolling stops. One shown by focus or `open` follows its trigger, and
 	 *  so does one that is fading out. */
 	private _handleScroll = (): void => {
+		// A trigger that is gone from the screen (a toolbar that is only there
+		// at another width) takes its tooltip along, focused or not.
+		if (this._visible && !this.open && this._currentTrigger && !shown(this._currentTrigger)) {
+			this._interest.close();
+			return;
+		}
 		if (!this._visible || this.open || this._interest.focused) {
 			this._updatePosition();
 			return;

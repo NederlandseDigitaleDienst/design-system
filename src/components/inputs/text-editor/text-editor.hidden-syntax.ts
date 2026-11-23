@@ -168,7 +168,9 @@ function revealsAnything(state: EditorState): boolean {
 	return !state.readOnly && state.facet(EditorView.editable);
 }
 
-function touchesSelection(state: EditorState, from: number, to: number): boolean {
+/** Whether the marks of the construct from `from` to `to` show: the caret or
+ *  the selection touches it, in an editor that reveals marks at all. */
+export function touchesSelection(state: EditorState, from: number, to: number): boolean {
 	return revealsAnything(state) && state.selection.ranges.some((range) => range.from <= to && range.to >= from);
 }
 

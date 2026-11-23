@@ -58,11 +58,11 @@
  * @related nldd-progress-bar, nldd-progress-circle
  *
  * @attr {string} size - Circle diameter on the icon scale: 16,20,24,28,32,40,44,48,56,64,80,96 (default '32')
- * @attr {boolean} show-text - Show the label under the indicator (default false; the label still feeds the accessible name)
  * @attr {string} text - Label text. Falls back to the translated "Laden" when unset.
+ * @attr {boolean} no-backdrop - Overlay mode dims and blurs the wrapped content with a frosted backdrop by default; set this to show only the indicator panel without dimming. No effect in standalone mode.
+ * @attr {boolean} show-text - Show the label under the indicator (default false; the label still feeds the accessible name)
  * @attr {'delay'|'instant'} timing - 'delay' (the default) waits 1000ms before showing (anti-flash); 'instant' shows immediately (the fade-in still plays).
  * @attr {boolean} complete - Mark the loader as finished while keeping the element mounted; clears aria-busy and hides the indicator.
- * @attr {boolean} no-backdrop - Overlay mode dims and blurs the wrapped content with a frosted backdrop by default; set this to show only the indicator panel without dimming. No effect in standalone mode.
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  *
  * @slot - Content to wrap (overlay mode); made inert while loading. Leave empty
@@ -95,13 +95,21 @@ export class NLDDActivityIndicator extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<ActivityIndicatorSize>('32') })
 	size: ActivityIndicatorSize = '32';
 
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	text = '';
+
+	/** Opt out of the dimming backdrop in overlay mode. With wrapped content the
+	 *  backdrop is on by default, because inert content should read as
+	 *  inactive. Set `no-backdrop` to show only the indicator panel without
+	 *  dimming/blurring the content. No effect in standalone mode (no content to
+	 *  dim). */
+	@property({ type: Boolean, reflect: true, attribute: 'no-backdrop' })
+	noBackdrop = false;
+
 	/** Show the label under the indicator. The label always feeds the
 	 *  accessible name (aria-label); this only controls visibility. */
 	@property({ type: Boolean, reflect: true, attribute: 'show-text' })
 	showText = false;
-
-	@property({ reflect: true, converter: reflectNonDefault<string>('') })
-	text = '';
 
 	/** 'delay' waits {@link SHOW_DELAY_MS} before showing; 'instant' shows
 	 *  immediately. The fade-in plays either way. */
@@ -112,14 +120,6 @@ export class NLDDActivityIndicator extends LitElement {
 	 *  Clears aria-busy and hides the indicator. Default false. */
 	@property({ type: Boolean, reflect: true })
 	complete = false;
-
-	/** Opt out of the dimming backdrop in overlay mode. With wrapped content the
-	 *  backdrop is on by default, because inert content should read as
-	 *  inactive. Set `no-backdrop` to show only the indicator panel without
-	 *  dimming/blurring the content. No effect in standalone mode (no content to
-	 *  dim). */
-	@property({ type: Boolean, reflect: true, attribute: 'no-backdrop' })
-	noBackdrop = false;
 
 	@property({ type: Object })
 	translations: Partial<NLDDActivityIndicatorTranslations> = {};

@@ -35,9 +35,9 @@
  * @attr {string} md-gap - Gap at md, overriding `gap` there
  * @attr {string} lg-gap - Gap at lg, overriding `gap` there
  * @attr {number} max-items - Number of visible items per page (default: 24)
- * @attr {object} translations - Translation overrides; unset keys fall back to Dutch. Available keys: 'components.collection.previous-action', 'components.collection.next-action', 'components.collection.load-more-action'
  * @attr {boolean} show-load-more - Show load-more button in grid/stack (default: false)
  * @attr {boolean} lazy-load - Automatically load more items when the button becomes visible
+ * @attr {object} translations - Translation overrides; unset keys fall back to Dutch. Available keys: 'components.collection.previous-action', 'components.collection.next-action', 'components.collection.load-more-action'
  *
  * @migration Items in horizontal scroll stop at 480px (or at `item-min-width` when that is wider) instead of filling the container.
  *            Set `item-max-width="100%"` where one or two items should still fill the row.
@@ -110,14 +110,14 @@ export class NLDDCollection extends LitElement {
 	@property({ type: Number, attribute: 'max-items' })
 	maxItems = 24;
 
-	@property({ type: Object })
-	translations: Partial<NLDDCollectionTranslations> = {};
-
 	@property({ type: Boolean, reflect: true, attribute: 'show-load-more' })
 	showLoadMore = false;
 
 	@property({ type: Boolean, reflect: true, attribute: 'lazy-load' })
 	lazyLoad = false;
+
+	@property({ type: Object })
+	translations: Partial<NLDDCollectionTranslations> = {};
 
 	// — i18n —————————————————————————————————————————————————————————————————
 

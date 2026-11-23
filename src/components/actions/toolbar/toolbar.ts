@@ -244,6 +244,8 @@ export class NLDDToolbar extends LitElement {
 					const el = m.target as Element;
 					const tag = el.tagName.toLowerCase();
 					if (tag === 'nldd-toolbar-item' || tag === 'nldd-toolbar-title') {
+						// The toolbar sets `hidden` on its own items when they overflow.
+						if (m.attributeName === 'hidden') continue;
 						// Structural attribute change (label/priority/width/…) → rebuild.
 						needsRebuild = true;
 					} else if (el.closest?.('[slot="overflow"]')) {
@@ -386,16 +388,15 @@ export class NLDDToolbar extends LitElement {
 	 * Syncs declarative state onto the slotted item and title hosts: size,
 	 * show-item-labels, the base fluid flag and the fluid width custom
 	 * properties. The parent owns layout decisions; each host owns its own box
-	 * and rendering. Attributes are set directly (not via reactive properties)
-	 * so the host box reflows synchronously before the next measurement.
+	 * and rendering. The hosts turn these into custom states synchronously, so
+	 * the host box reflows before the next measurement.
 	 */
 	private _syncHosts(): void {
 		this._allHostChildren().forEach(child => {
 			if (child.type === 'item') {
 				const host = child.element as NLDDToolbarItem;
-				host.setAttribute('size', this.size);
-				host.toggleAttribute('show-item-labels', this.showItemLabels);
-				host.toggleAttribute('fluid', child.isFluid);
+				host.showItemLabels = this.showItemLabels;
+				host.fluid = child.isFluid;
 				if (child.isFluid && child.minWidth) {
 					host.style.setProperty('--_toolbar-item-min-width', child.minWidth);
 				} else {
@@ -419,7 +420,7 @@ export class NLDDToolbar extends LitElement {
 				});
 			} else if (child.type === 'title') {
 				const host = child.element as NLDDToolbarTitle;
-				host.setAttribute('size', this.size);
+				host.size = this.size;
 			}
 		});
 	}
@@ -584,9 +585,9 @@ export class NLDDToolbar extends LitElement {
 		// (see _syncShrinkable) with everything shown.
 		const controls = new Map<HTMLElement, ShrinkableControl>();
 		itemChildren.forEach(child => {
-			const host = child.element as HTMLElement;
+			const host = child.element as NLDDToolbarItem;
 			host.hidden = false;
-			host.removeAttribute('shrunk');
+			host.shrunk = false;
 			const control = shrinkableControlOf(host);
 			if (control) controls.set(host, control);
 		});
@@ -596,25 +597,25 @@ export class NLDDToolbar extends LitElement {
 			const widths = new Map([...controls].map(([host, control]) => [host, control._toolbarWidths()]));
 			yield 'write';
 			controls.forEach(control => control._setMeasuring?.(false));
-			itemChildren.forEach(child => this._syncShrinkable(child.element as HTMLElement, widths.get(child.element as HTMLElement) ?? null));
+			itemChildren.forEach(child => this._syncShrinkable(child.element as NLDDToolbarItem, widths.get(child.element as HTMLElement) ?? null));
 		} else {
-			itemChildren.forEach(child => this._syncShrinkable(child.element as HTMLElement, null));
+			itemChildren.forEach(child => this._syncShrinkable(child.element as NLDDToolbarItem, null));
 		}
 
 		// Reset solo-fluid to fluid with min-width restored.
 		itemChildren.forEach(child => {
-			const host = child.element as HTMLElement;
-			if (host.hasAttribute('solo-fluid')) {
-				host.removeAttribute('solo-fluid');
-				host.toggleAttribute('fluid', child.isFluid);
+			const host = child.element as NLDDToolbarItem;
+			if (host.soloFluid) {
+				host.soloFluid = false;
+				host.fluid = child.isFluid;
 				if (child.isFluid && child.minWidth) {
 					host.style.setProperty('--_toolbar-item-min-width', child.minWidth);
 				}
 			}
 		});
 		titleChildren.forEach(child => {
-			const host = child.element as HTMLElement;
-			host.removeAttribute('solo-fluid');
+			const host = child.element as NLDDToolbarTitle;
+			host.soloFluid = false;
 			host.style.removeProperty('min-width');
 		});
 
@@ -657,8 +658,8 @@ export class NLDDToolbar extends LitElement {
 			if (group.some(c => c.isFluid)) {
 				const groupIds = new Set(group.map(c => c.id));
 				const nonFluidVisibleOutside = itemChildren.filter(c => {
-					const host = c.element as HTMLElement;
-					return !host.hidden && !host.hasAttribute('fluid') && !host.hasAttribute('solo-fluid') && !groupIds.has(c.id);
+					const host = c.element as NLDDToolbarItem;
+					return !host.hidden && !host.fluid && !host.soloFluid && !groupIds.has(c.id);
 				});
 				if (nonFluidVisibleOutside.length === 0) break;
 			}
@@ -666,11 +667,11 @@ export class NLDDToolbar extends LitElement {
 			// An item whose control overflows by itself narrows down first, and
 			// only goes into the menu when even that is not enough.
 			const shrinkable = group
-				.map(c => c.element as HTMLElement)
-				.filter(host => host.hasAttribute('shrinkable'));
+				.map(c => c.element as NLDDToolbarItem)
+				.filter(host => host.shrinkable);
 			if (shrinkable.length > 0) {
 				yield 'write';
-				shrinkable.forEach(host => host.toggleAttribute('shrunk', true));
+				shrinkable.forEach(host => { host.shrunk = true; });
 				yield 'read';
 				if (!isOverflowing()) break;
 			}
@@ -678,9 +679,9 @@ export class NLDDToolbar extends LitElement {
 			yield 'write';
 			for (const child of group) {
 				newOverflowIds.add(child.id);
-				const host = child.element as HTMLElement;
+				const host = child.element as NLDDToolbarItem;
 				host.hidden = true;
-				host.removeAttribute('shrunk');
+				host.shrunk = false;
 			}
 			yield 'read';
 		}
@@ -711,8 +712,8 @@ export class NLDDToolbar extends LitElement {
 	 * get. Read on every measurement, because the control's content can change.
 	 * Writes only: the widths were read before, for every toolbar in the pass.
 	 */
-	private _syncShrinkable(host: HTMLElement, widths: ToolbarWidths | null): void {
-		host.toggleAttribute('shrinkable', Boolean(widths));
+	private _syncShrinkable(host: NLDDToolbarItem, widths: ToolbarWidths | null): void {
+		host.shrinkable = Boolean(widths);
 		if (widths) {
 			host.style.setProperty('--_toolbar-item-preferred-width', `${widths.preferred}px`);
 			host.style.setProperty('--_toolbar-item-shrunk-min-width', `${widths.minimum}px`);
@@ -747,11 +748,11 @@ export class NLDDToolbar extends LitElement {
 		// lets align="center" actually center it). Toolbar-hidden items are
 		// display:none too, so this stays equivalent for the overflow flow.
 		const remainingVisible = itemChildren.filter(c => (c.element as HTMLElement).getClientRects().length > 0);
-		if (!centerOnly && remainingVisible.length === 1 && (remainingVisible[0].element as HTMLElement).hasAttribute('fluid')) {
+		if (!centerOnly && remainingVisible.length === 1 && (remainingVisible[0].element as NLDDToolbarItem).fluid) {
 			yield 'write';
-			const host = remainingVisible[0].element as HTMLElement;
-			host.removeAttribute('fluid');
-			host.setAttribute('solo-fluid', '');
+			const host = remainingVisible[0].element as NLDDToolbarItem;
+			host.fluid = false;
+			host.soloFluid = true;
 			host.style.removeProperty('--_toolbar-item-min-width');
 			yield 'read';
 		}
@@ -759,8 +760,8 @@ export class NLDDToolbar extends LitElement {
 		const remainingTitles = titleChildren.filter(c => !(c.element as HTMLElement).hidden);
 		if (remainingVisible.length === 0 && remainingTitles.length === 1) {
 			yield 'write';
-			const host = remainingTitles[0].element as HTMLElement;
-			host.setAttribute('solo-fluid', '');
+			const host = remainingTitles[0].element as NLDDToolbarTitle;
+			host.soloFluid = true;
 			host.style.setProperty('min-width', '0px');
 			yield 'read';
 		}
@@ -843,7 +844,7 @@ export class NLDDToolbar extends LitElement {
 		this._prioritizedItemsCache = null;
 		this._syncHosts();
 
-		const itemAttributeFilter = ['label', 'priority', 'min-width', 'max-width', 'width', 'text', 'disabled', 'selected', 'type'];
+		const itemAttributeFilter = ['label', 'priority', 'min-width', 'max-width', 'width', 'text', 'disabled', 'selected', 'type', 'hidden'];
 		this._observer?.observe(this, { childList: true, attributes: true, subtree: true, attributeFilter: itemAttributeFilter });
 		this._watchChildSizes();
 

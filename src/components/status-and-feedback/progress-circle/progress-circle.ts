@@ -21,25 +21,25 @@
  * @related nldd-progress-bar, nldd-activity-indicator
  *
  * @attr {'progress'|'distribution'} variant - Semantics for ARIA and gap behavior (default: 'progress')
- * @attr {number} max - Total value (default: 100)
- * @attr {number} value - Single-segment shorthand (ignored when segment children exist)
  * @attr {string} color - Color. Semantic (neutral, accent, success, warning, critical) or a Rijkskleur. Default 'accent'.
  * @attr {string} size - Circle diameter in px. Matches nldd-icon sizes: 16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96 (default: '28')
  * @attr {string} text - Label below the circle
+ * @attr {string} accessible-label - Full override of aria-valuetext
+ * @attr {string} value-text - Full override of the displayed value (inline + tooltip)
  * @attr {'percentage'|'absolute'|'fraction'} value-format - Format of the displayed value (default: 'percentage')
  * @attr {'inline'|'tooltip'|'none'} value-display - Where the value shows: inline below the label, in a tooltip, or hidden (default: 'tooltip')
- * @attr {string} value-text - Full override of the displayed value (inline + tooltip)
- * @attr {string} accessible-label - Full override of aria-valuetext
  * @attr {boolean} indeterminate - Renders the rotating elastic arc animation
+ * @attr {number} value - Single-segment shorthand (ignored when segment children exist)
+ * @attr {number} max - Total value (default: 100)
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  *
  * @slot - Place for nldd-progress-circle-segment-indicator elements
  *
  * @element nldd-progress-circle-segment-indicator
  *
- * @attr {number} value - Share of the parent's total (default 0; <=0 hides segment)
  * @attr {string} color - Color (semantic or Rijkskleur). Default 'accent'. With more than one segment, give each a Rijkskleur (or success, warning and critical where they mean that): `accent` can turn near-black or match another segment in a theme, and `neutral` disappears against the track.
  * @attr {string} name - Optional name used in the combined tooltip + screenreader text
+ * @attr {number} value - Share of the parent's total (default 0; <=0 hides segment)
  */
 import { LitElement, nothing } from 'lit';
 import { property, state } from 'lit/decorators.js';
@@ -79,14 +79,14 @@ export type ProgressCircleColor =
 export class NLDDProgressCircleSegmentIndicator extends LitElement {
 	static override styles = progressCircleSegmentIndicatorStyles;
 
-	@property({ type: Number, reflect: true })
-	value = 0;
-
 	@property({ reflect: true, converter: reflectNonDefault<ProgressCircleColor>('accent') })
 	color: ProgressCircleColor = 'accent';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	name = '';
+
+	@property({ type: Number, reflect: true })
+	value = 0;
 
 	override render() {
 		// Data-only element — the parent reads value/color/name and renders
@@ -107,12 +107,6 @@ export class NLDDProgressCircle extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<ProgressCircleVariant>('progress') })
 	variant: ProgressCircleVariant = 'progress';
 
-	@property({ reflect: true, converter: reflectNonDefault<number>(100) })
-	max = 100;
-
-	@property({ type: Number, reflect: true })
-	value: number | null = null;
-
 	@property({ reflect: true, converter: reflectNonDefault<ProgressCircleColor>('accent') })
 	color: ProgressCircleColor = 'accent';
 
@@ -122,20 +116,26 @@ export class NLDDProgressCircle extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	text = '';
 
-	@property({ reflect: true, attribute: 'value-format', converter: reflectNonDefault<ProgressCircleValueFormat>('percentage') })
-	valueFormat: ProgressCircleValueFormat = 'percentage';
+	@property({ reflect: true, attribute: 'accessible-label', converter: reflectNonDefault<string>('') })
+	accessibleLabel = '';
 
 	@property({ reflect: true, attribute: 'value-text', converter: reflectNonDefault<string>('') })
 	valueText = '';
 
+	@property({ reflect: true, attribute: 'value-format', converter: reflectNonDefault<ProgressCircleValueFormat>('percentage') })
+	valueFormat: ProgressCircleValueFormat = 'percentage';
+
 	@property({ reflect: true, attribute: 'value-display', converter: reflectNonDefault<ProgressCircleValueDisplay>('tooltip') })
 	valueDisplay: ProgressCircleValueDisplay = 'tooltip';
 
-	@property({ reflect: true, attribute: 'accessible-label', converter: reflectNonDefault<string>('') })
-	accessibleLabel = '';
-
 	@property({ type: Boolean, reflect: true })
 	indeterminate = false;
+
+	@property({ type: Number, reflect: true })
+	value: number | null = null;
+
+	@property({ reflect: true, converter: reflectNonDefault<number>(100) })
+	max = 100;
 
 	@property({ type: Object })
 	translations: Partial<NLDDProgressCircleTranslations> = {};

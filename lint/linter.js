@@ -541,6 +541,10 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 				endOffset: node.endOffset,
 				mention: node.mention,
 				startTag: node.startTag,
+				// What takes the place of a wrapper that is gone: its one child.
+				...(finding.fix?.unwrap && node.children.length === 1 && !node.text && !node.opaque
+					? { inner: { tag: node.children[0].name, offset: node.children[0].offset, endOffset: node.children[0].endOffset, startTag: node.children[0].startTag } }
+					: {}),
 				jsx,
 				...position(node.offset),
 			}))

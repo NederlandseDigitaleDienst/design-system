@@ -41,13 +41,6 @@ export default {
 			description: 'Bannermaat; sm gebruikt 8px padding en een icoon van 24px',
 			table: { defaultValue: { summary: 'md' } },
 		},
-		icon: {
-			control: 'select',
-			options: ['(auto)', ...ICONS],
-			mapping: { '(auto)': '' },
-			description: 'Override van het standaard-icoon',
-			table: { defaultValue: { summary: '(auto)' } },
-		},
 		text: {
 			control: 'text',
 			description: 'Hoofdtekst',
@@ -65,6 +58,13 @@ export default {
 			description: 'Rendert hoofdtekst als h1–h6; afwezig rendert als p',
 			table: { defaultValue: { summary: '(geen)' } },
 		},
+		icon: {
+			control: 'select',
+			options: ['(auto)', ...ICONS],
+			mapping: { '(auto)': '' },
+			description: 'Override van het standaard-icoon',
+			table: { defaultValue: { summary: '(auto)' } },
+		},
 		dismissible: {
 			control: 'boolean',
 			description: 'Toon een sluit-knop rechtsboven; emits `dismiss` event bij klik',
@@ -74,10 +74,10 @@ export default {
 	args: {
 		variant: 'neutral',
 		size: 'md',
-		icon: '',
 		text: 'Aanvraag A-1042 is in behandeling',
 		supportingText: '',
 		headingLevel: undefined,
+		icon: '',
 		dismissible: false,
 	},
 };
@@ -86,10 +86,10 @@ const Template = (args: Record<string, any>) => html`
 	<nldd-banner
 		variant=${args.variant}
 		size=${args.size}
-		icon=${args.icon || nothing}
 		text=${args.text}
 		supporting-text=${args.supportingText || nothing}
 		heading-level=${args.headingLevel || nothing}
+		icon=${args.icon || nothing}
 		?dismissible=${args.dismissible}
 	></nldd-banner>
 `;

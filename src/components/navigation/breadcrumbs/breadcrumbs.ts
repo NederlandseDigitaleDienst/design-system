@@ -37,9 +37,9 @@ import { translate } from '../../../utilities/translations.js';
  *
  * @element nldd-breadcrumbs-item
  *
- * @attr {string} href - Link target. Ignored when `current` is set.
- * @attr {boolean} current - Marks this item as the current page (renders as plain text + `aria-current="page"`). Typical use is on the last item.
  * @attr {string} text - Item label. Content in the default slot wins.
+ * @attr {boolean} current - Marks this item as the current page (renders as plain text + `aria-current="page"`). Typical use is on the last item.
+ * @attr {string} href - Link target. Ignored when `current` is set.
  *
  * @slot - Item label. Wins over `text`.
  */
@@ -49,14 +49,14 @@ export class NLDDBreadcrumbsItem extends LitElement {
 	/** @internal Whether the default slot holds text, which wins over `text`. */
 	_textSlot = new SlotContent(this);
 
-	@property({ type: String, reflect: true })
-	href?: string;
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	text = '';
 
 	@property({ type: Boolean, reflect: true })
 	current = false;
 
-	@property({ reflect: true, converter: reflectNonDefault<string>('') })
-	text = '';
+	@property({ type: String, reflect: true })
+	href?: string;
 
 	override connectedCallback(): void {
 		super.connectedCallback();

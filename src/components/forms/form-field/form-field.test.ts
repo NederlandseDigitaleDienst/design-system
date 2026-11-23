@@ -29,6 +29,7 @@ import '../../inputs/toggle-button-group/toggle-button-group.js';
 import '../../inputs/switch/switch.js';
 import '../../content/tag/tag.js';
 import '../../actions/button/button.js';
+import '../validation-list/validation-list.js';
 
 /** The elements a control points at as its description, in order. */
 function describedBy(el: Element): readonly Element[] {
@@ -102,8 +103,8 @@ describe('nldd-form-field', () => {
 		expect(optional!.textContent).toContain('Optioneel');
 	});
 
-	it('renders a custom optional label when optional-label is set', async () => {
-		el = await fixture('<nldd-form-field label="Phone" optional optional-label="Optional"></nldd-form-field>');
+	it('takes the text of the optional badge from its translations', async () => {
+		el = await fixture(`<nldd-form-field label="Phone" optional translations='{"components.form-field.optional-label": "Optional"}'></nldd-form-field>`);
 		await waitForUpdate(el);
 		const optional = el.shadowRoot!.querySelector('.form-field__optional');
 		expect(optional!.textContent).toContain('Optional');
@@ -152,9 +153,9 @@ describe('nldd-form-field', () => {
 		el = await fixture(`
 			<nldd-form-field label="Email">
 				<nldd-form-field-help-text id="help-1">Format hint</nldd-form-field-help-text>
-				<input invalid>
+				<input invalid value="a">
 				<nldd-validation-list id="rules-1">
-					<nldd-validation-item id="rule-at" match="@" visible>Een apenstaartje</nldd-validation-item>
+					<nldd-validation-item id="rule-at" match="@">Een apenstaartje</nldd-validation-item>
 				</nldd-validation-list>
 			</nldd-form-field>
 		`);
@@ -234,9 +235,9 @@ describe('nldd-form-field description wiring', () => {
 	it('points the input at the items of the validation list', async () => {
 		el = await fixture(`
 			<nldd-form-field label="Email">
-				<input invalid>
+				<input invalid value="a">
 				<nldd-validation-list id="rules-1">
-					<nldd-validation-item id="rule-at" match="@" visible>Een apenstaartje</nldd-validation-item>
+					<nldd-validation-item id="rule-at" match="@">Een apenstaartje</nldd-validation-item>
 				</nldd-validation-list>
 			</nldd-form-field>
 		`);
@@ -248,10 +249,10 @@ describe('nldd-form-field description wiring', () => {
 	it('points at the items on screen, and follows them as they show or hide', async () => {
 		el = await fixture(`
 			<nldd-form-field label="Wachtwoord">
-				<input invalid>
+				<input invalid value="abc">
 				<nldd-validation-list id="rules-2">
-					<nldd-validation-item id="rule-length" minlength="8" visible>Minimaal 8 tekens</nldd-validation-item>
-					<nldd-validation-item id="rule-capital" match="[A-Z]" visible>Een hoofdletter</nldd-validation-item>
+					<nldd-validation-item id="rule-length" minlength="8">Minimaal 8 tekens</nldd-validation-item>
+					<nldd-validation-item id="rule-capital" match="[A-Z]">Een hoofdletter</nldd-validation-item>
 				</nldd-validation-list>
 			</nldd-form-field>
 		`);
@@ -263,10 +264,12 @@ describe('nldd-form-field description wiring', () => {
 		const length = el.querySelector('#rule-length')!;
 		const capital = el.querySelector('#rule-capital')!;
 		expect(describedBy(input)).toEqual([length, capital]);
-		length.removeAttribute('visible');
+		input.value = 'abcdefghij';
+		input.dispatchEvent(new Event('input'));
 		await waitForUpdate(el);
 		expect(describedBy(input)).toEqual([capital]);
-		length.setAttribute('visible', '');
+		input.value = 'abc';
+		input.dispatchEvent(new Event('input'));
 		await waitForUpdate(el);
 		expect(describedBy(input)).toEqual([length, capital]);
 	});
@@ -278,10 +281,10 @@ describe('nldd-form-field description wiring', () => {
 			<div>
 				<div id="from">
 					<nldd-form-field label="Wachtwoord">
-						<input invalid>
+						<input invalid value="abc">
 						<nldd-validation-list>
-							<nldd-validation-item id="rule-length" minlength="8" visible>Minimaal 8 tekens</nldd-validation-item>
-							<nldd-validation-item id="rule-capital" match="[A-Z]" visible>Een hoofdletter</nldd-validation-item>
+							<nldd-validation-item id="rule-length" minlength="8">Minimaal 8 tekens</nldd-validation-item>
+							<nldd-validation-item id="rule-capital" match="[A-Z]">Een hoofdletter</nldd-validation-item>
 						</nldd-validation-list>
 					</nldd-form-field>
 				</div>
@@ -295,22 +298,51 @@ describe('nldd-form-field description wiring', () => {
 		const capital = el.querySelector('#rule-capital')!;
 		el.querySelector('#to')!.appendChild(field);
 		await waitForUpdate(field);
-		length.removeAttribute('visible');
+		expect(describedBy(input)).toEqual([length, capital]);
+		length.remove();
 		await waitForUpdate(field);
 		expect(describedBy(input)).toEqual([capital]);
+	});
+
+	it('takes its callback back from a validation list that leaves it, and when it leaves the page', async () => {
+		el = await fixture(`
+			<nldd-form-field label="Wachtwoord">
+				<input value="abc">
+				<nldd-validation-list>
+					<nldd-validation-item minlength="8">Minimaal 8 tekens</nldd-validation-item>
+				</nldd-validation-list>
+				<nldd-validation-list>
+					<nldd-validation-item match="[A-Z]">Een hoofdletter</nldd-validation-item>
+				</nldd-validation-list>
+			</nldd-form-field>
+		`);
+		await waitForUpdate(el);
+		const [first, second] = el.querySelectorAll('nldd-validation-list') as unknown as (HTMLElement & { onItemVisibilityChange: (() => void) | null })[];
+		expect(first.onItemVisibilityChange).toBeTypeOf('function');
+		document.body.appendChild(first);
+		await waitForUpdate(el);
+		expect(first.onItemVisibilityChange).toBeNull();
+		expect(second.onItemVisibilityChange).toBeTypeOf('function');
+		el.remove();
+		expect(second.onItemVisibilityChange).toBeNull();
+		first.remove();
 	});
 
 	it('keeps describing the input when the control turns valid again', async () => {
 		el = await fixture(`
 			<nldd-form-field label="Email">
-				<input id="ctrl" invalid>
+				<input id="ctrl" invalid value="a">
 				<nldd-validation-list id="rules-3">
-					<nldd-validation-item id="rule-at-2" match="@" visible>Een apenstaartje</nldd-validation-item>
+					<nldd-validation-item id="rule-at-2" match="@" hint>Een apenstaartje</nldd-validation-item>
 				</nldd-validation-list>
 			</nldd-form-field>
 		`);
 		await waitForUpdate(el);
 		el.querySelector('#ctrl')!.removeAttribute('invalid');
+		await waitForUpdate(el);
+		expect(describedBy(el.querySelector('#ctrl')!)).toEqual([]);
+		// A reset brings the hint back on a field that is valid now.
+		(el.querySelector('#rules-3') as HTMLElement & { judging: boolean }).judging = false;
 		await waitForUpdate(el);
 		// The references follow what the list shows, not the state of the field.
 		expect(describedBy(el.querySelector('#ctrl')!)).toEqual([el.querySelector('#rule-at-2')]);
@@ -320,9 +352,9 @@ describe('nldd-form-field description wiring', () => {
 		el = await fixture(`
 			<nldd-form-field label="Email">
 				<nldd-form-field-help-text>Help.</nldd-form-field-help-text>
-				<input id="ctrl-2" invalid>
+				<input id="ctrl-2" invalid value="a">
 				<nldd-validation-list id="rules-4">
-					<nldd-validation-item id="rule-at-3" match="@" visible>Een apenstaartje</nldd-validation-item>
+					<nldd-validation-item id="rule-at-3" match="@">Een apenstaartje</nldd-validation-item>
 				</nldd-validation-list>
 			</nldd-form-field>
 		`);

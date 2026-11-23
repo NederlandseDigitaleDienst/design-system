@@ -422,6 +422,18 @@ describe('nldd-container list', () => {
 		expect(roles(el)).toEqual([null, 'separator']);
 	});
 
+	it('leaves a list role from the markup alone', async () => {
+		el = await fixture('<nldd-container role="list"><div role="listitem"></div></nldd-container>');
+		await waitForUpdate(el);
+		expect(el.getAttribute('role')).toBe('list');
+		el.setAttribute('list', '');
+		await waitForUpdate(el);
+		el.removeAttribute('list');
+		await waitForUpdate(el);
+		expect(el.getAttribute('role')).toBe('list');
+		expect(roles(el)).toEqual(['listitem']);
+	});
+
 	it('adds no roles without list', async () => {
 		el = await fixture('<nldd-container><div></div></nldd-container>');
 		await waitForUpdate(el);

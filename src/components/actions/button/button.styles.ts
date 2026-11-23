@@ -374,8 +374,8 @@ export const buttonStyles = css`
 		pointer-events: none;
 	}
 
-	:host([no-highlight-border]),
-	:host([no-highlight-border][expanded]) {
+	:host(:state(no-highlight-border)),
+	:host(:state(no-highlight-border)[expanded]) {
 		--_button-highlight-border-color: transparent;
 		--_button-is-hovered-highlight-border-color: transparent;
 		--_button-is-active-highlight-border-color: transparent;

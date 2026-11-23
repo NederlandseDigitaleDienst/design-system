@@ -144,6 +144,21 @@ describe('nldd-radio-button-field – state', () => {
 		el.focus();
 		expect(deepActiveElement()).toBe(el);
 	});
+
+	// The ring is a state of the inner radio, not an attribute of its API.
+	it('asks its radio for a focus ring on keyboard focus, without an attribute', async () => {
+		el = await fixture<NLDDRadioButtonField>('<nldd-radio-button-field label="Optie"></nldd-radio-button-field>');
+		await waitForUpdate(el);
+		document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }));
+		el.focus();
+		await waitForUpdate(el);
+		const radio = el.shadowRoot!.querySelector('nldd-radio-button')!;
+		expect(radio.matches(':state(focus-ring)')).toBe(true);
+		expect(radio.hasAttribute('focus-ring')).toBe(false);
+		el.blur();
+		await waitForUpdate(el);
+		expect(radio.matches(':state(focus-ring)')).toBe(false);
+	});
 });
 
 

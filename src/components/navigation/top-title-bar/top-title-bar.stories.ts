@@ -41,15 +41,15 @@ export default {
 			name: 'back-text',
 			description: 'Tekst voor de terugknop; weglaten verbergt de knop',
 		},
-		dismissText: {
-			control: 'text',
-			name: 'dismiss-text',
-			description: "Tekst voor de sluitknop: 'Sluit', 'Annuleer' of 'Klaar'",
-		},
 		backHref: {
 			control: 'text',
 			name: 'back-href',
 			description: 'Wanneer ingesteld rendert de terugknop als ankerlink',
+		},
+		dismissText: {
+			control: 'text',
+			name: 'dismiss-text',
+			description: "Tekst voor de sluitknop: 'Sluit', 'Annuleer' of 'Klaar'",
 		},
 		collapseAnchor: {
 			control: 'text',
@@ -61,8 +61,8 @@ export default {
 		text: 'Aanvragen',
 		supportingText: '',
 		backText: '',
-		dismissText: '',
 		backHref: '',
+		dismissText: '',
 		collapseAnchor: '',
 	},
 };

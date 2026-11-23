@@ -33,25 +33,6 @@ export default {
 		},
 	},
 	argTypes: {
-		name: {
-			control: 'text',
-			description: 'Naam doorgegeven aan alle velden',
-		},
-		required: {
-			control: 'boolean',
-			description: 'Markeert de groep als verplicht',
-			table: { defaultValue: { summary: false } },
-		},
-		invalid: {
-			control: 'boolean',
-			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
-			table: { defaultValue: { summary: false } },
-		},
-		disabled: {
-			control: 'boolean',
-			description: 'Schakelt alle velden uit',
-			table: { defaultValue: { summary: false } },
-		},
 		accessibleLabel: {
 			name: 'accessible-label',
 			control: 'text',
@@ -62,13 +43,32 @@ export default {
 			control: false,
 			description: 'Id van een element elders op de pagina dat deze groep benoemt, zoals `aria-labelledby`.',
 		},
+		invalid: {
+			control: 'boolean',
+			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
+			table: { defaultValue: { summary: false } },
+		},
+		name: {
+			control: 'text',
+			description: 'Naam doorgegeven aan alle velden',
+		},
+		required: {
+			control: 'boolean',
+			description: 'Markeert de groep als verplicht',
+			table: { defaultValue: { summary: false } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Schakelt alle velden uit',
+			table: { defaultValue: { summary: false } },
+		},
 	},
 	args: {
+		accessibleLabel: 'Kies een optie',
+		invalid: false,
 		name: 'demo',
 		required: false,
-		invalid: false,
 		disabled: false,
-		accessibleLabel: 'Kies een optie',
 	},
 };
 
@@ -88,13 +88,13 @@ const fields = html`
 	></nldd-radio-button-field>
 `;
 
-const Template = ({ name, required, invalid, disabled, accessibleLabel }: Record<string, unknown>) => html`
+const Template = ({ accessibleLabel, invalid, name, required, disabled }: Record<string, unknown>) => html`
 	<nldd-radio-button-group
-		name=${name}
+		accessible-label=${accessibleLabel}
 		?invalid=${invalid}
+		name=${name}
 		?required=${required}
 		?disabled=${disabled}
-		accessible-label=${accessibleLabel}
 	>
 		${fields}
 	</nldd-radio-button-group>

@@ -1,7 +1,7 @@
 import { _setOSOverride } from '../../../utilities/os.js';
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate, deepActiveElement } from '../../../test-utils.js';
-import type { NLDDSegmentedControl, NLDDSegmentedControlItem } from './segmented-control.js';
+import type { NLDDSegmentedControl, NLDDSegmentedControlItem, SegmentedControlVariant } from './segmented-control.js';
 import type { NLDDTooltip } from '../../content/tooltip/tooltip.js';
 import './segmented-control.js';
 import '../../../assets/styles/variables.css';
@@ -22,6 +22,14 @@ function getItems(el: NLDDSegmentedControl): NLDDSegmentedControlItem[] {
 
 function getInput(item: NLDDSegmentedControlItem): HTMLInputElement {
 	return item.shadowRoot!.querySelector('input')!;
+}
+
+/** An item on its own, with the variant its group would hand it. */
+async function itemFixture(variant: SegmentedControlVariant, attrs = ''): Promise<NLDDSegmentedControlItem> {
+	const item = await fixture<NLDDSegmentedControlItem>(`<nldd-segmented-control-item ${attrs}></nldd-segmented-control-item>`);
+	item.variant = variant;
+	await waitForUpdate(item);
+	return item;
 }
 
 describe('nldd-segmented-control', () => {
@@ -59,7 +67,9 @@ describe('nldd-segmented-control-item', () => {
 	});
 
 	it('renders a native input in checkbox mode', async () => {
-		el = await fixture('<nldd-segmented-control-item input-type="checkbox"></nldd-segmented-control-item>');
+		const item = await fixture<NLDDSegmentedControlItem>('<nldd-segmented-control-item></nldd-segmented-control-item>');
+		item.inputType = 'checkbox';
+		el = item;
 		await waitForUpdate(el);
 		expect(el.shadowRoot!.querySelector('input')!.type).toBe('checkbox');
 		expect(el.hasAttribute('role')).toBe(false);
@@ -105,6 +115,48 @@ describe('nldd-segmented-control – state sync', () => {
 		`);
 		await waitForUpdate(el);
 		expect(getItems(el)[0].size).toBe('sm');
+	});
+
+	it('hands size, appearance and variant on as states the item styles read, not as attributes', async () => {
+		const token = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+		const local = (item: HTMLElement, name: string) => getComputedStyle(item).getPropertyValue(name).trim();
+		el = await fixture<NLDDSegmentedControl>(`
+			<nldd-segmented-control size="sm" appearance="neutral-base" variant="icon">
+				<nldd-segmented-control-item value="a" text="A"></nldd-segmented-control-item>
+			</nldd-segmented-control>
+		`);
+		await waitForUpdate(el);
+		const item = getItems(el)[0];
+		await waitForUpdate(item);
+		for (const name of ['size', 'appearance', 'variant', 'input-type', 'group-name']) {
+			expect(item.hasAttribute(name)).toBe(false);
+		}
+		expect(item.matches(':state(size-sm):state(appearance-neutral-base):state(variant-icon)')).toBe(true);
+		expect(item.matches(':state(size-md), :state(appearance-neutral-tinted), :state(variant-text)')).toBe(false);
+		expect(local(item, '--_segmented-control-item-min-size')).toBe(token('--semantics-controls-sm-min-size'));
+		expect(local(item, '--_segmented-control-item-content-color')).toBe(token('--semantics-buttons-neutral-base-content-color'));
+		const text = item.shadowRoot!.querySelector('.segmented-control__item-text')!;
+		const icon = item.shadowRoot!.querySelector('.segmented-control__item-icon')!;
+		expect(getComputedStyle(text).display).toBe('none');
+		expect(getComputedStyle(icon).display).toBe('flex');
+
+		el.size = 'lg';
+		el.variant = 'icon-and-text';
+		await waitForUpdate(el);
+		await waitForUpdate(item);
+		expect(item.matches(':state(size-lg):state(variant-icon-and-text)')).toBe(true);
+		expect(item.matches(':state(size-sm), :state(variant-icon)')).toBe(false);
+		expect(local(item, '--_segmented-control-item-min-size')).toBe(token('--semantics-controls-lg-min-size'));
+		expect(getComputedStyle(item.shadowRoot!.querySelector('.segmented-control__item')!).flexDirection).toBe('column');
+
+		el.variant = 'text';
+		el.appearance = 'neutral-tinted';
+		await waitForUpdate(el);
+		await waitForUpdate(item);
+		expect(local(item, '--_segmented-control-item-content-color')).toBe(token('--semantics-buttons-neutral-tinted-content-color'));
+		// Without a tooltip around it, the item renders anew.
+		expect(getComputedStyle(item.shadowRoot!.querySelector('.segmented-control__item-icon')!).display).toBe('none');
+		expect(getComputedStyle(item.shadowRoot!.querySelector('.segmented-control__item-text')!).display).not.toBe('none');
 	});
 
 	it('disables all items when parent is disabled', async () => {
@@ -454,9 +506,7 @@ describe('nldd-segmented-control-item – tooltip', () => {
 	});
 
 	it('wraps in nldd-tooltip when variant is icon', async () => {
-		el = await fixture<NLDDSegmentedControlItem>(`
-			<nldd-segmented-control-item variant="icon" text="Zoom in" icon="zoom-in"></nldd-segmented-control-item>
-		`);
+		el = await itemFixture('icon', 'text="Zoom in" icon="zoom-in"');
 		await waitForUpdate(el);
 		const tooltip = el.shadowRoot!.querySelector('nldd-tooltip');
 		expect(tooltip).not.toBeNull();
@@ -464,9 +514,7 @@ describe('nldd-segmented-control-item – tooltip', () => {
 	});
 
 	it('shows the tooltip on focus in radio mode, where the focus is on the item', async () => {
-		el = await fixture<NLDDSegmentedControlItem>(`
-			<nldd-segmented-control-item variant="icon" text="Zoom in" icon="zoom-in"></nldd-segmented-control-item>
-		`);
+		el = await itemFixture('icon', 'text="Zoom in" icon="zoom-in"');
 		await waitForUpdate(el);
 		const tooltip = el.shadowRoot!.querySelector('nldd-tooltip') as HTMLElement;
 		const bubble = tooltip.shadowRoot!.querySelector('.tooltip') as HTMLElement;
@@ -485,25 +533,19 @@ describe('nldd-segmented-control-item – tooltip', () => {
 	});
 
 	it('does not wrap in nldd-tooltip when variant is text', async () => {
-		el = await fixture<NLDDSegmentedControlItem>(`
-			<nldd-segmented-control-item variant="text" text="Label"></nldd-segmented-control-item>
-		`);
+		el = await itemFixture('text', 'text="Label"');
 		await waitForUpdate(el);
 		expect(el.shadowRoot!.querySelector('nldd-tooltip')).toBeNull();
 	});
 
 	it('does not wrap in nldd-tooltip when variant is icon-and-text', async () => {
-		el = await fixture<NLDDSegmentedControlItem>(`
-			<nldd-segmented-control-item variant="icon-and-text" text="Vet" icon="bold"></nldd-segmented-control-item>
-		`);
+		el = await itemFixture('icon-and-text', 'text="Vet" icon="bold"');
 		await waitForUpdate(el);
 		expect(el.shadowRoot!.querySelector('nldd-tooltip')).toBeNull();
 	});
 
 	it('renders both icon and text and keeps the text accessible for variant icon-and-text', async () => {
-		el = await fixture<NLDDSegmentedControlItem>(`
-			<nldd-segmented-control-item variant="icon-and-text" text="Vet" icon="bold"></nldd-segmented-control-item>
-		`);
+		el = await itemFixture('icon-and-text', 'text="Vet" icon="bold"');
 		await waitForUpdate(el);
 		const icon = el.shadowRoot!.querySelector('.segmented-control__item-icon nldd-icon');
 		const text = el.shadowRoot!.querySelector('.segmented-control__item-text')!;
@@ -517,26 +559,20 @@ describe('nldd-segmented-control-item – tooltip', () => {
 	});
 
 	it('shows the icon-placeholder for variant icon without an icon', async () => {
-		el = await fixture<NLDDSegmentedControlItem>(`
-			<nldd-segmented-control-item variant="icon" text="Vet"></nldd-segmented-control-item>
-		`);
+		el = await itemFixture('icon', 'text="Vet"');
 		await waitForUpdate(el);
 		expect(el.shadowRoot!.querySelector('nldd-icon[icon="icon-placeholder"]')).not.toBeNull();
 	});
 
 	it('icon-and-text with text but no icon shows the placeholder', async () => {
-		el = await fixture<NLDDSegmentedControlItem>(`
-			<nldd-segmented-control-item variant="icon-and-text" text="Vet"></nldd-segmented-control-item>
-		`);
+		el = await itemFixture('icon-and-text', 'text="Vet"');
 		await waitForUpdate(el);
 		expect(el.shadowRoot!.querySelector('nldd-icon[icon="icon-placeholder"]')).not.toBeNull();
 		expect(el.shadowRoot!.querySelector('.segmented-control__item-text')!.textContent?.trim()).toBe('Vet');
 	});
 
 	it('icon-and-text without an icon or text shows the placeholder', async () => {
-		el = await fixture<NLDDSegmentedControlItem>(`
-			<nldd-segmented-control-item variant="icon-and-text"></nldd-segmented-control-item>
-		`);
+		el = await itemFixture('icon-and-text', '');
 		await waitForUpdate(el);
 		expect(el.shadowRoot!.querySelector('nldd-icon[icon="icon-placeholder"]')).not.toBeNull();
 	});

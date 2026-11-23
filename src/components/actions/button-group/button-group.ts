@@ -36,8 +36,8 @@
  * @keywords knoppengroep
  * @related nldd-button-bar, nldd-toolbar
  * @attr {'sm'|'md'} size - Button group size, set on every button in it: 'sm' | 'md' (default: 'md')
- * @attr {'auto'|'horizontal'|'vertical'} orientation - Layout direction: 'auto' | 'horizontal' | 'vertical' (default: 'auto')
  * @attr {string} width - 'full': the buttons fill the row in equal shares, and a button that does not fit moves to a line of its own (default: unset, each button as wide as its label)
+ * @attr {'auto'|'horizontal'|'vertical'} orientation - Layout direction: 'auto' | 'horizontal' | 'vertical' (default: 'auto')
  *
  * @slot - Default slot for buttons (max 3)
  */
@@ -71,11 +71,11 @@ export class NLDDButtonGroup extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<Size>('md') })
 	size: Size = 'md';
 
-	@property({ reflect: true, converter: reflectNonDefault<Orientation>('auto') })
-	orientation: Orientation = 'auto';
-
 	@property({ reflect: true, converter: reflectNonDefault<Width>('') })
 	width: Width = '';
+
+	@property({ reflect: true, converter: reflectNonDefault<Orientation>('auto') })
+	orientation: Orientation = 'auto';
 
 	@query('slot')
 	private _slot!: HTMLSlotElement;

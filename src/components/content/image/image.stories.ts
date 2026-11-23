@@ -30,36 +30,50 @@ export default {
 		},
 	},
 	args: {
-		src: SAMPLE_SRC,
-		alt: SAMPLE_ALT,
+		shape: 'square',
 		width: 'full',
+		src: SAMPLE_SRC,
+		srcset: '',
+		sizes: '',
+		alt: SAMPLE_ALT,
 		aspectRatio: '16/9',
 		objectFit: 'cover',
 		objectPosition: 'center',
-		shape: 'square',
-		srcset: '',
-		sizes: '',
 		lqip: '',
+		fetchPriority: '(auto)',
 		caption: '',
 		credit: '',
-		loading: 'lazy',
-		fetchPriority: '(auto)',
 		decorative: false,
+		loading: 'lazy',
 	},
 	argTypes: {
-		src: {
-			control: 'text',
-			description: 'Image URL',
-		},
-		alt: {
-			control: 'text',
-			description: 'Alt-tekst voor de afbeelding uit `src`. Verplicht tenzij `decorative` is gezet; geslotte media heeft een eigen alt.',
+		shape: {
+			control: 'select',
+			options: ['square', 'rounded', 'circle'],
+			description: 'Hoekvorm',
+			table: { defaultValue: { summary: 'square' } },
 		},
 		width: {
 			control: 'select',
 			options: ['full', 160, 240, 320, 480, 640, '20rem', '50%'],
 			description: 'Display-breedte, nooit breder dan de parent. `full` vult de parent, een getal is pixels en zet ook de img-hint, een andere CSS-lengte zet alleen de breedte.',
 			table: { defaultValue: { summary: 'full' } },
+		},
+		src: {
+			control: 'text',
+			description: 'Image URL',
+		},
+		srcset: {
+			control: 'text',
+			description: `Responsive bron-set met varianten per pixel-breedte. Voorbeeld: ${SAMPLE_SRCSET}`,
+		},
+		sizes: {
+			control: 'text',
+			description: 'Sizes hint voor srcset, bv. `100vw` of `(max-width: 640px) 100vw, 50vw`',
+		},
+		alt: {
+			control: 'text',
+			description: 'Alt-tekst voor de afbeelding uit `src`. Verplicht tenzij `decorative` is gezet; geslotte media heeft een eigen alt.',
 		},
 		aspectRatio: {
 			name: 'aspect-ratio',
@@ -83,37 +97,9 @@ export default {
 			description: 'Welk deel zichtbaar blijft bij `object-fit: cover`',
 			table: { defaultValue: { summary: 'center' } },
 		},
-		shape: {
-			control: 'select',
-			options: ['square', 'rounded', 'circle'],
-			description: 'Hoekvorm',
-			table: { defaultValue: { summary: 'square' } },
-		},
-		srcset: {
-			control: 'text',
-			description: `Responsive bron-set met varianten per pixel-breedte. Voorbeeld: ${SAMPLE_SRCSET}`,
-		},
-		sizes: {
-			control: 'text',
-			description: 'Sizes hint voor srcset, bv. `100vw` of `(max-width: 640px) 100vw, 50vw`',
-		},
 		lqip: {
 			control: 'text',
 			description: `CSS-only multi-color LQIP. CSV-string van 7 bytes (base + 6 cellen, 3×2 raster). Elke byte is een 8-bit Oklab triplet. Voorbeeld: \`${SAMPLE_LQIP}\`. Genereer eigen waarden via de story LQIP-encoder.`,
-		},
-		caption: {
-			control: 'text',
-			description: 'Caption tekst onder de afbeelding',
-		},
-		credit: {
-			control: 'text',
-			description: 'Kleinere credit/attributie naast de caption',
-		},
-		loading: {
-			control: 'select',
-			options: ['lazy', 'eager'],
-			description: 'Loading-strategie. `lazy` is goed voor below-the-fold; gebruik `eager` voor hero / LCP-kandidaat (anders silent Core Web Vitals regressie).',
-			table: { defaultValue: { summary: 'lazy' } },
 		},
 		fetchPriority: {
 			name: 'fetchpriority',
@@ -123,47 +109,61 @@ export default {
 			description: 'Fetch priority hint. Zet `high` op de LCP-image voor sterkste signaal naar de browser.',
 			table: { defaultValue: { summary: '(auto)' } },
 		},
+		caption: {
+			control: 'text',
+			description: 'Caption tekst onder de afbeelding',
+		},
+		credit: {
+			control: 'text',
+			description: 'Kleinere credit/attributie naast de caption',
+		},
 		decorative: {
 			control: 'boolean',
 			description: 'Decoratieve afbeelding: alt wordt leeg en aria-hidden gezet',
 			table: { defaultValue: { summary: false } },
 		},
+		loading: {
+			control: 'select',
+			options: ['lazy', 'eager'],
+			description: 'Loading-strategie. `lazy` is goed voor below-the-fold; gebruik `eager` voor hero / LCP-kandidaat (anders silent Core Web Vitals regressie).',
+			table: { defaultValue: { summary: 'lazy' } },
+		},
 	},
 };
 
 const Template = ({
-	src,
-	alt,
+	shape,
 	width,
+	src,
+	srcset,
+	sizes,
+	alt,
 	aspectRatio,
 	objectFit,
 	objectPosition,
-	shape,
-	srcset,
-	sizes,
 	lqip,
+	fetchPriority,
 	caption,
 	credit,
-	loading,
-	fetchPriority,
 	decorative,
+	loading,
 }: Record<string, unknown>) => html`
 	<nldd-image
-		src=${src as string}
-		alt=${alt as string}
+		shape=${shape as string}
 		width=${width as string}
+		src=${src as string}
+		srcset=${srcset as string}
+		sizes=${sizes as string}
+		alt=${alt as string}
 		aspect-ratio=${aspectRatio as string}
 		object-fit=${objectFit as string}
 		object-position=${objectPosition as string}
-		shape=${shape as string}
-		srcset=${srcset as string}
-		sizes=${sizes as string}
 		lqip=${(lqip as string) || nothing}
+		fetchpriority=${(fetchPriority as string) || nothing}
 		caption=${caption as string}
 		credit=${credit as string}
-		loading=${loading as string}
-		fetchpriority=${(fetchPriority as string) || nothing}
 		?decorative=${decorative}
+		loading=${loading as string}
 	></nldd-image>
 `;
 

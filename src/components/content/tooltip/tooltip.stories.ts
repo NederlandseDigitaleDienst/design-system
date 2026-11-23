@@ -27,6 +27,12 @@ export default {
 		},
 	},
 	argTypes: {
+		placement: {
+			control: 'select',
+			options: ['top', 'bottom', 'left', 'right'],
+			description: 'Positie van de tooltip',
+			table: { defaultValue: { summary: 'bottom' } },
+		},
 		text: {
 			control: 'text',
 			description: 'Tooltip tekst',
@@ -50,12 +56,6 @@ export default {
 			control: 'text',
 			description: 'Sneltoets op Linux en ChromeOS, als die afwijkt van `shortcut`.',
 		},
-		placement: {
-			control: 'select',
-			options: ['top', 'bottom', 'left', 'right'],
-			description: 'Positie van de tooltip',
-			table: { defaultValue: { summary: 'bottom' } },
-		},
 		timing: {
 			control: 'select',
 			options: ['instant', 'delay', 'never'],
@@ -64,12 +64,12 @@ export default {
 		},
 	},
 	args: {
+		placement: 'bottom',
 		text: 'Aanvraag A-1042 is in behandeling',
 		shortcut: '',
 		shortcutMac: '',
 		shortcutWindows: '',
 		shortcutLinux: '',
-		placement: 'bottom',
 		timing: 'delay',
 	},
 };
@@ -82,12 +82,12 @@ export const Standaard = {
 			horizontal-alignment="center"
 		>
 			<nldd-tooltip
+				placement=${args.placement}
 				text=${args.text}
 				shortcut=${args.shortcut || nothing}
 				shortcut-mac=${args.shortcutMac || nothing}
 				shortcut-windows=${args.shortcutWindows || nothing}
 				shortcut-linux=${args.shortcutLinux || nothing}
-				placement=${args.placement}
 				timing=${args.timing}
 			>
 				<nldd-button text="Toon tooltip"></nldd-button>

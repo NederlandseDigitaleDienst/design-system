@@ -11,7 +11,7 @@ import { nlddListItemTranslations } from './list-item.i18n.js';
 import { downloadLinkHintKey, markDownloadTarget } from '../../../utilities/link-hint.js';
 import type { ListContext, ListType, NLDDList } from '../list/list.js';
 import type { RovingState } from '../list/list.roving.js';
-import { setState } from '../../../utilities/element-state.js';
+import { setState, styleState } from '../../../utilities/element-state.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
 
 export type ListItemSize = 'sm' | 'md';
@@ -168,21 +168,20 @@ const NESTED_CONTROLS = [
  * @keywords disclosure, rij, uitklappen
  *
  * @attr {'sm'|'md'} size - Row size (default: 'md'). Pushed onto the cells whose `size` means the same scale (nldd-text-cell, nldd-reorder-handle-cell), so it is written once per row instead of once per cell. A size set on the cell itself wins. Cells where `size` means something else (pixels on nldd-icon-cell / nldd-spacer-cell, a heading scale on nldd-title-cell) are left alone.
- * @attr {string} href - Renders the item as an `<a>` with this URL. Wins over `checkbox` and `button`; without any of the three the item is a plain container with no action.
- * @attr {string} target - Link target forwarded to the `<a>` (e.g. '_blank'); only applies with `href`. With '_blank' a visually hidden "opens in new tab" announcement is added for assistive technology. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.
- * @attr {string} download - Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab.
- * @attr {string} rel - Link rel forwarded to the `<a>`, only with `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set
  * @attr {boolean} button - Renders the item as a `<button>`. Last of the three: `href` and `checkbox` both win over it.
  * @attr {boolean} checkbox - Makes the whole row a `role="checkbox"` control. Wins over `button`, loses to `href`.
  * @attr {boolean} radio - Makes the whole row one radio of a group: the action becomes a `role="radio"` button carrying `aria-checked`, and activation sets `checked` (never clears it) and fires `change`. Put the rows in an `nldd-list type="radiogroup"`, which is what makes them a set. Wins over `button`, loses to `href` and `checkbox`. The arrow keys move focus without checking, where a native radio group and `nldd-radio-button-group` check as they go: a row can carry more than a label, so stepping past one should not commit it.
  * @attr {boolean} expandable - The row opens something, also while it is closed: without `expanded` it says "collapsed" instead of nothing. This is how markup writes a closed disclosure, since an attribute can only be there or not. A row with children in a tree already is one.
  * @attr {string} accessible-label - Accessible name of the row's action (its link, button, checkbox or radio), for a row whose text does not say enough on its own. It replaces the content of the whole row for assistive technology, the supporting text and a status included, so set it only when the row has no text of its own, or put everything that matters in it. Start it with the row's visible title, so voice control finds the row by the words on screen (WCAG 2.5.3); development warns when it does not. The hint for another website or a new tab is added to it.
- * @attr {boolean} reorderable - Set by the parent `nldd-list` when its own `reorderable` is on (with `type="list"`); consumers do not set this. Serves as a CSS hook for drag handle visibility.
+ * @attr {'page'|'step'|'location'|'date'|'time'|'true'} current-type - The `aria-current` value a `current` or `selected` row puts on its action in a `navigation` parent (default 'page'). Use 'location' for a table of contents, whose rows point at sections of the page you are on.
  * @attr {boolean} selected - Marks the item as selected: it is one of the rows you picked. Selection is consumer-managed; the list never sets it. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value; in a `listbox` parent it drives `aria-selected`.
  * @attr {boolean} checked - Checked state of a `checkbox` or `radio` row. A checkbox row toggles it on activation, a radio row only ever sets it
  * @attr {boolean} expanded - Disclosure state. Drives the `children` group's visibility AND supplies `aria-expanded`, to the row's own control when the row is interactive, or to the segment marked `disclosure`. Written once either way; the item DEV-warns when there is nowhere for it to live.
  * @attr {boolean} current - Marks the item as the one you are on: the page a menu row points at, the record a list has open. Exactly one row in a list carries it, where `selected` may be on many. It paints like `selected` at rest, a quiet fill on purpose: the page itself says where you are, in its title, heading and breadcrumb, so the fill is an extra that should not pull attention from the content, and an automated check that flags its contrast is expected. The fill alone stays under 3:1 (1.3:1 in light, 1.5:1 in dark), so a WCAG audit fails 1.4.1 and 1.4.11 on it unless the place also shows another way, such as in the page title or the breadcrumb. A table of contents that follows the scroll, as in the content page pattern, has no such other sign: expect the finding there, and name it as a deviation in the accessibility statement. It takes the highlighted fill while focus is anywhere in the row, including inside a nested `nldd-list-item-segment`, which is what a segmented row needs: the focus never reaches the row's own control, because there is none. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value. On a segmented row set it on the segment that holds the link instead: the row reads `current` off its own segments and paints itself, so it is written once, where `aria-current` belongs.
- * @attr {'page'|'step'|'location'|'date'|'time'|'true'} current-type - The `aria-current` value a `current` or `selected` row puts on its action in a `navigation` parent (default 'page'). Use 'location' for a table of contents, whose rows point at sections of the page you are on.
+ * @attr {string} href - Renders the item as an `<a>` with this URL. Wins over `checkbox` and `button`; without any of the three the item is a plain container with no action.
+ * @attr {string} target - Link target forwarded to the `<a>` (e.g. '_blank'); only applies with `href`. With '_blank' a visually hidden "opens in new tab" announcement is added for assistive technology. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.
+ * @attr {string} rel - Link rel forwarded to the `<a>`, only with `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set
+ * @attr {string} download - Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab.
  * @attr {boolean} disabled - Switches the row's own control off: a `button` or `checkbox` row stops responding and dims, a `href` row gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). A row without a control of its own has nothing to switch off, and segments carry their own `disabled`. The arrow keys skip a disabled row.
  *
  * Divider markers, set on a CELL in the row rather than on the row itself:
@@ -245,29 +244,6 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	@property({ reflect: true, converter: reflectNonDefault<ListItemSize>('md') })
 	size: ListItemSize = 'md';
 
-	/** When set, renders the item as a link. */
-	@property({ reflect: true })
-	href?: string;
-
-	/**
-	 * Link target (e.g. '_blank' to open in a new tab). Forwarded to the `<a>`; only applies with href.
-	 * When set to '_blank', the item appends a visually hidden "opens in new tab" announcement to the
-	 * link so the change of context is conveyed to assistive technology (WCAG 2.1 SC 3.2.2). Override
-	 * the wording via the `translations` property.
-	 */
-	@property({ reflect: true })
-	target?: string;
-
-	/** Saves the file instead of opening it; only used when href is set. Empty
-	 *  for the name from the URL, a name to save it under. */
-	@property({ type: String })
-	download: string | undefined = undefined;
-
-	/** Link rel, forwarded to the `<a>` with href. With target '_blank',
-	 *  'noopener noreferrer' is added to it. */
-	@property({ reflect: true })
-	rel?: string;
-
 	/** When set, renders the item as a button; ignored when href is set. */
 	@property({ type: Boolean, reflect: true })
 	button = false;
@@ -288,13 +264,26 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	@property({ type: Boolean, reflect: true })
 	expandable = false;
 
+	/**
+	 * @internal Set by the parent nldd-list while it is reorderable (with
+	 * `type="list"`). No attribute: the styles read it as `:state(reorderable)`.
+	 */
+	@property({ attribute: false })
+	reorderable = false;
+
 	/** Accessible name of the row's action; replaces the content of the whole row. */
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
-	/** Set by the parent nldd-list when reorderable is enabled. Used as a CSS hook for drag handle visibility. */
-	@property({ type: Boolean, reflect: true })
-	reorderable = false;
+	/**
+	 * What kind of "current" this row is, for `aria-current`.
+	 *
+	 * `page` fits a menu of pages, but a table of contents points at sections
+	 * of the page you are already on: there every row would announce itself as
+	 * "the current page". `location` says "you are here" instead.
+	 */
+	@property({ reflect: true, attribute: 'current-type', converter: reflectNonDefault<'page' | 'step' | 'location' | 'date' | 'time' | 'true'>('page') })
+	currentType: 'page' | 'step' | 'location' | 'date' | 'time' | 'true' = 'page';
 
 	@property({ type: Boolean, reflect: true })
 	selected = false;
@@ -325,15 +314,28 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	@property({ type: Boolean, reflect: true })
 	current = false;
 
+	/** When set, renders the item as a link. */
+	@property({ reflect: true })
+	href?: string;
+
 	/**
-	 * What kind of "current" this row is, for `aria-current`.
-	 *
-	 * `page` fits a menu of pages, but a table of contents points at sections
-	 * of the page you are already on: there every row would announce itself as
-	 * "the current page". `location` says "you are here" instead.
+	 * Link target (e.g. '_blank' to open in a new tab). Forwarded to the `<a>`; only applies with href.
+	 * When set to '_blank', the item appends a visually hidden "opens in new tab" announcement to the
+	 * link so the change of context is conveyed to assistive technology (WCAG 2.1 SC 3.2.2). Override
+	 * the wording via the `translations` property.
 	 */
-	@property({ reflect: true, attribute: 'current-type', converter: reflectNonDefault<'page' | 'step' | 'location' | 'date' | 'time' | 'true'>('page') })
-	currentType: 'page' | 'step' | 'location' | 'date' | 'time' | 'true' = 'page';
+	@property({ reflect: true })
+	target?: string;
+
+	/** Link rel, forwarded to the `<a>` with href. With target '_blank',
+	 *  'noopener noreferrer' is added to it. */
+	@property({ reflect: true })
+	rel?: string;
+
+	/** Saves the file instead of opening it; only used when href is set. Empty
+	 *  for the name from the URL, a name to save it under. */
+	@property({ type: String })
+	download: string | undefined = undefined;
 
 	/**
 	 * Switches off the row's own control.
@@ -663,6 +665,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	}
 
 	override updated(changed: Map<string, unknown>) {
+		if (changed.has('reorderable')) styleState(this, 'reorderable', this.reorderable);
 		if (changed.has('selected') || changed.has('current') || changed.has('currentType') || changed.has('button') || changed.has('checkbox') || changed.has('radio') || changed.has('href') || changed.has('_parentType')) {
 			this._updateAriaState();
 		}

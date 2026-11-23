@@ -25,7 +25,16 @@
 				"flag": { "type": "object", "additionalProperties": { "type": "string" }, "description": "Attributes in `removed` whose value became a boolean attribute, old to new. The context names the value; only a value written out in the markup." },
 				"tag": { "type": "string", "description": "The new tag of a component in `removed` that got another name." },
 				"translation": { "type": "object", "additionalProperties": { "type": "string" }, "description": "Attributes in `removed` whose text became a translation key, attribute to key. The text goes in `translations`; only a value written out in the markup." },
-				"wrap": { "type": "string", "description": "The element that the text of an element goes in, with any inline elements. Only content written out in the markup, with inline elements only." }
+				"wrap": { "type": "string", "description": "The element that the text of an element goes in, with any inline elements. Only content written out in the markup, with inline elements only." },
+				"unwrap": {
+					"type": "object",
+					"additionalProperties": false,
+					"properties": {
+						"drop": { "type": "array", "items": { "type": "string" }, "description": "Attributes of the wrapper that do nothing on its child and go." },
+						"move": { "type": "object", "additionalProperties": { "type": "array", "items": { "type": "string" } }, "description": "Attributes of the wrapper that only these children take, attribute to tags. On any other child the fix makes no edit." }
+					},
+					"description": "A wrapper in `removed` that is gone: its one child takes its place, with the wrapper's other attributes. Only when the child is all it holds, with whitespace around it."
+				}
 			}
 		},
 		"context": { "type": "string", "description": "CSS selector for the elements the rule applies to." },

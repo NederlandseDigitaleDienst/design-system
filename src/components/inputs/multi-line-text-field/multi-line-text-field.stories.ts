@@ -31,20 +31,20 @@ export default {
 		rows: 3,
 		width: '',
 		placeholder: 'Schrijf hier je toelichting',
-		name: '',
-		value: '',
-		minlength: null,
-		maxlength: null,
-		required: false,
-		keyboard: undefined,
-		enterKey: undefined,
-		autocomplete: '',
-		noSpellcheck: false,
 		accessibleLabel: '',
 		accessibleDescription: '',
 		accessibleDescribedBy: '',
 		valid: false,
 		invalid: false,
+		name: '',
+		value: '',
+		keyboard: undefined,
+		enterKey: undefined,
+		minlength: null,
+		maxlength: null,
+		required: false,
+		autocomplete: '',
+		noSpellcheck: false,
 		readonly: false,
 		disabled: false,
 	},
@@ -74,6 +74,21 @@ export default {
 			control: 'text',
 			description: 'Placeholdertekst',
 		},
+		accessibleLabel: {
+			name: 'accessible-label',
+			control: 'text',
+			description: 'Toegankelijk label voor screen readers',
+		},
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		},
 		valid: {
 			control: 'boolean',
 			description: 'Valid state',
@@ -84,16 +99,6 @@ export default {
 			description: 'Invalid state',
 			table: { defaultValue: { summary: false } },
 		},
-		readonly: {
-			control: 'boolean',
-			description: 'Readonly state',
-			table: { defaultValue: { summary: false } },
-		},
-		disabled: {
-			control: 'boolean',
-			description: 'Disabled state',
-			table: { defaultValue: { summary: false } },
-		},
 		name: {
 			control: 'text',
 			description: 'Name voor form submission',
@@ -101,21 +106,6 @@ export default {
 		value: {
 			control: 'text',
 			description: 'Veldwaarde',
-		},
-		minlength: {
-			control: 'number',
-			description: 'Minimaal aantal tekens.',
-			table: { type: { summary: 'number' } },
-		},
-		maxlength: {
-			control: 'number',
-			description: 'Maximaal aantal tekens.',
-			table: { type: { summary: 'number' } },
-		},
-		required: {
-			control: 'boolean',
-			description: 'Required state',
-			table: { defaultValue: { summary: false } },
 		},
 		keyboard: {
 			control: 'select',
@@ -132,6 +122,21 @@ export default {
 			description: 'Wat de Enter-toets op het virtuele toetsenbord zegt (enterkeyhint)',
 			table: { defaultValue: { summary: '(geen)' } },
 		},
+		minlength: {
+			control: 'number',
+			description: 'Minimaal aantal tekens.',
+			table: { type: { summary: 'number' } },
+		},
+		maxlength: {
+			control: 'number',
+			description: 'Maximaal aantal tekens.',
+			table: { type: { summary: 'number' } },
+		},
+		required: {
+			control: 'boolean',
+			description: 'Required state',
+			table: { defaultValue: { summary: false } },
+		},
 		autocomplete: {
 			control: 'text',
 			description: 'Browser autofill hint (HTML autocomplete attribute, bv. "off")',
@@ -142,46 +147,41 @@ export default {
 			description: 'Disables browser spellchecking on the inner textarea',
 			table: { defaultValue: { summary: false } },
 		},
-		accessibleLabel: {
-			name: 'accessible-label',
-			control: 'text',
-			description: 'Toegankelijk label voor screen readers',
+		readonly: {
+			control: 'boolean',
+			description: 'Readonly state',
+			table: { defaultValue: { summary: false } },
 		},
-		accessibleDescription: {
-			name: 'accessible-description',
-			control: 'text',
-			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
-		},
-		accessibleDescribedBy: {
-			name: 'accessible-described-by',
-			control: false,
-			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		disabled: {
+			control: 'boolean',
+			description: 'Disabled state',
+			table: { defaultValue: { summary: false } },
 		},
 	},
 };
 
-const Template = ({ size, resize, rows, width, placeholder, valid, invalid, readonly, disabled, name, value, minlength, maxlength, required, keyboard, enterKey, autocomplete, accessibleLabel, accessibleDescription, noSpellcheck }: Record<string, any>) => html`
+const Template = ({ size, resize, rows, width, placeholder, accessibleLabel, accessibleDescription, valid, invalid, name, value, keyboard, enterKey, minlength, maxlength, required, autocomplete, noSpellcheck, readonly, disabled }: Record<string, any>) => html`
 	<nldd-multi-line-text-field
-		minlength=${minlength ?? nothing}
 		size=${size}
 		resize=${resize}
 		rows=${rows}
 		width=${width}
 		.placeholder=${placeholder}
-		?valid=${valid}
-		?readonly=${readonly}
-		?invalid=${invalid}
-		?disabled=${disabled}
-		name=${name}
-		.value=${value}
-		maxlength=${maxlength ?? nothing}
-		keyboard=${keyboard || nothing}
-		enter-key=${enterKey || nothing}
-		?required=${required}
-		autocomplete=${autocomplete}
 		accessible-label=${accessibleLabel || nothing}
 		accessible-description=${accessibleDescription || nothing}
+		?valid=${valid}
+		?invalid=${invalid}
+		name=${name}
+		.value=${value}
+		keyboard=${keyboard || nothing}
+		enter-key=${enterKey || nothing}
+		minlength=${minlength ?? nothing}
+		maxlength=${maxlength ?? nothing}
+		?required=${required}
+		autocomplete=${autocomplete}
 		?no-spellcheck=${noSpellcheck}
+		?readonly=${readonly}
+		?disabled=${disabled}
 	></nldd-multi-line-text-field>
 `;
 

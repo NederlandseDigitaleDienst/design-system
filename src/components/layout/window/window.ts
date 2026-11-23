@@ -20,15 +20,15 @@
  * @attr {'inherit'|'light'|'dark'} scheme - Color scheme (default 'inherit').
  * @attr {string} width - CSS width (default: 640px)
  * @attr {string} height - CSS height (default: content height)
+ * @attr {boolean} centered - Centers both axes on the viewport. Overridable per axis: `centered top="0"` is horizontally centered, top aligned. Mirrors CSS `place-items: center` with `align-items`/`justify-items` overrides.
  * @attr {string} top - CSS top position of the top edge (e.g. '0', '100px')
  * @attr {string} right - CSS right value
  * @attr {string} bottom - CSS bottom value
  * @attr {string} left - CSS left position of the left edge
- * @attr {boolean} centered - Centers both axes on the viewport. Overridable per axis: `centered top="0"` is horizontally centered, top aligned. Mirrors CSS `place-items: center` with `align-items`/`justify-items` overrides.
  * @attr {string} accessible-label - Accessible name (aria-label). Unset, the window takes the text of the nldd-top-title-bar inside it, and without one the i18n default ('Venster'). Each window needs a unique, descriptive name, from either.
- * @attr {object} translations - Override translation keys; unset keys fall back to the Dutch default.
  * @attr {boolean} no-light-dismiss - A click on the backdrop does not close the window. For windows where dismissing by accident costs work: a process of several steps, a form with filled-in fields. Escape and the dismiss button keep working.
  * @attr {boolean} open - Whether the window is open. Set it to open or close the window, as an alternative to show() and hide(). The window clears it itself when it closes another way (Escape, the backdrop, the close button of its title bar), so bind it together with the close event.
+ * @attr {object} translations - Override translation keys; unset keys fall back to the Dutch default.
  *
  * @slot - Complete window content (e.g. nldd-page)
  * @slot notifications - Where the notifications area lands while this overlay is open, so a notification is not left inert behind it. Filled by the package; leave it alone.
@@ -67,6 +67,9 @@ export class NLDDWindow extends LitElement {
 	@property({ type: String, reflect: true })
 	height: string | undefined;
 
+	@property({ type: Boolean, reflect: true })
+	centered = false;
+
 	@property({ type: String, reflect: true })
 	top: string | undefined;
 
@@ -79,11 +82,14 @@ export class NLDDWindow extends LitElement {
 	@property({ type: String, reflect: true })
 	left: string | undefined;
 
-	@property({ type: Boolean, reflect: true })
-	centered = false;
-
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
+
+	@property({ type: Boolean, reflect: true, attribute: 'no-light-dismiss' })
+	noLightDismiss = false;
+
+	@property({ type: Boolean, reflect: true })
+	open = false;
 
 	/**
 	 * Override one or more translation keys.
@@ -91,12 +97,6 @@ export class NLDDWindow extends LitElement {
 	 */
 	@property({ type: Object })
 	translations: Partial<NLDDWindowTranslations> = {};
-
-	@property({ type: Boolean, reflect: true, attribute: 'no-light-dismiss' })
-	noLightDismiss = false;
-
-	@property({ type: Boolean, reflect: true })
-	open = false;
 
 	private _titleBar = new TitleBarLabelController(this);
 

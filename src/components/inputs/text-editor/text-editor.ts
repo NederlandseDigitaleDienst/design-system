@@ -97,29 +97,29 @@
  * @keywords wysiwyg, rich text editor, markdown, teksteditor
  * @related nldd-multi-line-text-field, nldd-code-editor
  *
- * @attr {string} value - Editor content (markdown). A value the app sets is kept as it is: the editor keeps the numbers of a numbered list in sequence while the user edits that list, not when the value is set. Only the part that differs changes, so the caret and the selection stay with their text, and the change stays out of the undo history.
+ * @attr {'none'|'vertical'|'auto'} resize - 'none' (fixed) | 'vertical' (drag) | 'auto' (grow, default)
+ * @attr {number} rows - Minimum visible rows (the floor in every resize mode). Default: 6.
  * @attr {string} placeholder - Placeholder text shown while empty
- * @attr {string} input-id - Sets the id on the editable element. Set automatically by nldd-form-field.
- * @attr {boolean} disabled - Disabled state
+ * @attr {boolean} embedded - Drops the frame, fill, padding and focus ring, for an editor inside a composition that provides them
+ * @attr {string} accessible-label - Accessible label forwarded to the editor. Set automatically by nldd-form-field.
+ * @attr {boolean} wrap - Wrap long lines (default true; prose wraps)
+ * @attr {string} syntax - 'hidden' (default) or 'visible'. 'visible': every formatting mark stays in view, dimmed, a bullet as the character you typed (`-`, `*` or `+`), for people who write markdown. 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A bullet reads as a dot, and shows its character on the line the caret is on. A quote reads as a line on the left per level, at the level the result gives each line, as in nldd-rich-text, with the spaces after a `>` beyond the first hidden and a missing one made room for, so every level is the same step; with the caret anywhere in it, its `>` marks and spaces show instead. A `---` line reads as a divider until the caret is on it, and a code block loses its closing ``` line until the caret is in it, since its own tint and edge already say what it is. Its opening line stays as the head of the block, with only the backticks hidden: the language as a label on the left, the copy button on the right. The numbers of a numbered list stay, in the color of the text: they are content. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way.
+ * @attr {boolean} annotatable - Enable the annotation overlay (off by default). Annotations only render when this is set.
+ * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
  * @attr {string} name - Field name for form submission
- * @attr {boolean} readonly - Readonly state (focusable and selectable, not editable)
+ * @attr {string} input-id - Sets the id on the editable element. Set automatically by nldd-form-field.
+ * @attr {string} value - Editor content (markdown). A value the app sets is kept as it is: the editor keeps the numbers of a numbered list in sequence while the user edits that list, not when the value is set. Only the part that differs changes, so the caret and the selection stay with their text, and the change stays out of the undo history.
  * @attr {boolean} required - Required state
  * @attr {boolean} no-spellcheck - Turns spellchecking off. It is on by default, like the other text fields, and leaves out what is not running text: inline code and code blocks, the address of a link and a bare URL (the link text is checked), and mentions. Autocorrect and autocapitalize follow the user's own settings, as in the other fields, also with `no-spellcheck`. Two limits come from the browser: text that was already there is checked once you edit near it, not when the editor opens (the editor lives in a shadow root; Firefox only checks around the caret), and markup that changes how a line is built, such as starting a list item, hides the underlines on that line until you type on.
- * @attr {boolean} wrap - Wrap long lines (default true; prose wraps)
- * @attr {number} rows - Minimum visible rows (the floor in every resize mode). Default: 6.
- * @attr {'none'|'vertical'|'auto'} resize - 'none' (fixed) | 'vertical' (drag) | 'auto' (grow, default)
- * @attr {boolean} embedded - Drops the frame, fill, padding and focus ring, for an editor inside a composition that provides them
- * @attr {string} syntax - 'hidden' (default) or 'visible'. 'visible': every formatting mark stays in view, dimmed, a bullet as the character you typed (`-`, `*` or `+`), for people who write markdown. 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A bullet reads as a dot, and shows its character on the line the caret is on. A quote reads as a line on the left per level, at the level the result gives each line, as in nldd-rich-text, with the spaces after a `>` beyond the first hidden and a missing one made room for, so every level is the same step; with the caret anywhere in it, its `>` marks and spaces show instead. A `---` line reads as a divider until the caret is on it, and a code block loses its closing ``` line until the caret is in it, since its own tint and edge already say what it is. Its opening line stays as the head of the block, with only the backticks hidden: the language as a label on the left, the copy button on the right. The numbers of a numbered list stay, in the color of the text: they are content. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way.
- * @attr {string} accessible-label - Accessible label forwarded to the editor. Set automatically by nldd-form-field.
+ * @attr {boolean} readonly - Readonly state (focusable and selectable, not editable)
+ * @attr {boolean} disabled - Disabled state
+ * @attr {object} translations - Override the editor's assistive-tech strings (the open-in-new-tab link badge, the annotation count badge, the label of a task's box and the copy button of a code block). Unset keys fall back to Dutch.
  *
  * @prop {MentionSource} mentionSource - Consumer-supplied @-mention candidate source (property only). Without it, @-typeahead is inert.
  * @prop {string} mentionQuery - What may follow the `@` of a mention, as a regular expression source (property only). Default: letters with any accent, digits, `_`, `.`, `+` and `-`. Allow one space to search on a full name, as in `@sam jansen`.
  * @prop {Function} mentionEmptyText - What to say when the @-list has no candidates, called with the typed query (property only). Without it the list says "Typ om te zoeken" or "Niets gevonden", both translatable. Return null to close the list without a word.
  * @prop {Typeahead[]} typeaheads - Your own typeahead lists next to the @-mention (property only): each a trigger character (`#`, `:`, `/`) that opens its list at a line start, after whitespace or after an opening bracket or quote, also with `**`, `_` or `~~` in between (`(@sam`, `**@sam`), not inside a word, a `source` that returns candidates for the text typed after it, an optional `query` (a regular expression for what may follow the trigger, such as a space in a full name), an optional `emptyText` (what to say when there are no candidates, instead of the translated default) and an optional `insert` that decides what a choice writes (by default the trigger, the text and a space). Lists on one trigger are merged in order. A screen reader hears how many candidates there are when the list opens or changes length, and the empty text when there are none. A candidate is `{ id, text, supportingText? }` and can carry an `avatar` (its row then takes two lines, the supporting text under the text; `avatar.name` or `avatar.initials` set the initials when `text` is not the name), an `icon` or a `symbol` for its row.
- * @attr {boolean} annotatable - Enable the annotation overlay (off by default). Annotations only render when this is set.
  * @prop {Annotation[]} annotations - Consumer-supplied annotation overlay (property only). Anchored by offset and mapped through edits; the text stays clean. Requires `annotatable`. Assign a NEW array to apply changes (Lit dirty-checks by identity, so in-place mutation like `.push()` won't re-render): `editor.annotations = [...editor.annotations, next]`.
- * @attr {object} translations - Override the editor's assistive-tech strings (the open-in-new-tab link badge, the annotation count badge, the label of a task's box and the copy button of a code block). Unset keys fall back to Dutch.
- * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
  *
  * @slot toolbar - An nldd-toolbar above the text, inside the frame. Its controls with `text-editor-command` drive this editor. Sticks to the top of the scroll container, below the page's own bars (`--context-inset-top`), while the editor grows past it; in an `embedded` editor it keeps 8px from that edge while it sticks.
  *
@@ -161,7 +161,7 @@ import { AnnotationClipboard } from './text-editor.clipboard.js';
 import { textEditorKeymap } from './text-editor.keymap.js';
 import { orderedListRenumber } from './text-editor.ordered-list.js';
 import { dragToMove, dragMovePlugin } from './text-editor.drag.js';
-import { linkOpenBadge } from './text-editor.links.js';
+import { linkBadgeTooltip, linkOpenBadge } from './text-editor.links.js';
 import { stableCursor } from './text-editor.cursor.js';
 import { focusSelectionGuard } from './text-editor.focus-selection.js';
 import { hiddenSyntax } from './text-editor.hidden-syntax.js';
@@ -234,21 +234,33 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 
 	static override styles = textEditorStyles;
 
-	/** Turns spellchecking off. On by default, without code, URLs and mentions. */
-	@property({ type: Boolean, reflect: true, attribute: 'no-spellcheck' })
-	noSpellcheck = false;
-
-	@property({ type: Boolean, reflect: true })
-	wrap = true;
-
 	@property({ reflect: true, converter: reflectNonDefault<ResizeMode>('auto') })
 	resize: ResizeMode = 'auto';
 
 	@property({ type: Boolean, reflect: true })
 	embedded = false;
 
+	@property({ type: Boolean, reflect: true })
+	wrap = true;
+
 	@property({ reflect: true, converter: reflectNonDefault<TextEditorSyntax>('hidden') })
 	syntax: TextEditorSyntax = 'hidden';
+
+	/** Whether the annotation overlay is enabled. Off by default; set the
+	 *  `annotatable` attribute to turn it on (so the comment affordance and the
+	 *  overlay only appear when the consumer opts in). */
+	@property({ type: Boolean, reflect: true })
+	annotatable = false;
+
+	/** Turns spellchecking off. On by default, without code, URLs and mentions. */
+	@property({ type: Boolean, reflect: true, attribute: 'no-spellcheck' })
+	noSpellcheck = false;
+
+	/** Override translation keys for the editor's assistive-tech strings (the
+	 *  open-in-new-tab link badge and the annotation count badge). Unset keys fall
+	 *  back to Dutch. */
+	@property({ type: Object })
+	translations: Partial<NLDDTextEditorTranslations> = {};
 
 	/** Consumer-supplied @-mention source: called with the text typed after `@`
 	 *  and returns (a promise of) candidates. Property only (set via JS); without
@@ -290,12 +302,6 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 		},
 	}))(this);
 
-	/** Whether the annotation overlay is enabled. Off by default; set the
-	 *  `annotatable` attribute to turn it on (so the comment affordance and the
-	 *  overlay only appear when the consumer opts in). */
-	@property({ type: Boolean, reflect: true })
-	annotatable = false;
-
 	/** Consumer-supplied annotations (W3C-style overlay). Property only (set via
 	 *  JS). Render only when `annotatable` is on. The text stays clean; these
 	 *  render as a light tint and a count badge, anchored by offset and mapped
@@ -308,12 +314,6 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 	 *  `editor.annotations = [...editor.annotations, next]`. */
 	@property({ attribute: false })
 	annotations: Annotation[] = [];
-
-	/** Override translation keys for the editor's assistive-tech strings (the
-	 *  open-in-new-tab link badge and the annotation count badge). Unset keys fall
-	 *  back to Dutch. */
-	@property({ type: Object })
-	translations: Partial<NLDDTextEditorTranslations> = {};
 
 	@query('.text-editor')
 	private _container!: HTMLElement;
@@ -445,7 +445,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 			...this.inputExtensions(),
 			this._wrapCompartment.of(this.wrap ? EditorView.lineWrapping : []),
 			this._spellcheckCompartment.of(this.noSpellcheck ? [] : spellcheck()),
-			this._syntaxCompartment.of(this.syntax === 'hidden' ? hiddenSyntax() : []),
+			this._syntaxCompartment.of(this.syntax === 'hidden' ? [hiddenSyntax(), linkBadgeTooltip.of(true)] : []),
 			EditorView.updateListener.of((u) => {
 				if (u.docChanged || u.selectionSet) this._emitState();
 			}),
@@ -587,7 +587,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 			this.reconfigure(this._wrapCompartment, this.wrap ? EditorView.lineWrapping : []);
 		}
 		if (changed.has('syntax')) {
-			this.reconfigure(this._syntaxCompartment, this.syntax === 'hidden' ? hiddenSyntax() : []);
+			this.reconfigure(this._syntaxCompartment, this.syntax === 'hidden' ? [hiddenSyntax(), linkBadgeTooltip.of(true)] : []);
 		}
 		if (changed.has('noSpellcheck')) {
 			this.reconfigure(this._spellcheckCompartment, this.noSpellcheck ? [] : spellcheck());

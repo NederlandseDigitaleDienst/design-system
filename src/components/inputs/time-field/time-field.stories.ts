@@ -22,21 +22,21 @@ export default {
 	args: {
 		size: 'md',
 		width: '',
-		value: '09:30',
 		placeholder: '',
-		min: '',
-		max: '',
-		step: 1,
-		noPicker: false,
 		accessibleLabel: '',
 		accessibleDescription: '',
 		accessibleDescribedBy: '',
+		noPicker: false,
 		valid: false,
 		invalid: false,
+		name: '',
+		value: '09:30',
+		min: '',
+		max: '',
+		step: 1,
+		required: false,
 		readonly: false,
 		disabled: false,
-		required: false,
-		name: '',
 	},
 	argTypes: {
 		size: {
@@ -49,32 +49,9 @@ export default {
 			control: 'text',
 			description: "Breedte: 'full' of een eigen CSS-lengte. Leeg is precies breed genoeg voor een tijd. 'fit-content' laat de ruimte voor het validatie-icoon weg en groeit weer zodra het veld valid of invalid wordt.",
 		},
-		value: {
-			control: 'text',
-			description: 'De tijd als HH:mm (24-uurs)',
-		},
 		placeholder: {
 			control: 'text',
 			description: 'Placeholdertekst',
-		},
-		min: {
-			control: 'text',
-			description: 'Vroegst toegestane tijd; tevens de basis waarvandaan step telt',
-		},
-		max: {
-			control: 'text',
-			description: 'Laatst toegestane tijd',
-		},
-		step: {
-			control: 'number',
-			description: 'Minutenstap: bepaalt het afronden en hoe ver de pijltjestoetsen verspringen',
-			table: { defaultValue: { summary: '1' } },
-		},
-		noPicker: {
-			name: 'no-picker',
-			control: 'boolean',
-			description: 'Verbergt de picker-knop',
-			table: { defaultValue: { summary: false } },
 		},
 		accessibleLabel: {
 			name: 'accessible-label',
@@ -92,6 +69,12 @@ export default {
 			control: false,
 			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
 		},
+		noPicker: {
+			name: 'no-picker',
+			control: 'boolean',
+			description: 'Verbergt de picker-knop',
+			table: { defaultValue: { summary: false } },
+		},
 		valid: {
 			control: 'boolean',
 			description: 'Markeert het veld als geldig',
@@ -100,6 +83,32 @@ export default {
 		invalid: {
 			control: 'boolean',
 			description: 'Markeert het veld als ongeldig',
+			table: { defaultValue: { summary: false } },
+		},
+		name: {
+			control: 'text',
+			description: 'Naam voor formulierverzending',
+		},
+		value: {
+			control: 'text',
+			description: 'De tijd als HH:mm (24-uurs)',
+		},
+		min: {
+			control: 'text',
+			description: 'Vroegst toegestane tijd; tevens de basis waarvandaan step telt',
+		},
+		max: {
+			control: 'text',
+			description: 'Laatst toegestane tijd',
+		},
+		step: {
+			control: 'number',
+			description: 'Minutenstap: bepaalt het afronden en hoe ver de pijltjestoetsen verspringen',
+			table: { defaultValue: { summary: '1' } },
+		},
+		required: {
+			control: 'boolean',
+			description: 'Verplichte staat',
 			table: { defaultValue: { summary: false } },
 		},
 		readonly: {
@@ -112,52 +121,43 @@ export default {
 			description: 'Uitgeschakelde staat',
 			table: { defaultValue: { summary: false } },
 		},
-		required: {
-			control: 'boolean',
-			description: 'Verplichte staat',
-			table: { defaultValue: { summary: false } },
-		},
-		name: {
-			control: 'text',
-			description: 'Naam voor formulierverzending',
-		},
 	},
 };
 
 const Template = ({
 	size,
 	width,
-	value,
 	placeholder,
+	accessibleLabel, accessibleDescription,
+	noPicker,
+	valid,
+	invalid,
+	name,
+	value,
 	min,
 	max,
 	step,
-	noPicker,
-	accessibleLabel, accessibleDescription,
-	valid,
-	invalid,
+	required,
 	readonly,
 	disabled,
-	required,
-	name,
 }: Record<string, any>) => html`
 	<nldd-time-field
 		size=${size || nothing}
 		width=${width || nothing}
-		value=${value || nothing}
 		placeholder=${placeholder || nothing}
+		accessible-label=${accessibleLabel || nothing}
+		accessible-description=${accessibleDescription || nothing}
+		?no-picker=${noPicker}
+		?valid=${valid}
+		?invalid=${invalid}
+		name=${name || nothing}
+		value=${value || nothing}
 		min=${min || nothing}
 		max=${max || nothing}
 		step=${step || nothing}
-		?no-picker=${noPicker}
-		accessible-label=${accessibleLabel || nothing}
-		accessible-description=${accessibleDescription || nothing}
-		?valid=${valid}
-		?readonly=${readonly}
-		?invalid=${invalid}
 		?required=${required}
+		?readonly=${readonly}
 		?disabled=${disabled}
-		name=${name || nothing}
 	></nldd-time-field>
 `;
 

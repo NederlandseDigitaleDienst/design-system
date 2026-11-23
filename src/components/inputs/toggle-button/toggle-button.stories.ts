@@ -73,6 +73,21 @@ export default {
 			description: 'Icoon in plaats van <code>icon</code> zolang de knop aan staat. Met een vlak vult het vlak; bij de transparante appearances draagt alleen het icoon de toestand.',
 			table: { defaultValue: { summary: '(geen)' } },
 		},
+		accessibleLabel: {
+			name: 'accessible-label',
+			control: 'text',
+			description: 'Toegankelijk label voor screen readers (verplicht voor icon-only)',
+		},
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		},
 		shortcut: {
 			control: 'text',
 			description: 'Sneltoets in de tooltip, bijvoorbeeld `Ctrl+B`. Hoort ook bij de toegankelijke naam. Alleen weergave: de toets zelf koppel je in je app.',
@@ -92,14 +107,6 @@ export default {
 			control: 'text',
 			description: 'Sneltoets op Linux en ChromeOS, als die afwijkt van `shortcut`.',
 		},
-		type: {
-			control: 'select',
-			options: ['button', 'checkbox', 'radio'],
-			description: 'Onderliggend element',
-			table: {
-				defaultValue: { summary: 'button' },
-			},
-		},
 		selected: {
 			control: 'boolean',
 			description: 'Geselecteerde toestand',
@@ -107,25 +114,18 @@ export default {
 				defaultValue: { summary: false },
 			},
 		},
-		accessibleLabel: {
-			name: 'accessible-label',
-			control: 'text',
-			description: 'Toegankelijk label voor screen readers (verplicht voor icon-only)',
-		},
-		accessibleDescription: {
-			name: 'accessible-description',
-			control: 'text',
-			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
-		},
-		accessibleDescribedBy: {
-			name: 'accessible-described-by',
-			control: false,
-			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
-		},
 		invalid: {
 			control: 'boolean',
 			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
 			table: { defaultValue: { summary: false } },
+		},
+		type: {
+			control: 'select',
+			options: ['button', 'checkbox', 'radio'],
+			description: 'Onderliggend element',
+			table: {
+				defaultValue: { summary: 'button' },
+			},
 		},
 		required: {
 			control: 'boolean',
@@ -147,16 +147,16 @@ export default {
 		text: 'Favoriet',
 		icon: '',
 		selectedIcon: '',
+		accessibleLabel: '',
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
 		shortcut: '',
 		shortcutMac: '',
 		shortcutWindows: '',
 		shortcutLinux: '',
-		type: 'button',
 		selected: false,
-		accessibleLabel: '',
-		accessibleDescription: '',
-		accessibleDescribedBy: '',
 		invalid: false,
+		type: 'button',
 		required: false,
 		disabled: false,
 	},
@@ -166,21 +166,21 @@ const Template = (args: Record<string, any>) => html`
 	<nldd-toggle-button
 		variant=${args.variant || nothing}
 		appearance=${args.appearance}
-		type=${args.type}
 		size=${args.size}
-		?selected=${args.selected}
-		?invalid=${args.invalid}
-		?required=${args.required}
-		?disabled=${args.disabled}
 		text=${args.text}
 		icon=${args.icon}
 		selected-icon=${args.selectedIcon || nothing}
+		accessible-label=${args.accessibleLabel || nothing}
+		accessible-description=${args.accessibleDescription || nothing}
 		shortcut=${args.shortcut || nothing}
 		shortcut-mac=${args.shortcutMac || nothing}
 		shortcut-windows=${args.shortcutWindows || nothing}
 		shortcut-linux=${args.shortcutLinux || nothing}
-		accessible-label=${args.accessibleLabel || nothing}
-		accessible-description=${args.accessibleDescription || nothing}
+		?selected=${args.selected}
+		?invalid=${args.invalid}
+		type=${args.type}
+		?required=${args.required}
+		?disabled=${args.disabled}
 	></nldd-toggle-button>
 `;
 

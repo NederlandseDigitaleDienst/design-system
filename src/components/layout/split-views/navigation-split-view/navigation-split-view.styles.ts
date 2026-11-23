@@ -160,6 +160,10 @@ export const navigationSplitViewStyles = css`
 		flex-basis: 0;
 	}
 
+	.navigation-split-view__pane--no-back {
+		--context-back-button-display: none;
+	}
+
 	/* Inline sidebar panes suppress their dismiss button */
 	.navigation-split-view__primary-sidebar-pane,
 	.navigation-split-view__secondary-sidebar-pane {
@@ -351,6 +355,8 @@ export const navigationSplitViewStyles = css`
 		flex-grow: 1;
 		flex-shrink: 1;
 		flex-basis: 0;
+		container-type: inline-size;
+		container-name: layout-container;
 	}
 
 	/* A bottom sheet sizes itself from its content (height: auto), so the pane's

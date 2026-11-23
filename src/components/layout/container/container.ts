@@ -67,7 +67,6 @@
  * @childattr {number} md-order - Position of this child at md
  * @childattr {number} lg-order - Position of this child at lg
  * @attr {'stack'|'row'|'wrap'|'grid'|'columns'|'lanes'} layout - 'stack' | 'row' | 'wrap' | 'grid' | 'columns' | 'lanes' (default: 'stack')
- * @attr {boolean} list - Makes the children a list for assistive technology: `role="list"` on the container and `role="listitem"` on each child, so a screen reader says how many there are and lets you skip them (WCAG 1.3.1). For a row of tags or a group of cards or tiles that are alike. A child with a role of its own keeps it. Nothing changes visually.
  * @attr {number} column-count - Force N columns (1-8) for layout=grid/columns/lanes
  * @attr {number} sm-column-count - Column count when this container is sm-wide
  * @attr {number} md-column-count - Column count when this container is md-wide
@@ -114,9 +113,10 @@
  * @attr {string} lg-padding-right - Padding right at lg
  * @attr {string} lg-padding-bottom - Padding bottom at lg
  * @attr {string} lg-padding-left - Padding left at lg
- * @attr {'touch'|'pointer'} hide-on - 'touch' | 'pointer'. Takes the container and all it holds away, for screen readers as well, on a device that only has touch (`touch`) or on one with a mouse or trackpad (`pointer`), the same test that hides keyboard shortcuts. For what only works with one of the two, such as a setting about hover. Not for content: what one visitor gets, the other should get too.
  * @attr {'left'|'center'|'right'} horizontal-alignment - 'left' | 'center' | 'right'
  * @attr {'top'|'center'|'bottom'} vertical-alignment - 'top' | 'center' | 'bottom'
+ * @attr {'touch'|'pointer'} hide-on - 'touch' | 'pointer'. Takes the container and all it holds away, for screen readers as well, on a device that only has touch (`touch`) or on one with a mouse or trackpad (`pointer`), the same test that hides keyboard shortcuts. For what only works with one of the two, such as a setting about hover. Not for content: what one visitor gets, the other should get too.
+ * @attr {boolean} list - Makes the children a list for assistive technology: `role="list"` on the container and `role="listitem"` on each child, so a screen reader says how many there are and lets you skip them (WCAG 1.3.1). For a row of tags or a group of cards or tiles that are alike. A child with a role of its own keeps it. Nothing changes visually.
  *
  * @slot - Container content
  */
@@ -192,9 +192,6 @@ export class NLDDContainer extends LitElement {
 
 	@property({ reflect: true, attribute: 'min-height', converter: reflectNonDefault<string>('') })
 	minHeight = '';
-
-	@property({ reflect: true, attribute: 'hide-on', converter: reflectNonDefault<string>('') })
-	hideOn: HideOn = '';
 
 	@property({ type: String, reflect: true })
 	gap: PaddingSize | undefined = undefined;
@@ -298,6 +295,9 @@ export class NLDDContainer extends LitElement {
 	@property({ type: String, reflect: true, attribute: 'vertical-alignment' })
 	verticalAlignment: VerticalAlignment | undefined = undefined;
 
+	@property({ reflect: true, attribute: 'hide-on', converter: reflectNonDefault<string>('') })
+	hideOn: HideOn = '';
+
 	/**
 	 * Whether this container takes its width from its content, while not saying
 	 * so itself: a 'full' container inside a 'fit-content' one. A query container
@@ -326,6 +326,9 @@ export class NLDDContainer extends LitElement {
 	/** The children this container gave `listitem`, so it only takes back its own. */
 	private _listItems = new WeakSet<Element>();
 
+	/** Whether the host's `role="list"` came from `list`, so a role from the markup survives. */
+	private _ownsListRole = false;
+
 	override connectedCallback(): void {
 		super.connectedCallback();
 		this._syncSizedByContent();
@@ -336,8 +339,13 @@ export class NLDDContainer extends LitElement {
 
 	/** The list role on the host, and `listitem` on each child without a role of its own. */
 	private _applyListRoles(): void {
-		if (this.list) this.setAttribute('role', 'list');
-		else if (this.getAttribute('role') === 'list') this.removeAttribute('role');
+		if (this.list && this.getAttribute('role') !== 'list') {
+			this.setAttribute('role', 'list');
+			this._ownsListRole = true;
+		} else if (!this.list && this._ownsListRole) {
+			this.removeAttribute('role');
+			this._ownsListRole = false;
+		}
 		const slot = this.renderRoot?.querySelector('slot:not([name])') as HTMLSlotElement | null;
 		for (const child of slot?.assignedElements() ?? []) {
 			if (this.list && !child.hasAttribute('role')) {

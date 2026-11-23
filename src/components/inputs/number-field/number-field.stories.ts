@@ -28,10 +28,30 @@ export default {
 			control: 'text',
 			description: 'Width mode: "full" (stretches to container) or any CSS length (e.g. "240px")',
 		},
+		accessibleLabel: {
+			name: 'accessible-label',
+			control: 'text',
+			description: 'Toegankelijk label voor screen readers',
+		},
+		accessibleDescription: {
+			name: 'accessible-description',
+			control: 'text',
+			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
+		},
+		accessibleDescribedBy: {
+			name: 'accessible-described-by',
+			control: false,
+			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
+		},
 		hideSpinButtons: {
 			name: 'hide-spin-buttons',
 			control: 'boolean',
 			description: 'Verbergt de plus- en minknoppen',
+			table: { defaultValue: { summary: false } },
+		},
+		invalid: {
+			control: 'boolean',
+			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
 			table: { defaultValue: { summary: false } },
 		},
 		name: {
@@ -58,29 +78,9 @@ export default {
 			description: 'Stapgrootte',
 			table: { defaultValue: { summary: 1 } },
 		},
-		accessibleLabel: {
-			name: 'accessible-label',
-			control: 'text',
-			description: 'Toegankelijk label voor screen readers',
-		},
-		accessibleDescription: {
-			name: 'accessible-description',
-			control: 'text',
-			description: 'Toegankelijke beschrijving voor screen readers, gelezen na de naam, de rol en de toestand. Vervangt nooit het label.',
-		},
-		accessibleDescribedBy: {
-			name: 'accessible-described-by',
-			control: false,
-			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
-		},
 		required: {
 			control: 'boolean',
 			description: 'Er moet een waarde ingevuld zijn; leeg is dan ongeldig',
-			table: { defaultValue: { summary: false } },
-		},
-		invalid: {
-			control: 'boolean',
-			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
 			table: { defaultValue: { summary: false } },
 		},
 		disabled: {
@@ -92,36 +92,36 @@ export default {
 	args: {
 		size: 'md',
 		width: '',
+		accessibleLabel: '',
+		accessibleDescription: '',
+		accessibleDescribedBy: '',
 		hideSpinButtons: false,
+		invalid: false,
 		name: '',
 		value: 1,
 		min: 0,
 		max: 10,
 		step: 1,
-		accessibleLabel: '',
-		accessibleDescription: '',
-		accessibleDescribedBy: '',
 		required: false,
-		invalid: false,
 		disabled: false,
 	},
 };
 
-const Template = ({ size, hideSpinButtons, name, value, min, max, step, width, accessibleLabel, accessibleDescription, required, invalid, disabled }: Record<string, any>) => html`
+const Template = ({ size, width, accessibleLabel, accessibleDescription, hideSpinButtons, invalid, name, value, min, max, step, required, disabled }: Record<string, any>) => html`
 	<nldd-number-field
+		size=${size}
+		width=${width || nothing}
+		accessible-label=${accessibleLabel || nothing}
+		accessible-description=${accessibleDescription || nothing}
+		?hide-spin-buttons=${hideSpinButtons}
+		?invalid=${invalid}
+		name=${name}
 		value=${value ?? nothing}
 		min=${min}
 		max=${max}
 		step=${step}
-		size=${size}
 		?required=${required}
-		?invalid=${invalid}
 		?disabled=${disabled}
-		name=${name}
-		?hide-spin-buttons=${hideSpinButtons}
-		width=${width || nothing}
-		accessible-label=${accessibleLabel || nothing}
-		accessible-description=${accessibleDescription || nothing}
 	></nldd-number-field>
 `;
 

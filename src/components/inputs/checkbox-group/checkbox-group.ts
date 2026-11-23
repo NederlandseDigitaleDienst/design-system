@@ -14,14 +14,14 @@
  * or the help text, or mark the other questions optional.
  *
  * @element nldd-checkbox-group
- * @keywords selectievakjes
+ * @keywords selectievakjes, toggle, toggles
  * @related nldd-radio-button-group, nldd-token-field
- * @attr {string} name - Forwarded to all nldd-checkbox-field elements in the group; clearing it leaves them the name they had
- * @attr {boolean} disabled - Disables all fields in the group
- * @attr {boolean} required - At least one box in the group has to be checked. Set on every field in the group, nested ones included, whether it is on or off: in a group, the group decides.
  * @attr {string} accessible-label - Accessible name for the group, set as aria-label on the group
  * @attr {string} accessible-labeled-by - Id of an external label element, set as aria-labelledby on the group
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
+ * @attr {string} name - Forwarded to all nldd-checkbox-field elements in the group; clearing it leaves them the name they had
+ * @attr {boolean} required - At least one box in the group has to be checked. Set on every field in the group, nested ones included, whether it is on or off: in a group, the group decides.
+ * @attr {boolean} disabled - Disables all fields in the group
  *
  * @slot - Slot for nldd-checkbox-field elements. Options nested in the `children` slot of a field belong to the group too; see nldd-checkbox-field.
  *
@@ -45,24 +45,12 @@ export class NLDDCheckboxGroup extends LitElement {
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
 
-	@property({ type: String })
-	name = '';
-
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
-	@property({ type: Boolean, reflect: true })
-	required = false;
-
 	/** Accessible name forwarded as aria-label to the group host. */
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
 	@property({ type: String, attribute: 'accessible-labeled-by' })
 	accessibleLabeledBy = '';
-
-	/** The name this group wrote onto its host, so it only takes back its own. */
-	private _appliedLabel: string | null = null;
 
 	/**
 	 * Marks the control as invalid.
@@ -75,6 +63,18 @@ export class NLDDCheckboxGroup extends LitElement {
 	 */
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
+
+	@property({ type: String })
+	name = '';
+
+	@property({ type: Boolean, reflect: true })
+	required = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
+
+	/** The name this group wrote onto its host, so it only takes back its own. */
+	private _appliedLabel: string | null = null;
 
 	private _choices = new ChoiceGroup<NLDDCheckboxField>(this, {
 		options: () => this._getFields(),

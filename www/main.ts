@@ -55,8 +55,8 @@ import '../src/components/status-and-feedback/inline-dialog/inline-dialog.ts';
 import '../src/components/status-and-feedback/progress-bar/progress-bar.ts';
 import '../src/components/status-and-feedback/progress-circle/progress-circle.ts';
 import '../src/components/status-and-feedback/step-bar/step-bar.ts';
+import { chooseScheme, chooseTheme, chosenScheme, chosenTheme } from './client/theme.ts';
 
-const root = document.documentElement;
 
 /**
  * The icon count in the page comes from the registry, so it never falls behind.
@@ -71,26 +71,37 @@ for (const el of document.querySelectorAll<HTMLElement>('[data-icon-count]')) {
 
 /**
  * The swatch picker in "Eén overheid" sets the theme of the whole page, so
- * the visitor sees the system change colour around them. Lintblauw is the
- * default and has no theme of its own. The title names the chosen colour,
- * since there is no hover on a phone and several of them look alike.
+ * the visitor sees the system change colour around them. It is the same
+ * choice as the theme button behind this page: what you pick here, every page
+ * of the documentation shows, and the other way round. The title names the
+ * chosen colour, since there is no hover on a phone and several look alike.
  */
-const themePicker = document.querySelector('#thema-keuze');
-themePicker?.addEventListener('change', (event) => {
-	const value = (event as CustomEvent<{ value: string }>).detail.value;
-	if (value === 'lintblauw') root.removeAttribute('data-nldd-theme');
-	else root.setAttribute('data-nldd-theme', value);
-	const name = themePicker.querySelector(`nldd-swatch-picker-item[value="${value}"]`)?.getAttribute('text');
+const themePicker = document.querySelector<HTMLElement & { value: string }>('#thema-keuze');
+function nameTheme(value: string): void {
+	const name = themePicker?.querySelector(`nldd-swatch-picker-item[value="${value}"]`)?.getAttribute('text');
 	const heading = document.querySelector('#thema-titel > h3');
 	if (name && heading) heading.textContent = `Thema: ${name}`;
+}
+chooseTheme(chosenTheme());
+if (themePicker) {
+	themePicker.value = chosenTheme();
+	nameTheme(chosenTheme());
+}
+themePicker?.addEventListener('change', (event) => {
+	const value = (event as CustomEvent<{ value: string }>).detail.value;
+	chooseTheme(value);
+	nameTheme(value);
 });
 
-/** Light, dark or the system setting, for the whole page. */
-document.querySelector('#kleurmodus')?.addEventListener('change', (event) => {
+/** Light, dark or the system setting, for the whole page, and as above for every page. */
+const schemeGroup = document.querySelector('#kleurmodus');
+chooseScheme(chosenScheme());
+for (const button of schemeGroup?.querySelectorAll('nldd-toggle-button') ?? []) {
+	button.toggleAttribute('selected', button.getAttribute('value') === chosenScheme());
+}
+schemeGroup?.addEventListener('change', (event) => {
 	const { selected, value } = (event as CustomEvent<{ selected: boolean; value: string }>).detail;
-	if (!selected) return;
-	if (value === 'systeem') root.removeAttribute('data-scheme');
-	else root.setAttribute('data-scheme', value);
+	if (selected) chooseScheme(value);
 });
 
 /**

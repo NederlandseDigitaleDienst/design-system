@@ -42,13 +42,13 @@
  * @element nldd-text
  * @keywords tekst
  * @related nldd-title, nldd-rich-text
+ * @attr {'content'|'secondary'|'accent'|'success'|'warning'|'critical'} color - Text color: 'content' (the default) | 'secondary' | 'accent' | 'success' | 'warning' | 'critical'. Each follows the surface the text sits on, through the `--context-content-*` it passes on; an area of your own that sets `color` sets `--context-content-color` too.
  * @attr {'xxs'|'xs'|'sm'|'md'|'lg'|'display-6'|'display-5'|'display-4'|'display-3'|'display-2'|'display-1'} size - Text size: 'xxs' | 'xs' | 'sm' | 'md' | 'lg' on the body scale (default: 'md'), or 'display-6' to 'display-1' for large letters that are not a heading, from small to large
  * @attr {string} sm-custom-size - A size of your own at sm, any CSS length (e.g. '56px', '3.5rem', 'clamp(3rem, 8vw, 7rem)'), for a statement larger than `display-1`. A var() works when the variable holds a length; one that is not defined leaves the text without its size, the floor included. Set per breakpoint on purpose: a breakpoint without one keeps the size from `size`, so text made large for a wide screen never breaks a narrow one. Never smaller than `display-1` at the same breakpoint: a smaller value shows as `display-1`, and a fixed length that is smaller says so in development (a relative value, such as vw, em or a percentage, is not checked there; the floor still holds). Takes the weight, typeface and line height of `display-1`. An invalid value falls back to `size`
  * @attr {string} md-custom-size - The same, at md
  * @attr {string} lg-custom-size - The same, at lg
  * @attr {'regular'|'medium'|'bold'} weight - Font weight: 'regular' | 'medium' | 'bold' (default: 'regular'). With 'bold' a slotted `<strong>` no longer stands out: there is nothing bolder in the scale.
  * @attr {'flat'|'tight'|'snug'|'loose'} line-height - Line height: 'flat' | 'tight' | 'snug' | 'loose' (default: 'snug')
- * @attr {'content'|'secondary'|'accent'|'success'|'warning'|'critical'} color - Text color: 'content' (the default) | 'secondary' | 'accent' | 'success' | 'warning' | 'critical'. Each follows the surface the text sits on, through the `--context-content-*` it passes on; an area of your own that sets `color` sets `--context-content-color` too.
  * @attr {'left'|'center'|'right'} horizontal-alignment - Alignment of the text within the block: 'left' | 'center' | 'right' (default: 'left'). Aligns the words; `horizontal-alignment` on nldd-container moves the box.
  *
  * @attr {string} text - The text, when it is plain text. The component draws it as a `<p>`. Content in the slot wins.
@@ -75,8 +75,8 @@ type HorizontalAlignment = 'left' | 'center' | 'right';
 export class NLDDText extends LitElement {
 	static override styles = textStyles;
 
-	@property({ reflect: true, converter: reflectNonDefault<string>('') })
-	text = '';
+	@property({ reflect: true, converter: reflectNonDefault<Color>('content') })
+	color: Color = 'content';
 
 	@property({ reflect: true, converter: reflectNonDefault<Size>('md') })
 	size: Size = 'md';
@@ -103,15 +103,15 @@ export class NLDDText extends LitElement {
 	})
 	lineHeight: LineHeight = 'snug';
 
-	@property({ reflect: true, converter: reflectNonDefault<Color>('content') })
-	color: Color = 'content';
-
 	@property({
 		reflect: true,
 		attribute: 'horizontal-alignment',
 		converter: reflectNonDefault<HorizontalAlignment>('left'),
 	})
 	horizontalAlignment: HorizontalAlignment = 'left';
+
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	text = '';
 
 	/** The valid custom size per breakpoint, worked out before the first paint. */
 	private _customSizes: Partial<Record<Breakpoint, string>> = {};

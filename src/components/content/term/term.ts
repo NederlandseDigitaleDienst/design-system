@@ -47,8 +47,8 @@
  * @attr {string} definition - The definition, as plain text. The term shows it in a popover of its own, named after the term. Ignored when `popovertarget` is set.
  * @attr {string} source - Where the definition comes from, such as a glossary or an article of law, as plain text. Shown under the definition in the term's own popover. Ignored when `popovertarget` is set.
  * @attr {string} source-href - Link for `source`. Without `source` it has no effect.
- * @attr {object} translations - Override translation keys (the label before the source).
  * @attr {string} popovertarget - ID of an nldd-popover with the definition, looked up in the tree of this term. Positioned against the term when it opens, so it needs no `anchor`, and it can be shared by every term for the same concept. Wins over `definition`.
+ * @attr {object} translations - Override translation keys (the label before the source).
  *
  * @slot - The term, as plain text. Whitespace around it is dropped, so the underline ends where the word does. It also names the popover that `definition` opens.
  */
@@ -87,12 +87,12 @@ export class NLDDTerm extends LitElement {
 	@property({ type: String, reflect: true, attribute: 'source-href' })
 	sourceHref = '';
 
+	@property({ type: String, reflect: true })
+	popovertarget = '';
+
 	/** Override one or more translation keys. Unspecified keys fall back to Dutch. */
 	@property({ type: Object })
 	translations: Partial<NLDDTermTranslations> = {};
-
-	@property({ type: String, reflect: true })
-	popovertarget = '';
 
 	/** The term as it shows: the slotted text without the whitespace around
 	 *  it, which the underline would otherwise run into. */

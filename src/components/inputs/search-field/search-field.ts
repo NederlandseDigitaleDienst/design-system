@@ -16,16 +16,16 @@
  * @attr {string} shortcut-mac - Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`).
  * @attr {string} shortcut-windows - Override of `shortcut` on Windows (falls back to `shortcut`).
  * @attr {string} shortcut-linux - Override of `shortcut` on Linux (falls back to `shortcut`).
- * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
- * @attr {boolean} disabled - Disabled state
  * @attr {string} name - Input name for form submission
  * @attr {string} value - The search value
- * @attr {boolean} required - Required state
  * @attr {number} minlength - Fewest characters the value may have.
  * @attr {number} maxlength - Most characters the value may have.
  * @attr {string} pattern - Regular expression the value has to match, as the native `pattern`.
+ * @attr {boolean} required - Required state
  * @attr {boolean} no-spellcheck - Disables browser spellchecking on the inner input
+ * @attr {boolean} disabled - Disabled state
+ * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  *
  * @fires input - When the input value changes; detail: { value: string }
  * @fires change - When the input value is committed; detail: { value: string }
@@ -77,15 +77,15 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
 	/** Renders again when shortcuts become available or unavailable, for the shortcut in the accessible name. */
 	private _shortcutAvailability = new ShortcutAvailabilityController(this);
 
+	@query('.search-field__input')
+	_input!: HTMLInputElement;
+
 	@property({ reflect: true, converter: reflectNonDefault<SearchFieldSize>('md') })
 	size: SearchFieldSize = 'md';
 
 	/** Optional fixed width (any CSS length). When unset, the field stretches to fill its container. */
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	width = '';
-
-	@query('.search-field__input')
-	_input!: HTMLInputElement;
 
 	@property({ type: String })
 	placeholder = 'Zoeken';
@@ -114,11 +114,6 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ reflect: true, attribute: 'shortcut-linux', converter: reflectNonDefault<string>('') })
 	shortcutLinux = '';
 
-	/** Override one or more translation keys. Unset keys fall back to Dutch. */
-	@property({ type: Object })
-	translations: Partial<NLDDSearchFieldTranslations> = {};
-
-
 	/**
 	 * Marks the control as invalid.
 	 *
@@ -131,18 +126,11 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
 
 	@property({ type: String })
 	value = '';
-
-
-	@property({ type: Boolean, reflect: true })
-	required = false;
 
 	/** Fewest characters the value may have, as the native `minlength`. */
 	@property({ type: Number, reflect: true })
@@ -156,8 +144,18 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	pattern = '';
 
+	@property({ type: Boolean, reflect: true })
+	required = false;
+
 	@property({ type: Boolean, reflect: true, attribute: 'no-spellcheck' })
 	noSpellcheck = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
+
+	/** Override one or more translation keys. Unset keys fall back to Dutch. */
+	@property({ type: Object })
+	translations: Partial<NLDDSearchFieldTranslations> = {};
 
 	override updated(changed: PropertyValues): void {
 		// Runs after the DescribedBy controller, so the shortcut hint is added to

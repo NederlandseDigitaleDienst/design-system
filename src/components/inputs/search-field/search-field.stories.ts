@@ -20,23 +20,23 @@ export default {
 		size: 'md',
 		width: '',
 		placeholder: 'Zoeken',
-		shortcut: '',
-		shortcutMac: '',
-		shortcutWindows: '',
-		shortcutLinux: '',
 		accessibleLabel: '',
 		accessibleDescription: '',
 		accessibleDescribedBy: '',
 		searchButton: undefined,
+		shortcut: '',
+		shortcutMac: '',
+		shortcutWindows: '',
+		shortcutLinux: '',
 		invalid: false,
-		disabled: false,
 		name: '',
 		value: '',
-		required: false,
 		minlength: null,
 		maxlength: null,
 		pattern: '',
+		required: false,
 		noSpellcheck: false,
+		disabled: false,
 	},
 	argTypes: {
 		size: {
@@ -53,25 +53,6 @@ export default {
 			control: 'text',
 			description: 'Placeholdertekst',
 			table: { defaultValue: { summary: 'Zoeken' } },
-		},
-		shortcut: {
-			control: 'text',
-			description: 'Sneltoets rechts in het lege veld, bijvoorbeeld `/` of `Ctrl+K`. Verdwijnt bij focus en zodra er een waarde staat. Alleen weergave: de toets zelf koppel je in je app.',
-		},
-		shortcutMac: {
-			name: 'shortcut-mac',
-			control: 'text',
-			description: 'Sneltoets op macOS (en iOS), als die afwijkt van `shortcut`.',
-		},
-		shortcutWindows: {
-			name: 'shortcut-windows',
-			control: 'text',
-			description: 'Sneltoets op Windows, als die afwijkt van `shortcut`.',
-		},
-		shortcutLinux: {
-			name: 'shortcut-linux',
-			control: 'text',
-			description: 'Sneltoets op Linux en ChromeOS, als die afwijkt van `shortcut`.',
 		},
 		accessibleLabel: {
 			name: 'accessible-label',
@@ -96,14 +77,28 @@ export default {
 			description: 'Toont een zoekknop aan de rechterkant, in deze appearance',
 			table: { defaultValue: { summary: '(geen)' } },
 		},
+		shortcut: {
+			control: 'text',
+			description: 'Sneltoets rechts in het lege veld, bijvoorbeeld `/` of `Ctrl+K`. Verdwijnt bij focus en zodra er een waarde staat. Alleen weergave: de toets zelf koppel je in je app.',
+		},
+		shortcutMac: {
+			name: 'shortcut-mac',
+			control: 'text',
+			description: 'Sneltoets op macOS (en iOS), als die afwijkt van `shortcut`.',
+		},
+		shortcutWindows: {
+			name: 'shortcut-windows',
+			control: 'text',
+			description: 'Sneltoets op Windows, als die afwijkt van `shortcut`.',
+		},
+		shortcutLinux: {
+			name: 'shortcut-linux',
+			control: 'text',
+			description: 'Sneltoets op Linux en ChromeOS, als die afwijkt van `shortcut`.',
+		},
 		invalid: {
 			control: 'boolean',
 			description: 'Ongeldig; aangekondigd met aria-invalid, er wordt niets voor getekend',
-			table: { defaultValue: { summary: false } },
-		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde toestand',
 			table: { defaultValue: { summary: false } },
 		},
 		name: {
@@ -113,11 +108,6 @@ export default {
 		value: {
 			control: 'text',
 			description: 'Huidige zoekwaarde',
-		},
-		required: {
-			control: 'boolean',
-			description: 'Verplicht veld',
-			table: { defaultValue: { summary: false } },
 		},
 		minlength: {
 			control: 'number',
@@ -133,36 +123,46 @@ export default {
 			control: 'text',
 			description: 'Reguliere expressie waar de waarde aan moet voldoen, als het native `pattern`.',
 		},
+		required: {
+			control: 'boolean',
+			description: 'Verplicht veld',
+			table: { defaultValue: { summary: false } },
+		},
 		noSpellcheck: {
 			name: 'no-spellcheck',
 			control: 'boolean',
 			description: 'Zet de spellingcontrole van de browser uit',
 			table: { defaultValue: { summary: false } },
 		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde toestand',
+			table: { defaultValue: { summary: false } },
+		},
 	},
 };
 
-const Template = ({ size, width, placeholder, shortcut, shortcutMac, shortcutWindows, shortcutLinux, accessibleLabel, accessibleDescription, searchButton, invalid, disabled, name, value, required, minlength, maxlength, pattern, noSpellcheck }: Record<string, any>) => html`
+const Template = ({ size, width, placeholder, accessibleLabel, accessibleDescription, searchButton, shortcut, shortcutMac, shortcutWindows, shortcutLinux, invalid, name, value, minlength, maxlength, pattern, required, noSpellcheck, disabled }: Record<string, any>) => html`
 	<nldd-search-field
 		size=${size}
 		width=${width}
 		placeholder=${placeholder}
+		accessible-label=${accessibleLabel}
+		accessible-description=${accessibleDescription || nothing}
+		search-button=${searchButton ?? nothing}
 		shortcut=${shortcut || nothing}
 		shortcut-mac=${shortcutMac || nothing}
 		shortcut-windows=${shortcutWindows || nothing}
 		shortcut-linux=${shortcutLinux || nothing}
-		accessible-label=${accessibleLabel}
-		accessible-description=${accessibleDescription || nothing}
-		search-button=${searchButton ?? nothing}
 		?invalid=${invalid}
-		?disabled=${disabled}
 		name=${name}
 		value=${value}
-		?required=${required}
 		minlength=${minlength ?? nothing}
 		maxlength=${maxlength ?? nothing}
 		pattern=${pattern || nothing}
+		?required=${required}
 		?no-spellcheck=${noSpellcheck}
+		?disabled=${disabled}
 	></nldd-search-field>
 `;
 
@@ -243,5 +243,5 @@ export const AlleToestanden = {
 export const MetSneltoets = {
 	name: 'Met shortcut',
 	render: Template,
-	args: { shortcut: '/', placeholder: 'Zoek een aanvraag' },
+	args: { placeholder: 'Zoek een aanvraag', shortcut: '/' },
 };

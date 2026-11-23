@@ -103,7 +103,6 @@ export const loaders: Record<string, () => Promise<unknown>> = {
 	'nldd-spacer-cell': () => import('../components/lists-and-tables/cells/spacer-cell/spacer-cell.js'),
 	'nldd-split-button': () => import('../components/actions/split-button/split-button.js'),
 	'nldd-split-view-divider': () => import('../components/layout/split-views/split-view-divider/split-view-divider.js'),
-	'nldd-split-view-pane': () => import('../components/layout/split-views/split-view-pane/split-view-pane.js'),
 	'nldd-stacked-split-view': () => import('../components/layout/split-views/stacked-split-view/stacked-split-view.js'),
 	'nldd-status-bar': () => import('../components/status-and-feedback/status-bar/status-bar.js'),
 	'nldd-step-bar': () => import('../components/status-and-feedback/step-bar/step-bar.js'),

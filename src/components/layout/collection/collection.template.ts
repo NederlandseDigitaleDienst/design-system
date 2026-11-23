@@ -20,7 +20,7 @@ export function collectionTemplate(component: NLDDCollection): TemplateResult {
 				<slot @slotchange=${(e: Event) => component._onSlotChange(e)}></slot>
 			</div>
 		</div>
-		<footer class="collection__footer"
+		<div class="collection__footer"
 			?hidden=${!showFooter}
 		>
 			<slot
@@ -55,6 +55,6 @@ export function collectionTemplate(component: NLDDCollection): TemplateResult {
 					></nldd-button>
 				` : nothing}
 			</slot>
-		</footer>
+		</div>
 	`;
 }

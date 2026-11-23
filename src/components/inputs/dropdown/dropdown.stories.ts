@@ -28,26 +28,6 @@ export default {
 			control: 'text',
 			description: 'Optionele vaste breedte (any CSS length, bv. "240px"). Leeg = stretch.',
 		},
-		valid: {
-			control: 'boolean',
-			description: 'Markeert het veld als geldig',
-			table: { defaultValue: { summary: false } },
-		},
-		invalid: {
-			control: 'boolean',
-			description: 'Markeert het veld als ongeldig',
-			table: { defaultValue: { summary: false } },
-		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde toestand',
-			table: { defaultValue: { summary: false } },
-		},
-		required: {
-			control: 'boolean',
-			description: 'Verplichte staat.',
-			table: { defaultValue: { summary: false } },
-		},
 
 		accessibleDescription: {
 			name: 'accessible-description',
@@ -59,16 +39,36 @@ export default {
 			control: false,
 			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
 		},
+		valid: {
+			control: 'boolean',
+			description: 'Markeert het veld als geldig',
+			table: { defaultValue: { summary: false } },
+		},
+		invalid: {
+			control: 'boolean',
+			description: 'Markeert het veld als ongeldig',
+			table: { defaultValue: { summary: false } },
+		},
+		required: {
+			control: 'boolean',
+			description: 'Verplichte staat.',
+			table: { defaultValue: { summary: false } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde toestand',
+			table: { defaultValue: { summary: false } },
+		},
 	},
 	args: {
 		size: 'md',
 		width: '',
-		valid: false,
-		invalid: false,
-		disabled: false,
-		required: false,
 		accessibleDescription: '',
 		accessibleDescribedBy: '',
+		valid: false,
+		invalid: false,
+		required: false,
+		disabled: false,
 	},
 };
 
@@ -80,15 +80,15 @@ const options = (selected = '') => [1, 2, 3, 4, 5, 6].map((option) => html`
 	>Optie ${option}</option>
 `);
 
-const Template = ({ size, valid, invalid, disabled, width, required, accessibleDescription }: Record<string, any>) => html`
+const Template = ({ size, width, accessibleDescription, valid, invalid, required, disabled }: Record<string, any>) => html`
 	<nldd-dropdown
 		size=${size}
-		?valid=${valid}
-		?invalid=${invalid}
-		?disabled=${disabled}
-		?required=${required}
 		width=${width}
 		accessible-description=${accessibleDescription || nothing}
+		?valid=${valid}
+		?invalid=${invalid}
+		?required=${required}
+		?disabled=${disabled}
 	>
 		<select
 			name="option"

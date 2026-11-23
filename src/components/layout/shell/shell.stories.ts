@@ -157,9 +157,9 @@ export const MetPagina = () => html`
 `;
 
 /**
- * Elk split-view-paneel kan een eigen achtergrondkleur hebben.
- * Het instellen van tinted op een paneel laat --context-background-color alleen
- * doorwerken naar de afstammelingen van dat paneel. Naburige panelen blijven ongewijzigd.
+ * Elk paneel kan een eigen achtergrondkleur hebben: zet background="tinted" op
+ * de pagina in dat slot. --context-background-color werkt dan alleen door naar
+ * wat in die pagina staat. Naburige panelen blijven ongewijzigd.
  */
 export const TintedPerPaneel = {
 	render: () => html`

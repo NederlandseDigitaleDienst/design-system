@@ -42,21 +42,21 @@ export type ListItemSegmentWidth = 'fit-content' | 'full';
  * @element nldd-list-item-segment
  *
  * @attr {'fit-content'|'full'} width - `full` lets the segment grow to fill the row (default: 'fit-content')
- * @attr {string} href - Renders the segment as an `<a>` with this URL. Wins over `checkbox` and `button`.
- * @attr {string} target - Link target forwarded to the `<a>`; only applies with `href`. With '_blank' a visually hidden "opent in nieuw tabblad" announcement is added. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. With `accessible-label` the hint goes into the label.
- * @attr {string} download - Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab.
- * @attr {string} rel - Link rel forwarded to the `<a>`, only with `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set
  * @attr {boolean} button - Renders the segment as a `<button>`. Last of the three: `href` and `checkbox` both win over it.
  * @attr {boolean} checkbox - Makes the segment a `role="checkbox"` control. Wins over `button`, loses to `href`.
- * @attr {boolean} disclosure - Marks the segment as the row's disclosure control: `aria-expanded` comes from the parent item's `expanded`, so the state lives in one place. A slotted `nldd-icon-cell` rotates a quarter turn while the row is open
  * @attr {boolean} expandable - The segment opens something, also while it is closed: without `expanded` it says "collapsed" instead of nothing. This is how markup writes a closed disclosure, since an attribute can only be there or not.
- * @attr {string} accessible-label - Accessible name for the control. Set it when the segment holds only an icon, or when the cell text does not describe the action.
- * @attr {boolean} checked - Checked state of a `checkbox` segment; it toggles on activation
- * @attr {boolean} expanded - Disclosure state, reflected as `aria-expanded` on the control, and painted: the segment stays lit a step above hover for as long as what it opened is on screen, so a menu reads as hanging off this row rather than floating over the list. Set it on the segment that opens something (a tree row's chevron, a menu). Leave it off entirely when the segment discloses nothing: an absent attribute emits no aria-expanded.
+ * @attr {boolean} disclosure - Marks the segment as the row's disclosure control: `aria-expanded` comes from the parent item's `expanded`, so the state lives in one place. A slotted `nldd-icon-cell` rotates a quarter turn while the row is open
  * @attr {'menu'|'listbox'|'dialog'|'tree'|'grid'} popup-type - Type of popup this segment opens: 'menu' | 'listbox' | 'dialog' | 'tree' | 'grid'. Becomes aria-haspopup on the control and makes aria-expanded permanent, so a row of identical "more" segments says what it opens before anything is open. An nldd-menu or nldd-popover anchored here sets it itself from the first render.
  * @attr {string} popovertarget - ID of a popover this segment toggles, looked up in the tree of the segment; the inner button gets the element. The IDL counterparts `popoverTargetElement` and `popoverTargetAction` work across shadow boundaries, as on nldd-icon-button. An nldd-menu or nldd-popover it points at is also positioned against this control, so it needs no `anchor`.
- * @attr {boolean} current - Marks the segment as the current one, with `aria-current` set to `current-type`. The row it sits in paints itself as the current row from it, so on a segmented row this is the only place it has to be set.
+ * @attr {string} accessible-label - Accessible name for the control. Set it when the segment holds only an icon, or when the cell text does not describe the action.
  * @attr {'page'|'step'|'location'|'date'|'time'|'true'} current-type - The `aria-current` value of a `current` segment (default 'page'). Use 'location' for a table of contents, whose rows point at sections of the page you are on.
+ * @attr {boolean} checked - Checked state of a `checkbox` segment; it toggles on activation
+ * @attr {boolean} expanded - Disclosure state, reflected as `aria-expanded` on the control, and painted: the segment stays lit a step above hover for as long as what it opened is on screen, so a menu reads as hanging off this row rather than floating over the list. Set it on the segment that opens something (a tree row's chevron, a menu). Leave it off entirely when the segment discloses nothing: an absent attribute emits no aria-expanded.
+ * @attr {boolean} current - Marks the segment as the current one, with `aria-current` set to `current-type`. The row it sits in paints itself as the current row from it, so on a segmented row this is the only place it has to be set.
+ * @attr {string} href - Renders the segment as an `<a>` with this URL. Wins over `checkbox` and `button`.
+ * @attr {string} target - Link target forwarded to the `<a>`; only applies with `href`. With '_blank' a visually hidden "opent in nieuw tabblad" announcement is added. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. With `accessible-label` the hint goes into the label.
+ * @attr {string} rel - Link rel forwarded to the `<a>`, only with `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set
+ * @attr {string} download - Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab.
  * @attr {boolean} disabled - Switches the segment off: a `button` or `checkbox` segment stops responding and dims, a `href` segment gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). The arrow keys skip a row whose only segment is off.
  *
  * Divider markers, set on a CELL inside the segment rather than on the segment itself:
@@ -74,25 +74,19 @@ export class NLDDListItemSegment extends withTranslations(LitElement, nlddListIt
 	@property({ reflect: true, converter: reflectNonDefault<ListItemSegmentWidth>('fit-content') })
 	width: ListItemSegmentWidth = 'fit-content';
 
-	@property({ reflect: true })
-	href?: string;
-
-	@property({ reflect: true })
-	target?: string;
-
-	/** Saves the file instead of opening it; only used when href is set. Empty
-	 *  for the name from the URL, a name to save it under. */
-	@property({ type: String })
-	download: string | undefined = undefined;
-
-	@property({ reflect: true })
-	rel?: string;
-
 	@property({ type: Boolean, reflect: true })
 	button = false;
 
 	@property({ type: Boolean, reflect: true })
 	checkbox = false;
+
+	/**
+	 * The segment opens something, also while it is closed. Without it an absent
+	 * `expanded` means "discloses nothing", and `false` can only be set as a
+	 * property, which a framework that writes attributes cannot do.
+	 */
+	@property({ type: Boolean, reflect: true })
+	expandable = false;
 
 	/**
 	 * Marks this segment as the row's disclosure control: it takes `aria-expanded`
@@ -105,24 +99,6 @@ export class NLDDListItemSegment extends withTranslations(LitElement, nlddListIt
 	 */
 	@property({ type: Boolean, reflect: true })
 	disclosure = false;
-
-	/**
-	 * The segment opens something, also while it is closed. Without it an absent
-	 * `expanded` means "discloses nothing", and `false` can only be set as a
-	 * property, which a framework that writes attributes cannot do.
-	 */
-	@property({ type: Boolean, reflect: true })
-	expandable = false;
-
-	@property({ attribute: 'accessible-label' })
-	accessibleLabel = '';
-
-	@property({ type: Boolean, reflect: true })
-	checked = false;
-
-	/** Undefined (attribute absent) means "discloses nothing", no aria-expanded is emitted, unless the segment is `expandable`. */
-	@property({ type: Boolean, reflect: true })
-	expanded?: boolean;
 
 	/**
 	 * Type of popup this segment opens: 'menu' | 'listbox' | 'dialog' | 'tree' |
@@ -151,12 +127,36 @@ export class NLDDListItemSegment extends withTranslations(LitElement, nlddListIt
 	@property({ attribute: false })
 	popoverTargetAction: 'toggle' | 'show' | 'hide' = 'toggle';
 
-	@property({ type: Boolean, reflect: true })
-	current = false;
+	@property({ attribute: 'accessible-label' })
+	accessibleLabel = '';
 
 	/** The `aria-current` value of a current segment; see nldd-list-item's `current-type`. */
 	@property({ reflect: true, attribute: 'current-type', converter: reflectNonDefault<'page' | 'step' | 'location' | 'date' | 'time' | 'true'>('page') })
 	currentType: 'page' | 'step' | 'location' | 'date' | 'time' | 'true' = 'page';
+
+	@property({ type: Boolean, reflect: true })
+	checked = false;
+
+	/** Undefined (attribute absent) means "discloses nothing", no aria-expanded is emitted, unless the segment is `expandable`. */
+	@property({ type: Boolean, reflect: true })
+	expanded?: boolean;
+
+	@property({ type: Boolean, reflect: true })
+	current = false;
+
+	@property({ reflect: true })
+	href?: string;
+
+	@property({ reflect: true })
+	target?: string;
+
+	@property({ reflect: true })
+	rel?: string;
+
+	/** Saves the file instead of opening it; only used when href is set. Empty
+	 *  for the name from the URL, a name to save it under. */
+	@property({ type: String })
+	download: string | undefined = undefined;
 
 	@property({ type: Boolean, reflect: true })
 	disabled = false;

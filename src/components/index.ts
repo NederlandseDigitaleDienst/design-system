@@ -95,7 +95,6 @@ export { NLDDSideBySideSplitView } from './layout/split-views/side-by-side-split
 export { NLDDStackedSplitView } from './layout/split-views/stacked-split-view/stacked-split-view.js';
 
 export { NLDDSplitViewDivider } from './layout/split-views/split-view-divider/split-view-divider.js';
-export { NLDDSplitViewPane } from './layout/split-views/split-view-pane/split-view-pane.js';
 
 export { NLDDPage } from './layout/page/page.js';
 

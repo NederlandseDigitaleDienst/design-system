@@ -5,26 +5,26 @@
  * @keywords textarea, tekstvak
  * @related nldd-text-field, nldd-text-editor
  *
- * @attr {string} value - The textarea value
- * @attr {string} placeholder - Placeholder text
- * @attr {string} input-id - Sets the id on the native textarea. Set automatically by nldd-form-field.
  * @attr {'md'|'sm'} size - 'md' (default) | 'sm'. Set automatically by nldd-form-field.
- * @attr {boolean} invalid - Marks the field as invalid
+ * @attr {'none'|'vertical'|'auto'} resize - 'none' | 'vertical' | 'auto' (default). 'auto' grows with content (native field-sizing), no manual handle.
+ * @attr {number} rows - Initial visible rows (minimum height). Default: 3.
+ * @attr {string} width - Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container.
+ * @attr {string} placeholder - Placeholder text
+ * @attr {string} accessible-label - Accessible label forwarded to the inner textarea. Set automatically by nldd-form-field.
  * @attr {boolean} valid - Marks the field as valid
- * @attr {boolean} disabled - Disabled state
+ * @attr {boolean} invalid - Marks the field as invalid
  * @attr {string} name - Textarea name for form submission
- * @attr {boolean} readonly - Readonly state
- * @attr {boolean} required - Required state
- * @attr {string} autocomplete - Autocomplete hint
+ * @attr {string} input-id - Sets the id on the native textarea. Set automatically by nldd-form-field.
+ * @attr {string} value - The textarea value
  * @attr {'none'|'text'|'decimal'|'numeric'|'tel'|'search'|'email'|'url'} keyboard - Which virtual keyboard a phone or tablet raises, forwarded as `inputmode`: 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url'. It changes nothing about what the field accepts, and nothing at all on a desktop.
  * @attr {'enter'|'done'|'go'|'next'|'previous'|'search'|'send'} enter-key - What the Enter key of the virtual keyboard says, forwarded as `enterkeyhint`: 'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'. In a field where Enter starts a new line, leave it alone.
- * @attr {number} rows - Initial visible rows (minimum height). Default: 3.
- * @attr {'none'|'vertical'|'auto'} resize - 'none' | 'vertical' | 'auto' (default). 'auto' grows with content (native field-sizing), no manual handle.
- * @attr {string} accessible-label - Accessible label forwarded to the inner textarea. Set automatically by nldd-form-field.
- * @attr {boolean} no-spellcheck - Disables browser spellchecking on the inner textarea
- * @attr {string} width - Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container.
  * @attr {number} minlength - Fewest characters the value may have.
  * @attr {number} maxlength - Most characters the value may have.
+ * @attr {boolean} required - Required state
+ * @attr {string} autocomplete - Autocomplete hint
+ * @attr {boolean} no-spellcheck - Disables browser spellchecking on the inner textarea
+ * @attr {boolean} readonly - Readonly state
+ * @attr {boolean} disabled - Disabled state
  *
  * @slot button - One `nldd-button`, `nldd-icon-button` or `nldd-toggle-button` in a row under the text, inside the border: the one action of a form that is only this field (post a reply, add a note), or an aid for filling in the field, such as an `nldd-toggle-button` that starts and stops dictation. The field passes on its corner, so the button's corners follow the field's. The field sets its `size`, `sm` in a field of `md` and `xs` in one of `sm`; a `size` of your own is overwritten. A disabled field disables the button too. Give it `type="submit"` in a form, and its own `text`. A form with more fields keeps its buttons in `nldd-form-actions`.
  *
@@ -73,35 +73,37 @@ export class NLDDMultiLineTextField extends DescribedBy(FormAssociated(LitElemen
 	@property({ reflect: true, converter: reflectNonDefault<'md' | 'sm'>('md') })
 	size: 'md' | 'sm' = 'md';
 
-	@property({ type: String })
-	value = '';
+	@property({ reflect: true, converter: reflectNonDefault<ResizeMode>('auto') })
+	resize: ResizeMode = 'auto';
 
-	@property({ type: String, attribute: 'input-id' })
-	inputId = '';
+	@property({ type: Number })
+	rows = 3;
+
+	/** Optional fixed width (any CSS length). When unset, the field stretches to fill its container. */
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	width = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	placeholder = '';
 
-	@property({ type: Boolean, reflect: true })
-	invalid = false;
+	/** Accessible label forwarded to the inner <textarea>. Set automatically by nldd-form-field. */
+	@property({ type: String, attribute: 'accessible-label' })
+	accessibleLabel = '';
 
 	@property({ type: Boolean, reflect: true })
 	valid = false;
 
 	@property({ type: Boolean, reflect: true })
-	disabled = false;
+	invalid = false;
 
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
 
-	@property({ type: Boolean, reflect: true })
-	readonly = false;
-
-	@property({ type: Boolean, reflect: true })
-	required = false;
+	@property({ type: String, attribute: 'input-id' })
+	inputId = '';
 
 	@property({ type: String })
-	autocomplete = '';
+	value = '';
 
 	/** Which on-screen keyboard to raise, forwarded as `inputmode`. */
 	@property({ type: String, reflect: true })
@@ -111,29 +113,6 @@ export class NLDDMultiLineTextField extends DescribedBy(FormAssociated(LitElemen
 	@property({ type: String, reflect: true, attribute: 'enter-key' })
 	enterKey?: EnterKey;
 
-	@property({ type: Number })
-	rows = 3;
-
-	@property({ reflect: true, converter: reflectNonDefault<ResizeMode>('auto') })
-	resize: ResizeMode = 'auto';
-
-	/** Accessible label forwarded to the inner <textarea>. Set automatically by nldd-form-field. */
-	@property({ type: String, attribute: 'accessible-label' })
-	accessibleLabel = '';
-
-
-	@property({ type: Boolean, reflect: true, attribute: 'no-spellcheck' })
-	noSpellcheck = false;
-
-	/** Optional fixed width (any CSS length). When unset, the field stretches to fill its container. */
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	width = '';
-
-
-	@query('.multi-line-text-field__input')
-	private _textarea!: HTMLTextAreaElement;
-
-
 	/** Fewest characters the value may have, as the native `minlength`. */
 	@property({ type: Number, reflect: true })
 	minlength?: number;
@@ -141,6 +120,25 @@ export class NLDDMultiLineTextField extends DescribedBy(FormAssociated(LitElemen
 	/** Most characters the value may have, as the native `maxlength`. */
 	@property({ type: Number, reflect: true })
 	maxlength?: number;
+
+	@property({ type: Boolean, reflect: true })
+	required = false;
+
+	@property({ type: String })
+	autocomplete = '';
+
+	@property({ type: Boolean, reflect: true, attribute: 'no-spellcheck' })
+	noSpellcheck = false;
+
+	@property({ type: Boolean, reflect: true })
+	readonly = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
+
+	@query('.multi-line-text-field__input')
+	private _textarea!: HTMLTextAreaElement;
+
 
 	override updated(changed: PropertyValues): void {
 		if (changed.has('width')) {

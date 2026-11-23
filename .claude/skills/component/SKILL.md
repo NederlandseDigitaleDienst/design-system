@@ -304,18 +304,27 @@ Zet het component ook in de tabellen in `form-field.test.ts`, die alle invoercom
 
 ### Controls conventies
 
-De website (`npm run www`) leidt de controls onder het eerste voorbeeld af uit de attributen van het component, met de waarden uit het TypeScript-type. `argTypes` vullen alleen aan: een Nederlandse toelichting, een label als `(geen)`, of een control voor iets dat geen attribuut is. De conventies hieronder zijn geschreven toen de stories nog in Storybook stonden; ze gelden nog voor hoe je `argTypes` schrijft, maar waar ze zeggen wat Storybook toont, kijk je op de componentpagina wat de website doet.
+De website (`npm run www`) maakt de controls onder het eerste voorbeeld zelf, uit de attributen van het component in `custom-elements.json`. Een attribuut zonder `argType` krijgt dus ook een control: een switch voor een boolean, een keuzelijst voor een type met vaste waarden, een tekstveld voor de rest. `argTypes` vullen aan met wat het manifest niet weet: een Nederlandse toelichting, een label als `(geen)` met zijn `mapping`, of een control voor iets dat geen attribuut is (de tekst in een slot, het aantal items).
+
+Wat de website met een `argType` doet, gemeten op de componentpagina's:
+
+- **Volgorde:** de controls staan in de volgorde van de `@property`-declaraties in de class. De volgorde van `argTypes` verandert daar niets aan. Een control zonder attribuut staat onder de attributen, en volgt daar wel `argTypes`.
+- **Soort control:**
+  - Bij een attribuut komt hij uit het TypeScript-type. `control: 'select'` of `control: 'text'` doet daar niets, en `control: false` verbergt hem niet.
+  - Bij een arg zonder attribuut bepaalt `control` het soort, en haalt `control: false` hem weg.
+- **Opties:** zonder `options` toont de keuzelijst de waarden uit het type, met `(standaard)` achter de default. Met `options` toont de lijst die van de story, in de volgorde waarin ze er staan. De default is die uit het manifest, of anders de `table.defaultValue.summary`; staat hij in de lijst, dan krijgt die optie `(standaard)` erachter. Alleen zonder `options` en zonder default in de lijst komt er een losse optie `(standaard)` bovenaan.
+- **Toelichting:** `description` vervangt de Engelse beschrijving uit de JSDoc.
+
+De tabel met attributen op de tab API komt uit het manifest, niet uit `argTypes`.
 
 - **`args` staat altijd vóór `argTypes`** in de default export
 - **Args keys:** altijd camelCase (bijv. `startIcon`, `fullWidth`)
-- **`name:`** het HTML attribuut in kebab-case (bijv. `name: 'start-icon'`, `name: 'full-width'`)
-- **`table.defaultValue.summary:`** invullen zodra er een default is die iets zegt: `md`, `false`, `content`, of de vertaling waar het component op terugvalt (`Kruimelpad`, `Meer opties`, `Tabs`). Die laatste is de belangrijkste, want de kolom beantwoordt de vraag "wat krijg ik als ik dit niet zet". Bij een toegankelijke naam is het antwoord daarop geen detail.
-
-  **Is de default leeg, laat de regel dan weg.** Storybook toont dan een streepje, en dat is precies wat je bedoelt. Schrijf er geen `summary: ''`, want `""` en `-` zijn dan twee manieren om hetzelfde te zeggen. Bij een select met een `(geen)`-optie zet je `(geen)` in de kolom, zodat de kolom de optie noemt die je kiest om terug te gaan.
+- **`name:`** het HTML-attribuut in kebab-case (bijv. `name: 'start-icon'`). De website koppelt een argType daarmee aan zijn attribuut. Zonder `name` neemt hij de key in kebab-case, dus `name` is alleen nodig als het attribuut anders heet.
+- **`table.defaultValue.summary:`** alleen nodig bij een attribuut zonder default in het manifest, of met een lege string als default. De website zet dan `(standaard)` achter de optie die gelijk is aan de summary: `(geen) (standaard)` bij `popup-type` op `nldd-button`. Heeft het attribuut een default in de class (`size: Size = 'md'`), dan wint die en doet de summary niets. Bij een select met een `(geen)`-optie zet je dus `(geen)` in de summary. Is er niets te melden, laat de regel dan weg.
 - **`description:`** korte Nederlandse beschrijving
-- **Icon controls:** gebruik `control: 'select'` met `options: ['(geen)', ...ICONS]` plus `mapping: { '(geen)': '' }` — importeer `ICONS` uit `../../content/icon/icon.ts`. Nooit een text input voor iconen.
+- **Icon controls:** gebruik `options: ['(geen)', ...ICONS]` plus `mapping: { '(geen)': '' }`, en importeer `ICONS` uit `../../content/icon/icon.ts`. De website maakt er een combo-box van met de icoonnamen, en `(geen)` bovenaan.
 - **Alias-naam heeft voorkeur:** kies bij het *gebruiken* van een icoon (`icon=`, `start-icon=`, in stories én consumers) de **alias-naam** boven de canonieke naam als er een alias bestaat — bijv. `harvest` i.p.v. `wheat`, `info` i.p.v. `info-circle`, `new-account` i.p.v. `person-circle-badge-plus`. Aliassen zijn betekenisvoller en stabieler; ze staan in `src/components/content/icon/icon-aliases.js`.
-- **Optionele select-controls:** Storybook toont anders een leeg item of letterlijk "undefined" in de dropdown. Gebruik een label tussen haakjes (zie de volgende bullet voor welk woord) en `mapping` om dat naar de echte waarde te vertalen. Plaats dat label als eerste element in `options`. In `args` staat de **actual value** (`''` of `undefined`) — Storybook reverse-lookt via `mapping` welke label de huidige waarde representeert en toont die als geselecteerd in de UI. De render-functie ontvangt eveneens de actual value. Let op: bij opties met numerieke waarden (`1, 2, ...`) plaatst JS de integer-index keys altijd eerst in `Object.keys`, waardoor `'(geen)'` visueel onderaan de dropdown belandt; de selected-state werkt wel correct, dus accepteer dat als trade-off.
+- **Optionele select-controls:** zonder `options` heet de lege keuze op de website `(standaard)`. Dat zegt niet wat er gebeurt als je niets zet. Gebruik daarom een label tussen haakjes (zie de volgende bullet voor welk woord) en `mapping` om dat naar de echte waarde te vertalen. Plaats dat label als eerste element in `options`; de lijst houdt die volgorde aan, ook bij numerieke waarden. In `args` staat de **echte waarde** (`''` of `undefined`). De website zoekt via `mapping` het label dat erbij hoort en toont dat als gekozen. De render-functie krijgt ook de echte waarde.
   ```ts
   // String prop met '' als "geen waarde"
   args: { variant: '' },
@@ -352,10 +361,7 @@ De website (`npm run www`) leidt de controls onder het eerste voorbeeld af uit d
   Verzin geen vierde woord: `(default)`, `(standaard)` en `(afgeleid)` hebben allemaal bestaan en zijn allemaal teruggebracht naar deze drie.
 
   **Staat het woord al als echte waarde in dezelfde dropdown, dan is het label bezet.** Dat is de `0` bij `nldd-container` hierboven, en het gebeurt ook zonder dat de woorden gelijk zijn: `(auto)` naast een echte `inherit` leest als twee manieren om te zeggen "haal het ergens anders vandaan", ook al betekenen ze iets anders. Kies dan geen ander label maar geef de default een naam, dan staan er twee echte waardes en heb je er helemaal geen nodig. Zo werd `color` op `nldd-title` en `nldd-rich-text` `content` naast `inherit`.
-- **Volgorde consistent**: `args`, `argTypes`, template-destructuring en HTML-attributen in de template gebruiken dezelfde volgorde, volgens de canon hieronder.
-- **Twee dingen laten een control naar het eind van de tabel springen.** De docs-tabel volgt de volgorde van `argTypes`, en Storybook bouwt een key opnieuw op (en zet hem dus achteraan) zodra je hem naderhand aanraakt:
-  1. Een key die je in `Standaard.args` opnieuw zet. Zet een default die je in `Standaard` wilt tonen daarom in de bovenste `args`, en laat `Standaard` alleen `render` houden.
-  2. Een `type`-override in een argType, zoals `type: { name: 'string' }`. Wil je een tekstveld voor een numerieke prop (leeg mogen laten), dan is `control: { type: 'text' }` genoeg; documenteer het echte type met `table: { type: { summary: 'number' } }`.
+- **Volgorde consistent**: `args`, `argTypes`, template-destructuring en HTML-attributen in de template gebruiken dezelfde volgorde, volgens de canon hieronder. Dat is voor wie de code leest; de website neemt de volgorde van de `@property`-declaraties.
 
 ### Canonieke volgorde in de rest van het component
 
@@ -393,7 +399,9 @@ export const ToestandChecked = {
 
 ### Canonieke control volgorde
 
-Per component: pak alleen de keys die je gebruikt en zet ze in deze volgorde. De groepering is een mentaal model — de daadwerkelijke `args`/`argTypes` is een platte lijst.
+Per component: pak alleen de keys die je gebruikt en zet ze in deze volgorde. De groepering is een mentaal model — de daadwerkelijke `args`/`argTypes` is een platte lijst. `npm run validate:control-order` controleert de `@attr`-regels en de `@property`-declaraties tegen deze lijst; een naam die er niet in staat, zet je erbij in de groep waar hij hoort. Een naam die in één component iets anders betekent (de `max` van `nldd-avatar-group`), staat in `MEANINGS` in `scripts/check-control-order.js`.
+
+`readonly` en `disabled` staan als laatste, achter Form. Ze overschrijven wat erboven staat: een uitgeschakelde control doet niets meer van wat de andere keys instellen. En je gebruikt ze liever niet (de ontwerprichtlijnen zeggen waarom), dus ze horen niet bovenaan in de controls.
 
 **Sorteer op wat een key doet, niet op hoe hij heet.** De groepen zijn het model, de namenlijsten eronder zijn voorbeelden. Twee componenten kunnen dezelfde naam voor iets anders gebruiken, en dan wint de betekenis. `max` is daar het schoolvoorbeeld van, en staat op drie plekken:
 
@@ -403,57 +411,95 @@ Per component: pak alleen de keys die je gebruikt en zet ze in deze volgorde. De
 
 ```
 [1. Visueel dominant]
-variant, appearance, color, background, level, status, size, compact,
-minor, pulse, layout,
+variant, appearance, destructive, color, customColor, iconColor,
+background, mainBackground, scheme, level, status, size, smSize, mdSize,
+lgSize, smCustomSize, mdCustomSize, lgCustomSize, weight, lineHeight,
+shape, corner, tile, compact, minor, pulse, line, dividers, dividerStart,
+dividerEnd, noRibbon, layout, labelAlignment, formLabelAlignment,
+columns, smColumns, mdColumns, lgColumns, columnCount, smColumnCount, mdColumnCount, lgColumnCount,
 panes, iconOnly, responsive, showItemLabels, inspectorAsSheet,
-sidebarAsSheet, noLogo
+sidebarAsSheet, primarySidebarAsSheet, inspectorAutoHidden, noLogo, noBlink
 
 [2. Sizing]
-resize, rows, width, minWidth, maxWidth, height, minHeight, fullWidth,
-itemMinWidth, itemMaxWidth, containerSize
+resize, rows, width, minWidth, maxWidth, height, minHeight, maxHeight,
+fullWidth, smFullHeight, grow, fluid, soloFluid, shrinkable, mainWidth,
+overlapSize, itemMinWidth, itemMaxWidth, containerSize
 
 [3. Space]
-spacing, padding, paddingInline, paddingBlock, paddingTop, paddingRight,
-paddingBottom, paddingLeft
+spacing, gap, smGap, mdGap, lgGap, padding, paddingInline, paddingBlock,
+paddingTop, paddingRight, paddingBottom, paddingLeft
 + smPadding…, mdPadding…, lgPadding…, layoutAreaXxxxPadding…
 
 [4. Alignment and position]
-horizontalAlignment, verticalAlignment, direction, orientation, placement,
-labelAlignment, top, right, bottom, left, position
+horizontalAlignment, verticalAlignment, align, centered, iconAligned,
+direction, orientation, placement, mainPosition,
+markerOffset, top, right, bottom, left, position, stickyTop, stickyBottom,
+order, smOrder, mdOrder, lgOrder,
+above, below, only, hideAbove, hideBelow, hideOn
 
 [5. Main content]
-text, supportingText, overline, label, supportingLabel, optional,
-placeholder, number, headingLevel,
-icon, startIcon, endIcon, containerColor,
-quote, attribution, cite, keys,
+text, shortText, supportingText, shortSupportingText, overline, label,
+supportingLabel, optional, placeholder, number, details, hint, headingLevel,
+icon, startIcon, endIcon, selectedIcon, containerColor,
+initials, src, srcset, sizes, alt, image, imageSrcset, avatarSrc,
+avatarSrcset, avatarAlt, mediaSrc, mediaSrcset, mediaSizes, mediaAlt,
+mediaAspectRatio, mediaHeight, aspectRatio, objectFit, objectPosition,
+lqip, decoding, fetchPriority, caption, credit,
+quote, attribution, cite, definition, source, sourceHref, keys, macKeys,
+windowsKeys, linuxKeys, language, diff, hyphens,
 logoTitle, logoSubtitle, logoSupportingText1, logoSupportingText2, logoHref,
-websiteTitle, websiteHref, backText, backHref, dismissText
+websiteTitle, websiteHref, sidebarLabel, backText, backHref, dismissText
 
 [6. Key behavior]
-control, expandable
+control, button, checkbox, radio, navigation, embedded, expandable,
+disclosure, popupType, haspopup, popovertarget, interestfor, controls,
+selectable, reorderable, exclusive, collapsible
 
 [7. A11y]
-accessibleLabel
+accessibleLabel, accessibleLabeledBy, accessibleDescription,
+accessibleDescribedBy, inspectorAccessibleLabel,
+primarySidebarAccessibleLabel, decorative, role, landmarks, list,
+rowHeader, currentType
 
 [8. Elements]
-showSearchButton, hideSpinButtons, hasDragHandle, maxItems
+showSearchButton, searchButton, hideSpinButtons, noPicker, noFilter,
+noCopy, lineNumbers, weekNumbers, histogram, hasDragHandle, reorderHandle,
+noArrow, arrowLength, noBackdrop, mdTitleBar, dismissible, dismissable,
+tokenControl, hideLgText, maxItems
 
 [9. Elements content]
-showText, hideText, overflowText
+showText, hideText, overflowText, menuText, tooltipText, emptyText,
+emptySupportingText, loadingText, valueText, valueFormat, valueDisplay,
+shortcut, shortcutMac, shortcutWindows, shortcutLinux
 
 [10. Elements A11y]
 showAccessibleLabel, hideAccessibleLabel
 
 [11. Behavior]
 modeless, movable, stickyHeader, stickyFooter, hasContent, alwaysVisible,
-showLoadMore, lazyLoad, collapseAnchor, contentPriority
+showLoadMore, lazyLoad, collapseAnchor, contentPriority, priority, anchor,
+noTab, roving, timing, tooltipTiming, duration, noLightDismiss, noCollapse,
+wrap, singleLine, uppercase, syntax, annotatable, query,
+queryMarkMode, aliases, filterFn, firstDayOfWeek, hrefPattern,
+textEditorFor, textEditorCommand, sidebarSectionOnly
 
 [12. States]
-selected, checked, indeterminate, open, valid, invalid, masked, readonly, current, disabled
+selected, checked, indeterminate, expanded, collapsed, open, active,
+loading, complete, shrunk, valid, invalid, judging, unmet, masked,
+current, empty, visible, hidden, copyUnavailable
 
 [13. Form]
-name, value, type, min, max, step, required, total,
-autocomplete, noSpellcheck, href, target, method, action, novalidate
+form, for, name, inputId, groupName, value, values, startValue, endValue,
+start, end, range, type, inputType, keyboard, enterKey, min, max, step,
+minlength, maxlength, length, pattern, match, format, accept, multiple,
+directory, allowCustom, required, total, autocomplete, noSpellcheck,
+href, target, rel, download, method, action, enctype, novalidate
+
+[14. Overrides]
+readonly, disabled
+
+[15. Development]
+debugOs, debugSafeTriangle
 ```
 
 **Open punt**: `type` staat onder Form (HTML input type, vaakste betekenis). Voor `segmented-control` heeft het een andere semantiek (radio/checkbox-modus); kan later via een rename naar bijv. `selectionMode` opgelost worden.

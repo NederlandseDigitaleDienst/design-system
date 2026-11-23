@@ -19,10 +19,47 @@ import { fragmentId } from './fragment.js';
 function wireBack(): void {
 	const view = document.querySelector('nldd-navigation-split-view');
 	view?.addEventListener('back', (event) => {
-		const pane = (event.target as Element).closest('nldd-split-view-pane');
+		const pane = (event.target as Element).closest('nldd-navigation-split-view > [slot]');
 		if (pane?.getAttribute('slot') === 'secondary-sidebar') pane.remove();
-		else pane?.removeAttribute('has-content');
+		else pane?.setAttribute('empty', '');
 	});
+}
+
+/**
+ * The way back to the landing page: in the toolbar once both sidebars are on
+ * the screen, in the title bar of the sections otherwise, as on a phone.
+ */
+function wireHome(): void {
+	const view = document.querySelector('nldd-navigation-split-view');
+	if (!view) return;
+	const panes = () => [...view.querySelectorAll<HTMLElement>(':scope > [slot]')];
+	const update = () => {
+		const area = view.getBoundingClientRect();
+		const shown = panes().filter((pane) => {
+			const box = pane.getBoundingClientRect();
+			return box.width > 0 && box.right > area.left + 1 && box.left < area.right - 1;
+		});
+		const both = ['primary-sidebar', 'secondary-sidebar'].every((slot) => shown.some((pane) => pane.slot === slot));
+		view.toggleAttribute('data-site-sidebars-shown', both);
+	};
+	const sizes = new ResizeObserver(update);
+	// The panes and their `empty`, not what is in them: a story renders often.
+	const mutations = new MutationObserver(() => {
+		observe();
+		update();
+	});
+	const observe = () => {
+		sizes.disconnect();
+		mutations.disconnect();
+		sizes.observe(view);
+		mutations.observe(view, { childList: true });
+		for (const pane of panes()) {
+			sizes.observe(pane);
+			mutations.observe(pane, { attributeFilter: ['empty', 'slot'] });
+		}
+	};
+	observe();
+	update();
 }
 
 /**
@@ -58,6 +95,16 @@ function wireSheets(): void {
 }
 
 /**
+ * A typed word and its singular, so a plural finds what is named in the
+ * singular: "toggles" finds the toggle button, "velden" a field, "knoppen" a
+ * button. Only for words long enough to keep their meaning.
+ */
+function stems(word: string): string[] {
+	if (word.length < 5) return [word];
+	return [word, word.replace(/s$/, ''), word.replace(/([^aeiou])\1en$/, '$1').replace(/en$/, '')];
+}
+
+/**
  * The field above the components or the patterns shortens the list as you
  * type: a row stays when every word typed is in its name, its tag, its group
  * or its keywords, and a group goes when none of its rows is left. Listened for on the document, so
@@ -68,7 +115,7 @@ function wireFilter(): void {
 		const field = event
 			.composedPath()
 			.find((node): node is Element => node instanceof Element && node.hasAttribute('data-site-filter'));
-		const pane = field?.closest('nldd-split-view-pane');
+		const pane = field?.closest('nldd-navigation-split-view > [slot]');
 		if (!field || !pane) return;
 		const words = String((event as CustomEvent<{ value?: string }>).detail?.value ?? '')
 			.toLowerCase()
@@ -79,7 +126,7 @@ function wireFilter(): void {
 			let inGroup = 0;
 			for (const row of group.querySelectorAll<HTMLElement>('[data-site-search]')) {
 				const text = row.dataset.siteSearch ?? '';
-				const match = words.every((word) => text.includes(word));
+				const match = words.every((word) => stems(word).some((stem) => text.includes(stem)));
 				row.hidden = !match;
 				if (match) inGroup += 1;
 			}
@@ -89,6 +136,26 @@ function wireFilter(): void {
 		const empty = pane.querySelector<HTMLElement>('[data-site-filter-empty]');
 		if (empty) empty.hidden = shown > 0;
 		showRelated(pane, words.length > 0);
+	});
+}
+
+/**
+ * "/" or Cmd/Ctrl+K puts the cursor in the search field of the list, as in
+ * GitHub and most documentation sites. "/" only when you are not typing.
+ */
+function wireSearchShortcut(): void {
+	document.addEventListener('keydown', (event) => {
+		const command = (event.metaKey || event.ctrlKey) && !event.altKey && !event.shiftKey && event.key.toLowerCase() === 'k';
+		const slash = event.key === '/' && !event.metaKey && !event.ctrlKey && !event.altKey;
+		if (event.defaultPrevented || (!command && !slash)) return;
+		if (slash) {
+			const target = event.composedPath()[0];
+			if (target instanceof HTMLElement && (target.isContentEditable || target.matches('input, textarea, select'))) return;
+		}
+		const field = [...document.querySelectorAll<HTMLElement>('[data-site-filter]')].find((candidate) => candidate.checkVisibility());
+		if (!field) return;
+		event.preventDefault();
+		field.focus();
 	});
 }
 
@@ -160,20 +227,23 @@ const SCHEME_ICONS: Record<string, string> = { system: 'themes', dark: 'moon', l
  * Both choices go along to the next page.
  */
 function wireTheme(): void {
-	const button = document.querySelector<HTMLElement>('[data-site-theme-button]');
-	const picker = document.querySelector<HTMLElement & { value: string }>('[data-site-theme-picker]');
+	// Two toolbars, one per width, each with its own picker.
+	const buttons = [...document.querySelectorAll<HTMLElement>('[data-site-theme-button]')];
+	const pickers = [...document.querySelectorAll<HTMLElement & { value: string }>('[data-site-theme-picker]')];
 	const items = [...document.querySelectorAll<HTMLElement>('[data-site-theme-item]')];
-	const schemes = document.querySelector('[data-site-scheme]');
+	const schemes = [...document.querySelectorAll('[data-site-scheme]')];
 
 	const showChosenTheme = (theme: string) => {
-		const name = picker?.querySelector(`nldd-swatch-picker-item[value="${theme}"]`)?.getAttribute('text');
-		if (name) button?.setAttribute('text', name);
-		if (picker && picker.value !== theme) picker.value = theme;
+		const name = pickers[0]?.querySelector(`nldd-swatch-picker-item[value="${theme}"]`)?.getAttribute('text');
+		// The icon button keeps "Weergave" as its name.
+		for (const button of buttons) if (name && button.localName === 'nldd-button') button.setAttribute('text', name);
+		for (const picker of pickers) if (picker.value !== theme) picker.value = theme;
 		for (const item of items) item.toggleAttribute('selected', item.getAttribute('value') === theme);
 	};
 	const showChosenScheme = (scheme: string) => {
-		button?.setAttribute('start-icon', SCHEME_ICONS[scheme] ?? SCHEME_ICONS.system);
-		for (const toggle of schemes?.querySelectorAll('nldd-toggle-button') ?? []) {
+		const icon = SCHEME_ICONS[scheme] ?? SCHEME_ICONS.system;
+		for (const button of buttons) button.setAttribute(button.localName === 'nldd-button' ? 'start-icon' : 'icon', icon);
+		for (const toggle of schemes.flatMap((group) => [...group.querySelectorAll('nldd-toggle-button')])) {
 			toggle.toggleAttribute('selected', toggle.getAttribute('value') === scheme);
 		}
 	};
@@ -182,11 +252,13 @@ function wireTheme(): void {
 	showChosenTheme(chosenTheme());
 	showChosenScheme(chosenScheme());
 
-	picker?.addEventListener('change', (event) => {
-		const theme = (event as CustomEvent<{ value: string }>).detail.value;
-		chooseTheme(theme);
-		showChosenTheme(theme);
-	});
+	for (const picker of pickers) {
+		picker.addEventListener('change', (event) => {
+			const theme = (event as CustomEvent<{ value: string }>).detail.value;
+			chooseTheme(theme);
+			showChosenTheme(theme);
+		});
+	}
 	for (const item of items) {
 		item.addEventListener('select', () => {
 			const theme = item.getAttribute('value') ?? '';
@@ -194,19 +266,23 @@ function wireTheme(): void {
 			showChosenTheme(theme);
 		});
 	}
-	schemes?.addEventListener('change', (event) => {
-		const { selected, value } = (event as CustomEvent<{ selected: boolean; value: string }>).detail;
-		if (!selected) return;
-		chooseScheme(value);
-		showChosenScheme(value);
-	});
+	for (const group of schemes) {
+		group.addEventListener('change', (event) => {
+			const { selected, value } = (event as CustomEvent<{ selected: boolean; value: string }>).detail;
+			if (!selected) return;
+			chooseScheme(value);
+			showChosenScheme(value);
+		});
+	}
 }
 
 wireTheme();
 wireBack();
+wireHome();
 wireSidebar();
 wireContents();
 wireFilter();
+wireSearchShortcut();
 wireSheets();
 document.addEventListener('site-navigate', (event) => {
 	const { main } = (event as CustomEvent<{ main: Element }>).detail;

@@ -6,7 +6,10 @@ import { toolbarTitleStyles } from './toolbar.styles.js';
 import { toolbarTitleTemplate } from './toolbar-title.template.js';
 import { nlddToolbarTranslations, type NLDDToolbarTranslations } from './toolbar.i18n.js';
 import { translate } from '../../../utilities/translations.js';
+import { styleState, styleValueState } from '../../../utilities/element-state.js';
 import type { Size } from './toolbar-item.js';
+
+const SIZES: readonly Size[] = ['sm', 'md', 'lg'];
 
 type TitleAlign = 'left' | 'center';
 
@@ -20,7 +23,6 @@ type TitleAlign = 'left' | 'center';
  * @attr {'left'|'center'} align - Text alignment: 'left' | 'center' (default: 'left').
  * @attr {string} text - Title text.
  * @attr {string} supporting-text - Secondary supporting text shown below the title.
- * @attr {'sm'|'md'|'lg'} size - Set by nldd-toolbar, not a consumer attribute: mirrors the toolbar's size (default: 'md'), which sets the title group height and, at 'sm', the title and supporting-text fonts.
  *
  * @attr {string} href - Makes the mark and the name one link, for the place this window belongs to (usually the app's own start). The `action` slot stays outside it: a control inside a link is a control you cannot reach without following the link.
  * @attr {string} target - Where the link opens; only meaningful with `href`. `_blank` adds rel="noopener noreferrer" and a visually hidden "opens in a new tab" announcement. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.
@@ -60,17 +62,28 @@ export class NLDDToolbarTitle extends LitElement {
 	@property({ type: Object })
 	translations: Partial<NLDDToolbarTranslations> = {};
 
-	/** Set by nldd-toolbar; not part of the public API. @internal */
-	@property({ reflect: true, converter: reflectNonDefault<Size>('md') })
-	size: Size = 'md';
-
 	public _t(key: keyof NLDDToolbarTranslations): string {
 		return translate(this.translations, nlddToolbarTranslations, key);
 	}
 
-	// Layout state — `solo-fluid` and `hidden` — is owned by nldd-toolbar and
-	// toggled directly as attributes during measurement (synchronous). Not a
-	// reactive property for the same reflection-timing reason as the item.
+	private _size: Size = 'md';
+	private _soloFluid = false;
+
+	/** @internal The toolbar's size: the title group height and, at 'sm', the fonts. Not an attribute: the toolbar sets it. Read as `:state(size-sm)` and the like, flipped synchronously because the toolbar measures right after. */
+	get size(): Size { return this._size; }
+	/** @internal */
+	set size(value: Size) {
+		this._size = value;
+		styleValueState(this, 'size', value, SIZES);
+	}
+
+	/** @internal Set by nldd-toolbar during measurement: the title is the sole element and fills the row. Read as `:state(solo-fluid)`. */
+	get soloFluid(): boolean { return this._soloFluid; }
+	/** @internal */
+	set soloFluid(on: boolean) {
+		this._soloFluid = on;
+		styleState(this, 'solo-fluid', on);
+	}
 
 	// willUpdate (not updated) so the size CSS variables are written before the
 	// toolbar measures the title with getBoundingClientRect() on the same frame.

@@ -96,14 +96,14 @@ const HOVER_OPEN_MAX_MS = 150;
  * @attr {'menu'|'listbox'|'navigation'} variant - What the menu is (default 'menu'). `menu` is a menu of actions: `role="menu"` with menu items, for things you do. `listbox` is the popup of a combobox: `role="listbox"` with options, focus stays in the field. `navigation` is a submenu in a site navigation: a list of links (`role="list"`, each item a list item around a real link), because a screen reader treats a menu as an application and reads a list of links as what it is. Every item takes an `href`. Tab reaches each link, the arrow keys, Home and End move between them, Escape closes and returns focus to the trigger, and the menu closes when focus leaves it. The trigger says `aria-expanded` and promises no menu. Checkbox and radio items, shortcuts and `filter()` belong to actions and warn in development here. A submenu of a navigation menu is a navigation menu too. The variant sets `role="listitem"` on its items and groups, and takes it off again when it changes back, also where you had set that role yourself.
  * @attr {boolean} no-blink - Closes the menu at once after a choice, without the blink. For a menu whose choice shows at once next to it, such as a token that writes the value it holds: the blink would confirm what is already in view, while the anchor changes under it. A submenu follows the menu it opens from.
  * @attr {string} width - Explicit width, pinned exactly. Without it the menu sizes to its content between a minimum and a viewport-aware maximum (min(100vw - inset, 640px)).
- * @attr {string} accessible-label - Name of the menu or listbox for assistive technology, on the element that has the role. Without it the menu takes the name of its anchor (the `accessible-label`, `aria-label`, `text` or text of the button or field it hangs off), and a submenu the text of the item that opens it, so a listbox under a search field is "Zoeken" rather than nameless (WCAG 4.1.2). The list of an nldd-combo-box or nldd-token-field takes the name of the field.
- * @attr {string} anchor - ID of the anchor element. Positions the menu against it AND makes it a toggle: the menu listens on document click and opens/closes itself when the click lands on the anchor. Use this for a trigger that is not an nldd component, such as a plain `<button>`. An nldd-button, nldd-icon-button, nldd-split-button or nldd-list-item-segment needs no anchor: put the menu in its `popup` slot, or point its `popovertarget` at the menu, and it anchors and opens the menu itself. For a menu you open yourself (a type-ahead under a text field, say), set the `anchorElement` property instead. It positions the same way, without the toggle.
  * @attr {'top'|'top-start'|'top-end'|'bottom'|'bottom-start'|'bottom-end'|'left'|'left-start'|'left-end'|'right'|'right-start'|'right-end'} placement - Side of the anchor it opens on, and how it lines up there (default: 'bottom-start')
+ * @attr {string} accessible-label - Name of the menu or listbox for assistive technology, on the element that has the role. Without it the menu takes the name of its anchor (the `accessible-label`, `aria-label`, `text` or text of the button or field it hangs off), and a submenu the text of the item that opens it, so a listbox under a search field is "Zoeken" rather than nameless (WCAG 4.1.2). The list of an nldd-combo-box or nldd-token-field takes the name of the field.
  * @attr {number} max-items - Maximum number of visible items before scrolling. Sets --_menu-max-items internally. Default: 0 (no limit).
  * @attr {string} empty-text - Text of the default empty-state dialog. Falls back to Dutch i18n "Geen opties beschikbaar".
  * @attr {string} empty-supporting-text - Supporting text of the default empty-state dialog.
- * @attr {object} translations - Override one or more translation keys.
+ * @attr {string} anchor - ID of the anchor element. Positions the menu against it AND makes it a toggle: the menu listens on document click and opens/closes itself when the click lands on the anchor. Use this for a trigger that is not an nldd component, such as a plain `<button>`. An nldd-button, nldd-icon-button, nldd-split-button or nldd-list-item-segment needs no anchor: put the menu in its `popup` slot, or point its `popovertarget` at the menu, and it anchors and opens the menu itself. For a menu you open yourself (a type-ahead under a text field, say), set the `anchorElement` property instead. It positions the same way, without the toggle.
  * @attr {Function} filterFn - Custom filter function (query, item) => boolean.
+ * @attr {object} translations - Override one or more translation keys.
  *
  * @slot - nldd-menu-item and nldd-menu-divider elements.
  * @slot header - Free content shown above the items, outside `role="menu"` (so it may hold non-menuitem content such as an avatar + name, buttons or links, reached with Tab and skipped by arrow navigation). The region is unpadded; control spacing with your own content (e.g. an `nldd-container`). Root-only: never rendered in a submenu. Example: an account identity header (nldd-identity).
@@ -120,6 +120,9 @@ export class NLDDMenu extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<MenuVariant>('menu') })
 	variant: MenuVariant = 'menu';
 
+	@property({ type: Boolean, reflect: true, attribute: 'no-blink' })
+	noBlink = false;
+
 	/**
 	 * Explicit width, pinned exactly (sets --_menu-width and clamps min/max to it).
 	 * Leave unset to let the menu size to its content between a minimum and a
@@ -128,11 +131,11 @@ export class NLDDMenu extends LitElement {
 	@property({ type: String })
 	width = '';
 
-	@property({ type: Boolean, reflect: true, attribute: 'no-blink' })
-	noBlink = false;
+	@property({ reflect: true, converter: reflectNonDefault<string>('bottom-start') })
+	placement: Placement = 'bottom-start';
 
-	@property({ reflect: true, converter: reflectNonDefault<string>('') })
-	anchor = '';
+	@property({ attribute: 'accessible-label' })
+	accessibleLabel = '';
 
 	/**
 	 * The anchor as an element reference. Positions the menu exactly like the
@@ -144,11 +147,15 @@ export class NLDDMenu extends LitElement {
 	@property({ attribute: false })
 	anchorElement: Element | null = null;
 
-	@property({ attribute: 'accessible-label' })
-	accessibleLabel = '';
+	/**
+	 * Maximum number of visible items before the menu scrolls.
+	 * Sets --_menu-max-items internally. Default: 0 (no limit).
+	 */
+	@property({ type: Number, attribute: 'max-items' })
+	maxItems = 0;
 
-	@property({ reflect: true, converter: reflectNonDefault<string>('bottom-start') })
-	placement: Placement = 'bottom-start';
+	@property({ reflect: true, attribute: 'empty-text', converter: reflectNonDefault<string>('') })
+	emptyText = '';
 
 	/**
 	 * @internal Distance in px between the anchor and the menu, along the placement
@@ -161,32 +168,11 @@ export class NLDDMenu extends LitElement {
 	@property({ attribute: false })
 	anchorOffset = 0;
 
-	/**
-	 * Maximum number of visible items before the menu scrolls.
-	 * Sets --_menu-max-items internally. Default: 0 (no limit).
-	 */
-	@property({ type: Number, attribute: 'max-items' })
-	maxItems = 0;
-
-	@property({ reflect: true, attribute: 'empty-text', converter: reflectNonDefault<string>('') })
-	emptyText = '';
-
 	@property({ reflect: true, attribute: 'empty-supporting-text', converter: reflectNonDefault<string>('') })
 	emptySupportingText = '';
 
-	/**
-	 * Override one or more translation keys.
-	 * Unset keys fall back to the Dutch default.
-	 */
-	@property({ type: Object })
-	translations: Partial<NLDDMenuTranslations> = {};
-
-	/**
-	 * Custom filter function. Defaults to case-insensitive substring match
-	 * on text, value, and aliases attributes.
-	 */
-	@property({ attribute: false })
-	filterFn: (query: string, item: NLDDMenuItem) => boolean = defaultFilterFn;
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	anchor = '';
 
 	/**
 	 * @internal Development only.
@@ -199,6 +185,20 @@ export class NLDDMenu extends LitElement {
 	 */
 	@property({ type: Boolean, reflect: true, attribute: 'debug-safe-triangle' })
 	debugSafeTriangle = false;
+
+	/**
+	 * Custom filter function. Defaults to case-insensitive substring match
+	 * on text, value, and aliases attributes.
+	 */
+	@property({ attribute: false })
+	filterFn: (query: string, item: NLDDMenuItem) => boolean = defaultFilterFn;
+
+	/**
+	 * Override one or more translation keys.
+	 * Unset keys fall back to the Dutch default.
+	 */
+	@property({ type: Object })
+	translations: Partial<NLDDMenuTranslations> = {};
 
 	@state()
 	private _isEmpty = false;
@@ -1450,7 +1450,7 @@ export class NLDDMenu extends LitElement {
 			? this._resolveDrillInPlacement(anchorEl)
 			: this.placement;
 
-		const { x, y } = await computePosition(anchorEl, this, {
+		const { x, y, placement } = await computePosition(anchorEl, this, {
 			placement: effectivePlacement as Placement,
 			middleware: [
 				offset({ mainAxis: this.anchorOffset, alignmentAxis: -submenuPadding }),
@@ -1469,7 +1469,11 @@ export class NLDDMenu extends LitElement {
 			left: `${x}px`,
 			top: `${y}px`,
 		});
+		this._opensAbove = placement.startsWith('top');
 	}
+
+	/** Whether the last position, after a flip, put the menu above its anchor. */
+	private _opensAbove = false;
 
 	// — Private handlers ——————————————————————————————————————————————————————
 
@@ -1804,12 +1808,15 @@ export class NLDDMenu extends LitElement {
 		document.addEventListener('pointerdown', this._handleDocumentPointerdown, true);
 
 		await this.updateComplete;
+		// A listbox is the popup of a field, which leads its scrolling.
 		if (this.variant !== 'listbox') {
+			this._scrollToSelected();
 			const keyboard = isKeyboardMode();
 			const items = this._getVisibleItems();
 			if (keyboard && items.length > 0) {
-				this._setHighlight(items[0]);
-				items[0].focus();
+				const start = items.find(item => item.hasAttribute('selected')) ?? items[0];
+				this._setHighlight(start);
+				start.focus({ preventScroll: true });
 			} else {
 				const menu = this.shadowRoot?.querySelector<HTMLElement>('.menu');
 				menu?.classList.toggle('is-pointer-focus', !keyboard);
@@ -1817,6 +1824,24 @@ export class NLDDMenu extends LitElement {
 			}
 		}
 	};
+
+	/**
+	 * Opens on the current choice, one and a half items in from the edge on the
+	 * anchor's side: close to the button, with the choices before it still in
+	 * view. Only the menu's own scroller moves: `scrollIntoView` would scroll
+	 * the page behind it as well.
+	 */
+	private _scrollToSelected(): void {
+		const scroller = this.shadowRoot?.querySelector<HTMLElement>('.menu__scroller');
+		const selected = this._getVisibleItems().find(item => item.hasAttribute('selected'));
+		if (!scroller || !selected || scroller.scrollHeight <= scroller.clientHeight) return;
+		const item = selected.getBoundingClientRect();
+		const area = scroller.getBoundingClientRect();
+		const lead = item.height * 1.5;
+		scroller.scrollTop += this._opensAbove
+			? item.bottom - (area.top + scroller.clientHeight - lead)
+			: item.top - (area.top + lead);
+	}
 
 	override render() {
 		return menuTemplate.call(this, this._isEmpty, this.variant);

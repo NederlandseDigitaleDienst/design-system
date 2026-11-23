@@ -37,9 +37,9 @@ export default {
 	},
 	args: {
 		variant: 'neutral',
-		icon: '',
 		text: 'Aanvraag A-1042 is ingediend',
 		supportingText: '',
+		icon: '',
 		duration: 10000,
 	},
 	argTypes: {
@@ -49,13 +49,6 @@ export default {
 			description: 'Soort melding; bepaalt het icoon en de ARIA-rol',
 			table: { defaultValue: { summary: 'neutral' } },
 		},
-		icon: {
-			control: 'select',
-			options: ['(geen)', ...ICONS],
-			mapping: { '(geen)': '' },
-			description: 'Overschrijft het icoon van de variant',
-			table: { defaultValue: { summary: '(geen)' } },
-		},
 		text: {
 			control: 'text',
 			description: 'De melding',
@@ -64,6 +57,13 @@ export default {
 			name: 'supporting-text',
 			control: 'text',
 			description: 'Tweede regel onder de melding',
+		},
+		icon: {
+			control: 'select',
+			options: ['(geen)', ...ICONS],
+			mapping: { '(geen)': '' },
+			description: 'Overschrijft het icoon van de variant',
+			table: { defaultValue: { summary: '(geen)' } },
 		},
 		duration: {
 			control: 'number',
@@ -106,12 +106,12 @@ const knop = (template: () => TemplateResult, text = 'Toon melding') => html`
 	</nldd-container>
 `;
 
-const Template = ({ variant, icon, text, supportingText, duration }: Record<string, unknown>) => html`
+const Template = ({ variant, text, supportingText, icon, duration }: Record<string, unknown>) => html`
 	<nldd-notification
 		variant=${String(variant)}
-		icon=${icon ? String(icon) : nothing}
 		text=${String(text)}
 		supporting-text=${supportingText ? String(supportingText) : nothing}
+		icon=${icon ? String(icon) : nothing}
 		duration=${String(duration)}
 		@dismiss=${weg}
 	></nldd-notification>

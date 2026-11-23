@@ -1,6 +1,6 @@
 import { html } from 'lit';
+import { ifDefined } from 'lit/directives/if-defined.js';
 import './bar-split-view.js';
-import '../split-view-pane/split-view-pane.js';
 import '../../page/page.js';
 import '../../page-sections/simple-section/simple-section.js';
 import '../../../content/rich-text/rich-text.js';
@@ -22,9 +22,9 @@ syncToolbarOverflow();
  * ## Gebruik
  * ```html
  * <nldd-bar-split-view>
- *   <nldd-split-view-pane slot="toolbar" sm-order="1" md-order="1">...</nldd-split-view-pane>
- *   <nldd-split-view-pane slot="main"    sm-order="2" md-order="2">...</nldd-split-view-pane>
- *   <nldd-split-view-pane slot="status-bar" sm-order="3" md-order="3">...</nldd-split-view-pane>
+ *   <nldd-container slot="toolbar" sm-order="1" md-order="1">...</nldd-container>
+ *   <nldd-page slot="main" sm-order="2" md-order="2">...</nldd-page>
+ *   <nldd-container slot="status-bar" sm-order="3" md-order="3">...</nldd-container>
  * </nldd-bar-split-view>
  * ```
  */
@@ -52,9 +52,16 @@ export default {
 	},
 };
 
+type Placement = { order: [number, number, number]; above?: string };
+
 // Reusable toolbar matching the WithPriority story from nldd-toolbar
-const toolbar = html`
+const toolbar = ({ order, above }: Placement) => html`
 	<nldd-container
+		slot="toolbar"
+		above=${ifDefined(above)}
+		sm-order=${order[0]}
+		md-order=${order[1]}
+		lg-order=${order[2]}
 		padding-inline="16"
 		padding-block="12"
 	>
@@ -179,8 +186,13 @@ const toolbar = html`
 `;
 
 // Reusable main content
-const mainContent = html`
-	<nldd-page>
+const mainContent = ({ order }: Placement) => html`
+	<nldd-page
+		slot="main"
+		sm-order=${order[0]}
+		md-order=${order[1]}
+		lg-order=${order[2]}
+	>
 		<nldd-simple-section>
 			<nldd-rich-text>
 				<h2>Primaire inhoud</h2>
@@ -201,22 +213,8 @@ export const Standaard = (args: Record<string, any>) => html`
 		style="height: 600px;"
 		background=${args.background}
 	>
-		<nldd-split-view-pane
-			slot="toolbar"
-			sm-order="1"
-			md-order="1"
-			lg-order="1"
-		>
-			${toolbar}
-		</nldd-split-view-pane>
-		<nldd-split-view-pane
-			slot="main"
-			sm-order="2"
-			md-order="2"
-			lg-order="2"
-		>
-			${mainContent}
-		</nldd-split-view-pane>
+		${toolbar({ order: [1, 1, 1] })}
+		${mainContent({ order: [2, 2, 2] })}
 	</nldd-bar-split-view>
 `;
 
@@ -226,51 +224,34 @@ export const MetStatusbalk = {
 		style="height: 600px;"
 		background=${args.background}
 	>
-		<nldd-split-view-pane
-			slot="toolbar"
-			sm-order="1"
-			md-order="1"
-			lg-order="1"
-		>
-			${toolbar}
-		</nldd-split-view-pane>
-		<nldd-split-view-pane
-			slot="main"
-			sm-order="2"
-			md-order="2"
-			lg-order="2"
-		>
-			${mainContent}
-		</nldd-split-view-pane>
-		<nldd-split-view-pane
+		${toolbar({ order: [1, 1, 1] })}
+		${mainContent({ order: [2, 2, 2] })}
+		<nldd-container
 			slot="status-bar"
 			sm-order="3"
 			md-order="3"
 			lg-order="3"
+			padding-inline="16"
+			padding-block="12"
+			sm-padding-bottom="0"
 		>
-			<nldd-container
-				padding-inline="16"
-				padding-block="12"
-				sm-padding-bottom="0"
-			>
-				<nldd-toolbar>
-					<nldd-toolbar-item
-						max-width="480px"
-						slot="center"
-						label="Zoeken"
-						min-width="240px"
-						width="70%"
-						priority="3"
-					>
-						<nldd-search-field placeholder="Zoeken..."></nldd-search-field>
-						<nldd-menu-item
-							slot="overflow"
-							text="Zoeken"
-						></nldd-menu-item>
-					</nldd-toolbar-item>
-				</nldd-toolbar>
-			</nldd-container>
-		</nldd-split-view-pane>
+			<nldd-toolbar>
+				<nldd-toolbar-item
+					max-width="480px"
+					slot="center"
+					label="Zoeken"
+					min-width="240px"
+					width="70%"
+					priority="3"
+				>
+					<nldd-search-field placeholder="Zoeken..."></nldd-search-field>
+					<nldd-menu-item
+						slot="overflow"
+						text="Zoeken"
+					></nldd-menu-item>
+				</nldd-toolbar-item>
+			</nldd-toolbar>
+		</nldd-container>
 	</nldd-bar-split-view>
 `,
 	parameters: { controls: { disable: true } },
@@ -281,29 +262,15 @@ export const MetStatusbalk = {
 export const WisselVolgorde = {
 	render: () => html`
 	<nldd-bar-split-view style="height: 600px;">
-		<nldd-split-view-pane
-			slot="toolbar"
-			sm-order="2"
-			md-order="1"
-			lg-order="1"
-		>
-			${toolbar}
-		</nldd-split-view-pane>
-		<nldd-split-view-pane
-			slot="main"
-			sm-order="1"
-			md-order="2"
-			lg-order="2"
-		>
-			<nldd-page>
-				<nldd-simple-section>
-					<nldd-rich-text>
-						<h2>Primaire inhoud</h2>
-						<p>Op sm staat de werkbalk onderaan als overlay. Op md en lg staat hij bovenaan in de flow.</p>
-					</nldd-rich-text>
-				</nldd-simple-section>
-			</nldd-page>
-		</nldd-split-view-pane>
+		${toolbar({ order: [2, 1, 1] })}
+		<nldd-page slot="main" sm-order="1" md-order="2" lg-order="2">
+			<nldd-simple-section>
+				<nldd-rich-text>
+					<h2>Primaire inhoud</h2>
+					<p>Op sm staat de werkbalk onderaan als overlay. Op md en lg staat hij bovenaan in de flow.</p>
+				</nldd-rich-text>
+			</nldd-simple-section>
+		</nldd-page>
 	</nldd-bar-split-view>
 `,
 	parameters: { controls: { disable: true } },
@@ -313,61 +280,43 @@ export const WisselVolgorde = {
 export const ResponsieveBalken = {
 	render: () => html`
 	<nldd-bar-split-view style="height: 600px;">
-		<nldd-split-view-pane
-			slot="toolbar"
-			above="md"
-			sm-order="1"
-			md-order="1"
-			lg-order="1"
-		>
-			${toolbar}
-		</nldd-split-view-pane>
-		<nldd-split-view-pane
-			slot="main"
-			sm-order="2"
-			md-order="2"
-			lg-order="2"
-		>
-			${mainContent}
-		</nldd-split-view-pane>
-		<nldd-split-view-pane
+		${toolbar({ order: [1, 1, 1], above: 'md' })}
+		${mainContent({ order: [2, 2, 2] })}
+		<nldd-container
 			slot="mobile-bar"
 			only="sm"
 			sm-order="3"
+			padding-inline="16"
+			padding-block="12"
+			sm-padding-bottom="0"
 		>
-			<nldd-container
-				padding-inline="16"
-				padding-block="12"
-				sm-padding-bottom="0"
-			>
-				<nldd-toolbar size="lg">
-					<nldd-toolbar-item
-						priority="1"
-						slot="start"
-						label="Bewaar"
-					>
-						<nldd-button
-							appearance="primary"
-							text="Bewaar"
-						></nldd-button>
-						<nldd-menu-item
-							slot="overflow"
-							text="Bewaar"
-						></nldd-menu-item>
-					</nldd-toolbar-item>
-					<nldd-toolbar-item
-						slot="end"
-						label="Delen"
-					>
-						<nldd-button text="Delen"></nldd-button>
-						<nldd-menu-item
-							slot="overflow"
-							text="Delen"
-						></nldd-menu-item>
-					</nldd-toolbar-item>
-				</nldd-toolbar>
-			</nldd-container>
-		</nldd-split-view-pane>
+			<nldd-toolbar size="lg">
+				<nldd-toolbar-item
+					priority="1"
+					slot="start"
+					label="Bewaar"
+				>
+					<nldd-button
+						appearance="primary"
+						text="Bewaar"
+					></nldd-button>
+					<nldd-menu-item
+						slot="overflow"
+						text="Bewaar"
+					></nldd-menu-item>
+				</nldd-toolbar-item>
+				<nldd-toolbar-item
+					slot="end"
+					label="Delen"
+				>
+					<nldd-button text="Delen"></nldd-button>
+					<nldd-menu-item
+						slot="overflow"
+						text="Delen"
+					></nldd-menu-item>
+				</nldd-toolbar-item>
+			</nldd-toolbar>
+		</nldd-container>
 	</nldd-bar-split-view>
 `,
 	parameters: { controls: { disable: true } },

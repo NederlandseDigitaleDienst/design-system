@@ -8,9 +8,9 @@
  * @element nldd-menu-bar
  * @keywords menubalk
  * @related nldd-tab-bar, nldd-top-navigation-bar
- * @attr {string} overflow-text - Text for the overflow button (default through i18n)
- * @attr {string} accessible-label - aria-label for the nav landmark
  * @attr {boolean} compact - Propagates the compact attribute to slotted items (activates content priority)
+ * @attr {string} accessible-label - aria-label for the nav landmark
+ * @attr {string} overflow-text - Text for the overflow button (default through i18n)
  *
  * @slot - nldd-menu-bar-item elements
  */
@@ -24,7 +24,7 @@ import { template } from './menu-bar.template.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddMenuBarTranslations } from './menu-bar.i18n.js';
 import '../menu-bar-item/menu-bar-item.js';
-import type { NLDDMenuBarItem } from '../menu-bar-item/menu-bar-item.js';
+import { NLDDMenuBarItem } from '../menu-bar-item/menu-bar-item.js';
 import { OverflowMenu } from '../../../utilities/overflow-menu.js';
 import { OverlayInvoker, type InvokableOverlay } from '../../../utilities/overlay-invoker.js';
 import { setState } from '../../../utilities/element-state.js';
@@ -60,14 +60,14 @@ const sizeObserver = sharedResizeObserver<NLDDMenuBar>(bars => bars.forEach(bar 
 export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTranslations) {
 	static override styles = menuBarStyles;
 
-	@property({ reflect: true, attribute: 'overflow-text', converter: reflectNonDefault<string>('') })
-	overflowText = '';
+	@property({ type: Boolean, reflect: true })
+	compact = false;
 
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
-	@property({ type: Boolean, reflect: true })
-	compact = false;
+	@property({ reflect: true, attribute: 'overflow-text', converter: reflectNonDefault<string>('') })
+	overflowText = '';
 
 	// ## Internal references
 
@@ -165,11 +165,11 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 		setState(this, 'unnamed', !this.accessibleLabel && !this.hasAttribute('empty'));
 	}
 
-	/** Propagate compact attribute to slotted items. */
+	/** Hands compact on to the slotted items, as a property: it is no attribute of theirs. */
 	private _syncCompactAttribute(): void {
 		const items = this._defaultSlot?.assignedElements({ flatten: true }) ?? [];
 		for (const item of items) {
-			item.toggleAttribute('compact', this.compact);
+			if (item instanceof NLDDMenuBarItem) item.compact = this.compact;
 		}
 	}
 

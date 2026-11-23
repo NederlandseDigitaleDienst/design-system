@@ -1,0 +1,11 @@
+severity: error
+context: 'nldd-split-view-pane'
+removed: ['nldd-split-view-pane']
+fix: { unwrap: { drop: [has-content, hide-back], move: { background: [nldd-page] } } }
+message: '`nldd-split-view-pane` is gone: put what was in it straight in the split view, with the `slot` of the pane. In an nldd-navigation-split-view, set `empty` on a pane that says nothing is chosen yet.'
+examples:
+  passed:
+    - '<nldd-navigation-split-view><nldd-page slot="main" landmarks="page"></nldd-page></nldd-navigation-split-view>'
+  failed:
+    - '<nldd-navigation-split-view><nldd-split-view-pane slot="main" has-content><nldd-page landmarks="page"></nldd-page></nldd-split-view-pane></nldd-navigation-split-view>'
+    - '<nldd-bar-split-view><nldd-split-view-pane slot="toolbar" only="sm"><nldd-container padding="8"></nldd-container></nldd-split-view-pane><nldd-split-view-pane slot="main" background="tinted"><nldd-page landmarks="page"></nldd-page></nldd-split-view-pane></nldd-bar-split-view>'

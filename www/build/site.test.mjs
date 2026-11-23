@@ -66,8 +66,9 @@ test('the landing page is the one written by hand, with the head every page has'
 
 test('every page behind the landing page is an application: a toolbar around a split view, without the bar of the landing page', () => {
 	for (const path of ['componenten/button/index.html', 'patronen/form/index.html', 'richtlijnen/index.html']) {
-		assert.match(pages[path], /<nldd-bar-split-view>[^]*<nldd-navigation-split-view>/, path);
-		assert.match(pages[path], /<nldd-icon-button\s+icon="chevron-left"\s+text="Home"\s+href="\/"/, path);
+		assert.match(pages[path], /<nldd-bar-split-view>[^]*<nldd-navigation-split-view slot="main">/, path);
+		assert.match(pages[path], /data-site-home\s*>\s*<nldd-icon-button\s+icon="chevron-left"\s+text="Home"\s+href="\/"/, path);
+		assert.match(pages[path], /text="Documentatie"\s+heading-level="2"\s+back-text="Home"\s+back-href="\/"/, path);
 		assert.match(pages[path], /<nldd-toolbar-title\s+slot="start"\s+text="NLDD Designsysteem"\s+min-width="0"/, path);
 		assert.match(pages[path], /<nldd-page[^]*?slot="footer"[^]*?<nldd-link-group accessible-label="Over deze site" size="sm">/, path);
 		assert.doesNotMatch(pages[path], /nldd-top-navigation-bar|nldd-page-footer|nldd-breadcrumbs/, path);
@@ -88,30 +89,30 @@ test('a page marks its section in the first sidebar, itself in the second, and g
 	const button = pages['componenten/button/index.html'];
 	assert.match(button, /<nldd-list-item href="\/componenten\/" current>/);
 	assert.match(button, /<nldd-list-item\s+href="\/componenten\/button\/"\s+current\s/);
-	assert.match(button, /<nldd-search-field\s+data-site-filter\s+placeholder="Component zoeken"/);
+	assert.match(button, /<nldd-search-field\s+data-site-filter\s+placeholder="Component zoeken"\s+shortcut="\/"/);
 	assert.match(button, /data-site-search="icon button icon-button acties icoonknop knop actions"/);
 	// Each row names the pages it relates to, which the search lists under its matches.
 	assert.match(button, /data-site-slug="sheet"\s+data-site-related="modal-dialog popover window"/);
 	assert.match(button, /<nldd-container\s+data-site-filter-related\s+hidden\s*>/);
 	// A keyword finds what its name does not: a toast is a notification.
 	assert.match(button, /data-site-search="notification notification status en feedback toast snackbar melding status &amp; feedback"/);
-	assert.match(button, /slot="main"\s+has-content[^]*back-text="Componenten"\s+back-href="\/componenten\/"/);
+	assert.match(button, /slot="main"\s+landmarks="page"[^]*back-text="Componenten"\s+back-href="\/componenten\/"/);
 	// A page without a list of its own goes back to the sections.
-	assert.match(pages['iconen/index.html'], /slot="main"\s+has-content[^]*back-text="Documentatie"\s+back-href="\/documentatie\/"/);
+	assert.match(pages['iconen/index.html'], /slot="main"\s+landmarks="page"[^]*back-text="Documentatie"\s+back-href="\/documentatie\/"/);
 });
 
 test('the sections have a page of their own, with only the first sidebar and nothing chosen', () => {
 	const docs = pages['documentatie/index.html'];
 	assert.match(docs, /slot="primary-sidebar"/);
 	assert.doesNotMatch(docs, /slot="secondary-sidebar"/);
-	assert.match(docs, /<nldd-split-view-pane\s+slot="main"\s*>[^]*text="Kies een onderdeel"/);
+	assert.match(docs, /<nldd-page\s+slot="main"\s+empty\s[^]*text="Kies een onderdeel"/);
 	assert.doesNotMatch(docs, / current[\s>]/);
 });
 
 test('an overview has the list and an empty main, so a phone opens on the list', () => {
 	const overview = pages['componenten/index.html'];
-	assert.match(overview, /slot="secondary-sidebar"\s+has-content/);
-	assert.match(overview, /<nldd-split-view-pane\s+slot="main"\s*>/);
+	assert.match(overview, /slot="secondary-sidebar"/);
+	assert.match(overview, /<nldd-page\s+slot="main"\s+empty\s/);
 	assert.match(overview, /<nldd-inline-dialog text="Kies een component">/);
 });
 
@@ -226,7 +227,7 @@ test('a page under a deploy base links within that base', () => {
 	const based = buildPages({ base: '/design-system/' }).pages;
 	assert.match(based['index.html'], /href="\/design-system\/componenten\/"/);
 	assert.match(based['componenten/button/index.html'], /back-href="\/design-system\/componenten\/"/);
-	assert.match(based['componenten/index.html'], /icon="chevron-left"\s+text="Home"\s+href="\/design-system\/"/);
+	assert.match(based['componenten/index.html'], /back-text="Home"\s+back-href="\/design-system\/"/);
 	assert.match(based['componenten/button/index.html'], /src="\/design-system\/theme\.js"/);
 	// Vite adds the base to the entry script and the icons itself.
 	assert.match(based['index.html'], /src="\/home\.ts"/);

@@ -205,7 +205,10 @@ describe('nldd-form', () => {
 
 
 	describe('label-alignment propagation', () => {
-		it('propageert label-alignment naar form-field en form-actions children als form-label-alignment', async () => {
+		const alignment = (el: Element) =>
+			el.matches(':state(form-label-left)') ? 'left' : el.matches(':state(form-label-right)') ? 'right' : 'top';
+
+		it('geeft label-alignment door aan form-field en form-actions, als state en niet als attribuut', async () => {
 			el = await fixture(`
 				<nldd-form label-alignment="right">
 					<nldd-form-field label="A"></nldd-form-field>
@@ -215,130 +218,57 @@ describe('nldd-form', () => {
 			`);
 			await waitForUpdate(el);
 
-			const fields = el.querySelectorAll('nldd-form-field');
-			const actions = el.querySelector('nldd-form-actions')!;
-			fields.forEach(f => {
-				// form-label-alignment propagated, the element's own label-alignment is NOT set
-				expect(f.getAttribute('form-label-alignment')).toBe('right');
-				expect(f.hasAttribute('label-alignment')).toBe(false);
+			const children = el.querySelectorAll('nldd-form-field, nldd-form-actions');
+			expect(children).toHaveLength(3);
+			children.forEach(child => {
+				expect(alignment(child)).toBe('right');
+				expect(child.hasAttribute('label-alignment')).toBe(false);
+				expect(child.hasAttribute('form-label-alignment')).toBe(false);
 			});
-			expect(actions.getAttribute('form-label-alignment')).toBe('right');
-			// form-actions' labelAlignment defaults to `undefined`, so Lit reflects
-			// nothing: its own `label-alignment` stays absent and the cascaded
-			// `form-label-alignment="right"` wins without the form having to
-			// overschrijven.
-			expect(actions.hasAttribute('label-alignment')).toBe(false);
 		});
 
-		it('overschrijft NIET een explicit eigen label-alignment van een form-field', async () => {
+		it('laat een eigen label-alignment van een form-field staan', async () => {
 			el = await fixture(`
 				<nldd-form label-alignment="right">
-					<nldd-form-field label="Inherits"></nldd-form-field>
 					<nldd-form-field label="Own" label-alignment="top"></nldd-form-field>
 				</nldd-form>
 			`);
 			await waitForUpdate(el);
 
-			const inherits = el.querySelector('nldd-form-field[label="Inherits"]') as HTMLElement;
-			const own = el.querySelector('nldd-form-field[label="Own"]') as HTMLElement;
-
-			// Inherited: form-label-alignment set, its own label-alignment not
-			expect(inherits.getAttribute('form-label-alignment')).toBe('right');
-			expect(inherits.hasAttribute('label-alignment')).toBe(false);
-
-			// Own: label-alignment kept, form-label-alignment present as well but
-			// the CSS cascade lets its own value win through :host(:not([label-alignment])[form-label-alignment=...])
-			expect(own.getAttribute('label-alignment')).toBe('top');
-			expect(own.getAttribute('form-label-alignment')).toBe('right');
+			expect(el.querySelector('nldd-form-field')!.getAttribute('label-alignment')).toBe('top');
 		});
 
-		it('past form-label-alignment aan wanneer parent label-alignment wijzigt', async () => {
+		it('volgt een wijziging en het weghalen van label-alignment op de form', async () => {
 			el = await fixture(`
 				<nldd-form label-alignment="right">
 					<nldd-form-field label="A"></nldd-form-field>
 				</nldd-form>
 			`);
 			await waitForUpdate(el);
-
-			const field = el.querySelector('nldd-form-field') as HTMLElement;
-			expect(field.getAttribute('form-label-alignment')).toBe('right');
+			const field = el.querySelector('nldd-form-field')!;
 
 			el.setAttribute('label-alignment', 'left');
-			await waitForUpdate(el);
+			await field.updateComplete;
+			expect(alignment(field)).toBe('left');
 
-			expect(field.getAttribute('form-label-alignment')).toBe('left');
+			el.removeAttribute('label-alignment');
+			await field.updateComplete;
+			expect(alignment(field)).toBe('top');
 			expect(field.hasAttribute('label-alignment')).toBe(false);
 		});
 
-		it("zet form-label-alignment terug naar 'top' wanneer parent label-alignment leegmaakt", async () => {
-			el = await fixture(`
-				<nldd-form label-alignment="right">
-					<nldd-form-field label="A"></nldd-form-field>
-					<nldd-form-field label="Own" label-alignment="top"></nldd-form-field>
-				</nldd-form>
-			`);
-			await waitForUpdate(el);
-
-			const inherits = el.querySelector('nldd-form-field[label="A"]') as HTMLElement;
-			const own = el.querySelector('nldd-form-field[label="Own"]') as HTMLElement;
-
-			el.removeAttribute('label-alignment');
-			await waitForUpdate(el);
-
-			// form-label-alignment falls back to the default 'top' (always set)
-			expect(inherits.getAttribute('form-label-alignment')).toBe('top');
-			expect(own.getAttribute('form-label-alignment')).toBe('top');
-
-			// The descendant that had its own label-alignment keeps it
-			expect(own.getAttribute('label-alignment')).toBe('top');
-			// Inherits had no label-alignment of its own, so it still does not
-			expect(inherits.hasAttribute('label-alignment')).toBe(false);
-		});
-
-		it('propageert ook naar later toegevoegde form-field children', async () => {
+		it('geeft hem ook aan later toegevoegde form-field en form-actions', async () => {
 			el = await fixture('<nldd-form label-alignment="right"></nldd-form>');
 			await waitForUpdate(el);
 
 			const field = document.createElement('nldd-form-field');
-			field.setAttribute('label', 'Late');
-			el.appendChild(field);
-
-			// MutationObserver runs async — wait a microtask
-			await awaitMicrotask();
-
-			expect(field.getAttribute('form-label-alignment')).toBe('right');
-			expect(field.hasAttribute('label-alignment')).toBe(false);
-		});
-
-		it('propageert ook naar later toegevoegde form-actions children', async () => {
-			// form-actions reflects its Lit default of 'top' onto label-alignment on
-			// the first update, but since we never touch label-alignment there is no
-			// race left. We only set form-label-alignment.
-			el = await fixture('<nldd-form label-alignment="right"></nldd-form>');
-			await waitForUpdate(el);
-
 			const actions = document.createElement('nldd-form-actions');
-			el.appendChild(actions);
-
-			await waitForUpdate(actions);
+			el.append(field, actions);
 			await awaitMicrotask();
+			await Promise.all([field.updateComplete, actions.updateComplete]);
 
-			expect(actions.getAttribute('form-label-alignment')).toBe('right');
-		});
-
-		it("zet form-label-alignment='top' als default wanneer parent geen label-alignment heeft", async () => {
-			el = await fixture(`
-				<nldd-form>
-					<nldd-form-field label="A"></nldd-form-field>
-				</nldd-form>
-			`);
-			await waitForUpdate(el);
-
-			const field = el.querySelector('nldd-form-field') as HTMLElement;
-			// Always set: descendants inside nldd-form always carry
-			// form-label-alignment, so downstream CSS selectors may assume the
-			// attribute is there.
-			expect(field.getAttribute('form-label-alignment')).toBe('top');
+			expect(alignment(field)).toBe('right');
+			expect(alignment(actions)).toBe('right');
 		});
 
 		it('CSS cascade: expliciete eigen label-alignment wint over geërfde via container query', async () => {
@@ -390,7 +320,7 @@ describe('nldd-form', () => {
 			await settle();
 			const group = el.querySelector('nldd-radio-button-group')!;
 			expect(group.hasAttribute('invalid')).toBe(true);
-			expect(el.querySelector('nldd-validation-item')!.hasAttribute('visible')).toBe(true);
+			expect((el.querySelector('nldd-validation-item') as HTMLElement & { visible: boolean }).visible).toBe(true);
 
 			(el.querySelector('nldd-radio-button-field') as HTMLElement).click();
 			await settle();

@@ -27,18 +27,18 @@ export default {
 	args: {
 		size: 'md',
 		centered: false,
-		length: 6,
-		format: '',
 		accessibleLabel: 'Code uit de sms',
 		accessibleDescription: '',
 		accessibleDescribedBy: '',
+		uppercase: false,
 		invalid: false,
-		readonly: false,
-		disabled: false,
 		value: '',
 		type: 'numeric',
-		uppercase: false,
+		length: 6,
+		format: '',
 		required: false,
+		readonly: false,
+		disabled: false,
 	},
 	argTypes: {
 		size: {
@@ -51,15 +51,6 @@ export default {
 			control: 'boolean',
 			description: 'Zet de vakjes in het midden van de rij',
 			table: { defaultValue: { summary: false } },
-		},
-		length: {
-			control: 'number',
-			description: 'Aantal tekens van de code',
-			table: { defaultValue: { summary: 6 } },
-		},
-		format: {
-			control: 'text',
-			description: 'Vorm van een code in groepen, zoals ###-###; elke # is een vakje en wint van length',
 		},
 		accessibleLabel: {
 			name: 'accessible-label',
@@ -76,19 +67,14 @@ export default {
 			control: false,
 			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
 		},
+		uppercase: {
+			control: 'boolean',
+			description: 'Maakt letters hoofdletters, in de vakjes en in de waarde; alleen bij alphanumeric',
+			table: { defaultValue: { summary: false } },
+		},
 		invalid: {
 			control: 'boolean',
 			description: 'Ongeldige toestand',
-			table: { defaultValue: { summary: false } },
-		},
-		readonly: {
-			control: 'boolean',
-			description: 'Alleen-lezen',
-			table: { defaultValue: { summary: false } },
-		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde toestand',
 			table: { defaultValue: { summary: false } },
 		},
 		value: {
@@ -101,34 +87,48 @@ export default {
 			description: 'Alleen cijfers, of letters en cijfers',
 			table: { defaultValue: { summary: 'numeric' } },
 		},
-		uppercase: {
-			control: 'boolean',
-			description: 'Maakt letters hoofdletters, in de vakjes en in de waarde; alleen bij alphanumeric',
-			table: { defaultValue: { summary: false } },
+		length: {
+			control: 'number',
+			description: 'Aantal tekens van de code',
+			table: { defaultValue: { summary: 6 } },
+		},
+		format: {
+			control: 'text',
+			description: 'Vorm van een code in groepen, zoals ###-###; elke # is een vakje en wint van length',
 		},
 		required: {
 			control: 'boolean',
 			description: 'Verplicht; een code die niet af is telt ook als ongeldig',
 			table: { defaultValue: { summary: false } },
 		},
+		readonly: {
+			control: 'boolean',
+			description: 'Alleen-lezen',
+			table: { defaultValue: { summary: false } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde toestand',
+			table: { defaultValue: { summary: false } },
+		},
 	},
 };
 
-const Template = ({ size, centered, length, format, accessibleLabel, accessibleDescription, invalid, readonly, disabled, value, type, uppercase, required }: Record<string, any>) => html`
+const Template = ({ size, centered, accessibleLabel, accessibleDescription, uppercase, invalid, value, type, length, format, required, readonly, disabled }: Record<string, any>) => html`
 	<nldd-one-time-code-field
 		size=${size || nothing}
 		?centered=${centered}
-		length=${length ?? nothing}
-		format=${format || nothing}
 		accessible-label=${accessibleLabel || nothing}
 		accessible-description=${accessibleDescription || nothing}
+		?uppercase=${uppercase}
 		?invalid=${invalid}
-		?readonly=${readonly}
-		?disabled=${disabled}
 		.value=${value ?? ''}
 		type=${type || nothing}
-		?uppercase=${uppercase}
+		length=${length ?? nothing}
+		format=${format || nothing}
 		?required=${required}
+		?readonly=${readonly}
+		?disabled=${disabled}
 		@input=${action('input')}
 		@change=${action('change')}
 		@complete=${action('complete')}

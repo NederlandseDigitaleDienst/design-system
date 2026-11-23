@@ -50,10 +50,6 @@ export default {
 			description: 'Grootste hoogte van het blok, als CSS-lengte (bijvoorbeeld `400px` of `50vh`). Daarboven scrollt de inhoud verticaal.',
 			table: { defaultValue: { summary: '(geen)' } },
 		},
-		content: {
-			control: 'text',
-			description: 'Code-inhoud (slot)',
-		},
 		language: {
 			control: 'select',
 			options: LANGUAGE_OPTIONS,
@@ -66,32 +62,36 @@ export default {
 			description: 'De inhoud is een unified diff: toegevoegde regels groen, verwijderde rood, met oude en nieuwe regelnummers en de gewijzigde woorden gemarkeerd.',
 			table: { defaultValue: { summary: false } },
 		},
+		copy: {
+			control: 'boolean',
+			description: 'Toon de kopieerknop rechtsboven. Klik kopieert de raw slot-tekst naar het klembord.',
+			table: { defaultValue: { summary: true } },
+		},
 		lineNumbers: {
 			name: 'line-numbers',
 			control: 'boolean',
 			description: 'Toon een kolom met het nummer van elke regel. Een screenreader slaat hem over en een kopie laat hem weg. Geen effect met `diff`.',
 			table: { defaultValue: { summary: false } },
 		},
-		copy: {
-			control: 'boolean',
-			description: 'Toon de kopieerknop rechtsboven. Klik kopieert de raw slot-tekst naar het klembord.',
-			table: { defaultValue: { summary: true } },
-		},
 		wrap: {
 			control: 'boolean',
 			description: 'Lange regels afbreken in plaats van horizontaal scrollen',
 			table: { defaultValue: { summary: false } },
 		},
+		content: {
+			control: 'text',
+			description: 'Code-inhoud (slot)',
+		},
 	},
 	args: {
 		appearance: 'box-tinted',
 		maxHeight: '',
-		content: DEFAULT_CONTENT,
 		language: '',
 		diff: false,
-		lineNumbers: false,
 		copy: true,
+		lineNumbers: false,
 		wrap: false,
+		content: DEFAULT_CONTENT,
 	},
 };
 
@@ -101,8 +101,8 @@ const Template = (args: Record<string, any>) => html`
 		max-height=${args.maxHeight || nothing}
 		language=${args.language || nothing}
 		?diff=${args.diff}
-		?line-numbers=${args.lineNumbers}
 		?no-copy=${!args.copy}
+		?line-numbers=${args.lineNumbers}
 		?wrap=${args.wrap}
 	>${args.content}</nldd-code-viewer>
 `;

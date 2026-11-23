@@ -13,8 +13,8 @@ import '../../../content/rich-text/rich-text.js';
  * ## Gebruik
  * ```html
  * <nldd-stacked-split-view panes="2">
- *   <nldd-split-view-pane slot="pane-1">...</nldd-split-view-pane>
- *   <nldd-split-view-pane slot="pane-2">...</nldd-split-view-pane>
+ *   <nldd-page slot="pane-1">...</nldd-page>
+ *   <nldd-page slot="pane-2">...</nldd-page>
  * </nldd-stacked-split-view>
  * ```
  */
@@ -51,32 +51,31 @@ export default {
 /* Het eerste paneel draagt de hoofdinhoud en houdt daarmee de landmarks van het
    document; de andere panelen zijn benoemde regio's. */
 const paneContent = (title: any, slot: any) => html`
-	<nldd-split-view-pane slot=${slot}>
-		<nldd-page
-			sticky-header
-			landmarks=${slot === 'pane-1' ? 'page' : nothing}
-			accessible-label=${slot === 'pane-1' ? nothing : title}
+	<nldd-page
+		slot=${slot}
+		sticky-header
+		landmarks=${slot === 'pane-1' ? 'page' : nothing}
+		accessible-label=${slot === 'pane-1' ? nothing : title}
+	>
+		<nldd-container
+			slot="header"
+			padding="16"
 		>
-			<nldd-container
-				slot="header"
-				padding="16"
-			>
-				<nldd-rich-text>
-					<strong>${title}</strong>
-				</nldd-rich-text>
-			</nldd-container>
-			<nldd-simple-section>
-				<nldd-rich-text>
-					<h2>Sectietitel</h2>
-					<p>Dit is de inhoud van ${title}. Elke pagina heeft een eigen scrollbaar gebied.</p>
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-					<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-					<p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-					<p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-				</nldd-rich-text>
-			</nldd-simple-section>
-		</nldd-page>
-	</nldd-split-view-pane>
+			<nldd-rich-text>
+				<strong>${title}</strong>
+			</nldd-rich-text>
+		</nldd-container>
+		<nldd-simple-section>
+			<nldd-rich-text>
+				<h2>Sectietitel</h2>
+				<p>Dit is de inhoud van ${title}. Elke pagina heeft een eigen scrollbaar gebied.</p>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+				<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+				<p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+				<p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+			</nldd-rich-text>
+		</nldd-simple-section>
+	</nldd-page>
 `;
 
 export const Standaard = ({ background, panes }: Record<string, any>) => html`

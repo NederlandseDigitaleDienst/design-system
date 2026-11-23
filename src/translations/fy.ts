@@ -173,6 +173,7 @@ export const fy: Record<TranslationKey, string> = {
 	'components.file-field.show-options-action': 'Opsjes sjen litte',
 	'components.file-field.required-error-text': 'In bestân is ferplichte',
 	'components.file-field.accepted-types-text': 'Tastien: {types}',
+	'components.form-field.optional-label': 'Opsjoneel',
 	'components.number-field.decrement-action': 'Ferleegje',
 	'components.number-field.increment-action': 'Ferheegje',
 	'components.number-field.to-adjust-value-action': 'Wearde oanpasse',
@@ -316,6 +317,7 @@ export const fy: Record<TranslationKey, string> = {
 	'components.step-bar.status-current-label': 'Hjoeddeistige stap',
 	'components.step-bar.status-future-label': 'Noch te dwaan',
 	'components.step-bar.compact-text': 'Stap {current} fan {total}',
+	'components.step-bar.compact-overview-text': '{total} stappen',
 	'components.term.source-capitalize': 'Boarne',
 	'components.term.sheet-dismiss-action': 'Slút',
 };

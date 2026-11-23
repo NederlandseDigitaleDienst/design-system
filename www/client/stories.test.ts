@@ -30,7 +30,7 @@ describe('stories', () => {
 				const story = await loadStory(file, name);
 				container = document.createElement('div');
 				document.body.append(container);
-				const context: StoryContext = { args: story.args, updateArgs: () => {}, log: () => {} };
+				const context: StoryContext = { args: story.args, updateArgs: () => {} };
 				mount(withContext(context, () => story.render(mapArgs(story.args, story.argTypes))), container);
 				expect(container.childNodes.length, `${name} renders nothing`).toBeGreaterThan(0);
 				// Let the components finish their first update while they are still
