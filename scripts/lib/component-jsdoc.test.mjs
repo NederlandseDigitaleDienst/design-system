@@ -63,3 +63,23 @@ test('reads search words from @keywords, lower case, and other components from @
 test('refuses a @related that is not a tag', () => {
 	assert.throws(() => parse(['@element nldd-thing', '@related banner'].join('\n')), /takes element tags only/);
 });
+
+test('keeps a code fence in the description as a block of its own', () => {
+	const block = ['A thing. Put a cell in it:', '```html', '<nldd-thing>', '\t<nldd-cell></nldd-cell>', '</nldd-thing>', '```', 'Any cell will do.', '', '@element nldd-thing'].join('\n');
+	const [component] = parse(block);
+	assert.equal(component.summary, 'A thing. Put a cell in it:\n\n```html\n<nldd-thing>\n\t<nldd-cell></nldd-cell>\n</nldd-thing>\n```\n\nAny cell will do.');
+});
+
+test('keeps a code fence in the prose under an element, with an @ in the code', () => {
+	const block = ['@element nldd-thing', '', 'Listen for it:', '```js', 'thing.addEventListener("change", () => {});', '@attr not-a-tag', '```', '', '@attr {string} text - Its text.'].join('\n');
+	const [component] = parse(block);
+	assert.equal(component.summary, 'Listen for it:\n\n```js\nthing.addEventListener("change", () => {});\n@attr not-a-tag\n```');
+	assert.deepEqual(component.attrs.map((a) => a.name), ['text']);
+});
+
+test('keeps the indentation of the code, from the JSDoc source', async () => {
+	const { extractComponentBlocks } = await import('./component-jsdoc.js');
+	const source = ['/**', ' * A thing:', ' * ```html', ' * <nldd-thing>', ' *   <nldd-cell></nldd-cell>', ' * </nldd-thing>', ' * ```', ' *', ' * @element nldd-thing', ' */'].join('\n');
+	const [component] = parse(extractComponentBlocks(source)[0]);
+	assert.match(component.summary, /\n {2}<nldd-cell><\/nldd-cell>\n/);
+});
