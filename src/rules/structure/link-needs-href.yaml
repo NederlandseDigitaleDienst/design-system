@@ -2,6 +2,7 @@ severity: warn
 context: 'nldd-link'
 assert: '[href], :has(> a:not([slot])[href])'
 message: 'Give it an `href`, or the `<a>` in it one, or use nldd-button when it performs an action: what looks like a link has to be one.'
+wcag: ['2.1.1', '4.1.2']
 see: ontwerprichtlijnen/visueel-en-layout
 examples:
   passed:

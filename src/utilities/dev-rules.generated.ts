@@ -597,7 +597,7 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "menu-bar-needs-name",
-		"message": "No `accessible-label` set. A page with more than one nav landmark needs a unique label on each (WCAG 1.3.1).",
+		"message": "No `accessible-label` set. A page with more than one nav landmark needs a unique label on each, so they can be told apart.",
 		"context": "nldd-menu-bar:state(unnamed)"
 	},
 	{

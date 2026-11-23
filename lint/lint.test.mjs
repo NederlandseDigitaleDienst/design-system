@@ -1841,6 +1841,11 @@ describe('nldd command', () => {
 		assert.match(output, /patronen\/toolbar-with-actions\//);
 	});
 
+	it('names the success criterion a rule guards', () => {
+		const output = execFileSync(process.execPath, [cli, 'explain', 'toolbar-item-needs-overflow'], { encoding: 'utf8' });
+		assert.match(output, /WCAG 1\.4\.10 Reflow \(AA\)/);
+	});
+
 	it('lists the rules about a component, also where it is only mentioned', () => {
 		const output = execFileSync(process.execPath, [cli, 'rules', '--for', 'nldd-toggle-button'], { encoding: 'utf8' });
 		assert.match(output, /button-bar-no-toggle-button/);

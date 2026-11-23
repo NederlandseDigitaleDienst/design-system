@@ -3868,7 +3868,7 @@ Horizontal row of nldd-menu-bar-item elements with automatic overflow detection.
 
 **Rules** (`nldd lint`)
 
-- `menu-bar-needs-name`: No `accessible-label` set. A page with more than one nav landmark needs a unique label on each (WCAG 1.3.1).
+- `menu-bar-needs-name`: No `accessible-label` set. A page with more than one nav landmark needs a unique label on each, so they can be told apart.
 - `top-navigation-bar-max-three-items` (hint): Keep the bar to search, language and account: the pages together are the navigation.
 - `top-navigation-bar-utility-needs-priority` (hint): Set content-priority="text", so "Zoeken" and "NL" stay readable on a narrow screen.
 

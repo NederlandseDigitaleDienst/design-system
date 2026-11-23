@@ -6,6 +6,8 @@ import { buildPages } from './site.js';
 import { collectComponents, repoRoot, storyName } from './sources.js';
 import { controlFor } from './attribute-values.js';
 import { headingId, renderMarkdown } from './markdown.js';
+import { WCAG } from '../../lint/wcag.js';
+import { WCAG_NL } from './wcag.js';
 
 function storyFiles(dir, found = []) {
 	for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -176,6 +178,49 @@ test('a pattern has a tab with the lint rules that point at it', () => {
 	assert.match(pattern, /href="\/patronen\/form\/"\s+text="Patroon"\s+current/);
 	assert.doesNotMatch(pattern, /id="regels"/);
 	assert.match(rules, /text="Lintregels"\s+current[^]*id="regels"[^]*<h2>Lintregels<\/h2>[^]*text="form-actions-needs-button-group"/);
+});
+
+test('a rule has a page of its own, which every list of rules links to', () => {
+	const rule = pages['linter/link-needs-href/index.html'];
+	assert.match(rule, /<h1>link-needs-href<\/h1>/);
+	assert.match(rule, /back-text="Linter"\s+back-href="\/linter\/"/);
+	// The message is English on a Dutch page.
+	assert.match(rule, /<p lang="en">Give it an <code>href<\/code>/);
+	assert.match(rule, /WCAG22-nl\/#keyboard"[^>]*>2\.1\.1 Toetsenbord<\/a> \(niveau A\)/);
+	assert.match(rule, /<h2 id="goed">Goed<\/h2>[^]*<h2 id="fout">Fout<\/h2>[^]*<h2 id="onzeker">Onzeker<\/h2>[^]*<h2 id="de-regel">De regel<\/h2>/);
+	assert.match(rule, /blob\/main\/src\/rules\/structure\/link-needs-href\.yaml/);
+	assert.match(pages['componenten/link/lintregels/index.html'], /<nldd-list-item href="\/linter\/link-needs-href\/">/);
+	// A rule only the running page can tell has no markup to show.
+	assert.doesNotMatch(pages['linter/sheet-needs-name/index.html'], /<h2 id="goed">/);
+});
+
+test('every success criterion the linter knows has its Dutch name and an anchor of its own', () => {
+	assert.deepEqual(Object.keys(WCAG_NL), Object.keys(WCAG));
+	const anchors = Object.values(WCAG_NL).map((criterion) => criterion.anchor);
+	assert.equal(new Set(anchors).size, anchors.length);
+});
+
+test('the accessibility page lists the rules by success criterion, from every group', () => {
+	const page = pages['toegankelijkheid/index.html'];
+	assert.match(page, /<h2>Lintregels per succescriterium<\/h2>/);
+	// A rule of `copy` under the criterion it guards.
+	const sheet = page.slice(page.indexOf('<nldd-sheet\n\tid="lintregels-per-succescriterium-2-4-4"'));
+	assert.match(sheet, /text="2\.4\.4 Linkdoel \(in context\)"[^]*?href="\/linter\/link-no-vague-text\/"/);
+	// The rules of `a11y` without a criterion are still there.
+	assert.match(page, /id="lintregels-per-succescriterium-goede-praktijk"[^]*href="\/linter\/list-needs-name\/"/);
+});
+
+test('the accessibility page shows who does what as a list per principle, with a tag per criterion', () => {
+	const page = pages['toegankelijkheid/index.html'];
+	for (const principle of ['Waarneembaar', 'Bedienbaar', 'Begrijpelijk', 'Robuust']) {
+		assert.match(page, new RegExp(`accessible-label="Succescriteria van het principe ${principle}"`));
+	}
+	assert.match(page, /text="2\.4\.2 Paginatitel \(A\)"\s+supporting-text="[^"]*\*\*&lt;title&gt;\*\*/);
+	assert.match(page, /color="success"\s+text="Systeem"/);
+	// A cell with a link keeps it, as a component in a paragraph of its own.
+	assert.match(page, /<p slot="supporting-text">[^<]*<nldd-link href="#bekende-afwijkingen" text="Bekende afwijkingen"><\/nldd-link>/);
+	// The table of ATAG stays a table.
+	assert.equal(page.match(/<table/g).length, 1);
 });
 
 test('a page under a deploy base links within that base', () => {
