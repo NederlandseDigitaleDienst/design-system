@@ -78,7 +78,7 @@ describe('nldd-token – state', () => {
 	it('open is false by default', async () => {
 		el = await fixture<NLDDToken>('<nldd-token control="menu">Label</nldd-token>');
 		await waitForUpdate(el);
-		expect(el.expanded).toBe(false);
+		expect(el._expanded).toBe(false);
 	});
 
 	it('open reflects as attribute', async () => {
@@ -265,7 +265,7 @@ describe('nldd-token – menu', () => {
 		button.click();
 		await waitForUpdate(el);
 		expect(popover.matches(':popover-open')).toBe(true);
-		expect(el.expanded).toBe(true);
+		expect(el._expanded).toBe(true);
 	});
 
 	it('gives its button no aria-controls for a popover with an id, which its shadow root cannot resolve', async () => {
@@ -292,7 +292,7 @@ describe('nldd-token – menu', () => {
 
 		el._handleMenuClick(new MouseEvent('click'));
 		await waitForUpdate(el);
-		expect(el.expanded).toBe(false);
+		expect(el._expanded).toBe(false);
 	});
 
 	/* ============================================================

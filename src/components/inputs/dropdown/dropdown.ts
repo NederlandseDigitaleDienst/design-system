@@ -85,8 +85,8 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 	accessibleLabel = '';
 
 	/** @internal Reflects whether the native picker is open, for the expanded style. */
-	@property({ type: Boolean, reflect: true })
-	expanded = false;
+	@property({ type: Boolean, reflect: true, attribute: 'expanded' })
+	_expanded = false;
 
 	@property({ type: Boolean, reflect: true })
 	valid = false;
@@ -220,7 +220,7 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 
 		if (!select) {
 			setState(this, 'unnamed-select', false);
-			this.expanded = false;
+			this._expanded = false;
 			return;
 		}
 
@@ -305,7 +305,7 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 
 	private _handleSelectBlur = (): void => {
 		this.toggleAttribute('is-pointer-focus', false);
-		this.expanded = false;
+		this._expanded = false;
 	};
 
 	/** Any key press while focused promotes to keyboard mode, so drop the marker. */
@@ -319,7 +319,7 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 	 * silently skip this, and the visual expanded state is then a no-op.
 	 */
 	private _handleSelectToggle = (e: Event): void => {
-		this.expanded = (e as ToggleEvent).newState === 'open';
+		this._expanded = (e as ToggleEvent).newState === 'open';
 	};
 
 	/**

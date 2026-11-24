@@ -571,7 +571,7 @@ describe('nldd-token-field', () => {
 		await waitForUpdate(el);
 		const tokenFor = (v: string) => [...el.shadowRoot!.querySelectorAll<HTMLElement>('nldd-token')]
 			.find((t) => t.dataset.value === v)!;
-		(tokenFor('be') as HTMLElement & { expanded: boolean }).expanded = true; // its menu is "open"
+		(tokenFor('be') as HTMLElement & { _expanded: boolean })._expanded = true; // its menu is "open"
 		await waitForUpdate(el);
 		const deBefore = tokenFor('de');
 		el.values = ['nl', 'de']; // remove the expanded 'be'
