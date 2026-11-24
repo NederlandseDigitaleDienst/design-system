@@ -57,6 +57,15 @@ body:not(:has(nldd-navigation-split-view[data-site-wide])) nldd-toolbar-title {
 		overflow-x: auto;
 	}
 
+	.site-stage__mat:last-child {
+		padding-block-end: var(--semantics-surfaces-highlight-border-width);
+
+		& > .site-stage__canvas {
+			border-end-start-radius: calc(var(--semantics-surfaces-corner-radius) - var(--semantics-surfaces-highlight-border-width));
+			border-end-end-radius: calc(var(--semantics-surfaces-corner-radius) - var(--semantics-surfaces-highlight-border-width));
+		}
+	}
+
 	.site-stage__mat--frame {
 		display: flex;
 		justify-content: center;

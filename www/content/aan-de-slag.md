@@ -21,11 +21,11 @@ import { NLDDButton, NLDDCheckbox } from '@nldd/design-system';
 Daarna schrijf je de elementen in je HTML of in je template:
 
 ```html
-<nldd-button appearance="accent-filled" text="Opslaan"></nldd-button>
+<nldd-button appearance="primary" text="Opslaan"></nldd-button>
 <nldd-checkbox-field label="Akkoord met voorwaarden"></nldd-checkbox-field>
 ```
 
-Werk je voor een organisatie buiten de Rijksoverheid, laad dan `@nldd/design-system/styles/system-font` in plaats van `/styles`. Het font Rijksoverheid Sans is alleen bestemd voor de Rijksoverheid en voor wie in haar opdracht werkt.
+Werk je voor een organisatie buiten de Rijksoverheid, laad dan `@nldd/design-system/styles/open-font` in plaats van `/styles`. Dat geeft Inter, afgesteld op RijksSans, zodat de componenten er hetzelfde uitzien. RijksSans is alleen bestemd voor de Rijksoverheid en voor wie in haar opdracht werkt.
 
 ## Met een AI-assistent
 

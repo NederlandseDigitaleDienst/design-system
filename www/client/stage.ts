@@ -478,7 +478,7 @@ export class SiteStage extends HTMLElement {
 				);
 			}
 			this.resetButton = nldd('button', { text: 'Herstel', hidden: true });
-			this.resetItem = nldd('menu-item', { text: 'Herstel', hidden: true });
+			this.resetItem = nldd('menu-item', { icon: 'undo', text: 'Herstel', hidden: true });
 			this.resetButton.addEventListener('click', () => this.reset());
 			this.resetItem.addEventListener('select', () => this.reset());
 			toolbar.append(this.toolItem(this.resetButton, this.resetItem, 0, 'end'));
