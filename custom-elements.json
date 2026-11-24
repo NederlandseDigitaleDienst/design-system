@@ -18605,16 +18605,6 @@
             },
             {
               "kind": "field",
-              "name": "type",
-              "type": {
-                "text": "OneTimeCodeType"
-              },
-              "default": "'numeric'",
-              "attribute": "type",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "length",
               "default": "6",
               "attribute": "length",
@@ -18710,6 +18700,16 @@
               },
               "default": "''",
               "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "type": {
+                "text": "OneTimeCodeType"
+              },
+              "default": "'numeric'",
+              "attribute": "type",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -19173,18 +19173,6 @@
           ],
           "attributes": [
             {
-              "name": "type",
-              "type": {
-                "text": "OneTimeCodeType"
-              },
-              "default": "'numeric'",
-              "fieldName": "type",
-              "expandedType": {
-                "text": "'alphanumeric' | 'numeric'"
-              },
-              "description": "What the code holds: 'numeric' (default, digits only, raises the number keyboard) | 'alphanumeric' (letters and digits)"
-            },
-            {
               "name": "length",
               "default": "DEFAULT_LENGTH",
               "fieldName": "length",
@@ -19276,6 +19264,18 @@
               "default": "''",
               "fieldName": "value",
               "description": "The code"
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "OneTimeCodeType"
+              },
+              "default": "'numeric'",
+              "fieldName": "type",
+              "expandedType": {
+                "text": "'alphanumeric' | 'numeric'"
+              },
+              "description": "What the code holds: 'numeric' (default, digits only, raises the number keyboard) | 'alphanumeric' (letters and digits)"
             },
             {
               "name": "required",

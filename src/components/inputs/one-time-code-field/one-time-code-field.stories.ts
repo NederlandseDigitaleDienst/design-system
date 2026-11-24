@@ -25,7 +25,6 @@ export default {
 		},
 	},
 	args: {
-		type: 'numeric',
 		length: 6,
 		format: '',
 		size: 'md',
@@ -36,17 +35,12 @@ export default {
 		uppercase: false,
 		invalid: false,
 		value: '',
+		type: 'numeric',
 		required: false,
 		readonly: false,
 		disabled: false,
 	},
 	argTypes: {
-		type: {
-			control: 'select',
-			options: ['numeric', 'alphanumeric'],
-			description: 'Alleen cijfers, of letters en cijfers',
-			table: { defaultValue: { summary: 'numeric' } },
-		},
 		length: {
 			control: 'number',
 			description: 'Aantal tekens van de code',
@@ -96,6 +90,12 @@ export default {
 			control: 'text',
 			description: 'De code',
 		},
+		type: {
+			control: 'select',
+			options: ['numeric', 'alphanumeric'],
+			description: 'Alleen cijfers, of letters en cijfers',
+			table: { defaultValue: { summary: 'numeric' } },
+		},
 		required: {
 			control: 'boolean',
 			description: 'Verplicht; een code die niet af is telt ook als ongeldig',
@@ -114,9 +114,8 @@ export default {
 	},
 };
 
-const Template = ({ type, length, format, size, centered, accessibleLabel, accessibleDescription, uppercase, invalid, value, required, readonly, disabled }: Record<string, any>) => html`
+const Template = ({ length, format, size, centered, accessibleLabel, accessibleDescription, uppercase, invalid, value, type, required, readonly, disabled }: Record<string, any>) => html`
 	<nldd-one-time-code-field
-		type=${type || nothing}
 		length=${length ?? nothing}
 		format=${format || nothing}
 		size=${size || nothing}
@@ -126,6 +125,7 @@ const Template = ({ type, length, format, size, centered, accessibleLabel, acces
 		?uppercase=${uppercase}
 		?invalid=${invalid}
 		.value=${value ?? ''}
+		type=${type || nothing}
 		?required=${required}
 		?readonly=${readonly}
 		?disabled=${disabled}

@@ -1801,7 +1801,6 @@ A field for a code someone receives once and types over: by text message, by ema
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `type` | `'numeric'\|'alphanumeric'` | What the code holds: 'numeric' (default, digits only, raises the number keyboard) \| 'alphanumeric' (letters and digits) |
 | `length` | `number` | How many characters the code has (default: 6). |
 | `format` | `string` | The shape of a code that is printed in groups, such as '###-###' or '#### ####': each `#` is a box, anything else a separator you see but a screen reader does not hear. The number of `#` is then the length, so `format` wins over `length`. The value never holds a separator: '123-234' is submitted as '123234'. Leave it out for a code without groups, as most codes from a text message are. |
 | `size` | `'sm'\|'md'\|'lg'` | 'sm' \| 'md' (default) \| 'lg'. 'lg' has boxes 56px tall with larger characters, for a page where the code is the only thing to do, such as signing in. Where the boxes do not fit the width, the field steps down a size, to md and then sm: a code never wraps onto a second line. Where not even sm fits, the field shows the code in a text field of its own size. |
@@ -1812,6 +1811,7 @@ A field for a code someone receives once and types over: by text message, by ema
 | `name` | `string` | Input name for form submission |
 | `input-id` | `string` | Sets the id on the native input. Set automatically by nldd-form-field. |
 | `value` | `string` | The code |
+| `type` | `'numeric'\|'alphanumeric'` | What the code holds: 'numeric' (default, digits only, raises the number keyboard) \| 'alphanumeric' (letters and digits) |
 | `required` | `boolean` | Required state. A code that is not complete counts as invalid too. |
 | `readonly` | `boolean` | Readonly state |
 | `disabled` | `boolean` | Disabled state |

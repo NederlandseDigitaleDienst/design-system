@@ -2281,14 +2281,14 @@ export const devRules: DevRule[] = [
 		"context": "nldd-one-third-two-thirds-section[lg-padding-bottom]:not([lg-padding-bottom=\"0\"], [lg-padding-bottom=\"10\"], [lg-padding-bottom=\"12\"], [lg-padding-bottom=\"16\"], [lg-padding-bottom=\"2\"], [lg-padding-bottom=\"20\"], [lg-padding-bottom=\"24\"], [lg-padding-bottom=\"28\"], [lg-padding-bottom=\"32\"], [lg-padding-bottom=\"4\"], [lg-padding-bottom=\"40\"], [lg-padding-bottom=\"44\"], [lg-padding-bottom=\"48\"], [lg-padding-bottom=\"56\"], [lg-padding-bottom=\"6\"], [lg-padding-bottom=\"64\"], [lg-padding-bottom=\"8\"], [lg-padding-bottom=\"80\"], [lg-padding-bottom=\"96\"])"
 	},
 	{
-		"id": "invalid-value-one-time-code-field-type",
-		"message": "`type` on nldd-one-time-code-field takes: alphanumeric, numeric.",
-		"context": "nldd-one-time-code-field[type]:not([type=\"alphanumeric\"], [type=\"numeric\"])"
-	},
-	{
 		"id": "invalid-value-one-time-code-field-size",
 		"message": "`size` on nldd-one-time-code-field takes: lg, md, sm.",
 		"context": "nldd-one-time-code-field[size]:not([size=\"lg\"], [size=\"md\"], [size=\"sm\"], nldd-toolbar *, nldd-button-bar *, nldd-button-group *, nldd-list-item *, nldd-avatar-group *, nldd-notification *)"
+	},
+	{
+		"id": "invalid-value-one-time-code-field-type",
+		"message": "`type` on nldd-one-time-code-field takes: alphanumeric, numeric.",
+		"context": "nldd-one-time-code-field[type]:not([type=\"alphanumeric\"], [type=\"numeric\"])"
 	},
 	{
 		"id": "invalid-value-page-background",

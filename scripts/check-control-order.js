@@ -101,8 +101,8 @@ export function firstViolation(canon, names, component) {
  */
 const MEANINGS = {
 	'avatar-group': { max: 'size' },
-	// What the code is decides how many boxes there are and how they group.
-	'one-time-code-field': { type: 'status', length: 'status', format: 'status' },
+	// The length and format of a code decide how many boxes there are and how they group.
+	'one-time-code-field': { length: 'status', format: 'status' },
 };
 
 /** A `max` right after `number` caps how that number shows, and keeps its place (badge). */
