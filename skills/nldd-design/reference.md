@@ -1091,7 +1091,6 @@ A self-contained piece of data the user is handling: a person in an address fiel
 | `control` | `'none' \| 'dismiss' \| 'menu'` | Control type (default: 'none') |
 | `menu-text` | `string` | Accessible label for the menu button. Unset, it is `Toon opties voor "{text}"`. |
 | `roving` | `boolean` | Inside a roving-focus container (e.g. nldd-token-field): the host is the single tab stop, so the trailing control is not separately tabbable. |
-| `expanded` | `boolean` | Reflects whether the token's menu or popover is open (control="menu"); managed by the token. |
 | `disabled` | `boolean` | Disabled state. Avoid it where you can; the design guidelines say why. |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 
@@ -1640,7 +1639,6 @@ A visual wrapper around a native `<select>` element. The consumer provides a nat
 | `size` | `'xs'\|'sm'\|'md'` | Size: 'xs' \| 'sm' \| 'md' (default: 'md') |
 | `width` | `string` | Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container. |
 | `accessible-label` | `string` | Accessible name, forwarded as aria-label to the slotted select |
-| `expanded` | `boolean` | Reflects whether the native picker popup is open (driven internally) |
 | `valid` | `boolean` | Marks the field as valid |
 | `invalid` | `boolean` | Marks the field as invalid |
 | `required` | `boolean` | Required state, handed to the slotted <select>. A `required` on the <select> itself is left alone. |

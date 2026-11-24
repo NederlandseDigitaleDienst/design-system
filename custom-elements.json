@@ -8419,16 +8419,6 @@
             },
             {
               "kind": "field",
-              "name": "expanded",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "expanded",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "disabled",
               "type": {
                 "text": "boolean"
@@ -8520,15 +8510,6 @@
               "default": "false",
               "description": "Inside a roving-focus container (e.g. nldd-token-field): the host is the single tab stop, so the trailing control is not separately tabbable.",
               "fieldName": "roving"
-            },
-            {
-              "name": "expanded",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "expanded",
-              "description": "Reflects whether the token's menu or popover is open (control=\"menu\"); managed by the token."
             },
             {
               "name": "disabled",
@@ -15490,16 +15471,6 @@
             },
             {
               "kind": "field",
-              "name": "expanded",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "expanded",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "valid",
               "type": {
                 "text": "boolean"
@@ -15667,15 +15638,6 @@
               "default": "''",
               "description": "Accessible name, forwarded as aria-label to the slotted select",
               "fieldName": "accessibleLabel"
-            },
-            {
-              "name": "expanded",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "expanded",
-              "description": "Reflects whether the native picker popup is open (driven internally)"
             },
             {
               "name": "valid",

@@ -23,7 +23,6 @@
  * @attr {'xs'|'sm'|'md'} size - Size: 'xs' | 'sm' | 'md' (default: 'md')
  * @attr {string} width - Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container.
  * @attr {string} accessible-label - Accessible name, forwarded as aria-label to the slotted select
- * @attr {boolean} expanded - Reflects whether the native picker popup is open (driven internally)
  * @attr {boolean} valid - Marks the field as valid
  * @attr {boolean} invalid - Marks the field as invalid
  * @attr {boolean} required - Required state, handed to the slotted <select>. A `required` on the <select> itself is left alone.
@@ -85,6 +84,7 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
+	/** @internal Reflects whether the native picker is open, for the expanded style. */
 	@property({ type: Boolean, reflect: true })
 	expanded = false;
 
