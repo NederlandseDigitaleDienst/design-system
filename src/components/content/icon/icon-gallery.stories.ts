@@ -100,7 +100,9 @@ export const Galerij = {
 							>
 								<nldd-card>
 									<nldd-container
-										padding="16"
+										padding-top="20"
+										padding-bottom="12"
+										padding-inline="8"
 										horizontal-alignment="center"
 										style="text-align: center;"
 									>
@@ -109,7 +111,7 @@ export const Galerij = {
 											size="32"
 										></nldd-icon>
 										<nldd-spacer
-											size="12"
+											size="10"
 											direction="vertical"
 										></nldd-spacer>
 										<nldd-text
