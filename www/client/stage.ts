@@ -1082,12 +1082,14 @@ export class SiteStage extends HTMLElement {
 			// whose mapping gives this value, the way the story expects it back.
 			const label = Object.entries(argType?.mapping ?? {}).find(([, value]) => value === start)?.[0];
 			const selected = label ?? (text === fallback && !own ? '' : text);
-			// Segments show the selection already, so they go without the mark.
-			const segments = own ? values.map((value): [string, string] => [value, value]) : options;
+			// Segments show the selection already, so they go without the mark. The
+			// default keeps its empty value, so choosing it leaves the attribute out;
+			// only a "not set" without a name of its own stays a dropdown.
+			const segments = own ? values.map((value): [string, string] => [value, value]) : options.map(([name, value]): [string, string] => [value === '' && fallback ? fallback : name, value]);
 			const fits =
 				segments.length <= SHOWN_WHOLE.options &&
 				segments.reduce((sum, [name]) => sum + name.length, 0) <= SHOWN_WHOLE.characters &&
-				segments.every(([, value]) => value !== '');
+				segments.every(([name, value]) => value !== '' || (!!fallback && name === fallback));
 			if (fits) return this.choice(control.name, segments, selected, change, { size: 'md' });
 			const select = element('select', '');
 			for (const [name, value] of options) select.append(new Option(name, value));
