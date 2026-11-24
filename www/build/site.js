@@ -349,9 +349,9 @@ function themePicker({ compact = false } = {}) {
 
 /**
  * The main toolbar, around the panes: back to the landing page and the name
- * of the site at the start, the theme at the end. The way back shows once both
- * sidebars are on the screen; until then it is in the title bar of the
- * sections, as on a phone (main.ts switches between the two). Up to md the
+ * of the site at the start, the theme at the end. The way back shows where
+ * both sidebars fit beside main; below that width it is in the title bar of
+ * the sections, as on a phone (main.ts switches between the two). Up to md the
  * theme is an icon button, so the name has room.
  */
 function toolbar({ compact = false } = {}) {

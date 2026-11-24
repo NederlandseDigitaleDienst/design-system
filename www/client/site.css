@@ -23,20 +23,20 @@
 	max-width: 280px;
 }
 
-/* With both sidebars on the screen the toolbar has the way back to the
+/* Where both sidebars fit beside main, the toolbar has the way back to the
    landing page (main.ts sets the attribute). */
-nldd-navigation-split-view[data-site-sidebars-shown] > [slot="primary-sidebar"] {
+nldd-navigation-split-view[data-site-wide] > [slot="primary-sidebar"] {
 	/* nldd-lint-disable-next-line internal-context-no-use -- the split view hides no back button in the first sidebar */
 	--context-back-button-display: none;
 }
 
 /* Not `hidden`: the toolbar sets that on its own items when they overflow. */
-body:not(:has(nldd-navigation-split-view[data-site-sidebars-shown])) [data-site-home] {
+body:not(:has(nldd-navigation-split-view[data-site-wide])) [data-site-home] {
 	display: none;
 }
 
 /* Without the way back the name lines up with the content below it. */
-body:not(:has(nldd-navigation-split-view[data-site-sidebars-shown])) nldd-toolbar-title {
+body:not(:has(nldd-navigation-split-view[data-site-wide])) nldd-toolbar-title {
 	margin-inline-start: var(--primitives-space-8);
 }
 

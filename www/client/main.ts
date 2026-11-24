@@ -26,39 +26,22 @@ function wireBack(): void {
 }
 
 /**
- * The way back to the landing page: in the toolbar once both sidebars are on
- * the screen, in the title bar of the sections otherwise, as on a phone.
+ * The way back to the landing page: in the toolbar where the view is wide
+ * enough for both sidebars beside main, in the title bar of the sections
+ * otherwise, as on a phone. It goes by that width and not by the panes on the
+ * screen, so it stays put from page to page at the same width, whether a page
+ * has a second sidebar or not.
  */
 function wireHome(): void {
 	const view = document.querySelector('nldd-navigation-split-view');
 	if (!view) return;
-	const panes = () => [...view.querySelectorAll<HTMLElement>(':scope > [slot]')];
+	const style = getComputedStyle(view);
+	const minWidth = (pane: string) => parseFloat(style.getPropertyValue(`--_navigation-split-view-${pane}-min-width`));
 	const update = () => {
-		const area = view.getBoundingClientRect();
-		const shown = panes().filter((pane) => {
-			const box = pane.getBoundingClientRect();
-			return box.width > 0 && box.right > area.left + 1 && box.left < area.right - 1;
-		});
-		const both = ['primary-sidebar', 'secondary-sidebar'].every((slot) => shown.some((pane) => pane.slot === slot));
-		view.toggleAttribute('data-site-sidebars-shown', both);
+		const wide = minWidth('primary-sidebar') + minWidth('secondary-sidebar') + minWidth('main');
+		view.toggleAttribute('data-site-wide', view.getBoundingClientRect().width >= wide);
 	};
-	const sizes = new ResizeObserver(update);
-	// The panes and their `empty`, not what is in them: a story renders often.
-	const mutations = new MutationObserver(() => {
-		observe();
-		update();
-	});
-	const observe = () => {
-		sizes.disconnect();
-		mutations.disconnect();
-		sizes.observe(view);
-		mutations.observe(view, { childList: true });
-		for (const pane of panes()) {
-			sizes.observe(pane);
-			mutations.observe(pane, { attributeFilter: ['empty', 'slot'] });
-		}
-	};
-	observe();
+	new ResizeObserver(update).observe(view);
 	update();
 }
 
