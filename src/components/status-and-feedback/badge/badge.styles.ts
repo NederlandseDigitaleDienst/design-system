@@ -219,11 +219,6 @@ export const badgeStyles = css`
 		margin-left: calc((var(--_badge-height) - var(--_badge-icon-size)) / 2 - var(--_badge-inline-padding) + var(--_badge-icon-offset-correction));
 	}
 
-	.badge__icon nldd-icon {
-		width: 100%;
-		height: 100%;
-	}
-
 	.badge__text {
 		--context-content-color: var(--_badge-content-color);
 		color: var(--_badge-content-color);

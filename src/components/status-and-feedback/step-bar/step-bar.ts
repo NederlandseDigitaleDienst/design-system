@@ -30,7 +30,10 @@
  * When the bar is no wider than the sm breakpoint, or than 120px per step,
  * whichever is wider (a container query, so measured on the component itself
  * rather than on the viewport), it folds into one line of text plus a
- * segmented bar. A label that is too long for its step breaks at a syllable. The full list of steps stays in the DOM, only visually hidden,
+ * segmented bar. A label of 12 letters or more that is too long for its step
+ * breaks at a syllable, in either form; a shorter word stays whole, and the
+ * count beside the title in the folded form stays on one line. The full list
+ * of steps stays in the DOM, only visually hidden,
  * so assistive software hears no less than a wide screen shows. A step that
  * is a link or a button is out of the tab order then: Tab would land on
  * something you cannot see (WCAG 2.4.7).

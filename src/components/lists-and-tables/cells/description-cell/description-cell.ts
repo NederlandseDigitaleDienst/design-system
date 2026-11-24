@@ -9,12 +9,33 @@
  * a minimum centered region. For strict top alignment without a minimum height,
  * use `vertical-alignment="top"`.
  *
+ * ### Width and breaking
+ * A cell of `width="full"` takes the room the row has left, but not less than
+ * 160px, so its text stays readable: about 20 characters. In a row too narrow
+ * for that the row runs wider than its box, which is the sign to hide a cell
+ * at that width (`hide-below`) or to combine two. In `nldd-table` the columns
+ * set the width, so a cell there has no floor. A `width="fit-content"` cell is
+ * as wide as its text on one line, and never narrower than its longest word.
+ * `min-width` always wins: `0` lets the cell shrink freely, so a long URL
+ * breaks; `min-content` keeps the longest word whole; `max-content` keeps the
+ * text on one line. A `max-width` below 160px lowers the floor with it.
+ *
+ * Text breaks at spaces and hyphens. A word wider than the cell breaks between
+ * two letters, without a hyphen. Set `hyphens` to break long words by
+ * syllable instead.
+ *
+ * The cell gives the element in a slot its font and color, and styles nothing
+ * inside it. For a link, code or bold text in the description, put an
+ * `nldd-text` in the slot, with a `<p>` in it: that brings the inline styles
+ * of nldd-text, and its own rules for breaking.
+ *
  * @element nldd-description-cell
  * @attr {string} width - 'full' | 'fit-content' | CSS length (e.g. '200px', '20rem'). Default: 'full'
- * @attr {string} min-width - Minimum width as CSS length (e.g. '80px', '5rem')
+ * @attr {string} min-width - Minimum width: a CSS length (e.g. '80px', '5rem'), or `min-content` or `max-content`. Wins over the default floor, `width` and `max-width`
  * @attr {string} max-width - Maximum width as CSS length (e.g. '300px', '20rem')
  * @attr {string} min-height - Minimum height as CSS length (e.g. '44px', '3rem')
  * @attr {'top' | 'center' | 'bottom'} vertical-alignment - Vertical alignment (default: 'center')
+ * @attr {boolean} hyphens - Breaks a word of at least 6 letters by syllable, with a hyphen, as `hyphens` on nldd-text does. Needs a `lang` on the page (`lang="nl"` on `<html>`): without one the browser does not hyphenate, and a long word still breaks between two letters. Reaches text in the two slots, not an `nldd-text` in them: that has a `hyphens` of its own.
  *
  * @slot title - The label displayed above the description
  * @slot description - The description content
@@ -50,6 +71,9 @@ export class NLDDDescriptionCell extends ReorderHandleMixin(RowHeaderMixin(Visib
 
 	@property({ reflect: true, attribute: 'vertical-alignment', converter: reflectNonDefault<VerticalAlignment>('center') })
 	verticalAlignment: VerticalAlignment = 'center';
+
+	@property({ type: Boolean, reflect: true })
+	hyphens = false;
 
 	override updated(changed: Map<string, unknown>) {
 		super.updated(changed);

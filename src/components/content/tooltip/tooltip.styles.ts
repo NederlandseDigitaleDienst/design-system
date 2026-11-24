@@ -1,5 +1,6 @@
 import { css } from 'lit';
 import { inheritedTextReset, linksFollowContent } from '../../../assets/styles/shadow-resets.js';
+import { wrapUiText } from '../../../assets/styles/text-wrap.js';
 
 export const tooltipStyles = css`
 	:host {
@@ -124,11 +125,11 @@ export const tooltipStyles = css`
 		align-items: baseline;
 		color: var(--_tooltip-content-color);
 		font: var(--_tooltip-font);
-		overflow-wrap: break-word;
 	}
 
 	.tooltip__text {
 		min-width: 0;
+		${wrapUiText}
 		text-wrap: pretty;
 	}
 

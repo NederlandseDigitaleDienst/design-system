@@ -1,7 +1,9 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
 import './page-footer.js';
+import { wrapUiText } from '../../../assets/styles/text-wrap.js';
+import { wrapOf, wrapOfSets } from '../../../assets/styles/text-wrap.fixtures.js';
 import '../../navigation/breadcrumbs/breadcrumbs.js';
 
 describe('nldd-page-footer', () => {
@@ -244,5 +246,36 @@ describe('nldd-page-footer-legal-bar-item', () => {
 		await waitForUpdate(el);
 		// Slotted content lives in the light DOM; el.textContent walks both trees.
 		expect(el.textContent?.trim()).toBe('Disclaimer');
+	});
+});
+
+describe('nldd-page-footer-legal-bar-item – breaking long words', () => {
+	let el: HTMLElement;
+	let removeTokens: () => void;
+
+	beforeEach(() => {
+		removeTokens = loadTokens();
+	});
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		removeTokens();
+	});
+
+	for (const href of ['', ' href="#"']) {
+		it(`blijft binnen een smalle footer${href ? ' als link' : ''}`, async () => {
+			el = await fixture(`<div lang="nl" style="width: 200px"><nldd-page-footer><nldd-page-footer-legal-bar slot="legal-bar"><nldd-page-footer-legal-bar-item slot="end"${href} text="Verantwoordelijkheidsverklaring en disclaimer"></nldd-page-footer-legal-bar-item></nldd-page-footer-legal-bar></nldd-page-footer></div>`);
+			const bar = el.querySelector('nldd-page-footer-legal-bar') as HTMLElement;
+			const item = el.querySelector('nldd-page-footer-legal-bar-item') as HTMLElement;
+			await waitForUpdate(item);
+
+			expect(item.getBoundingClientRect().right).toBeLessThanOrEqual(bar.getBoundingClientRect().right + 0.5);
+		});
+	}
+
+	it('breekt het item als knoptekst', async () => {
+		el = await fixture('<nldd-page-footer-legal-bar-item text="Privacy"></nldd-page-footer-legal-bar-item>');
+		await waitForUpdate(el);
+		expect(wrapOf(el.shadowRoot!.querySelector('.page-footer__legal-bar-item')!)).toEqual(wrapOfSets(wrapUiText));
 	});
 });

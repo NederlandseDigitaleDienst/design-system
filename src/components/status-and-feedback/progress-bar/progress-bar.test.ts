@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import type { NLDDProgressBar, NLDDProgressBarSegmentIndicator } from './progress-bar.js';
 import { INDETERMINATE_TRANSITION_MS } from './progress-bar.js';
@@ -7,6 +7,9 @@ import { INDETERMINATE_TRANSITION_MS } from './progress-bar.js';
 // request is needed at runtime.
 import variablesCss from '../../../assets/styles/variables.css?raw';
 import './progress-bar.js';
+import { loadTokens } from '../../../test-tokens.js';
+import { wrapUiText } from '../../../assets/styles/text-wrap.js';
+import { wrapOf, wrapOfSets } from '../../../assets/styles/text-wrap.fixtures.js';
 
 describe('nldd-progress-bar', () => {
 	let el: HTMLElement;
@@ -495,5 +498,33 @@ describe('nldd-progress-bar-segment-indicator', () => {
 		expect(match, 'token declaration not found in variables.css').not.toBeNull();
 		const tokenMs = Number(match![1]);
 		expect(tokenMs).toBe(INDETERMINATE_TRANSITION_MS);
+	});
+});
+
+describe('nldd-progress-bar – breaking long words', () => {
+	let el: HTMLElement;
+	let removeTokens: () => void;
+
+	beforeEach(() => { removeTokens = loadTokens(); });
+	afterEach(() => { cleanup(el); removeTokens(); });
+
+	const rectOf = (node: Element) => {
+		const range = document.createRange();
+		range.selectNodeContents(node);
+		return range.getBoundingClientRect();
+	};
+
+	it('keeps the text and the value inside 200px, the value on the last line of the text', async () => {
+		el = await fixture('<div style="width: 200px"><nldd-progress-bar text="Arbeidsongeschiktheidsverzekering aanvragen" value="40"></nldd-progress-bar></div>');
+		const bar = el.querySelector('nldd-progress-bar')!;
+		await waitForUpdate(bar as HTMLElement);
+		const box = el.getBoundingClientRect();
+		const text = bar.shadowRoot!.querySelector('.progress-bar__text')!;
+		const value = bar.shadowRoot!.querySelector('.progress-bar__supporting-text')!;
+		expect(rectOf(text).right).toBeLessThanOrEqual(box.right + 1);
+		expect(rectOf(value).right).toBeLessThanOrEqual(box.right + 1);
+		expect(Math.abs(rectOf(value).bottom - rectOf(text).bottom)).toBeLessThanOrEqual(1);
+		expect(wrapOf(text)).toEqual(wrapOfSets(wrapUiText));
+		expect(getComputedStyle(value).whiteSpace).toBe('nowrap');
 	});
 });

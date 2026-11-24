@@ -57,7 +57,7 @@
  * @attr {boolean} sticky-header - Sticky header
  * @attr {boolean} sticky-footer - Sticky footer
  *
- * @slot header - Header content
+ * @slot header - Header content. Put a `nldd-top-title-bar` straight in this slot, not in a container: the page measures the bar there, so an anchor scrolled to stays clear of it
  * @slot - Main content (scrollable)
  * @slot footer - Footer content
  *
@@ -75,10 +75,12 @@ import { pageTemplate } from './page.template.js';
 import { setState } from '../../../utilities/element-state.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { LayoutPass, sharedResizeObserver } from '../../../utilities/layout-pass.js';
+import type { CompactingBar } from '../../navigation/top-title-bar/top-title-bar.js';
 
 /** What a page measures of its bars and its scroller, before it writes any of it. */
 interface PageInsets {
 	header: number;
+	headerScrolled: number;
 	footer: number;
 	headerFull: number;
 	scroll: number | null;
@@ -404,6 +406,7 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 		const header = this._headerEl!;
 		return {
 			header: this.stickyHeader ? header.offsetHeight : 0,
+			headerScrolled: this.stickyHeader ? header.offsetHeight + this._measureBarGrowth() : 0,
 			footer: this.stickyFooter ? this._footerEl!.offsetHeight : 0,
 			headerFull: this._measureHeaderFullHeight(header),
 			// How tall the scroller actually is. Sticky content inside it caps its
@@ -417,6 +420,7 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 	/** @internal */
 	_applyInsets(insets: PageInsets): void {
 		this._publish('--_page-header-height', `${insets.header}px`);
+		this._publish('--_page-header-scrolled-height', `${insets.headerScrolled}px`);
 		this._publish('--_page-footer-height', `${insets.footer}px`);
 		this._publish('--_page-header-full-height', `${insets.headerFull}px`);
 		if (insets.scroll === null) this.style.removeProperty('--_page-scroll-height');
@@ -474,6 +478,22 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 	private _publish(name: string, value: string) {
 		if (this.style.getPropertyValue(name) === value) return;
 		this.style.setProperty(name, value);
+	}
+
+	/**
+	 * How much a top title bar in the header still grows once it turns compact.
+	 * An anchor or a focused field lies past the bar's collapse anchor, so by the
+	 * time it is scrolled into view the bar is compact: the scroll padding takes
+	 * that height up front, or the bar grows over what was just scrolled to.
+	 * A bar belongs straight in the header slot, so only those are measured.
+	 */
+	private _measureBarGrowth(): number {
+		let growth = 0;
+		for (const el of this.querySelectorAll<HTMLElement & Partial<CompactingBar>>(':scope > [slot="header"]')) {
+			if (el._compactHeight === undefined) continue;
+			growth += Math.max(0, el._compactHeight - el.offsetHeight);
+		}
+		return growth;
 	}
 
 	/**

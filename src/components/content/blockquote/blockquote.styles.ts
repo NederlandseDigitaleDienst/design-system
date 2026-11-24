@@ -1,6 +1,7 @@
 import { css, unsafeCSS } from 'lit';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 import { slottedReset, inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { wrapBodyText, wrapDisplayText } from '../../../assets/styles/text-wrap.js';
 
 const smMax = unsafeCSS(queryBreakpoints.smMax);
 const mdMin = unsafeCSS(queryBreakpoints.mdMin);
@@ -144,11 +145,13 @@ export const blockquoteStyles = css`
 		flex-direction: column;
 		gap: calc(1lh / 2);
 		font: var(--_blockquote-quote-font);
+		${wrapDisplayText}
 	}
 
 	.blockquote__attribution {
 		display: block;
 		font: var(--_blockquote-attribution-font);
+		${wrapBodyText}
 	}
 
 	.blockquote__attribution::before {

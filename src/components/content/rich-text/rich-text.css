@@ -148,8 +148,9 @@ nldd-rich-text *:focus:not(:focus-visible) {
 nldd-rich-text :is(h1, h2, h3, h4, h5, h6) {
 	margin-top: var(--_rich-text-spacing);
 	margin-bottom: 0;
-	overflow-wrap: break-word;
 	text-wrap: balance;
+	/* wrapDisplayText in text-wrap.ts; rich-text.test.ts keeps the two equal. */
+	overflow-wrap: anywhere;
 	-webkit-hyphens: auto;
 	hyphens: auto;
 	-webkit-hyphenate-limit-before: 5;
@@ -204,10 +205,7 @@ nldd-rich-text h6 {
 
 nldd-rich-text p {
 	margin: 0;
-	/* Safety net, independent of [hyphens]: lets long URLs and Dutch compounds
-	   break as soon as they are wider than the column, instead of overflowing
-	   at narrow (mobile) widths. break-word (not anywhere) leaves the grid
-	   min-content size alone, so the main column stays intact. */
+	/* wrapBodyText in text-wrap.ts; rich-text.test.ts keeps the two equal. */
 	overflow-wrap: break-word;
 	text-wrap: pretty;
 }
@@ -215,8 +213,8 @@ nldd-rich-text p {
 
 /* # Hyphenation */
 
-/* Opt-in through [hyphens]; only works with a correct `lang` on the page. */
-nldd-rich-text[hyphens] :is(p, li, dd) {
+/* hyphenateBodyText in text-wrap.ts; rich-text.test.ts keeps the two equal. */
+nldd-rich-text[hyphens] :is(p, li, dd, td) {
 	-webkit-hyphens: auto;
 	hyphens: auto;
 	-webkit-hyphenate-limit-before: 3;
@@ -254,7 +252,6 @@ nldd-rich-text ol > li > ol {
 nldd-rich-text li {
 	margin: calc(var(--_rich-text-spacing) / 2) 0;
 	padding: 0;
-	/* Same safety net as p: long strings break instead of overflowing. */
 	overflow-wrap: break-word;
 	text-wrap: pretty;
 }
@@ -272,16 +269,17 @@ nldd-rich-text dl {
 	column-gap: var(--_rich-text-dl-column-gap);
 
 	@container (max-width: 40rem) {
-		grid-template-columns: 1fr;
+		grid-template-columns: minmax(0, 1fr);
 	}
 
 	@container (min-width: 40.0625rem) {
-		grid-template-columns: var(--_rich-text-dt-width) 1fr;
+		grid-template-columns: var(--_rich-text-dt-width) minmax(0, 1fr);
 	}
 }
 
 nldd-rich-text dt {
 	font-weight: var(--primitives-font-weight-body-bold);
+	overflow-wrap: break-word;
 
 	@container (min-width: 40.0625rem) {
 		grid-column: 1;
@@ -290,6 +288,7 @@ nldd-rich-text dt {
 
 nldd-rich-text dd {
 	margin-inline: 0;
+	overflow-wrap: break-word;
 	text-wrap: pretty;
 
 	@container (min-width: 40.0625rem) {
@@ -425,11 +424,7 @@ nldd-rich-text code {
 	background-color: var(--semantics-surfaces-tinted-background-color);
 	font-family: var(--primitives-font-family-monospace);
 	font-size: var(--semantics-code-inline-font-size);
-}
-
-/* Inside table cells, let long code tokens (e.g. type_spec.precision) break so
-   they don't force a column wide; in running text code stays intact. */
-nldd-rich-text :is(th, td) code {
+	/* wrapCodeText in text-wrap.ts; rich-text.test.ts keeps the two equal. */
 	overflow-wrap: anywhere;
 }
 
@@ -529,6 +524,17 @@ nldd-rich-text blockquote {
 	}
 }
 
+nldd-rich-text blockquote,
+nldd-rich-text blockquote > p {
+	/* wrapDisplayText in text-wrap.ts; rich-text.test.ts keeps the two equal. */
+	overflow-wrap: anywhere;
+	-webkit-hyphens: auto;
+	hyphens: auto;
+	-webkit-hyphenate-limit-before: 5;
+	-webkit-hyphenate-limit-after: 5;
+	hyphenate-limit-chars: 12 5 5;
+}
+
 nldd-rich-text blockquote > p {
 	margin: 0;
 }
@@ -576,6 +582,7 @@ nldd-rich-text details {
    and a flex or grid row would make each of them a column. */
 nldd-rich-text summary {
 	display: block;
+	position: relative;
 	align-content: center;
 	box-sizing: border-box;
 	border-radius: max(0px, var(--_rich-text-details-start-corner-radius) - var(--_rich-text-details-highlight-border-width)) max(0px, var(--_rich-text-details-start-corner-radius) - var(--_rich-text-details-highlight-border-width)) max(0px, var(--_rich-text-details-end-corner-radius) - var(--_rich-text-details-highlight-border-width)) max(0px, var(--_rich-text-details-end-corner-radius) - var(--_rich-text-details-highlight-border-width));
@@ -587,20 +594,25 @@ nldd-rich-text summary {
 	font: var(--_rich-text-details-summary-font);
 	cursor: default;
 	list-style: none;
+	/* wrapUiText in text-wrap.ts; rich-text.test.ts keeps the two equal. */
 	overflow-wrap: break-word;
+	-webkit-hyphens: auto;
+	hyphens: auto;
+	-webkit-hyphenate-limit-before: 5;
+	-webkit-hyphenate-limit-after: 5;
+	hyphenate-limit-chars: 12 5 5;
 	-webkit-tap-highlight-color: transparent;
 
 	&::-webkit-details-marker {
 		display: none;
 	}
 
-	/* Floated into the padding on the first line, so it moves with the centered
-	   text and a second line does not run under it. */
+	/* In the padding the summary keeps free, so a second line does not run under it. */
 	&::before {
 		content: '';
-		float: inline-end;
-		margin-block-start: calc((1lh - var(--_rich-text-details-disclosure-icon-size)) / 2);
-		margin-inline-end: calc(-1 * (var(--_rich-text-details-disclosure-icon-size) + var(--_rich-text-details-summary-gap)));
+		position: absolute;
+		inset-block-start: calc(50% - var(--_rich-text-details-disclosure-icon-size) / 2);
+		inset-inline-end: calc((var(--_rich-text-details-summary-min-size) - var(--_rich-text-details-disclosure-icon-size)) / 2);
 		background-color: currentColor;
 		width: var(--_rich-text-details-disclosure-icon-size);
 		height: var(--_rich-text-details-disclosure-icon-size);
@@ -779,9 +791,8 @@ nldd-rich-text hr {
 
 nldd-rich-text table {
 	display: block;
-	/* Mobile scroll: the block shrinks to its content (so the border hugs
-	   narrow tables) but caps at the container, scrolling when the columns
-	   need more room. width: auto would instead fill 100% as a block. */
+	/* A block, not a table: only a block can scroll. It hugs its content, caps
+	   at the container and scrolls once every column is at its longest word. */
 	width: max-content;
 	max-width: 100%;
 	margin-block: max(
@@ -797,13 +808,6 @@ nldd-rich-text table {
 	overflow-x: auto;
 	-webkit-overflow-scrolling: touch;
 	scrollbar-width: thin;
-
-	@container (min-width: 40.0625rem) {
-		display: table;
-		width: 100%;
-		overflow-x: unset;
-		scrollbar-width: unset;
-	}
 }
 
 /* ## Table Row */
@@ -817,31 +821,25 @@ nldd-rich-text tr {
 /* ## Table Header Cell */
 
 nldd-rich-text th {
-	min-width: var(--primitives-area-160);
 	padding-block: var(--semantics-tables-row-padding-block);
 	padding-inline: calc(var(--semantics-tables-column-gap) / 2);
 	border-bottom: var(--semantics-tables-border-width) solid var(--semantics-tables-border-color);
 	font: var(--primitives-font-body-md-bold-tight);
 	text-align: start;
-
-	@container (min-width: 40.0625rem) {
-		min-width: unset;
-	}
+	/* wrapBodyText in text-wrap.ts; rich-text.test.ts keeps the two equal. */
+	overflow-wrap: break-word;
 }
 
 /* ## Table Data Cell */
 
 nldd-rich-text td {
-	min-width: var(--primitives-area-160);
 	padding-block: var(--semantics-tables-row-padding-block);
 	padding-inline: calc(var(--semantics-tables-column-gap) / 2);
 	border-bottom: var(--semantics-tables-border-width) solid var(--semantics-tables-border-color);
 	font: var(--primitives-font-body-md-regular-tight);
 	text-align: left;
-
-	@container (min-width: 40.0625rem) {
-		min-width: unset;
-	}
+	/* wrapBodyText in text-wrap.ts; rich-text.test.ts keeps the two equal. */
+	overflow-wrap: break-word;
 }
 
 /* ## Table Outer Cells */

@@ -3323,7 +3323,7 @@
                   }
                 }
               ],
-              "description": "Filter items based on a query string.\n\nMatching items are kept visible. Non-matching items are hidden. Matching\nitems receive `query=<query>` so their text-cell bolds the non-typed\nremainder (predictive completion, the ARIA APG pattern for combobox).\n\nWhen the query is empty, all items are shown and `query` is cleared.\n\nWith `hide: false` nothing is hidden and every item gets the `query`, for\na list someone else already filtered, such as a server answering per\nkeystroke. Text without the query in it is shown as it is."
+              "description": "Filter items based on a query string.\n\nMatching items are kept visible. Non-matching items are hidden. Matching\nitems receive `query=<query>` so their text bolds the non-typed\nremainder (predictive completion, the ARIA APG pattern for combobox).\n\nWhen the query is empty, all items are shown and `query` is cleared.\n\nWith `hide: false` nothing is hidden and every item gets the `query`, for\na list someone else already filtered, such as a server answering per\nkeystroke. Text without the query in it is shown as it is."
             },
             {
               "kind": "method",
@@ -3568,7 +3568,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A split button combines a primary action with a chevron that opens its alternatives. The main button performs the default action; the chevron opens a menu or popover of variants of that same action. The overlay is required. Put an `nldd-menu` or `nldd-popover` in the `popup` slot, as on nldd-button and nldd-icon-button: ```html <nldd-split-button text=\"Bewaar\"> <nldd-menu slot=\"popup\"> <nldd-menu-item text=\"Opslaan als…\"></nldd-menu-item> </nldd-menu> </nldd-split-button> ``` The split button has no other slots, so an overlay without `slot=\"popup\"` works too. When both hold one, the one in `popup` wins. For an overlay that lives elsewhere, point `popovertarget` at it instead. The chevron is the overlay's invoker: it anchors it, opens and closes it, and takes `aria-expanded` and `aria-haspopup` from it, exactly as an nldd-icon-button with a slotted overlay does. Its accessible name says which action it belongs to (\"Meer opties voor Bewaar\"). The API is narrower than nldd-button on purpose: a split button is an action with variants, so it has no supporting text, no end icon and no link target. Its label always stays on one line, without an ellipsis: keep it short.",
+          "description": "A split button combines a primary action with a chevron that opens its alternatives. The main button performs the default action; the chevron opens a menu or popover of variants of that same action. The overlay is required. Put an `nldd-menu` or `nldd-popover` in the `popup` slot, as on nldd-button and nldd-icon-button:\n\n```html\n<nldd-split-button text=\"Bewaar\">\n  <nldd-menu slot=\"popup\">\n    <nldd-menu-item text=\"Opslaan als…\"></nldd-menu-item>\n  </nldd-menu>\n</nldd-split-button>\n```\n\nThe split button has no other slots, so an overlay without `slot=\"popup\"` works too. When both hold one, the one in `popup` wins. For an overlay that lives elsewhere, point `popovertarget` at it instead. The chevron is the overlay's invoker: it anchors it, opens and closes it, and takes `aria-expanded` and `aria-haspopup` from it, exactly as an nldd-icon-button with a slotted overlay does. Its accessible name says which action it belongs to (\"Meer opties voor Bewaar\"). The API is narrower than nldd-button on purpose: a split button is an action with variants, so it has no supporting text, no end icon and no link target. Its label always stays on one line, without an ellipsis: keep it short.",
           "name": "NLDDSplitButton",
           "members": [
             {
@@ -4933,7 +4933,9 @@
             "inklappen"
           ],
           "related": [
-            "nldd-list"
+            "nldd-list",
+            "nldd-admonition",
+            "nldd-rich-text"
           ],
           "slots": [
             {
@@ -5110,12 +5112,16 @@
             "callout",
             "note",
             "opmerking",
-            "let op"
+            "let op",
+            "disclosure",
+            "uitklappen"
           ],
           "related": [
             "nldd-banner",
             "nldd-inline-dialog",
-            "nldd-blockquote"
+            "nldd-blockquote",
+            "nldd-accordion",
+            "nldd-rich-text"
           ],
           "slots": [
             {
@@ -5286,9 +5292,19 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Shows one person or organization as a compact, round (person) or rounded (organization) representation. The content follows a fixed fallback chain: an image when `src` loads, otherwise the initials (from `initials` or derived from `name`), and otherwise a fallback icon. `type` sets both the shape and the fallback icon: `person` gives a circle with a person icon, `organization` a rounded square with a building icon. The shape belongs to the meaning and cannot be set on its own. Override the fallback icon with `icon` where that helps. Without `size` the avatar scales with its container, like `nldd-icon`; a fixed size (the same spacer-aligned scale, 16 through 96) is the exception. The initials and the icon scale along. Wide initials (WW, MMM) are scaled down automatically so they stay inside the shape. Four characters fit an organization acronym such as LVVN or JenV; they read well from 40px, so below that pick a shorter form. Accessibility: the host element carries the meaning. With a `name` (and without `decorative`) it gets `role=\"img\"` with the name as its label. When the name already stands beside it as text, in an identity for instance, set `decorative` so the avatar stays hidden from assistive software. A dead `src` falls back to the initials or the icon, never to a broken-image icon.",
+          "description": "Shows one person or organization as a compact, round (person) or rounded (organization) representation. The content follows a fixed fallback chain: an image when `src` loads, otherwise the initials (from `initials` or derived from `name`), and otherwise a fallback icon. `variant` sets both the shape and the fallback icon: `person` gives a circle with a person icon, `organization` a rounded square with a building icon. The shape belongs to the meaning and cannot be set on its own. Override the fallback icon with `icon` where that helps. Without `size` the avatar scales with its container, like `nldd-icon`; a fixed size (the same spacer-aligned scale, 16 through 96) is the exception. The initials and the icon scale along. Wide initials (WW, MMM) are scaled down automatically so they stay inside the shape. Four characters fit an organization acronym such as LVVN or JenV; they read well from 40px, so below that pick a shorter form. Accessibility: the host element carries the meaning. With a `name` (and without `decorative`) it gets `role=\"img\"` with the name as its label. When the name already stands beside it as text, in an identity for instance, set `decorative` so the avatar stays hidden from assistive software. A dead `src` falls back to the initials or the icon, never to a broken-image icon.",
           "name": "NLDDAvatar",
           "members": [
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "AvatarVariant"
+              },
+              "default": "'person'",
+              "attribute": "variant",
+              "reflects": true
+            },
             {
               "kind": "field",
               "name": "color",
@@ -5321,12 +5337,12 @@
             },
             {
               "kind": "field",
-              "name": "icon",
+              "name": "name",
               "type": {
                 "text": "string"
               },
               "default": "''",
-              "attribute": "icon"
+              "attribute": "name"
             },
             {
               "kind": "field",
@@ -5336,6 +5352,15 @@
               },
               "default": "''",
               "attribute": "initials"
+            },
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "icon"
             },
             {
               "kind": "field",
@@ -5410,25 +5435,6 @@
             },
             {
               "kind": "field",
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "name"
-            },
-            {
-              "kind": "field",
-              "name": "type",
-              "type": {
-                "text": "AvatarType"
-              },
-              "default": "'person'",
-              "attribute": "type",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "href",
               "type": {
                 "text": "string"
@@ -5499,6 +5505,18 @@
           ],
           "attributes": [
             {
+              "name": "variant",
+              "type": {
+                "text": "AvatarVariant"
+              },
+              "default": "'person'",
+              "fieldName": "variant",
+              "expandedType": {
+                "text": "'organization' | 'person'"
+              },
+              "description": "`person` (the default: a circle, person icon) or `organization` (a rounded square, building icon)"
+            },
+            {
               "name": "color",
               "type": {
                 "text": "AvatarColor"
@@ -5532,13 +5550,13 @@
               "description": "Shrinks the visible shape to 5/6 of the host, centered, so the avatar aligns optically with an icon on the same grid (an icon glyph has built-in margin)"
             },
             {
-              "name": "icon",
+              "name": "name",
               "type": {
                 "text": "string"
               },
               "default": "''",
-              "fieldName": "icon",
-              "description": "Overrides the type-dependent fallback icon"
+              "fieldName": "name",
+              "description": "Name of the person or organization; supplies the derived initials and the accessible label"
             },
             {
               "name": "initials",
@@ -5548,6 +5566,15 @@
               "default": "''",
               "fieldName": "initials",
               "description": "Explicit initials, at most 4 characters, such as `KvK` or `LVVN` (overrides what is derived from `name`; also for organization acronyms). Four characters read well from 40px; below that use a shorter form"
+            },
+            {
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "icon",
+              "description": "Overrides the fallback icon of the variant"
             },
             {
               "name": "src",
@@ -5614,27 +5641,6 @@
               "expandedType": {
                 "text": "'delay' | 'instant' | 'never'"
               }
-            },
-            {
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "name",
-              "description": "Name of the person or organization; supplies the derived initials and the accessible label"
-            },
-            {
-              "name": "type",
-              "type": {
-                "text": "AvatarType"
-              },
-              "default": "'person'",
-              "fieldName": "type",
-              "expandedType": {
-                "text": "'organization' | 'person'"
-              },
-              "description": "`person` (circle, person icon) or `organization` (rounded, building icon); default `person`"
             },
             {
               "name": "href",
@@ -6182,14 +6188,6 @@
               "description": "Wrap long lines instead of horizontal scroll"
             },
             {
-              "name": "copy-unavailable",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "_copyUnavailable"
-            },
-            {
               "name": "translations",
               "type": {
                 "text": "Partial<NLDDCodeViewerTranslations>"
@@ -6235,6 +6233,30 @@
           "declaration": {
             "name": "NLDDCodeViewer",
             "module": "src/components/content/code-viewer/code-viewer.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/content/icon/icon-categories.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "ICON_CATEGORIES",
+          "type": {
+            "text": "Record<string, string[]>"
+          },
+          "default": "{ 'Pijlen en richting': [ 'arrow-2-counter-clockwise', 'arrow-clockwise', 'arrow-down', 'arrow-down-in-bucket', 'arrow-down-left-arrow-up-right', 'arrow-left', 'arrow-left-right', 'arrow-left-to-line', 'arrow-right', 'arrow-right-in-bucket', 'arrow-right-out-bucket', 'arrow-right-to-line', 'arrow-u-turn-backward', 'arrow-u-turn-forward', 'arrow-up', 'arrow-up-arrow-down', 'arrow-up-circle', 'arrow-up-out-bucket', 'arrow-up-right-arrow-down-left', 'rectangle-split-2x3-badge-arrow-down', 'square-arrow-down', 'square-arrow-right-top', 'square-arrow-up', ], 'Chevrons': [ 'chevron-double-left', 'chevron-double-left-small', 'chevron-double-left-extra-small', 'chevron-double-right', 'chevron-double-right-small', 'chevron-double-right-extra-small', 'chevron-down', 'chevron-down-small', 'chevron-down-extra-small', 'chevron-left', 'chevron-left-small', 'chevron-left-extra-small', 'chevron-left-to-line', 'chevron-left-to-line-small', 'chevron-left-to-line-extra-small', 'chevron-right', 'chevron-right-small', 'chevron-right-extra-small', 'chevron-right-to-line', 'chevron-right-to-line-small', 'chevron-right-to-line-extra-small', 'chevron-up', 'chevron-up-small', 'chevron-up-extra-small', 'chevron-up-chevron-down', ], 'Carets': [ 'caret-down', 'caret-down-small', 'caret-down-extra-small', 'caret-left', 'caret-left-small', 'caret-left-extra-small', 'caret-right', 'caret-right-small', 'caret-right-extra-small', 'caret-up', 'caret-up-small', 'caret-up-extra-small', ], 'Status en feedback': [ 'check-mark', 'check-mark-small', 'check-mark-extra-small', 'check-mark-circle', 'check-mark-circle-filled', 'check-mark-circle-light', 'check-mark-square', 'dismiss', 'dismiss-small', 'dismiss-extra-small', 'dismiss-circle', 'dismiss-circle-filled', 'exclamation-circle', 'exclamation-circle-filled', 'exclamation-2-circle', 'exclamation-2-circle-filled', 'exclamation-3-circle', 'exclamation-3-circle-filled', 'exclamation-triangle', 'exclamation-triangle-filled', 'info-circle', 'info-circle-filled', 'question-mark-circle', 'slash-circle', 'slash-circle-light', ], 'Vormen en rekenen': [ 'circle', 'circle-light', 'circle-circle', 'circle-circle-light', 'circle-dashed', 'circle-filled', 'circle-filled-small', 'circle-filled-extra-small', 'circle-grid-2x2-top-left-check-mark', 'ellipsis', 'minus', 'minus-small', 'minus-extra-small', 'minus-circle', 'plus', 'plus-small', 'square', 'square-1', ], 'Zoeken en ontdekken': [ 'binoculars', 'magnifier', 'radar', 'viewfinder', 'viewfinder-line', ], 'Mensen': [ 'accessibility', 'ear', 'ear-slash', 'eye', 'eye-slash', 'eyeglasses', 'face-frowning', 'face-smiling', 'face-smiling-badge-plus', 'hand', 'hand-thumbs-down', 'hand-thumbs-up', 'handshake', 'head-profile-with-brain', 'lips', 'person', 'person-2', 'person-badge-gear', 'person-badge-minus', 'person-badge-plus', 'person-circle', 'person-circle-badge-plus', 'person-text-rectangle', ], 'Favorieten en markeringen': [ 'bell', 'bookmark', 'bookmark-filled', 'certificate', 'flag', 'flag-filled', 'heart', 'heart-filled', 'megaphone', 'seal-check-mark', 'seal-star', 'star', 'star-filled', 'starburst-filled', 'tag', 'tag-on-tag', ], 'Communicatie': [ 'at', 'envelope', 'link', 'link-badge-lock', 'message-rectangle-text', 'paper-plane', 'paperclip', 'tray', ], 'Documenten en mappen': [ 'file', 'file-badge-arrow-down', 'file-badge-arrow-up', 'file-badge-minus', 'file-badge-plus', 'file-box', 'file-on-file', 'file-text', 'file-text-badge-check-mark', 'file-text-badge-check-plus', 'file-text-on-file-text', 'file-text-pencil', 'markdown-rectangle', 'folder', 'folder-badge-plus', 'folder-on-folder', 'folder-open', 'note', 'file-markdown', 'file-pdf', 'file-odt', 'file-ods', 'file-odp', 'file-odg', 'file-odf', 'file-jpg', 'file-png', 'file-gif', 'file-heic', 'file-svg', 'file-tiff', 'file-webp', ], 'Boeken': [ 'book', 'book-badge-play', 'book-badge-plus', 'book-with-bookmark', 'books-vertical', ], 'Tekstopmaak': [ 'bold', 'heading-1', 'heading-2', 'heading-3', 'heading-4', 'heading-5', 'heading-6', 'highlighter', 'indent-decrease', 'indent-increase', 'italic', 'paragraph-sign', 'strikethrough', 'text-format-size', 'text-quote', 'underlined', 'superscript', 'subscript', ], 'Lijsten en sorteren': [ 'bullet-list', 'checkbox-list', 'task-list', 'list', 'list-decreasing-lines', 'numbered-list', 'list-arrow-up', 'list-arrow-down', ], 'Objecten en gereedschap': [ 'triangle-square-circle', 'clipboard', 'clipboard-bullet-list', 'clipboard-pencil', 'clipboard-square', 'gear', 'paintbrush', 'pencil', 'pencil-on-square', 'pencil-ruler', 'scissor', 'slider-horizontal-3', 'square-on-square', 'square-plus-on-square', 'trash', 'boxes-3', 'screwdriver-wrench', 'erlenmeyer-flask', 'erlenmeyer-flask-light', 'microscope', 'wrench', 'color-chart', 'diamond', 'lifebuoy', 'lightbulb', ], 'Indeling': [ 'rectangle', 'rectangle-split-2x1', 'rectangle-split-2x3', 'rectangle-split-3x1', 'rectangle-stack', 'rectangle-stack-text', 'sidebar-left', 'sidebar-right', 'square-grid-2x2', 'square-grid-2x2-pencil', 'square-grid-3x3', 'blocks-9', 'kanban-columns', ], 'Data en structuur': [ 'chart-line-x-y-axis', 'chart-bar-x-axis', 'score-meter', 'centralized-structure', 'tree-structure', 'share-network', ], 'Media': [ 'media-backward', 'media-backward-filled', 'media-backward-end', 'media-backward-end-filled', 'media-backward-frame', 'media-backward-frame-filled', 'media-forward', 'media-forward-filled', 'media-forward-end', 'media-forward-end-filled', 'media-forward-frame', 'media-forward-frame-filled', 'media-pause', 'media-pause-filled', 'media-play', 'media-play-filled', 'media-play-pause', 'media-play-pause-filled', 'media-stop', 'media-stop-filled', 'microphone', 'microphone-slash', 'photo', 'photo-camera', 'photo-on-photo-angled', 'photo-slash', 'photo-stack', 'speaker', 'speaker-slash', 'speaker-volume-low', 'speaker-volume-medium', 'speaker-volume-high', 'video-camera', 'projection-screen', ], 'Tijd en agenda': [ 'calendar-event', 'clock', 'clock-light', 'clock-arrow-clockwise', 'clock-arrow-counter-clockwise', 'timer', ], 'Privacy en beveiliging': [ 'key', 'lock-closed', 'lock-open', 'shield', 'shield-check-mark', 'shield-lock', 'shield-arrow-right-arrow-left', ], 'Natuur': [ 'cloud', 'leaf', 'lightning', 'lightning-filled', 'moon', 'snowflake', 'sun', 'wheat', 'tulip', 'tulip-light', 'bug', 'flower', ], 'Kaarten en plaatsen': [ 'apartment-building', 'apartment-building-2', 'brick-wall', 'foundation', 'globe', 'house', 'house-apartment-building', 'map', 'map-pin', 'map-pin-badge-minus', 'map-pin-badge-plus', 'map-pin-oval', 'parking-sign-square', 'point-bottom-left-to-point-top-right-s-curve-path', 'signpost', ], 'Software en ontwikkeling': [ 'app', 'puzzle-piece', 'puzzle-piece-badge-plus', 'puzzle-piece-filled', 'brackets-ellipsis', 'brackets-ellipsis-badge-plus', 'git-branch', 'git-commit', 'git-compare', 'git-fork', 'git-merge', 'git-pull-request', 'git-pull-request-closed', 'git-pull-request-draft', 'terminal', 'chevron-left-chevron-right', 'chevron-left-forward-slash-chevron-right', 'chevron-left-forward-slash-chevron-right-rectangle', 'rectangle-stack-chevron-left-forward-slash-chevron-right', ], 'Infrastructuur en hardware': [ 'cpu', 'cylinder-split', 'cylinder-split-badge-lock', 'cylinder-split-slash', 'cylinder-2-big-small-split', 'display', 'desk-with-screen', 'external-hard-drive', 'external-hard-drives', 'globe-rack-server', 'gpu', 'printer', 'memory-chip', 'waving-crossing-lines', 'pipeline-corner-2', 'pipeline-machine-gear', 'pipeline-valve', 'power-plug', 'power-plug-socket', 'pci-card', 'ssd-hard-drive', 'rack-server', 'rack-servers', 'psu', 'network-switch', 'transceiver-module', 'kvm-switch', 'ship-wheel', 'ship-wheel-badge-plus', ], 'Verbinding': [ 'cloud-arrow-up', 'cloud-arrow-down', 'antenna-radio-waves', 'rss', ], 'Handel': [ 'euro-sign', 'shopping-cart', 'creditcard', ], 'Kantoor': [ 'business-suitcase', 'network-structure', ], 'Overig': [ 'sparkles', ], }"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ICON_CATEGORIES",
+          "declaration": {
+            "name": "ICON_CATEGORIES",
+            "module": "src/components/content/icon/icon-categories.ts"
           }
         }
       ]
@@ -7393,7 +7415,7 @@
               },
               "default": "false",
               "fieldName": "hyphens",
-              "description": "Opt-in automatic hyphenation for running text (p, li, dd). Needs a correct `lang` on the page (`lang=\"nl\"` on `<html>`, for instance): without language information the browser does not hyphenate. An `overflow-wrap: break-word` safety net on headings, p and li is always on, independent of this attribute, so a word wider than the column breaks instead of overflowing. Headings are hyphenated regardless of this attribute, but only a word of at least 12 letters, as in `nldd-title`, so a short word moves to the next line whole. A soft hyphen (`&shy;`) adds a place to break of your own."
+              "description": "Opt-in automatic hyphenation for running text (p, li, dd, td). Needs a correct `lang` on the page (`lang=\"nl\"` on `<html>`, for instance): without language information the browser does not hyphenate. Without this attribute, a word wider than the column still breaks between two letters, in p, li, dt and dd, so no text runs out of it. In a table a column is never narrower than its longest word: the table scrolls instead. Inline `code` breaks between any two characters, also in a table cell. Headings are hyphenated regardless of this attribute, but only a word of at least 12 letters, as in `nldd-title`, so a short word moves to the next line whole. A soft hyphen (`&shy;`) adds a place to break of your own."
             },
             {
               "name": "translations",
@@ -7474,11 +7496,15 @@
             "prose",
             "markdown",
             "typography",
-            "opgemaakte tekst"
+            "opgemaakte tekst",
+            "disclosure",
+            "details"
           ],
           "related": [
             "nldd-text",
-            "nldd-title"
+            "nldd-title",
+            "nldd-accordion",
+            "nldd-admonition"
           ]
         }
       ],
@@ -7855,7 +7881,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "One run of body text at a size from the type scale. It is what you reach for where an app would otherwise write a bare `<p>` and inherit whatever the page happens to set: a line under a title, a sentence in a panel, a caption. Every combination it offers exists as a token, so it cannot invent typography: it only names what the scale already has. The three axes are the same three the tokens carry: size, weight and line height. Plain text goes in `text`, and the component draws a `<p>` for it. Text with a link, a `<strong>` or a tag goes in the slot, in a `<p>` of your own, or a `<span>` where the text is no paragraph, such as a label or a number. What is in the slot is in the HTML before any script runs; `text` is drawn in the browser. On a page of a website that has to read without script, use the slot. The element in the slot takes the text style of the component: a font, margin or other style the page sets on it does not apply. Not for headings, which is `nldd-title`, and not for a block of prose with its own rhythm, spacing and media widths, which is `nldd-rich-text`. This is one run of text and nothing around it. For large letters that are not a heading, such as a number or a statement on a landing page, take a display size: `display-6` to `display-1` are the sizes of `nldd-title`, with its weight, typeface and line height, and they follow the breakpoint as a title does. `weight` and `line-height` belong to the body sizes and do nothing at a display size. For a statement larger than `display-1`, give each breakpoint a size of its own with `sm-custom-size`, `md-custom-size` and `lg-custom-size`. Color follows the context channel a list item, menu or table sets on its content, so text inside a row travels with that row as it is hovered or selected. Standalone that channel is unset and the semantic color answers. A line stops at `--semantics-text-max-width`, 40em, so it holds the same number of characters at every size and a wide column does not turn one sentence into a ruler. Override that variable, or `max-width` on the element, where a line is meant to run the full width: a label in a table cell, a value beside its own heading.",
+          "description": "One run of body text at a size from the type scale. It is what you reach for where an app would otherwise write a bare `<p>` and inherit whatever the page happens to set: a line under a title, a sentence in a panel, a caption. Every combination it offers exists as a token, so it cannot invent typography: it only names what the scale already has. The three axes are the same three the tokens carry: size, weight and line height. Plain text goes in `text`, and the component draws a `<p>` for it. Text with a link, a `<strong>` or a tag goes in the slot, in a `<p>` of your own, or a `<span>` where the text is no paragraph, such as a label or a number. What is in the slot is in the HTML before any script runs; `text` is drawn in the browser. On a page of a website that has to read without script, use the slot. The element in the slot takes the text style of the component: a font, margin or other style the page sets on it does not apply. Not for headings, which is `nldd-title`, and not for a block of prose with its own rhythm, spacing and media widths, which is `nldd-rich-text`. This is one run of text and nothing around it. For large letters that are not a heading, such as a number or a statement on a landing page, take a display size: `display-6` to `display-1` are the sizes of `nldd-title`, with its weight, typeface and line height, and they follow the breakpoint as a title does. `weight` and `line-height` belong to the body sizes and do nothing at a display size. For a statement larger than `display-1`, give each breakpoint a size of its own with `sm-custom-size`, `md-custom-size` and `lg-custom-size`. Color follows the context channel a list item, menu or table sets on its content, so text inside a row travels with that row as it is hovered or selected. Standalone that channel is unset and the semantic color answers. A line stops at `--semantics-text-max-width`, 40em, so it holds the same number of characters at every size and a wide column does not turn one sentence into a ruler. Override that variable, or `max-width` on the element, where a line is meant to run the full width: a label in a table cell, a value beside its own heading. Text breaks at spaces and hyphens. A word wider than the line, such as a long compound, a URL or a code, breaks between two letters, so no text runs out of a narrow box. Set `hyphens` to break long words by syllable instead, with a hyphen. A display size always does that for a word of at least 12 letters. A soft hyphen (`&shy;`) in the text marks a break of your own at any size.",
           "name": "NLDDText",
           "members": [
             {
@@ -7946,6 +7972,16 @@
               },
               "default": "''",
               "attribute": "text",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hyphens",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "hyphens",
               "reflects": true
             }
           ],
@@ -8045,6 +8081,15 @@
               "default": "''",
               "fieldName": "text",
               "description": "The text, when it is plain text. The component draws it as a `<p>`. Content in the slot wins."
+            },
+            {
+              "name": "hyphens",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hyphens",
+              "description": "Breaks a word of at least 6 letters by syllable, with a hyphen, as `hyphens` on nldd-rich-text does. Needs a `lang` on the page (`lang=\"nl\"` on `<html>`): without one the browser does not hyphenate, and a long word still breaks between two letters. A display size hyphenates regardless of this attribute."
             }
           ],
           "superclass": {
@@ -8105,7 +8150,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A title bar with an optional overline, title, and supporting text on the left, and a slot at the end of the title line on the right. The title comes from `text`, with `heading-level` for its place in the heading structure. The level also sets the size: an h2 looks like `display-2`. Set `size` where the look should differ from the level, such as a section heading that is smaller than its place. A heading of your own in the default slot sets the level the same way, so `<h2>` there looks like `display-2` without a `heading-level`. A title without a level is no heading and shows as body text, whatever its `size`: give it a level, or for large letters that are not a heading use nldd-text with a display size. `overline` and `supporting-text` go above and below it. Each of the three has a slot in the same place for content that is more than text. The slot takes the element the attribute draws: a heading, or a `<p>` for a title that is no heading, and a `<p>` for the overline and the supporting text. Put inline markup inside that element. A filled slot takes the place of the attribute. Each of the three chooses for itself, so a heading in the slot can go with plain `supporting-text`. Both grow and shrink with the size of the title, and keep to the width of a line of reading (40em), with balanced lines. The supporting text is a line or two, not a paragraph. What is in a slot is in the HTML the server sends; what comes from an attribute is drawn in the browser. On a page of a website, which search engines, link previews and reader mode read without script, put the heading in the default slot. In an application `text` with `heading-level` is enough. Inline elements in a slotted heading or `<p>` (a link, strong, em, code, mark, q) look as they do in nldd-text. A shadow root cannot reach inside a slotted element, so that styling comes from a global stylesheet: `dist/css/title.css`, or `global.css`, which includes it. A word too long for the line is hyphenated by syllable, with the `lang` of the page: only a word of at least 12 letters, with at least 5 on each side, so a short word moves to the next line whole. A soft hyphen (`&shy;`) adds a place to break of your own, also where the browser has no dictionary for the language: `overheids&shy;informatie`, or `\\u00AD` in a string set from script, where an entity is not read. Most browsers then break that word only there; Safari may still pick a syllable of its own.",
+          "description": "A title bar with an optional overline, title, and supporting text on the left, and a slot at the end of the title line on the right. The title comes from `text`, with `heading-level` for its place in the heading structure. The level also sets the size: an h2 looks like `display-2`. Set `size` where the look should differ from the level, such as a section heading that is smaller than its place. A heading of your own in the default slot sets the level the same way, so `<h2>` there looks like `display-2` without a `heading-level`. A title without a level is no heading and shows as body text, whatever its `size`: give it a level, or for large letters that are not a heading use nldd-text with a display size. `overline` and `supporting-text` go above and below it. Each of the three has a slot in the same place for content that is more than text. The slot takes the element the attribute draws: a heading, or a `<p>` for a title that is no heading, and a `<p>` for the overline and the supporting text. Put inline markup inside that element. A filled slot takes the place of the attribute. Each of the three chooses for itself, so a heading in the slot can go with plain `supporting-text`. Both grow and shrink with the size of the title, and keep to the width of a line of reading (40em), with balanced lines. The supporting text is a line or two, not a paragraph. What is in a slot is in the HTML the server sends; what comes from an attribute is drawn in the browser. On a page of a website, which search engines, link previews and reader mode read without script, put the heading in the default slot. In an application `text` with `heading-level` is enough. Inline elements in a slotted heading or `<p>` (a link, strong, em, code, mark, q) look as they do in nldd-text. A shadow root cannot reach inside a slotted element, so that styling comes from a global stylesheet: `dist/css/title.css`, or `global.css`, which includes it. A word too long for the line is hyphenated by syllable, with the `lang` of the page: only a word of at least 12 letters, with at least 5 on each side, so a short word moves to the next line whole. A soft hyphen (`&shy;`) adds a place to break of your own, also where the browser has no dictionary for the language: `overheids&shy;informatie`, or `\\u00AD` in a string set from script, where an entity is not read. Most browsers then break that word only there; Safari may still pick a syllable of its own. The overline and the supporting text are not hyphenated: a word wider than their line breaks between two letters, as in `nldd-text`.",
           "name": "NLDDTitle",
           "members": [
             {
@@ -8398,16 +8443,6 @@
             },
             {
               "kind": "field",
-              "name": "expanded",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "expanded",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "disabled",
               "type": {
                 "text": "boolean"
@@ -8499,15 +8534,6 @@
               "default": "false",
               "description": "Inside a roving-focus container (e.g. nldd-token-field): the host is the single tab stop, so the trailing control is not separately tabbable.",
               "fieldName": "roving"
-            },
-            {
-              "name": "expanded",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "expanded",
-              "description": "Reflects whether the token's menu or popover is open (control=\"menu\"); managed by the token."
             },
             {
               "name": "disabled",
@@ -15469,16 +15495,6 @@
             },
             {
               "kind": "field",
-              "name": "expanded",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "expanded",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "valid",
               "type": {
                 "text": "boolean"
@@ -15646,15 +15662,6 @@
               "default": "''",
               "description": "Accessible name, forwarded as aria-label to the slotted select",
               "fieldName": "accessibleLabel"
-            },
-            {
-              "name": "expanded",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "expanded",
-              "description": "Reflects whether the native picker popup is open (driven internally)"
             },
             {
               "name": "valid",
@@ -17870,6 +17877,16 @@
             },
             {
               "kind": "field",
+              "name": "spinButtons",
+              "type": {
+                "text": "NumberFieldSpinButtons"
+              },
+              "default": "'end'",
+              "attribute": "spin-buttons",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "size",
               "type": {
                 "text": "NumberFieldSize"
@@ -17898,16 +17915,6 @@
               "default": "''",
               "description": "Accessible label forwarded as aria-label to the native input.",
               "attribute": "accessible-label"
-            },
-            {
-              "kind": "field",
-              "name": "hideSpinButtons",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "hide-spin-buttons",
-              "reflects": true
             },
             {
               "kind": "field",
@@ -18360,6 +18367,18 @@
           ],
           "attributes": [
             {
+              "name": "spin-buttons",
+              "type": {
+                "text": "NumberFieldSpinButtons"
+              },
+              "default": "'end'",
+              "fieldName": "spinButtons",
+              "expandedType": {
+                "text": "'end' | 'none' | 'split'"
+              },
+              "description": "Where the decrement and increment buttons go: 'end' (the default) puts them side by side at the end, so the value lines up at the start with the other fields in a form; 'split' puts decrement at the start and increment at the end, with the value centered between them, for a short counter such as a quantity; 'none' leaves them out."
+            },
+            {
               "name": "size",
               "type": {
                 "text": "NumberFieldSize"
@@ -18388,15 +18407,6 @@
               "default": "''",
               "description": "Accessible label (aria-label) forwarded to the native input",
               "fieldName": "accessibleLabel"
-            },
-            {
-              "name": "hide-spin-buttons",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "hideSpinButtons",
-              "description": "When set, hides the decrement and increment buttons"
             },
             {
               "name": "invalid",
@@ -18619,6 +18629,26 @@
             },
             {
               "kind": "field",
+              "name": "length",
+              "default": "6",
+              "attribute": "length",
+              "reflects": true,
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "format",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "format",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "size",
               "type": {
                 "text": "OneTimeCodeSize"
@@ -18703,26 +18733,6 @@
               },
               "default": "'numeric'",
               "attribute": "type",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "length",
-              "default": "6",
-              "attribute": "length",
-              "reflects": true,
-              "type": {
-                "text": "number"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "format",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "format",
               "reflects": true
             },
             {
@@ -19187,6 +19197,24 @@
           ],
           "attributes": [
             {
+              "name": "length",
+              "default": "DEFAULT_LENGTH",
+              "fieldName": "length",
+              "description": "How many characters the code has (default: 6).",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "format",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "format",
+              "description": "The shape of a code that is printed in groups, such as '###-###' or '#### ####': each `#` is a box, anything else a separator you see but a screen reader does not hear. The number of `#` is then the length, so `format` wins over `length`. The value never holds a separator: '123-234' is submitted as '123234'. Leave it out for a code without groups, as most codes from a text message are."
+            },
+            {
               "name": "size",
               "type": {
                 "text": "OneTimeCodeSize"
@@ -19272,24 +19300,6 @@
                 "text": "'alphanumeric' | 'numeric'"
               },
               "description": "What the code holds: 'numeric' (default, digits only, raises the number keyboard) | 'alphanumeric' (letters and digits)"
-            },
-            {
-              "name": "length",
-              "default": "DEFAULT_LENGTH",
-              "fieldName": "length",
-              "description": "How many characters the code has (default: 6).",
-              "type": {
-                "text": "number"
-              }
-            },
-            {
-              "name": "format",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "format",
-              "description": "The shape of a code that is printed in groups, such as '###-###' or '#### ####': each `#` is a box, anything else a separator you see but a screen reader does not hear. The number of `#` is then the length, so `format` wins over `length`. The value never holds a separator: '123-234' is submitted as '123234'. Leave it out for a code without groups, as most codes from a text message are."
             },
             {
               "name": "required",
@@ -42333,7 +42343,7 @@
           "slots": [
             {
               "name": "header",
-              "description": "Header content"
+              "description": "Header content. Put a `nldd-top-title-bar` straight in this slot, not in a container: the page measures the bar there, so an anchor scrolled to stays clear of it"
             },
             {
               "name": "",
@@ -44351,7 +44361,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A cell component for displaying a title-description pair in lists. `vertical-alignment=\"center\"` (default) stretches the cell to fill the full row height and centers its content within that space. Use `min-height` to set a minimum centered region. For strict top alignment without a minimum height, use `vertical-alignment=\"top\"`.",
+          "description": "A cell component for displaying a title-description pair in lists. `vertical-alignment=\"center\"` (default) stretches the cell to fill the full row height and centers its content within that space. Use `min-height` to set a minimum centered region. For strict top alignment without a minimum height, use `vertical-alignment=\"top\"`. A cell of `width=\"full\"` takes the room the row has left, but not less than 160px, so its text stays readable: about 20 characters. In a row too narrow for that the row runs wider than its box, which is the sign to hide a cell at that width (`hide-below`) or to combine two. In `nldd-table` the columns set the width, so a cell there has no floor. A `width=\"fit-content\"` cell is as wide as its text on one line, and never narrower than its longest word. `min-width` always wins: `0` lets the cell shrink freely, so a long URL breaks; `min-content` keeps the longest word whole; `max-content` keeps the text on one line. A `max-width` below 160px lowers the floor with it. Text breaks at spaces and hyphens. A word wider than the cell breaks between two letters, without a hyphen. Set `hyphens` to break long words by syllable instead. The cell gives the element in a slot its font and color, and styles nothing inside it. For a link, code or bold text in the description, put an `nldd-text` in the slot, with a `<p>` in it: that brings the inline styles of nldd-text, and its own rules for breaking.",
           "name": "NLDDDescriptionCell",
           "members": [
             {
@@ -44400,6 +44410,16 @@
               },
               "default": "'center'",
               "attribute": "vertical-alignment",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hyphens",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "hyphens",
               "reflects": true
             },
             {
@@ -44470,7 +44490,7 @@
                 "text": "string | undefined"
               },
               "fieldName": "minWidth",
-              "description": "Minimum width as CSS length (e.g. '80px', '5rem')"
+              "description": "Minimum width: a CSS length (e.g. '80px', '5rem'), or `min-content` or `max-content`. Wins over the default floor, `width` and `max-width`"
             },
             {
               "name": "max-width",
@@ -44499,6 +44519,15 @@
                 "text": "'bottom' | 'center' | 'top'"
               },
               "description": "Vertical alignment (default: 'center')"
+            },
+            {
+              "name": "hyphens",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hyphens",
+              "description": "Breaks a word of at least 6 letters by syllable, with a hyphen, as `hyphens` on nldd-text does. Needs a `lang` on the page (`lang=\"nl\"` on `<html>`): without one the browser does not hyphenate, and a long word still breaks between two letters. Reaches text in the two slots, not an `nldd-text` in them: that has a `hyphens` of its own."
             },
             {
               "name": "reorder-handle",
@@ -44816,7 +44845,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "The grip that drags its row in a `reorderable` nldd-list, by pointer or with the arrow keys. Always vertically centered and sized to fit the handle. It carries `reorder-handle` by itself, so it shows only while the row is `reorderable` and needs nothing else: ```html <nldd-list reorderable> <nldd-list-item> <nldd-reorder-handle-cell></nldd-reorder-handle-cell> <nldd-text-cell text=\"Item\"></nldd-text-cell> </nldd-list-item> </nldd-list> ``` Any other cell becomes the grip with `reorder-handle`, such as an nldd-cell with a control of your own.",
+          "description": "The grip that drags its row in a `reorderable` nldd-list, by pointer or with the arrow keys. Always vertically centered and sized to fit the handle. It carries `reorder-handle` by itself, so it shows only while the row is `reorderable` and needs nothing else:\n\n```html\n<nldd-list reorderable>\n  <nldd-list-item>\n    <nldd-reorder-handle-cell></nldd-reorder-handle-cell>\n    <nldd-text-cell text=\"Item\"></nldd-text-cell>\n  </nldd-list-item>\n</nldd-list>\n```\n\nAny other cell becomes the grip with `reorder-handle`, such as an nldd-cell with a control of your own.",
           "name": "NLDDReorderHandleCell",
           "members": [
             {
@@ -45409,7 +45438,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A cell component for displaying text content in lists with configurable alignment, size and color. This is the most fundamental list cell component. `vertical-alignment=\"center\"` (default) stretches the cell to fill the full row height and centers its content within that space. Use `min-height` to set a minimum centered region. For strict top alignment without a minimum height, use `vertical-alignment=\"top\"`. Each text region (overline, main text, supporting text) takes plain text in its attribute, which the cell draws as a `<p>`, or a `<p>` of your own in its slot. Use the slot when you need components mixed with text, such as `<nldd-link>`, `<nldd-tag>` or `<nldd-icon>`, and put them in that `<p>`: the paragraph is then in the HTML before any script runs. The slot wins over the attribute. Each region chooses for itself, so an attribute and a slot stand side by side: plain text in `overline`, a `<p>` with a tag in the default slot. The cell does not style plain HTML: for bold, write `**bold**` in the attribute, and for code put an `<nldd-text>` in the `<p>`, with the `<code>` in a `<span>` of its own. The element in a slot takes the text style of the cell: a font, margin or other style the page sets on it does not apply. Note that `query` highlighting and `**bold**` parsing only apply to the attribute path; slotted content is rendered as-is.",
+          "description": "A cell component for displaying text content in lists with configurable alignment, size and color. This is the most fundamental list cell component. `vertical-alignment=\"center\"` (default) stretches the cell to fill the full row height and centers its content within that space. Use `min-height` to set a minimum centered region. For strict top alignment without a minimum height, use `vertical-alignment=\"top\"`. Each text region (overline, main text, supporting text) takes plain text in its attribute, which the cell draws as a `<p>`, or a `<p>` of your own in its slot. Use the slot when you need components mixed with text, such as `<nldd-link>`, `<nldd-tag>` or `<nldd-icon>`, and put them in that `<p>`: the paragraph is then in the HTML before any script runs. The slot wins over the attribute. Each region chooses for itself, so an attribute and a slot stand side by side: plain text in `overline`, a `<p>` with a tag in the default slot. The cell does not style plain HTML: for bold, write `**bold**` in the attribute, and for code put an `<nldd-text>` in the `<p>`, with the `<code>` in a `<span>` of its own. The element in a slot takes the text style of the cell: a font, margin or other style the page sets on it does not apply. Note that `query` highlighting and `**bold**` parsing only apply to the attribute path; slotted content is rendered as-is. A cell of `width=\"full\"` takes the room the row has left, but not less than 160px, so its text stays readable: about 20 characters. In a row too narrow for that the row runs wider than its box, which is the sign to hide a cell at that width (`hide-below`) or to combine two. In `nldd-table` the columns set the width, so a cell there has no floor. A `width=\"fit-content\"` cell is as wide as its text on one line, and never narrower than its longest word. `min-width` always wins: `0` lets the cell shrink freely, so a long URL breaks; `min-content` keeps the longest word whole; `max-content` keeps the text on one line. A `max-width` below 160px lowers the floor with it. `fit-content` is for short text of a known length: a label, a status, an amount. A long value, such as a URL, goes in the `full` cell, beside a label of `fit-content`. The value then takes the room the label leaves and breaks within it, and the label only breaks between its words when the value would otherwise drop below its floor:\n\n```html\n<nldd-list-item>\n  <nldd-text-cell width=\"fit-content\" text=\"Bestand\"></nldd-text-cell>\n  <nldd-spacer-cell></nldd-spacer-cell>\n  <nldd-text-cell text=\"https://mijndienst.example.nl/aanvragen/A-1042/besluit\"></nldd-text-cell>\n</nldd-list-item>\n```\n\nText breaks at spaces and hyphens. A word wider than the cell breaks between two letters, without a hyphen. Set `hyphens` to break long words by syllable instead.",
           "name": "NLDDTextCell",
           "members": [
             {
@@ -45517,6 +45546,16 @@
               },
               "default": "''",
               "attribute": "overline",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hyphens",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "hyphens",
               "reflects": true
             },
             {
@@ -45630,7 +45669,7 @@
                 "text": "string | undefined"
               },
               "fieldName": "minWidth",
-              "description": "Minimum width as CSS length (e.g. '80px', '5rem')"
+              "description": "Minimum width: a CSS length (e.g. '80px', '5rem'), or `min-content` or `max-content`. Wins over the default floor, `width` and `max-width`"
             },
             {
               "name": "max-width",
@@ -45698,6 +45737,15 @@
               "default": "''",
               "fieldName": "overline",
               "description": "Optional overline text displayed above the main content. Supports **bold**. Falls back to `overline` slot."
+            },
+            {
+              "name": "hyphens",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hyphens",
+              "description": "Breaks a word of at least 6 letters by syllable, with a hyphen, as `hyphens` on nldd-text does. Needs a `lang` on the page (`lang=\"nl\"` on `<html>`): without one the browser does not hyphenate, and a long word still breaks between two letters."
             },
             {
               "name": "query",
@@ -45828,7 +45876,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A cell component for displaying a title with optional overline and supporting text in lists. `vertical-alignment=\"center\"` (default) stretches the cell to fill the full row height and centers its content within that space. Use `min-height` to set a minimum centered region. For strict top alignment without a minimum height, use `vertical-alignment=\"top\"`. Each text region (overline, title, supporting text) takes plain text in its attribute, or the element itself in its slot: a heading (`h1`–`h6`) or a `<p>` for the title, a `<p>` for the other two, as the cell draws them for the attribute. Use the slot when you need inline elements like `<nldd-tag>`, `<nldd-icon>` or other components mixed with text, and put them in that element: the heading is then in the HTML before any script runs. The slot wins over the attribute, and `heading-level` only applies to the attribute. Each region chooses for itself, so an attribute and a slot stand side by side: plain text in `supporting-text`, a heading with a tag in the default slot. The element in a slot takes the text style of the cell: a font, margin or other style the page sets on it does not apply. Note that `query` highlighting and `**bold**` parsing only apply to the attribute path; slotted content is rendered as-is.",
+          "description": "A cell component for displaying a title with optional overline and supporting text in lists. `vertical-alignment=\"center\"` (default) stretches the cell to fill the full row height and centers its content within that space. Use `min-height` to set a minimum centered region. For strict top alignment without a minimum height, use `vertical-alignment=\"top\"`. Each text region (overline, title, supporting text) takes plain text in its attribute, or the element itself in its slot: a heading (`h1`–`h6`) or a `<p>` for the title, a `<p>` for the other two, as the cell draws them for the attribute. Use the slot when you need inline elements like `<nldd-tag>`, `<nldd-icon>` or other components mixed with text, and put them in that element: the heading is then in the HTML before any script runs. The slot wins over the attribute, and `heading-level` only applies to the attribute. Each region chooses for itself, so an attribute and a slot stand side by side: plain text in `supporting-text`, a heading with a tag in the default slot. The element in a slot takes the text style of the cell: a font, margin or other style the page sets on it does not apply. Note that `query` highlighting and `**bold**` parsing only apply to the attribute path; slotted content is rendered as-is. A cell of `width=\"full\"` takes the room the row has left, but not less than 160px, so its text stays readable: about 20 characters. In a row too narrow for that the row runs wider than its box, which is the sign to hide a cell at that width (`hide-below`) or to combine two. In `nldd-table` the columns set the width, so a cell there has no floor. A `width=\"fit-content\"` cell is as wide as its text on one line, and never narrower than its longest word. `min-width` always wins: `0` lets the cell shrink freely, so a long URL breaks; `min-content` keeps the longest word whole; `max-content` keeps the text on one line. A `max-width` below 160px lowers the floor with it. Text breaks at spaces and hyphens. A word wider than the cell breaks between two letters, without a hyphen. Set `hyphens` to break long words by syllable instead.",
           "name": "NLDDTitleCell",
           "members": [
             {
@@ -45950,6 +45998,16 @@
             },
             {
               "kind": "field",
+              "name": "hyphens",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "hyphens",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "query",
               "type": {
                 "text": "string"
@@ -46058,7 +46116,7 @@
                 "text": "string | undefined"
               },
               "fieldName": "minWidth",
-              "description": "Minimum width as CSS length (e.g. '80px', '5rem')"
+              "description": "Minimum width: a CSS length (e.g. '80px', '5rem'), or `min-content` or `max-content`. Wins over the default floor, `width` and `max-width`"
             },
             {
               "name": "max-width",
@@ -46135,6 +46193,15 @@
               "default": "undefined",
               "description": "Heading level for the title element: 1–6 (default: none, renders a <p>)",
               "fieldName": "headingLevel"
+            },
+            {
+              "name": "hyphens",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hyphens",
+              "description": "Breaks a word of at least 6 letters by syllable, with a hyphen, as `hyphens` on nldd-text does. Needs a `lang` on the page (`lang=\"nl\"` on `<html>`): without one the browser does not hyphenate, and a long word still breaks between two letters."
             },
             {
               "name": "query",
@@ -47882,7 +47949,7 @@
         },
         {
           "kind": "class",
-          "description": "A trail of `nldd-breadcrumbs-item`s separated by `›`, rendered as a `<nav>` landmark wrapping a `<div role=\"list\">` (with each item carrying `role=\"listitem\"`). Explicit ARIA roles travel reliably across the slot boundary where the implicit `<ol>`/`<li>` mapping is inconsistent across AT + browser combos. The trail wraps onto multiple lines when it doesn't fit, so it adapts to any width.",
+          "description": "A trail of `nldd-breadcrumbs-item`s separated by `›`, rendered as a `<nav>` landmark wrapping a `<div role=\"list\">` (with each item carrying `role=\"listitem\"`). Explicit ARIA roles travel reliably across the slot boundary where the implicit `<ol>`/`<li>` mapping is inconsistent across AT + browser combos. The trail flows as text: when it doesn't fit, it wraps between items and within a long item, which breaks as the text of a button (a word of at least 12 letters by syllable). A chevron stays on the line of the last word of its item.",
           "name": "NLDDBreadcrumbs",
           "members": [
             {
@@ -52659,7 +52726,7 @@
               "expandedType": {
                 "text": "'inline' | 'none' | 'tooltip'"
               },
-              "description": "Where the value shows: inline in the caption, in a tooltip on the bar, or hidden (default: 'inline')"
+              "description": "Where the value shows: inline in the caption, in a tooltip on the bar, or hidden (default: 'inline'). Inline, the value stays on one line, at the end of the last line of the text, and the text breaks beside it, a word of at least 12 letters by syllable"
             },
             {
               "name": "indeterminate",
@@ -53463,7 +53530,7 @@
         },
         {
           "kind": "class",
-          "description": "Shows where you are in a process of several steps: a row of discs with a number (or a check mark on what is done), a label under each and a line connecting them. Other systems call this a stepper or a progress indicator. Mark the step you are on with `status=\"current\"`. The parent derives the rest from its position: `past` before it, `future` after. With none marked, no step is current and every step is still to do. With more than one, the last one wins and a warning goes to the console in a dev build: a flow that forgets to clear the previous step still points at the furthest one. A `status=\"past\"` or `status=\"future\"` on another step overrides what is derived for that step, for flows that jump back or skip a step. One attribute, the same three values as `nldd-step-cell`, so a flow reads in one vocabulary whether it runs across or down. A bar without a current step shows what is coming, for instance on the page before a process starts. Use that sparingly: what someone needs there is the button that starts the task, and a bar that shows no progress tells little. Mark a step as soon as the process has begun. Horizontal only, for 3 to 5 steps and 7 at most: each step needs room for its label, and with more of them you count instead of seeing at a glance how far you are. For more steps, or steps under each other, build an `nldd-list` with an `nldd-step-cell` and an `nldd-title-cell` per row: vertical steps usually carry more than a title, and a list row already does that. When the bar is no wider than the sm breakpoint, or than 120px per step, whichever is wider (a container query, so measured on the component itself rather than on the viewport), it folds into one line of text plus a segmented bar. A label that is too long for its step breaks at a syllable. The full list of steps stays in the DOM, only visually hidden, so assistive software hears no less than a wide screen shows. A step that is a link or a button is out of the tab order then: Tab would land on something you cannot see (WCAG 2.4.7). Accessibility: a `nav` with a label, holding a `role=\"list\"` with a `role=\"listitem\"` per step. The current step gets `aria-current=\"step\"`, the only notion WAI-ARIA has for this. \"Done\" and \"still to do\" do not exist as ARIA tokens and travel along as visually hidden text instead.",
+          "description": "Shows where you are in a process of several steps: a row of discs with a number (or a check mark on what is done), a label under each and a line connecting them. Other systems call this a stepper or a progress indicator. Mark the step you are on with `status=\"current\"`. The parent derives the rest from its position: `past` before it, `future` after. With none marked, no step is current and every step is still to do. With more than one, the last one wins and a warning goes to the console in a dev build: a flow that forgets to clear the previous step still points at the furthest one. A `status=\"past\"` or `status=\"future\"` on another step overrides what is derived for that step, for flows that jump back or skip a step. One attribute, the same three values as `nldd-step-cell`, so a flow reads in one vocabulary whether it runs across or down. A bar without a current step shows what is coming, for instance on the page before a process starts. Use that sparingly: what someone needs there is the button that starts the task, and a bar that shows no progress tells little. Mark a step as soon as the process has begun. Horizontal only, for 3 to 5 steps and 7 at most: each step needs room for its label, and with more of them you count instead of seeing at a glance how far you are. For more steps, or steps under each other, build an `nldd-list` with an `nldd-step-cell` and an `nldd-title-cell` per row: vertical steps usually carry more than a title, and a list row already does that. When the bar is no wider than the sm breakpoint, or than 120px per step, whichever is wider (a container query, so measured on the component itself rather than on the viewport), it folds into one line of text plus a segmented bar. A label of 12 letters or more that is too long for its step breaks at a syllable, in either form; a shorter word stays whole, and the count beside the title in the folded form stays on one line. The full list of steps stays in the DOM, only visually hidden, so assistive software hears no less than a wide screen shows. A step that is a link or a button is out of the tab order then: Tab would land on something you cannot see (WCAG 2.4.7). Accessibility: a `nav` with a label, holding a `role=\"list\"` with a `role=\"listitem\"` per step. The current step gets `aria-current=\"step\"`, the only notion WAI-ARIA has for this. \"Done\" and \"still to do\" do not exist as ARIA tokens and travel along as visually hidden text instead.",
           "name": "NLDDStepBar",
           "members": [
             {

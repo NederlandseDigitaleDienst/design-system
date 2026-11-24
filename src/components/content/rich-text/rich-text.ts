@@ -66,21 +66,22 @@
  * away short and additional: see the design guidelines on expand/collapse.
  *
  * @element nldd-rich-text
- * @keywords prose, markdown, typography, opgemaakte tekst
- * @related nldd-text, nldd-title
+ * @keywords prose, markdown, typography, opgemaakte tekst, disclosure, details
+ * @related nldd-text, nldd-title, nldd-accordion, nldd-admonition
  *
  * @attr {'flat'|'tight'|'snug'|'loose'} spacing - Spacing between elements: 'flat' | 'tight' | 'snug' (default) | 'loose'
  * @attr {boolean} centered - Centers the main column inside the container; without it, content is left-aligned
  * @attr {boolean} hyphens - Opt-in automatic hyphenation for running text (p,
- *   li, dd). Needs a correct
- *   `lang` on the page (`lang="nl"` on `<html>`, for instance): without
- *   language information the browser does not hyphenate. An
- *   `overflow-wrap: break-word` safety net on headings, p and li is always on,
- *   independent of this attribute, so a word wider than the column breaks
- *   instead of overflowing. Headings are hyphenated regardless of this
+ *   li, dd, td). Needs a correct `lang` on the page (`lang="nl"` on `<html>`,
+ *   for instance): without language information the browser does not
+ *   hyphenate. Without this attribute, a word wider than the column still
+ *   breaks between two letters, in p, li, dt and dd, so no text runs out of
+ *   it. In a table a column is never narrower than its longest word: the
+ *   table scrolls instead. Inline `code` breaks between any two characters,
+ *   also in a table cell. Headings are hyphenated regardless of this
  *   attribute, but only a word of at least 12 letters, as in `nldd-title`, so
- *   a short word moves to the next line whole. A soft hyphen (`&shy;`) adds
- *   a place to break of your own.
+ *   a short word moves to the next line whole. A soft hyphen (`&shy;`) adds a
+ *   place to break of your own.
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  * @accepts p, h1, h2, h3, h4, h5, h6, a, strong, b, em, i, u, s, del, ins, code, kbd, samp, var, small, mark, q, cite, abbr, sub, sup, br, span, ul, ol, li, dl, dt, dd, blockquote, pre, figure, figcaption, img, picture, source, table, thead, tbody, tfoot, tr, th, td, caption, hr, div, section, details, summary, video, iframe
  */
@@ -141,12 +142,11 @@ export class NLDDRichText extends LitElement {
 
 	override connectedCallback(): void {
 		super.connectedCallback();
-		/* Tables overflow horizontally on narrow viewports (overflow-x: auto
-		 * below 641px). Keyboard users need them focusable to scroll —
-		 * WCAG 2.1.1. Observe the host's size (catches container/viewport
-		 * resizes; per-table ResizeObserver misses container-query display
-		 * flips on tables) and the light-DOM subtree (catches added/removed
-		 * tables). Both trigger a re-evaluation of every table's overflow. */
+		/* A table scrolls horizontally once its columns no longer fit. Keyboard
+		 * users need it focusable to scroll (WCAG 2.1.1). Observe the host's
+		 * size (catches container and viewport resizes) and the light-DOM
+		 * subtree (catches added and removed tables). Both trigger a
+		 * re-evaluation of every table's overflow. */
 		this._resizeObserver = new ResizeObserver(() => this._syncTables());
 		this._resizeObserver.observe(this);
 		this._mutationObserver = new MutationObserver((records) => {

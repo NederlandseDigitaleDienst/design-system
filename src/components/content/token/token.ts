@@ -17,7 +17,6 @@
  * @attr {'none' | 'dismiss' | 'menu'} control - Control type (default: 'none')
  * @attr {string} menu-text - Accessible label for the menu button. Unset, it is `Toon opties voor "{text}"`.
  * @attr {boolean} roving - Inside a roving-focus container (e.g. nldd-token-field): the host is the single tab stop, so the trailing control is not separately tabbable.
- * @attr {boolean} expanded - Reflects whether the token's menu or popover is open (control="menu"); managed by the token.
  * @attr {boolean} disabled - Disabled state. Avoid it where you can; the design guidelines say why.
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  *
@@ -69,8 +68,9 @@ export class NLDDToken extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	roving = false;
 
-	@property({ type: Boolean, reflect: true })
-	expanded = false;
+	/** @internal Reflects whether the menu is open (control="menu"); the token sets it. */
+	@property({ type: Boolean, reflect: true, attribute: 'expanded' })
+	_expanded = false;
 
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
@@ -148,7 +148,7 @@ export class NLDDToken extends LitElement {
 
 	private _handleMenuToggle = (e: Event): void => {
 		const open = (e as ToggleEvent).newState === 'open';
-		this.expanded = open;
+		this._expanded = open;
 		// Closing via the menu (Escape or a selection) leaves focus in the now-hidden
 		// popover, so hand it back to the chevron. An outside click already moved focus
 		// to its target — leave that.

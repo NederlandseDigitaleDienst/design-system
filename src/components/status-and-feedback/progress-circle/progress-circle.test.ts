@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import type { NLDDProgressCircle } from './progress-circle.js';
 import { INDETERMINATE_TRANSITION_MS } from './progress-circle.js';
@@ -6,6 +6,9 @@ import { getStrokeWidthPx, getBorderErodeRadius } from './progress-circle.templa
 import { progressCircleStyles } from './progress-circle.styles.js';
 import variablesCss from '../../../assets/styles/variables.css?raw';
 import './progress-circle.js';
+import { loadTokens } from '../../../test-tokens.js';
+import { wrapUiText } from '../../../assets/styles/text-wrap.js';
+import { wrapOf, wrapOfSets } from '../../../assets/styles/text-wrap.fixtures.js';
 
 describe('nldd-progress-circle', () => {
 	let el: HTMLElement;
@@ -275,5 +278,34 @@ describe('nldd-progress-circle-segment-indicator', () => {
 		expect(getBorderErodeRadius(50)).toBe(2);
 		expect(getBorderErodeRadius(16)).toBe(6.25);
 		expect(getBorderErodeRadius(28)).toBeCloseTo(100 / 28, 5);
+	});
+});
+
+describe('nldd-progress-circle – breaking long words', () => {
+	let el: HTMLElement;
+	let removeTokens: () => void;
+
+	beforeEach(() => {
+		removeTokens = loadTokens();
+	});
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		removeTokens();
+	});
+
+	it('houdt een lang woord in het label binnen een smal vak', async () => {
+		el = await fixture('<div lang="nl" style="width: 100px"><nldd-progress-circle size="48" value="40" text="Subsidieaanvragen" value-display="inline"></nldd-progress-circle></div>');
+		const circle = el.querySelector('nldd-progress-circle') as HTMLElement;
+		await waitForUpdate(circle);
+		const text = circle.shadowRoot!.querySelector('.progress-circle__text')!;
+
+		expect(text.getBoundingClientRect().right).toBeLessThanOrEqual(el.getBoundingClientRect().right + 0.5);
+	});
+
+	it('breekt het label als knoptekst', async () => {
+		el = await fixture('<nldd-progress-circle value="40" text="Aanvragen"></nldd-progress-circle>');
+		await waitForUpdate(el);
+		expect(wrapOf(el.shadowRoot!.querySelector('.progress-circle__text')!)).toEqual(wrapOfSets(wrapUiText));
 	});
 });

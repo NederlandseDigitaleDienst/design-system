@@ -1,5 +1,6 @@
 import { css } from 'lit';
 import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { wrapUiText } from '../../../assets/styles/text-wrap.js';
 
 
 export const skipLinkStyles = css`
@@ -70,6 +71,11 @@ export const skipLinkStyles = css`
 		font: var(--primitives-font-body-md-medium-tight);
 		text-decoration: underline;
 		appearance: none;
+	}
+
+	.skip-link__text {
+		min-width: 0;
+		${wrapUiText}
 	}
 
 	.skip-link__control:focus-visible {

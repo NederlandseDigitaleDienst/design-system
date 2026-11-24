@@ -1,5 +1,6 @@
 import { css } from 'lit';
 import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { wrapUiText } from '../../../assets/styles/text-wrap.js';
 
 export const progressCircleStyles = css`
 	:host {
@@ -221,6 +222,7 @@ export const progressCircleStyles = css`
 		color: var(--_progress-circle-text-color);
 		font: var(--_progress-circle-text-font);
 		text-align: center;
+		${wrapUiText}
 		text-wrap: balance;
 	}
 

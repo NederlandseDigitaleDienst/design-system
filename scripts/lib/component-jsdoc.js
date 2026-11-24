@@ -30,11 +30,48 @@ function extractComponentBlocks(source) {
  *  JSDoc formatted with two or more spaces (" *  @attr …") still lands the tag
  *  at column 0, otherwise the @-tag regex would miss it and drop the entry. */
 function cleanBlock(body) {
+	let inFence = false;
 	return body
 		.split('\n')
-		.map((line) => line.replace(/^\s*\*?\s*/, ''))
+		.map((line) => {
+			const fence = /^\s*\*?\s*```/.test(line);
+			// Inside a code fence only the star and one space go, so the code keeps its indentation.
+			const cleaned = inFence && !fence ? line.replace(/^\s*\*? ?/, '') : line.replace(/^\s*\*?\s*/, '');
+			if (fence) inFence = !inFence;
+			return cleaned;
+		})
 		.join('\n')
 		.trim();
+}
+
+/** Prose lines joined into one paragraph, with a code fence kept as a block of
+ *  its own on its own lines, so it reads as code in markdown rather than inline. */
+function joinProse(lines) {
+	const parts = [];
+	let prose = [];
+	let fence = null;
+	const flush = () => {
+		const text = prose.join(' ').replace(/\s+/g, ' ').trim();
+		if (text) parts.push(text);
+		prose = [];
+	};
+	for (const line of lines) {
+		if (fence) {
+			fence.push(line);
+			if (line.trim().startsWith('```')) {
+				parts.push(fence.join('\n'));
+				fence = null;
+			}
+		} else if (line.trim().startsWith('```')) {
+			flush();
+			fence = [line.trim()];
+		} else {
+			prose.push(line);
+		}
+	}
+	if (fence) parts.push(fence.join('\n'));
+	flush();
+	return parts.join('\n\n');
 }
 
 function extractLeadingBlock(source) {
@@ -116,6 +153,7 @@ function parseComponent(block, filePath, fallbackTag) {
 	const newComponent = (tag) => ({
 		tag,
 		summary: '',
+		summaryLines: [],
 		attrs: [],
 		slots: [],
 		events: [],
@@ -141,7 +179,21 @@ function parseComponent(block, filePath, fallbackTag) {
 	// from its @element until its first tag of its own.
 	let collecting = false;
 
+	let inFence = false;
+	const addProse = (line) => {
+		if (!current) summaryLines.push(line);
+		else if (collecting && (inFence || !SEPARATOR.test(line))) current.summaryLines.push(line);
+	};
+
 	for (const line of lines) {
+		// A code fence in the prose is kept line by line: an @ or # in the code is not a tag or a heading.
+		if (line.trim().startsWith('```') || inFence) {
+			if (line.trim().startsWith('```')) inFence = !inFence;
+			// In a tag's description a fence stays flat: it ends up in a table cell.
+			if (lastEntry) lastEntry.description = `${lastEntry.description} ${line.trim()}`.trim();
+			else addProse(line);
+			continue;
+		}
 		const tagMatch = line.match(/^@(\w+)\s*([\s\S]*)$/);
 		if (!tagMatch) {
 			if (line.trim() === '') {
@@ -158,8 +210,7 @@ function parseComponent(block, filePath, fallbackTag) {
 			// second element in a shared file gets a description at all. Once a
 			// tag of its own has followed, prose is part of that tag's block
 			// (an @example for instance) and not a description.
-			if (!current) summaryLines.push(line.trim());
-			else if (collecting && !SEPARATOR.test(line)) current.summary = `${current.summary} ${line.trim()}`.trim();
+			addProse(line.trim());
 			continue;
 		}
 		lastEntry = null;
@@ -252,11 +303,11 @@ function parseComponent(block, filePath, fallbackTag) {
 
 	// The shared prose summary (minus the boilerplate title line) goes to the
 	// first element; sub-elements keep their own per-element prose if any.
-	const summary = summaryLines
-		.filter((l) => !/Components? \(Lit \+ TypeScript\)\s*$/.test(l))
-		.join(' ')
-		.replace(/\s+/g, ' ')
-		.trim();
+	const summary = joinProse(summaryLines.filter((l) => !/Components? \(Lit \+ TypeScript\)\s*$/.test(l)));
+	for (const component of components) {
+		component.summary = joinProse(component.summaryLines);
+		delete component.summaryLines;
+	}
 	// Joined, not assigned: the first element may also carry prose of its own,
 	// written under its @element, and that would be overwritten here.
 	if (components[0]) components[0].summary = [summary, components[0].summary].filter(Boolean).join(' ');

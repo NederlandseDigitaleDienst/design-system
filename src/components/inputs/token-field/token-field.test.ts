@@ -1,6 +1,7 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import './token-field.js';
+import { loadTokens } from '../../../test-tokens.js';
 
 type TokenFieldEl = HTMLElement & {
 	values: string[];
@@ -570,7 +571,7 @@ describe('nldd-token-field', () => {
 		await waitForUpdate(el);
 		const tokenFor = (v: string) => [...el.shadowRoot!.querySelectorAll<HTMLElement>('nldd-token')]
 			.find((t) => t.dataset.value === v)!;
-		(tokenFor('be') as HTMLElement & { expanded: boolean }).expanded = true; // its menu is "open"
+		(tokenFor('be') as HTMLElement & { _expanded: boolean })._expanded = true; // its menu is "open"
 		await waitForUpdate(el);
 		const deBefore = tokenFor('de');
 		el.values = ['nl', 'de']; // remove the expanded 'be'
@@ -868,4 +869,30 @@ describe('nldd-token-field typed option labels', () => {
 		await waitForUpdate(el);
 		expect(el.values).toEqual(['be']);
 	});
+});
+
+describe('nldd-token-field in a narrow column', () => {
+	let el: HTMLElement;
+	let removeTokens: () => void;
+
+	beforeEach(() => {
+		removeTokens = loadTokens();
+	});
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		removeTokens();
+	});
+
+	for (const width of [160, 200]) {
+		it(`houdt het invoergebied binnen een veld van ${width}px`, async () => {
+			el = await fixture(`<div style="width: ${width}px"><nldd-token-field accessible-label="Teams"><nldd-menu><nldd-menu-item text="Team Beleid"></nldd-menu-item></nldd-menu></nldd-token-field></div>`);
+			const field = el.querySelector('nldd-token-field') as HTMLElement;
+			await waitForUpdate(field);
+			const area = field.shadowRoot!.querySelector('.token-field__input-area')!;
+			expect(area).not.toBeNull();
+
+			expect(area.getBoundingClientRect().right).toBeLessThanOrEqual(field.getBoundingClientRect().right + 0.5);
+		});
+	}
 });

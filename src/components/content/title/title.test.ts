@@ -2,6 +2,9 @@ import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
 import './title.js';
+import titleCss from './title.css?raw';
+import { wrapBodyText, wrapCodeText, wrapDisplayText } from '../../../assets/styles/text-wrap.js';
+import { wrapOf, wrapOfSets } from '../../../assets/styles/text-wrap.fixtures.js';
 
 describe('nldd-title', () => {
 	let el: HTMLElement;
@@ -415,5 +418,47 @@ describe('nldd-title on its first render', () => {
 		await (el as HTMLElement & { updateComplete: Promise<boolean> }).updateComplete;
 		expect(el.getAttribute('data-level')).toBe('1');
 		expect(el.shadowRoot!.querySelector('.title__overline')).toBeNull();
+	});
+});
+
+describe('nldd-title – breaking long words', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it('geeft titel, overline en supporting-text elk hun eigen set, getekend en geslot', async () => {
+		el = await fixture(`<div>
+			<nldd-title id="own" text="Titel" overline="Boven" supporting-text="Onder"></nldd-title>
+			<nldd-title id="slotted"><p slot="overline">Boven</p><h2>Titel</h2><p slot="supporting-text">Onder</p></nldd-title>
+		</div>`);
+		await waitForUpdate(el);
+		const own = el.querySelector('#own')!.shadowRoot!;
+		const slotted = el.querySelector('#slotted')!;
+		const cases: [string, Element, Record<string, string>][] = [
+			['titel', own.querySelector('.title__text')!, wrapOfSets(wrapDisplayText)],
+			['overline', own.querySelector('.title__overline')!, wrapOfSets(wrapBodyText)],
+			['supporting-text', own.querySelector('.title__supporting-text')!, wrapOfSets(wrapBodyText)],
+			['geslotte titel', slotted.querySelector('h2')!, wrapOfSets(wrapDisplayText)],
+			['geslotte overline', slotted.querySelector('[slot="overline"]')!, wrapOfSets(wrapBodyText)],
+			['geslotte supporting-text', slotted.querySelector('[slot="supporting-text"]')!, wrapOfSets(wrapBodyText)],
+		];
+		for (const [name, node, expected] of cases) {
+			expect(wrapOf(node), name).toEqual(expected);
+		}
+	});
+
+	// title.css is plain CSS and cannot import the sets of text-wrap.ts.
+	it('geeft inline code wrapCodeText, ook in de supporting-text', async () => {
+		const style = document.createElement('style');
+		style.textContent = titleCss;
+		document.head.append(style);
+		el = await fixture('<nldd-title><h2>Zet <code>a</code></h2><p slot="supporting-text">Zet <code>b</code></p></nldd-title>');
+		await waitForUpdate(el);
+		for (const code of el.querySelectorAll('code')) {
+			expect(wrapOf(code)['overflow-wrap']).toBe(wrapOfSets(wrapCodeText)['overflow-wrap']);
+		}
+		style.remove();
 	});
 });

@@ -1,0 +1,8 @@
+severity: error
+context: 'nldd-number-field[hide-spin-buttons]'
+removed: ['hide-spin-buttons']
+fix: { flag: { hide-spin-buttons: 'spin-buttons="none"' } }
+message: '`hide-spin-buttons` is now `spin-buttons="none"`, and the attribute does nothing. Replace it here and on every other nldd-number-field.'
+examples:
+  passed: ['<nldd-number-field accessible-label="Aantal" spin-buttons="none"></nldd-number-field>']
+  failed: ['<nldd-number-field accessible-label="Aantal" hide-spin-buttons></nldd-number-field>']

@@ -27,7 +27,7 @@
  * @attr {string} accessible-label - Full override of aria-valuetext
  * @attr {string} value-text - Full override of the displayed value
  * @attr {'percentage'|'absolute'|'fraction'} value-format - Format for the displayed value (default: 'percentage')
- * @attr {'inline'|'tooltip'|'none'} value-display - Where the value shows: inline in the caption, in a tooltip on the bar, or hidden (default: 'inline')
+ * @attr {'inline'|'tooltip'|'none'} value-display - Where the value shows: inline in the caption, in a tooltip on the bar, or hidden (default: 'inline'). Inline, the value stays on one line, at the end of the last line of the text, and the text breaks beside it, a word of at least 12 letters by syllable
  * @attr {boolean} indeterminate - Shows a sliding indicator animation (only without segments)
  * @attr {number} value - Single-segment shorthand (ignored when segment children are present)
  * @attr {number} max - Total value (default: 100)

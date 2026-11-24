@@ -255,7 +255,7 @@ export const MetHistogramEnVelden = {
 							min="0"
 							max="2000"
 							step="50"
-							hide-spin-buttons
+							spin-buttons="none"
 							@change=${(event: Event) => fromField(event, false)}
 						></nldd-number-field>
 					</nldd-form-field>
@@ -265,7 +265,7 @@ export const MetHistogramEnVelden = {
 							min="0"
 							max="2000"
 							step="50"
-							hide-spin-buttons
+							spin-buttons="none"
 							@change=${(event: Event) => fromField(event, true)}
 						></nldd-number-field>
 					</nldd-form-field>

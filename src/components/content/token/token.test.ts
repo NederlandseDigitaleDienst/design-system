@@ -78,14 +78,9 @@ describe('nldd-token – state', () => {
 	it('open is false by default', async () => {
 		el = await fixture<NLDDToken>('<nldd-token control="menu">Label</nldd-token>');
 		await waitForUpdate(el);
-		expect(el.expanded).toBe(false);
+		expect(el._expanded).toBe(false);
 	});
 
-	it('open reflects as attribute', async () => {
-		el = await fixture<NLDDToken>('<nldd-token control="menu" expanded>Label</nldd-token>');
-		await waitForUpdate(el);
-		expect(el.hasAttribute('expanded')).toBe(true);
-	});
 
 	it('menu icon-button is not expanded and has popup-type=menu when closed', async () => {
 		el = await fixture<NLDDToken>('<nldd-token control="menu">Label</nldd-token>');
@@ -95,11 +90,21 @@ describe('nldd-token – state', () => {
 		expect(button.getAttribute('popup-type')).toBe('menu');
 	});
 
-	it('menu icon-button is expanded when the menu is open', async () => {
-		el = await fixture<NLDDToken>('<nldd-token control="menu" expanded>Label</nldd-token>');
+	it('follows its slotted menu: expanded while it is open, on the host and on the chevron', async () => {
+		el = await fixture<NLDDToken>('<nldd-token control="menu"><nldd-menu slot="menu"><nldd-menu-item text="A"></nldd-menu-item></nldd-menu></nldd-token>');
 		await waitForUpdate(el);
 		const button = el.shadowRoot!.querySelector('.token__menu-action nldd-icon-button')!;
+		const menu = el.querySelector('nldd-menu') as HTMLElement;
+		(button as HTMLElement).click();
+		await waitForUpdate(el);
+		expect(el._expanded).toBe(true);
+		expect(el.hasAttribute('expanded')).toBe(true);
 		expect(button.hasAttribute('expanded')).toBe(true);
+		menu.hidePopover();
+		await waitForUpdate(el);
+		expect(el._expanded).toBe(false);
+		expect(el.hasAttribute('expanded')).toBe(false);
+		expect(button.hasAttribute('expanded')).toBe(false);
 	});
 
 	it('disabled reflects as attribute', async () => {
@@ -265,7 +270,7 @@ describe('nldd-token – menu', () => {
 		button.click();
 		await waitForUpdate(el);
 		expect(popover.matches(':popover-open')).toBe(true);
-		expect(el.expanded).toBe(true);
+		expect(el._expanded).toBe(true);
 	});
 
 	it('gives its button no aria-controls for a popover with an id, which its shadow root cannot resolve', async () => {
@@ -292,7 +297,7 @@ describe('nldd-token – menu', () => {
 
 		el._handleMenuClick(new MouseEvent('click'));
 		await waitForUpdate(el);
-		expect(el.expanded).toBe(false);
+		expect(el._expanded).toBe(false);
 	});
 
 	/* ============================================================

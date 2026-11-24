@@ -75,6 +75,8 @@ export const splitButtonStyles = css`
 	}
 
 	:host([width="full"]) {
+		--_split-button-width: 100%;
+
 		display: block;
 		width: 100%;
 	}

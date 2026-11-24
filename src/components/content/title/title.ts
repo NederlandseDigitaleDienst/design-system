@@ -38,7 +38,9 @@
  * place to break of your own, also where the browser has no dictionary for the
  * language: `overheids&shy;informatie`, or `\u00AD` in a string set from
  * script, where an entity is not read. Most browsers then break that word only
- * there; Safari may still pick a syllable of its own.
+ * there; Safari may still pick a syllable of its own. The overline and the
+ * supporting text are not hyphenated: a word wider than their line breaks
+ * between two letters, as in `nldd-text`.
  *
  * @element nldd-title
  * @keywords heading, kop, koptekst

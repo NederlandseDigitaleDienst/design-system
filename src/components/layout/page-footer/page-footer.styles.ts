@@ -1,4 +1,5 @@
 import { css, unsafeCSS } from 'lit';
+import { wrapUiText } from '../../../assets/styles/text-wrap.js';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 import { inheritedTextReset, surfaceContent } from '../../../assets/styles/shadow-resets.js';
 
@@ -221,6 +222,7 @@ export const pageFooterLegalBarItemStyles = css`
 
 	.page-footer__legal-bar-item {
 		display: inline-flex;
+		${wrapUiText}
 		--context-content-color: var(--_page-footer-legal-bar-item-color);
 		color: var(--_page-footer-legal-bar-item-color);
 		font: var(--primitives-font-body-sm-regular-tight);

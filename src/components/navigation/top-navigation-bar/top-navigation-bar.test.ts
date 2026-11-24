@@ -5,6 +5,8 @@ import { loadTokens } from '../../../test-tokens.js';
 import type { NLDDTopNavigationBar } from './top-navigation-bar.js';
 import './top-navigation-bar.js';
 import '../../status-and-feedback/status-bar/status-bar.js';
+import { wrapUiText } from '../../../assets/styles/text-wrap.js';
+import { wrapOf, wrapOfSets } from '../../../assets/styles/text-wrap.fixtures.js';
 
 function navWithGlobalItems(): string {
 	return `
@@ -1001,5 +1003,37 @@ describe('nldd-top-navigation-bar – the name of the menu sheet list', () => {
 		el.querySelector('nldd-menu-bar')!.setAttribute('accessible-label', 'Mijn Dienst');
 		await (el as any)._onMenuButtonClick();
 		expect(list.getAttribute('aria-label')).toBe('Mijn Dienst');
+	});
+});
+
+describe('nldd-top-navigation-bar – a long website title', () => {
+	const TITLE = 'Mijn Arbeidsongeschiktheidsverzekeringsportaalomgeving';
+	let el: NLDDTopNavigationBar;
+	let own: { width: number; height: number };
+	let removeTokens: () => void;
+
+	beforeEach(() => {
+		own = { width: window.innerWidth, height: window.innerHeight };
+		removeTokens = loadTokens();
+	});
+
+	afterEach(async () => {
+		if (el) cleanup(el);
+		removeTokens();
+		await page.viewport(own.width, own.height);
+	});
+
+	it.each([
+		['a link', ' website-href="/"'],
+		['plain text', ''],
+	])('keeps a long word inside the bar on a narrow screen, as %s', async (_name, href) => {
+		await page.viewport(360, 800);
+		el = await fixture<NLDDTopNavigationBar>(`<nldd-top-navigation-bar website-title="${TITLE}"${href}></nldd-top-navigation-bar>`);
+		await waitForUpdate(el);
+		const text = el.shadowRoot!.querySelector('.top-navigation-bar__website-title-text')!;
+		expect(wrapOf(text)).toEqual(wrapOfSets(wrapUiText));
+		const range = document.createRange();
+		range.selectNodeContents(text);
+		expect(range.getBoundingClientRect().right).toBeLessThanOrEqual(el.getBoundingClientRect().right + 1);
 	});
 });

@@ -3,6 +3,8 @@ import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
 import type { NLDDAdmonition } from './admonition.js';
 import './admonition.js';
+import { wrapUiText } from '../../../assets/styles/text-wrap.js';
+import { wrapOf, wrapOfSets } from '../../../assets/styles/text-wrap.fixtures.js';
 
 describe('nldd-admonition', () => {
 	let el: NLDDAdmonition;
@@ -131,5 +133,20 @@ describe('nldd-admonition', () => {
 	it('does not collapse without a title to click on', async () => {
 		el = await fixture('<nldd-admonition collapsible></nldd-admonition>');
 		expect(el.shadowRoot!.querySelector('details')).toBeNull();
+	});
+});
+
+describe('nldd-admonition – breaking long words', () => {
+	let el: HTMLElement;
+
+	afterEach(() => cleanup(el));
+
+	it.each([
+		['plain', ''],
+		['collapsible', ' collapsible'],
+	])('gives the title wrapUiText, %s', async (_name, attr) => {
+		el = await fixture(`<nldd-admonition${attr} text="Let op"><nldd-text><p>Tekst</p></nldd-text></nldd-admonition>`);
+		await waitForUpdate(el);
+		expect(wrapOf(el.shadowRoot!.querySelector('.admonition__title')!)).toEqual(wrapOfSets(wrapUiText));
 	});
 });

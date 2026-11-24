@@ -71,6 +71,16 @@ describe('nldd-badge', () => {
 		expect(el.shadowRoot!.querySelector('.badge__text')!.textContent).toBe('OK');
 	});
 
+	it('lets the icon fill the box the badge sets for it', async () => {
+		el = await fixture('<nldd-badge icon="check-mark" text="OK"></nldd-badge>');
+		await waitForUpdate(el);
+		const box = el.shadowRoot!.querySelector('.badge__icon')!.getBoundingClientRect();
+		const icon = el.shadowRoot!.querySelector('.badge__icon nldd-icon')!.getBoundingClientRect();
+		expect(box.width).toBeGreaterThan(0);
+		expect(icon.width).toBe(box.width);
+		expect(icon.height).toBe(box.height);
+	});
+
 	it('omits role and aria-label when text is visible', async () => {
 		el = await fixture('<nldd-badge text="Nieuw"></nldd-badge>');
 		await waitForUpdate(el);

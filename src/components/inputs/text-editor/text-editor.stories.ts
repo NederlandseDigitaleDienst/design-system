@@ -455,7 +455,7 @@ export const Typeaheads = {
 			{ id: '1', text: 'Anouk de Vries', supportingText: 'Beleid', avatar: {} },
 			{ id: '2', text: 'Bram Jansen', supportingText: 'Communicatie', avatar: {} },
 			{ id: '3', text: 'Chen Wei', supportingText: 'Data', avatar: {} },
-			{ id: '4', text: 'Mijn Dienst', supportingText: 'Organisatie', avatar: { type: 'organization' as const } },
+			{ id: '4', text: 'Mijn Dienst', supportingText: 'Organisatie', avatar: { variant: 'organization' as const } },
 		];
 		const channels = [
 			{ id: 'algemeen', text: 'algemeen', supportingText: 'Het hele team', icon: 'tag' },

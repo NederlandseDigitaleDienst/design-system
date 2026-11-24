@@ -142,9 +142,9 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 	@property({ type: Boolean, reflect: true })
 	wrap = false;
 
-	/* Reflects when the copy button is suppressed because the Clipboard API is
-	 * unavailable (non-secure context), so the CSS can drop the reserved actions
-	 * space just like it does for no-copy. Internal — not a public API. */
+	/** @internal Reflects when the copy button is suppressed because the
+	 *  Clipboard API is unavailable (non-secure context), so the CSS can drop
+	 *  the reserved actions space just like it does for no-copy. */
 	@property({ type: Boolean, reflect: true, attribute: 'copy-unavailable' })
 	_copyUnavailable = false;
 
