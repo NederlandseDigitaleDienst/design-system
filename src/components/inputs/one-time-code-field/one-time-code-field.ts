@@ -479,10 +479,7 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 			case 'deleteSoftLineBackward':
 			case 'deleteHardLineBackward': {
 				e.preventDefault();
-				const box = this.activeBox < 0 ? this._box : this.activeBox;
-				const target = this.charAt(box) ? box : box - 1;
-				if (target < 0) return;
-				this._setChars(this._chars.map((char, index) => (index === target ? '' : char)), target);
+				this._deleteBackward();
 				return;
 			}
 			case 'deleteContentForward': {
@@ -493,6 +490,14 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 			default:
 				// Composition, dictation and the like change the input itself: read it back in _handleInput.
 		}
+	}
+
+	/** Empties the box the caret is in, or the one before it when it is already empty. */
+	private _deleteBackward(): void {
+		const box = this.activeBox < 0 ? this._box : this.activeBox;
+		const target = this.charAt(box) ? box : box - 1;
+		if (target < 0) return;
+		this._setChars(this._chars.map((char, index) => (index === target ? '' : char)), target);
 	}
 
 	/**
@@ -552,6 +557,13 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 	public _handleKeydown(e: KeyboardEvent): void {
 		submitOnEnter(this, e);
 		if (this._asField || e.altKey || e.ctrlKey || e.metaKey) return;
+		// With nothing before the caret in the input there is nothing to delete,
+		// so Safari sends no beforeinput, and Backspace in an empty box did nothing.
+		if (e.key === 'Backspace' && !this.readonly && !this.disabled && !this._input.value.slice(0, this._input.selectionStart ?? 0)) {
+			e.preventDefault();
+			this._deleteBackward();
+			return;
+		}
 		const moves: Record<string, () => number> = {
 			ArrowLeft: () => this._box - 1,
 			ArrowRight: () => Math.min(this._box + 1, this._nextBox),
