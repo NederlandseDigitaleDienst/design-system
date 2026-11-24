@@ -6188,14 +6188,6 @@
               "description": "Wrap long lines instead of horizontal scroll"
             },
             {
-              "name": "copy-unavailable",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "_copyUnavailable"
-            },
-            {
               "name": "translations",
               "type": {
                 "text": "Partial<NLDDCodeViewerTranslations>"
