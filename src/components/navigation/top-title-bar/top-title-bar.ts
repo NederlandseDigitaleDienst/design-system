@@ -106,6 +106,19 @@ export class NLDDTopTitleBar extends LitElement {
 	@property({ type: String, attribute: 'collapse-anchor' })
 	collapseAnchor = '';
 
+	/**
+	 * @internal The height the bar takes once compact, also while it is not:
+	 * nldd-page reserves it in its scroll padding. Undefined without
+	 * `collapse-anchor`, when the bar keeps one state.
+	 */
+	get _compactHeight(): number | undefined {
+		if (!this.collapseAnchor) return undefined;
+		const group = this.shadowRoot?.querySelector('.top-title-bar__title-group');
+		if (!group) return undefined;
+		const style = getComputedStyle(group);
+		return parseFloat(style.marginTop) + parseFloat(style.minHeight);
+	}
+
 	@state()
 	_hasToolbarItems = false;
 

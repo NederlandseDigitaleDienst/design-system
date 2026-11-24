@@ -19,6 +19,7 @@ export const pageStyles = css`
 		--_page-outer-inset-top: var(--context-inset-top, 0px);
 		--_page-outer-inset-bottom: var(--context-inset-bottom, 0px);
 		--_page-header-height: 0px;
+		--_page-header-scrolled-height: 0px;
 		--_page-footer-height: 0px;
 		--_page-fade-size: var(--primitives-space-24);
 		--_page-scroll-padding-top: 0px;
@@ -183,7 +184,7 @@ export const pageStyles = css`
 	/* Nested scrolling: a sticky child is measured against this element, so the
 	   bars above the page fall outside it and only its own header counts. */
 	:host([sticky-header]) {
-		--_page-scroll-padding-top: calc(var(--_page-header-height) + var(--_page-fade-size));
+		--_page-scroll-padding-top: calc(var(--_page-header-scrolled-height) + var(--_page-fade-size));
 	}
 
 	:host([sticky-footer]) {

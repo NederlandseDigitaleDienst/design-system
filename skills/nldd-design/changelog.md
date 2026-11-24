@@ -18,6 +18,7 @@ here; consult the commit history if you need that level of detail.
 ### Breaking
 
 - **`spin-buttons` on `nldd-number-field` replaces `hide-spin-buttons`, and the buttons now sit together at the end by default.** The value lines up at the start, as in the other fields of a form, instead of centered between two buttons at the far ends of a wide field. `spin-buttons="split"` keeps the old layout, for a short counter such as a quantity; `spin-buttons="none"` leaves the buttons out, as `hide-spin-buttons` did. `nldd lint --fix` turns `hide-spin-buttons` into `spin-buttons="none"`.
+- **`type` on `nldd-avatar` is now `variant`**: `person` or `organization`, which sets the shape and the fallback icon together. `type` named the input type of a form field elsewhere in the system. The `avatar` of a candidate in the typeaheads of `nldd-text-editor` takes `variant` too. `nldd lint --fix` renames the attribute.
 - **`expanded` is no longer an attribute of `nldd-dropdown` and `nldd-token`.** Both set it themselves while their picker or menu is open, so writing it only made them look open. Open the menu of a token with its button, as before.
 
 ### Added
@@ -35,6 +36,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **A link to an anchor no longer scrolls its target under the bar of `nldd-page`.** A `nldd-top-title-bar` with `collapse-anchor` takes no height at the top of the page and turns compact once you scroll past the anchor, so the page reserved only the fade above the target, and the bar then grew over it. The page now keeps the compact height of the bar free from the start, for a link to an anchor and for a focused field alike (WCAG 2.4.11).
 - **Backspace in an empty box of `nldd-one-time-code-field` moves to the box before it**, also where every box is empty. With nothing in the field Safari sent no input event for it, so the caret stayed put.
 - **`nldd-split-button` at `size="xs"` is as tall as its buttons**, and the main action and the chevron line up. The split button was 27px tall, the height of a line of text, with the buttons shifted inside it. A `nldd-button` of `width="full"` no longer grows with the line height around it either. A split button of `width="full"` now fills its container: only the outer box did, and the buttons kept their own width.
 - **A long word in `nldd-text` no longer runs out of a narrow box.** A compound, URL or code wider than the line now breaks between two letters at every body size, as text in `nldd-rich-text` does. Before, only the display sizes did that, and a card or column narrower than one word lost the end of it (WCAG 1.4.10).
