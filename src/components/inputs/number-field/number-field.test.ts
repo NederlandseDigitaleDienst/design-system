@@ -531,7 +531,7 @@ describe('nldd-number-field – spin-buttons', () => {
 		expect(decrement!.left).toBeGreaterThan(inputBox.left);
 		expect(increment!.left).toBeGreaterThan(decrement!.right);
 		expect(field.right - increment!.right).toBeLessThan(8);
-		expect(getComputedStyle(input).textAlign).toBe('left');
+		expect(getComputedStyle(input).textAlign).toBe('start');
 	});
 
 	it('keeps the order input, decrement, increment for the keyboard', async () => {
@@ -554,7 +554,7 @@ describe('nldd-number-field – spin-buttons', () => {
 		expect(el.shadowRoot!.querySelector('nldd-icon-button')).toBeNull();
 		const input = el.shadowRoot!.querySelector('input')!;
 		expect(getComputedStyle(input).minWidth).toBe('80px');
-		expect(getComputedStyle(input).textAlign).toBe('left');
+		expect(getComputedStyle(input).textAlign).toBe('start');
 	});
 
 	it('starts the value where a text field starts its text', async () => {

@@ -92,16 +92,16 @@ export const numberFieldStyles = css`
 	.number-field__spin-buttons {
 		display: flex;
 		height: 100%;
-		padding-right: var(--_number-field-spin-button-padding);
+		padding-inline-end: var(--_number-field-spin-button-padding);
 		gap: var(--_number-field-spin-button-padding);
 	}
 
 	:host([spin-buttons="split"]) .number-field__decrement-button {
-		padding-left: var(--_number-field-spin-button-padding);
+		padding-inline-start: var(--_number-field-spin-button-padding);
 	}
 
 	:host([spin-buttons="split"]) .number-field__increment-button {
-		padding-right: var(--_number-field-spin-button-padding);
+		padding-inline-end: var(--_number-field-spin-button-padding);
 	}
 
 	.number-field__input {
@@ -111,10 +111,11 @@ export const numberFieldStyles = css`
 		border: none;
 		background: transparent;
 		min-width: 0;
-		padding: 0 var(--primitives-space-6) 0 var(--_number-field-inline-padding);
+		padding-block: 0;
+		padding-inline: var(--_number-field-inline-padding) var(--primitives-space-6);
 		align-self: stretch;
 		flex-grow: 1;
-		text-align: left;
+		text-align: start;
 		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--_number-field-text-font);
