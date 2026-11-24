@@ -582,6 +582,7 @@ nldd-rich-text details {
    and a flex or grid row would make each of them a column. */
 nldd-rich-text summary {
 	display: block;
+	position: relative;
 	align-content: center;
 	box-sizing: border-box;
 	border-radius: max(0px, var(--_rich-text-details-start-corner-radius) - var(--_rich-text-details-highlight-border-width)) max(0px, var(--_rich-text-details-start-corner-radius) - var(--_rich-text-details-highlight-border-width)) max(0px, var(--_rich-text-details-end-corner-radius) - var(--_rich-text-details-highlight-border-width)) max(0px, var(--_rich-text-details-end-corner-radius) - var(--_rich-text-details-highlight-border-width));
@@ -606,13 +607,12 @@ nldd-rich-text summary {
 		display: none;
 	}
 
-	/* Floated into the padding on the first line, so it moves with the centered
-	   text and a second line does not run under it. */
+	/* In the padding the summary keeps free, so a second line does not run under it. */
 	&::before {
 		content: '';
-		float: inline-end;
-		margin-block-start: calc((1lh - var(--_rich-text-details-disclosure-icon-size)) / 2);
-		margin-inline-end: calc(-1 * (var(--_rich-text-details-disclosure-icon-size) + var(--_rich-text-details-summary-gap)));
+		position: absolute;
+		inset-block-start: calc(50% - var(--_rich-text-details-disclosure-icon-size) / 2);
+		inset-inline-end: calc((var(--_rich-text-details-summary-min-size) - var(--_rich-text-details-disclosure-icon-size)) / 2);
 		background-color: currentColor;
 		width: var(--_rich-text-details-disclosure-icon-size);
 		height: var(--_rich-text-details-disclosure-icon-size);

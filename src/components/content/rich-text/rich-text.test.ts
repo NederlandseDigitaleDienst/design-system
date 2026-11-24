@@ -494,7 +494,7 @@ describe('nldd-rich-text details', () => {
 		expect(getComputedStyle(summary).listStyleType).toBe('none');
 		expect(getComputedStyle(summary).fontWeight).toBe('475');
 		expect(parseFloat(getComputedStyle(summary).minHeight)).toBeGreaterThanOrEqual(44);
-		expect(getComputedStyle(summary, '::before').float).toBe('inline-end');
+		expect(getComputedStyle(summary, '::before').position).toBe('absolute');
 		expect(getComputedStyle(summary, '::before').rotate).toBe('none');
 	});
 
@@ -509,8 +509,9 @@ describe('nldd-rich-text details', () => {
 		el = await render(block());
 		const summary = el.querySelector('summary')!;
 		const icon = getComputedStyle(summary, '::before');
-		const fromEnd = parseFloat(getComputedStyle(summary).paddingRight) + parseFloat(icon.marginRight);
-		expect(fromEnd).toBeCloseTo((summary.getBoundingClientRect().height - parseFloat(icon.width)) / 2, 0);
+		const height = summary.getBoundingClientRect().height;
+		expect(parseFloat(icon.right)).toBeCloseTo((height - parseFloat(icon.width)) / 2, 0);
+		expect(parseFloat(icon.top)).toBeCloseTo((height - parseFloat(icon.height)) / 2, 0);
 	});
 
 	it('centers a title of one line in the bar', async () => {
@@ -526,7 +527,7 @@ describe('nldd-rich-text details', () => {
 		expect(inline.getBoundingClientRect().height).toBeCloseTo(plain.getBoundingClientRect().height, 0);
 	});
 
-	it('grows a title that wraps by its lines only, with the disclosure icon on the first', async () => {
+	it('grows a title that wraps by its lines only, with the disclosure icon in the middle', async () => {
 		el = await render('<details><summary style="width: 200px">Welke stukken horen bij de aanvraag voor dakisolatie?</summary></details>');
 		const summary = el.querySelector('summary')!;
 		const { line, padding, icon } = metrics(summary);
@@ -534,7 +535,7 @@ describe('nldd-rich-text details', () => {
 		const lines = Math.round((height - 2 * padding) / line);
 		expect(lines).toBeGreaterThanOrEqual(2);
 		expect(height).toBeCloseTo(lines * line + 2 * padding, 0);
-		expect(parseFloat(getComputedStyle(summary, '::before').marginTop)).toBeCloseTo((line - icon) / 2, 0);
+		expect(parseFloat(getComputedStyle(summary, '::before').top)).toBeCloseTo((height - icon) / 2, 0);
 	});
 
 	it('turns the disclosure icon when it opens', async () => {
