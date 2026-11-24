@@ -1,6 +1,7 @@
 import { LitElement } from 'lit';
 import { EditorView } from '@codemirror/view';
 import { EditorState, Transaction, type Compartment, type Extension } from '@codemirror/state';
+import { deferFocus } from '../defer-focus.js';
 
 /**
  * Shared base for design-system editors built on CodeMirror 6
@@ -109,9 +110,11 @@ export abstract class NLDDCodeMirrorElement extends LitElement {
 	 * Focus the editor itself, not the host. delegatesFocus handles a click or tab
 	 * into the host, but a programmatic host.focus() is routed straight to
 	 * CodeMirror here, whose contenteditable delegatesFocus does not reliably
-	 * target.
+	 * target. A call before the first render waits for it, as htmx focuses
+	 * `autofocus` straight after a swap.
 	 */
-	override focus(): void {
+	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		this.view?.focus();
 	}
 

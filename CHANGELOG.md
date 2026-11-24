@@ -18,6 +18,10 @@ here; consult the commit history if you need that level of detail.
 - **The design guidelines say: do not open a sheet from a sheet, go a step further in the same sheet.**
 - **Three lint rules for steps, all `warn`:** `sheet-no-nested` for an `nldd-sheet` inside an `nldd-sheet`, `page-parent-not-found` for a `parent` that names no page, and `popover-no-steps` for steps in an `nldd-popover`, which hides its title bar and so the back button on md and up.
 
+### Fixed
+
+- **`focus()` on `nldd-text-editor` and `nldd-code-editor` works right after the editor is put in the page.** A call before the editor had rendered did nothing, so an editor that htmx swapped in with `autofocus` never got focus. The editor now holds on to the call until it has rendered, as `nldd-text-field` does, unless focus has moved on in the meantime.
+
 ## [0.29.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.28.1...v0.29.0) (2026-11-24)
 
 ### Highlights
