@@ -47,7 +47,7 @@ export const titleCellStyles = css`
 	:host([width="full"]),
 	:host(:not([width])),
 	:host([width=""]) {
-		--_title-cell-min-width: var(--context-cell-min-width, var(--primitives-area-160));
+		--_title-cell-min-width: var(--context-cell-min-width, var(--semantics-cells-min-width));
 
 		flex-grow: 1;
 		flex-shrink: 1;
@@ -79,7 +79,7 @@ export const titleCellStyles = css`
 	:host([max-width][width="full"]),
 	:host([max-width]:not([width])),
 	:host([max-width][width=""]) {
-		--_title-cell-min-width: min(var(--context-cell-min-width, var(--primitives-area-160)), var(--_title-cell-max-width));
+		--_title-cell-min-width: min(var(--context-cell-min-width, var(--semantics-cells-min-width)), var(--_title-cell-max-width));
 	}
 
 

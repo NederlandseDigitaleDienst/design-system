@@ -1737,6 +1737,10 @@
 	--semantics-list-items-is-highlighted-is-active-background-color: light-dark(var(--primitives-color-accent-850), var(--primitives-color-accent-750));
 	--semantics-list-items-is-highlighted-content-color: var(--primitives-color-accent-0);
 
+	/* ## Cells */
+
+	--semantics-cells-min-width: var(--primitives-area-160);
+
 	/* ## Menu bar items */
 
 	--semantics-menu-bar-items-inline-padding: var(--primitives-space-8);

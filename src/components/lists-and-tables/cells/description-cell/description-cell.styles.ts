@@ -43,7 +43,7 @@ export const descriptionCellStyles = css`
 	:host([width="full"]),
 	:host(:not([width])),
 	:host([width=""]) {
-		--_description-cell-min-width: var(--context-cell-min-width, var(--primitives-area-160));
+		--_description-cell-min-width: var(--context-cell-min-width, var(--semantics-cells-min-width));
 
 		flex-grow: 1;
 		flex-shrink: 1;
@@ -75,7 +75,7 @@ export const descriptionCellStyles = css`
 	:host([max-width][width="full"]),
 	:host([max-width]:not([width])),
 	:host([max-width][width=""]) {
-		--_description-cell-min-width: min(var(--context-cell-min-width, var(--primitives-area-160)), var(--_description-cell-max-width));
+		--_description-cell-min-width: min(var(--context-cell-min-width, var(--semantics-cells-min-width)), var(--_description-cell-max-width));
 	}
 
 
