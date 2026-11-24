@@ -115,6 +115,11 @@ export const pageStyles = css`
 		flex-shrink: 0;
 	}
 
+	/* A split view hides the back button of a pane whose previous pane is in view; a step's back goes to a page in the same pane. */
+	:host([parent]) .page__header {
+		--context-back-button-display: flex;
+	}
+
 	:host([sticky-header]) .page__header {
 		position: absolute;
 		top: 0;

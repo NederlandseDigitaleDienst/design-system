@@ -42189,7 +42189,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A page layout with optional sticky header and footer. Without sticky-header, the host is the scroll container and the header is in normal flow. With sticky-header, the header becomes absolute and .page__scroll takes over scrolling, padded by the measured header height. That padding freezes once you scroll, so a collapsing bar cannot drag the content up under the cursor. In root-scroll mode (--context-scroll-mode: root, derived upstream by nldd-shell) the page stops owning a scroller: the document scrolls and the sticky header/footer stick against the document, offset by --context-inset-top/bottom. The mode is read on connect/resize and reflected to [data-scroll] so the CSS can branch. The page passes those insets on to its own content, with its sticky header and footer added: anything sticky inside (an nldd-sidebar-section, a sticky table head) reads --context-inset-top / --context-inset-bottom and clears every bar above and below it without being told a number. The heights are measured, because a top title bar shrinks as you scroll past its anchor. While the page owns the scroller, only its own bars count: the chrome above the page sits outside that scroller and does not push sticky content down. A page carries the landmarks of a document: its header is the banner, its content the main landmark, its footer the contentinfo. A document has one of each, so a page that sits beside another one cannot have them. Such a page renders a section and a plain div instead, which drops all three at once: a header inside sectioning content is no longer a banner. With `accessible-label` that section is a named region, so there is still one landmark to jump to; without a name it is no landmark at all, which beats an unnamed one. `landmarks` says which of the two a page is, and `auto` (the default) reads it off where the page sits: - in an overlay (nldd-sheet, nldd-modal-dialog, nldd-window, nldd-popover) a region, because the overlay is not the document; - in a pane of nldd-navigation-split-view, nldd-side-by-side-split-view or nldd-stacked-split-view a region, because those place pages beside each other; - anywhere else the page, including the `main` slot of an nldd-bar-split-view, which stacks bars around a single content area. So an app shell has no main until you say which pane holds the primary content, with `landmarks=\"page\"` on that one page. Only the application knows which pane that is. Two pages that both render a main is invalid HTML, and the page says so in development.",
+          "description": "A page layout with optional sticky header and footer. Without sticky-header, the host is the scroll container and the header is in normal flow. With sticky-header, the header becomes absolute and .page__scroll takes over scrolling, padded by the measured header height. That padding freezes once you scroll, so a collapsing bar cannot drag the content up under the cursor. In root-scroll mode (--context-scroll-mode: root, derived upstream by nldd-shell) the page stops owning a scroller: the document scrolls and the sticky header/footer stick against the document, offset by --context-inset-top/bottom. The mode is read on connect/resize and reflected to [data-scroll] so the CSS can branch. The page passes those insets on to its own content, with its sticky header and footer added: anything sticky inside (an nldd-sidebar-section, a sticky table head) reads --context-inset-top / --context-inset-bottom and clears every bar above and below it without being told a number. The heights are measured, because a top title bar shrinks as you scroll past its anchor. While the page owns the scroller, only its own bars count: the chrome above the page sits outside that scroller and does not push sticky content down. A page carries the landmarks of a document: its header is the banner, its content the main landmark, its footer the contentinfo. A document has one of each, so a page that sits beside another one cannot have them. Such a page renders a section and a plain div instead, which drops all three at once: a header inside sectioning content is no longer a banner. With `accessible-label` that section is a named region, so there is still one landmark to jump to; without a name it is no landmark at all, which beats an unnamed one. `landmarks` says which of the two a page is, and `auto` (the default) reads it off where the page sits: - in an overlay (nldd-sheet, nldd-modal-dialog, nldd-window, nldd-popover) a region, because the overlay is not the document; - in a pane of nldd-navigation-split-view, nldd-side-by-side-split-view or nldd-stacked-split-view a region, because those place pages beside each other; - anywhere else the page, including the `main` slot of an nldd-bar-split-view, which stacks bars around a single content area. So an app shell has no main until you say which pane holds the primary content, with `landmarks=\"page\"` on that one page. Only the application knows which pane that is. Two pages that both render a main is invalid HTML, and the page says so in development. A step deeper in the same surface is a page beside the one it starts from, in the same parent and slot, not a second sheet on top of the first. Give each page an `id` and the deeper one a `parent`, and hide all but the first: <nldd-sheet> <nldd-page id=\"opdracht\">…</nldd-page> <nldd-page id=\"kiezer\" parent=\"opdracht\" hidden>…</nldd-page> </nldd-sheet> `show()` on a page shows it and hides the pages beside it. A page with `parent` gives the nldd-top-title-bar in its header a back button with the title of that parent page (its title bar's `text`, or else its `accessible-label`), unless the bar has a `back-text` of its own. A press on it shows the parent and puts focus back on the control that opened the step. That `back` goes no further, so a listener for the back of a split view's pane does not hear it too. With `back-href` the bar is a link and the page leaves it alone. The parent is structure, not history: a page opened straight away still goes back to its parent. Nothing goes into the URL. A step that deserves an address of its own is a page of the application, with `back-href`. In a framework, bind `hidden` and listen for `show` to keep your state in step.",
           "name": "NLDDPage",
           "members": [
             {
@@ -42243,11 +42243,47 @@
             },
             {
               "kind": "field",
+              "name": "parent",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "parent",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "scrollTarget",
               "type": {
                 "text": "HTMLElement"
               },
               "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Shows this page and hides the pages beside it. When focus was in the page\nthis one replaces, it moves into this page, and the control that had it is\nremembered for the way back."
+            },
+            {
+              "kind": "method",
+              "name": "back",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Shows the parent page and puts focus back on the control that opened this\nstep, as the back button does. For a step that ends with a choice, so the\nchoice goes back the same way. Without a parent page it does nothing."
+            }
+          ],
+          "events": [
+            {
+              "name": "show",
+              "description": "Fired on a page that `show()` or a back button has just shown. Bubbles. Read the page from `event.target`"
             }
           ],
           "attributes": [
@@ -42301,6 +42337,15 @@
               "default": "false",
               "fieldName": "stickyFooter",
               "description": "Sticky footer"
+            },
+            {
+              "name": "parent",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "parent",
+              "description": "Id of the page beside this one that this page is a step of. The back button of its title bar shows that page"
             }
           ],
           "superclass": {
@@ -50565,7 +50610,7 @@
               },
               "default": "''",
               "fieldName": "backText",
-              "description": "Text of the back button and its accessible name. Empty hides the back button (and the divider)."
+              "description": "Text of the back button and its accessible name. Empty hides the back button (and the divider), except in the header of an nldd-page with `parent`: the bar then takes the title of that parent page."
             },
             {
               "name": "back-href",
@@ -60754,7 +60799,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Reads the accessible name an overlay can take from its own title bar.\n\nA sheet or a window almost always holds an nldd-page with an\nnldd-top-title-bar in its header, and the text of that bar is what the\noverlay is called. aria-labelledby cannot point at it, because the h1 lives\nin the shadow root of the bar, so the overlay copies the text and keeps\nwatching it.\n\nThe attribute is read rather than the property: it is there before the bar\nis defined, and the bar reflects `text`, so a property set later arrives as\nan attribute change too.",
+          "description": "Reads the accessible name an overlay can take from its own title bar.\n\nA sheet or a window almost always holds an nldd-page with an\nnldd-top-title-bar in its header, and the text of that bar is what the\noverlay is called. aria-labelledby cannot point at it, because the h1 lives\nin the shadow root of the bar, so the overlay copies the text and keeps\nwatching it.\n\nWith more pages in the overlay, steps of each other (see nldd-page), the bar\nof the page in view names it, so a hidden page's bar is passed over.\n\nThe attribute is read rather than the property: it is there before the bar\nis defined, and the bar reflects `text`, so a property set later arrives as\nan attribute change too.",
           "name": "TitleBarLabelController",
           "members": [
             {

@@ -30,6 +30,20 @@ nldd-sheet                     open, placement, width; in de document-root
 
 **Zet de sheet in de document-root.** Die hoort niet in de inhoud van een split view: als slotted kind pikt die daar de hoogte van het paneel in, waarna een sticky footer los in het scherm komt te hangen. In een framework teleporteer je die naar `document.body`; [`nldd-sheet`](/componenten/sheet/) legt uit waarom.
 
+## Een stap verder
+
+Soms vraagt een veld om een eigen scherm, zoals een team kiezen uit een lijst. Open daarvoor geen tweede sheet over de eerste. Ga in dezelfde sheet een stap verder: een tweede [`nldd-page`](/componenten/page/) naast de eerste, met `parent` naar de pagina waar hij vandaan komt en `hidden` tot hij aan de beurt is.
+
+<!-- voorbeeld: EenStapVerder -->
+
+**De terugknop zegt waar je heen gaat.** De pagina met `parent` geeft zijn titelbalk een terugknop met de titel van de ouder, hier "Aanvraag A-1042 bewerken". Twee sheets over elkaar hebben elk een eigen sluitknop, en die zegt niet waar je uitkomt. "Annuleer" sluit hier de hele sheet, in elke stap.
+
+**Wat je in de eerste stap invulde, blijft staan.** De eerste pagina gaat niet weg maar wordt verborgen, dus de titel die je net typte, staat er nog als je terugkomt.
+
+**Een keuze gaat terug zoals de terugknop.** Roep `back()` aan op de stap: die toont de ouder en zet de focus terug op de rij die de stap opende. De gekozen waarde zet je zelf in de eerste pagina, want alleen jij weet waar hij hoort.
+
+**Geen eigen adres.** Een stap komt niet in de URL, en de terugknop van de browser gaat er niet doorheen. Verdient een stap een adres, dan is hij een pagina van de applicatie, met `back-href` op de titelbalk.
+
 ## Toegankelijkheid
 
 Wat je gratis krijgt: de dialoogrol, sluiten met Esc en met een klik naast de sheet, de focus die binnen de sheet blijft en daarna terugkeert naar de knop die de sheet opende, en de naam uit de titelbalk.

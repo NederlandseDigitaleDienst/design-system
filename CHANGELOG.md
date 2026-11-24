@@ -9,6 +9,15 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **A step deeper in a sheet is a page in the same sheet, with a back button that says where it goes.** Put a second `nldd-page` beside the first, with `parent` naming the page it is a step of and `hidden` until its turn. `show()` shows it, and its `nldd-top-title-bar` gets a back button with the title of the parent page. A press goes back and puts focus on the control that opened the step; `back()` does the same for a step that ends with a choice. What you filled in on the first page stays, because that page is hidden, not removed. It works in an `nldd-window` and in a pane of a split view too, and a sheet or window takes its name from the page in view. The pattern [Bewerken in een sheet](https://design.digitaledienst.overheid.nl/patronen/edit-in-a-sheet/) shows it.
+
+### Added
+
+- **The design guidelines say: do not open a sheet from a sheet, go a step further in the same sheet.**
+- **Three lint rules for steps, all `warn`:** `sheet-no-nested` for an `nldd-sheet` inside an `nldd-sheet`, `page-parent-not-found` for a `parent` that names no page, and `popover-no-steps` for steps in an `nldd-popover`, which hides its title bar and so the back button on md and up.
+
 ## [0.28.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.28.0...v0.28.1) (2026-11-23)
 
 ### Added

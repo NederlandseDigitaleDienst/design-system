@@ -1,0 +1,9 @@
+severity: warn
+context: 'nldd-popover nldd-page[parent]'
+message: A step with `parent` sits in an nldd-popover, which hides its title bar and so its back button on md and up. Put the steps in an nldd-sheet.
+see: patronen/edit-in-a-sheet
+examples:
+  passed:
+    - '<nldd-sheet><nldd-page id="aanvraag"></nldd-page><nldd-page id="team" parent="aanvraag" hidden></nldd-page></nldd-sheet>'
+  failed:
+    - '<nldd-popover accessible-label="Team"><nldd-page id="aanvraag"></nldd-page><nldd-page id="team" parent="aanvraag" hidden></nldd-page></nldd-popover>'

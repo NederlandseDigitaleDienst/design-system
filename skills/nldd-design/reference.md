@@ -3141,7 +3141,7 @@ A section with a 1/3 sidebar on the left and 2/3 main content on the right. The 
 
 ### `<nldd-page>`
 
-A page layout with optional sticky header and footer. Without sticky-header, the host is the scroll container and the header is in normal flow. With sticky-header, the header becomes absolute and .page__scroll takes over scrolling, padded by the measured header height. That padding freezes once you scroll, so a collapsing bar cannot drag the content up under the cursor. In root-scroll mode (--context-scroll-mode: root, derived upstream by nldd-shell) the page stops owning a scroller: the document scrolls and the sticky header/footer stick against the document, offset by --context-inset-top/bottom. The mode is read on connect/resize and reflected to [data-scroll] so the CSS can branch. The page passes those insets on to its own content, with its sticky header and footer added: anything sticky inside (an nldd-sidebar-section, a sticky table head) reads --context-inset-top / --context-inset-bottom and clears every bar above and below it without being told a number. The heights are measured, because a top title bar shrinks as you scroll past its anchor. While the page owns the scroller, only its own bars count: the chrome above the page sits outside that scroller and does not push sticky content down. A page carries the landmarks of a document: its header is the banner, its content the main landmark, its footer the contentinfo. A document has one of each, so a page that sits beside another one cannot have them. Such a page renders a section and a plain div instead, which drops all three at once: a header inside sectioning content is no longer a banner. With `accessible-label` that section is a named region, so there is still one landmark to jump to; without a name it is no landmark at all, which beats an unnamed one. `landmarks` says which of the two a page is, and `auto` (the default) reads it off where the page sits: - in an overlay (nldd-sheet, nldd-modal-dialog, nldd-window, nldd-popover) a region, because the overlay is not the document; - in a pane of nldd-navigation-split-view, nldd-side-by-side-split-view or nldd-stacked-split-view a region, because those place pages beside each other; - anywhere else the page, including the `main` slot of an nldd-bar-split-view, which stacks bars around a single content area. So an app shell has no main until you say which pane holds the primary content, with `landmarks="page"` on that one page. Only the application knows which pane that is. Two pages that both render a main is invalid HTML, and the page says so in development.
+A page layout with optional sticky header and footer. Without sticky-header, the host is the scroll container and the header is in normal flow. With sticky-header, the header becomes absolute and .page__scroll takes over scrolling, padded by the measured header height. That padding freezes once you scroll, so a collapsing bar cannot drag the content up under the cursor. In root-scroll mode (--context-scroll-mode: root, derived upstream by nldd-shell) the page stops owning a scroller: the document scrolls and the sticky header/footer stick against the document, offset by --context-inset-top/bottom. The mode is read on connect/resize and reflected to [data-scroll] so the CSS can branch. The page passes those insets on to its own content, with its sticky header and footer added: anything sticky inside (an nldd-sidebar-section, a sticky table head) reads --context-inset-top / --context-inset-bottom and clears every bar above and below it without being told a number. The heights are measured, because a top title bar shrinks as you scroll past its anchor. While the page owns the scroller, only its own bars count: the chrome above the page sits outside that scroller and does not push sticky content down. A page carries the landmarks of a document: its header is the banner, its content the main landmark, its footer the contentinfo. A document has one of each, so a page that sits beside another one cannot have them. Such a page renders a section and a plain div instead, which drops all three at once: a header inside sectioning content is no longer a banner. With `accessible-label` that section is a named region, so there is still one landmark to jump to; without a name it is no landmark at all, which beats an unnamed one. `landmarks` says which of the two a page is, and `auto` (the default) reads it off where the page sits: - in an overlay (nldd-sheet, nldd-modal-dialog, nldd-window, nldd-popover) a region, because the overlay is not the document; - in a pane of nldd-navigation-split-view, nldd-side-by-side-split-view or nldd-stacked-split-view a region, because those place pages beside each other; - anywhere else the page, including the `main` slot of an nldd-bar-split-view, which stacks bars around a single content area. So an app shell has no main until you say which pane holds the primary content, with `landmarks="page"` on that one page. Only the application knows which pane that is. Two pages that both render a main is invalid HTML, and the page says so in development. A step deeper in the same surface is a page beside the one it starts from, in the same parent and slot, not a second sheet on top of the first. Give each page an `id` and the deeper one a `parent`, and hide all but the first: <nldd-sheet> <nldd-page id="opdracht">…</nldd-page> <nldd-page id="kiezer" parent="opdracht" hidden>…</nldd-page> </nldd-sheet> `show()` on a page shows it and hides the pages beside it. A page with `parent` gives the nldd-top-title-bar in its header a back button with the title of that parent page (its title bar's `text`, or else its `accessible-label`), unless the bar has a `back-text` of its own. A press on it shows the parent and puts focus back on the control that opened the step. That `back` goes no further, so a listener for the back of a split view's pane does not hear it too. With `back-href` the bar is a link and the page leaves it alone. The parent is structure, not history: a page opened straight away still goes back to its parent. Nothing goes into the URL. A step that deserves an address of its own is a page of the application, with `back-href`. In a framework, bind `hidden` and listen for `show` to keep your state in step.
 
 **Keywords:** pagina.
 
@@ -3156,8 +3156,10 @@ A page layout with optional sticky header and footer. Without sticky-header, the
 - `page-footer-needs-slot`: Set slot="footer": the page gives the footer its place and it sets its own width and spacing.
 - `page-needs-shell` (hint): Put nldd-shell around it: the shell sets the background and decides who scrolls.
 - `page-no-second-main`: A second page renders a main landmark, which a document may have only one of. Leave `landmarks` at "auto" on pages in a pane or an overlay, or set landmarks="region" on the ones that are not the document's page.
+- `page-parent-not-found`: `parent` needs the id of an nldd-page beside this one, or the step has no page to go back to.
 - `pane-page-needs-name` (hint): Give this page an `accessible-label`, so it becomes a named region, or landmarks="page" if it holds the main content.
 - `pane-title-bar-needs-level` (hint): Set heading-level="2" on the title bar of a pane beside the main content: the screen has one h1.
+- `popover-no-steps`: A step with `parent` sits in an nldd-popover, which hides its title bar and so its back button on md and up. Put the steps in an nldd-sheet.
 - `section-goes-in-page`: Put this section in an nldd-page: a section lays out by the width of the page, and the page makes its content the main landmark, scrolls it and tells sticky content where the bars are.
 - `section-no-own-background` (hint): Use `background` on the section: it cascades the surface to what is inside it.
 - `sheet-title-bar-needs-anchor` (hint): Put an nldd-title above the form and point `collapse-anchor` at it: the bar stays quiet until the heading scrolls away.
@@ -3176,6 +3178,7 @@ A page layout with optional sticky header and footer. Without sticky-header, the
 | `landmarks` | `'auto'\|'page'\|'region'` | Whether this page carries the document's landmarks: 'auto' (default) derives it from where the page sits, 'page' keeps banner, main and contentinfo, 'region' drops all three |
 | `sticky-header` | `boolean` | Sticky header |
 | `sticky-footer` | `boolean` | Sticky footer |
+| `parent` | `string` | Id of the page beside this one that this page is a step of. The back button of its title bar shows that page |
 
 **Slots**
 
@@ -3192,6 +3195,12 @@ A page layout with optional sticky header and footer. Without sticky-header, the
 | `--context-inset-top` | Height of every bar above the content, sticky header included. Read it as `top` of anything sticky inside the page |
 | `--context-inset-bottom` | Height of every bar below the content, sticky footer included. Read it as `bottom` of anything sticky inside the page |
 | `--context-scroller-height` | Height of the area the content scrolls in, for sticky content that caps its own height. The height of the page's own scroller while it scrolls in its pane, and `100dvh` while the document scrolls |
+
+**Events**
+
+| Event | Description |
+| --- | --- |
+| `show` | Fired on a page that `show()` or a back button has just shown. Bubbles. Read the page from `event.target` |
 
 ### `<nldd-page-footer>`
 
@@ -3281,6 +3290,7 @@ A non-modal floating panel anchored to a trigger element. Built on the native Po
 - `interestfor-no-effect`: This control has both `interestfor` and a popover in its `interest` slot, and opens only the slotted one. Remove one.
 - `popover-anchor-not-found`: Anchor element not found. Set `anchor` or `anchorElement` before calling show().
 - `popover-needs-name`: nldd-popover needs `accessible-label`, or a screen reader announces it without a name.
+- `popover-no-steps`: A step with `parent` sits in an nldd-popover, which hides its title bar and so its back button on md and up. Put the steps in an nldd-sheet.
 - `popover-width-invalid`: This `width` is not supported and is ignored: the popover is an inline-size query container, so its width cannot come from its own content. Give it a CSS length instead.
 - `split-button-max-one-popup`: nldd-split-button opens one overlay: the one in the `popup` slot, or else the first. Remove the others.
 - `split-button-needs-popup`: nldd-split-button has no menu, so its chevron opens nothing. Put an nldd-menu or nldd-popover in its `popup` slot, or point `popovertarget` at one.
@@ -3333,6 +3343,7 @@ An overlay component that slides in from the side or bottom of the screen. Based
 - `sheet-height-invalid`: Invalid `height`. Falling back to full height. Use "full", "fit-content", or a valid CSS length (such as "50dvh" or "480px").
 - `sheet-needs-dismiss`: Set `dismiss-text` on the title bar, so the sheet has a visible way out.
 - `sheet-needs-name`: No `accessible-label` and no nldd-top-title-bar with text inside. Screen readers will announce this dialog with a generic name. Give the title bar a text, or set `accessible-label`.
+- `sheet-no-nested`: An nldd-sheet opens over another nldd-sheet. Show the next step in the same sheet, as an nldd-page with `parent`.
 - `sheet-title-bar-needs-anchor` (hint): Put an nldd-title above the form and point `collapse-anchor` at it: the bar stays quiet until the heading scrolls away.
 - `split-view-no-sheet`: Render nldd-sheet at the document root: as a slotted child it takes the height of the pane, and a sticky footer comes loose.
 
@@ -4129,7 +4140,7 @@ A toolbar for page and container headings with optional navigation and action bu
 | `text` | `string` | Title of the bar, rendered as the heading in the title group. One line, cut off with an ellipsis when it does not fit; see above for a title that can run long. |
 | `supporting-text` | `string` | Text under the title. |
 | `heading-level` | `1\|2\|3\|4\|5\|6` | Heading level of the title: 1–6 (default: 1). Lower it where the bar is not the top of the page, such as a pane beside content that already has its h1. |
-| `back-text` | `string` | Text of the back button and its accessible name. Empty hides the back button (and the divider). |
+| `back-text` | `string` | Text of the back button and its accessible name. Empty hides the back button (and the divider), except in the header of an nldd-page with `parent`: the bar then takes the title of that parent page. |
 | `back-href` | `string` | URL for the back button; renders a link and suppresses the `back` event. |
 | `dismiss-text` | `string` | Text of the dismiss button. Empty hides that button. |
 | `collapse-anchor` | `string` | Id of the element whose top edge triggers the compact state on scroll. Without it the state is static (see above). |

@@ -608,3 +608,162 @@ describe('nldd-page – stand-alone, moved in the DOM', () => {
 		expect(page.dataset.scroll).toBe('nested');
 	});
 });
+
+describe('nldd-page – steps with parent', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const STEPS = `
+		<div>
+			<nldd-page id="opdracht">
+				<nldd-top-title-bar slot="header" text="Opdracht" dismiss-text="Sluit"></nldd-top-title-bar>
+				<nldd-button id="opener" text="Opdrachtgever toevoegen"></nldd-button>
+			</nldd-page>
+			<nldd-page id="kiezer" parent="opdracht" hidden>
+				<nldd-top-title-bar slot="header" text="Opdrachtgever kiezen" dismiss-text="Sluit"></nldd-top-title-bar>
+				<nldd-text-field id="zoek" accessible-label="Zoek"></nldd-text-field>
+			</nldd-page>
+			<nldd-page id="contact" parent="kiezer" hidden>
+				<nldd-top-title-bar slot="header" text="Contactpersoon"></nldd-top-title-bar>
+			</nldd-page>
+		</div>
+	`;
+
+	type Page = HTMLElement & { show(): void; hidden: boolean };
+	type Bar = HTMLElement & { _backText: string; updateComplete: Promise<boolean> };
+	const page = (id: string) => el.querySelector<Page>(`#${id}`)!;
+	const bar = (id: string) => page(id).querySelector<Bar>('nldd-top-title-bar')!;
+	const pressBack = async (id: string) => {
+		await bar(id).updateComplete;
+		bar(id).shadowRoot!.querySelector<HTMLElement>('.top-title-bar__text-back-button nldd-button')!.click();
+		await waitForUpdate(page(id));
+	};
+
+	async function setup() {
+		await import('../../navigation/top-title-bar/top-title-bar.js');
+		await import('../../actions/button/button.js');
+		await import('../../inputs/text-field/text-field.js');
+		el = await fixture(STEPS);
+		await waitForUpdate(page('kiezer'));
+	}
+
+	it('gives the title bar of a step the title of its parent as back text', async () => {
+		await setup();
+		expect(bar('kiezer')._backText).toBe('Opdracht');
+		expect(bar('contact')._backText).toBe('Opdrachtgever kiezen');
+		expect(bar('opdracht')._backText).toBe('');
+	});
+
+	it('keeps a back-text the consumer set', async () => {
+		await setup();
+		bar('kiezer').setAttribute('back-text', 'Terug');
+		await bar('kiezer').updateComplete;
+		expect(bar('kiezer')._backText).toBe('Terug');
+	});
+
+	it('falls back to the accessible-label of a parent without a title bar', async () => {
+		await setup();
+		page('opdracht').querySelector('nldd-top-title-bar')!.remove();
+		page('opdracht').setAttribute('accessible-label', 'Opdracht bewerken');
+		page('kiezer').show();
+		expect(bar('kiezer')._backText).toBe('Opdracht bewerken');
+	});
+
+	it('show() shows the page and hides the pages beside it, and fires show', async () => {
+		await setup();
+		const shown: string[] = [];
+		el.addEventListener('show', (event) => shown.push((event.target as HTMLElement).id));
+		page('kiezer').show();
+		expect(page('opdracht').hidden).toBe(true);
+		expect(page('kiezer').hidden).toBe(false);
+		expect(page('contact').hidden).toBe(true);
+		expect(shown).toEqual(['kiezer']);
+	});
+
+	it('goes back to the parent on back, and stops the event there', async () => {
+		await setup();
+		const heard: Event[] = [];
+		el.addEventListener('back', (event) => heard.push(event));
+		page('kiezer').show();
+		await pressBack('kiezer');
+		expect(page('opdracht').hidden).toBe(false);
+		expect(page('kiezer').hidden).toBe(true);
+		expect(heard).toHaveLength(0);
+	});
+
+	it('goes back to its parent when opened straight away, skipping nothing it was not', async () => {
+		await setup();
+		page('contact').show();
+		await pressBack('contact');
+		expect(page('kiezer').hidden).toBe(false);
+		expect(page('opdracht').hidden).toBe(true);
+	});
+
+	it('leaves a back with back-href alone', async () => {
+		await setup();
+		page('kiezer').show();
+		bar('kiezer').setAttribute('back-href', '/opdrachten/');
+		await bar('kiezer').updateComplete;
+		const heard: Event[] = [];
+		el.addEventListener('back', (event) => heard.push(event));
+		bar('kiezer').dispatchEvent(new CustomEvent('back', { bubbles: true, composed: true }));
+		expect(page('kiezer').hidden).toBe(false);
+		expect(heard).toHaveLength(1);
+	});
+
+	it('lets a back without parent through', async () => {
+		await setup();
+		const heard: Event[] = [];
+		el.addEventListener('back', (event) => heard.push(event));
+		bar('opdracht').dispatchEvent(new CustomEvent('back', { bubbles: true, composed: true }));
+		expect(heard).toHaveLength(1);
+	});
+
+	it('moves focus into the step, and back to the control that opened it', async () => {
+		await setup();
+		const opener = page('opdracht').querySelector<HTMLElement>('#opener')!;
+		opener.focus();
+		page('kiezer').show();
+		await waitForUpdate(page('kiezer'));
+		await nextFrames();
+		expect(page('kiezer').contains(document.activeElement)).toBe(true);
+		await pressBack('kiezer');
+		await nextFrames();
+		expect(document.activeElement).toBe(opener);
+	});
+
+	it('follows a page a framework shows by removing hidden', async () => {
+		await setup();
+		page('opdracht').querySelector('nldd-top-title-bar')!.setAttribute('text', 'Opdracht bewerken');
+		page('opdracht').hidden = true;
+		page('kiezer').hidden = false;
+		await waitForUpdate(page('kiezer'));
+		expect(bar('kiezer')._backText).toBe('Opdracht bewerken');
+	});
+
+	it('names a sheet after the title bar of the step in view', async () => {
+		await import('../../navigation/top-title-bar/top-title-bar.js');
+		el = await fixture(`<nldd-sheet>${STEPS.replace(/<\/?div>/g, '')}</nldd-sheet>`);
+		const sheet = el as HTMLElement & { _resolvedAccessibleLabel: string };
+		await waitForUpdate(sheet);
+		expect(sheet._resolvedAccessibleLabel).toBe('Opdracht');
+		page('kiezer').show();
+		await waitForUpdate(sheet);
+		expect(sheet._resolvedAccessibleLabel).toBe('Opdrachtgever kiezen');
+	});
+
+	it('back() goes to the parent like the back button, for a step that ends with a choice', async () => {
+		await setup();
+		const opener = page('opdracht').querySelector<HTMLElement>('#opener')!;
+		opener.focus();
+		page('kiezer').show();
+		await nextFrames();
+		(page('kiezer') as Page & { back(): void }).back();
+		await nextFrames();
+		expect(page('opdracht').hidden).toBe(false);
+		expect(document.activeElement).toBe(opener);
+	});
+});
