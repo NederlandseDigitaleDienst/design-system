@@ -1755,16 +1755,17 @@ A numeric input field with decrement and increment buttons.
 
 **Rules** (`nldd lint`)
 
+- `number-field-hide-spin-buttons-renamed`: `hide-spin-buttons` is now `spin-buttons="none"`, and the attribute does nothing. Replace it here and on every other nldd-number-field.
 - `number-field-needs-name`: nldd-number-field needs `accessible-label` or a labeled nldd-form-field around it, or a screen reader cannot announce its purpose.
 
 **Attributes**
 
 | Attribute | Type | Description |
 | --- | --- | --- |
+| `spin-buttons` | `'end'\|'split'\|'none'` | Where the decrement and increment buttons go: 'end' (the default) puts them side by side at the end, so the value lines up at the start with the other fields in a form; 'split' puts decrement at the start and increment at the end, with the value centered between them, for a short counter such as a quantity; 'none' leaves them out. |
 | `size` | `'sm'\|'md'` | Size: 'sm' \| 'md' (default: 'md') |
 | `width` | `string` | Width mode: 'full' (stretches to container) or any CSS length (e.g. '240px') |
 | `accessible-label` | `string` | Accessible label (aria-label) forwarded to the native input |
-| `hide-spin-buttons` | `boolean` | When set, hides the decrement and increment buttons |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
 | `name` | `string` | Name for form submission |
 | `value` | `number` | Current value. Leave it out for an empty field, which submits an empty string and takes `min` and `max` as no reason to be invalid: only `required` asks for a value, as with a native number input. As a property, `null` is empty. In an empty field + and - are both enabled, and start at 0, or at the nearer end of the range when 0 lies outside it (`min="1"` starts at 1). |

@@ -9,6 +9,10 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Breaking
+
+- **`spin-buttons` on `nldd-number-field` replaces `hide-spin-buttons`, and the buttons now sit together at the end by default.** The value lines up at the start, as in the other fields of a form, instead of centered between two buttons at the far ends of a wide field. `spin-buttons="split"` keeps the old layout, for a short counter such as a quantity; `spin-buttons="none"` leaves the buttons out, as `hide-spin-buttons` did. `nldd lint --fix` turns `hide-spin-buttons` into `spin-buttons="none"`.
+
 ### Added
 
 - **`hyphens` on `nldd-text`** breaks a long word by syllable, with a hyphen, as `hyphens` on `nldd-rich-text` already does. It needs a `lang` on the page. The display sizes hyphenate as before, with or without it.

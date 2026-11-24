@@ -412,7 +412,7 @@ Per component: pak alleen de keys die je gebruikt en zet ze in deze volgorde. De
 ```
 [1. Visueel dominant]
 variant, appearance, destructive, color, customColor, iconColor,
-background, mainBackground, scheme, level, status, size, smSize, mdSize,
+background, mainBackground, scheme, level, status, spinButtons, size, smSize, mdSize,
 lgSize, smCustomSize, mdCustomSize, lgCustomSize, weight, lineHeight,
 shape, corner, tile, compact, minor, pulse, line, dividers, dividerStart,
 dividerEnd, noRibbon, layout, labelAlignment, formLabelAlignment,
@@ -462,7 +462,7 @@ primarySidebarAccessibleLabel, decorative, role, landmarks, list,
 rowHeader, currentType
 
 [8. Elements]
-showSearchButton, searchButton, hideSpinButtons, noPicker, noFilter,
+showSearchButton, searchButton, noPicker, noFilter,
 noCopy, lineNumbers, weekNumbers, histogram, hasDragHandle, reorderHandle,
 noArrow, arrowLength, noBackdrop, mdTitleBar, dismissible, dismissable,
 tokenControl, hideLgText, maxItems

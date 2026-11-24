@@ -117,11 +117,12 @@ function removeEdits(source, finding, name) {
 	return [{ from, to: found.end, text: '' }];
 }
 
-/** A value written out in the markup that became a boolean: the whole attribute
- *  turns into the new name. The rule's context says which value that is. */
+/** One attribute that became another: a value written out that became a
+ *  boolean, or a boolean that became a value (`spin-buttons="none"`). The whole
+ *  attribute turns into `to`. The rule's context says which one it was. */
 function flagEdits(source, startTag, from, to) {
 	const found = findAttribute(startTag, from);
-	if (!found || found.prefix || found.templated || findAttribute(startTag, to)) return [];
+	if (!found || found.prefix || found.templated || findAttribute(startTag, to.split('=')[0])) return [];
 	return [{ from: found.start, to: found.end, text: to }];
 }
 

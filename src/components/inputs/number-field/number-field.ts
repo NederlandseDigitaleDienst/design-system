@@ -6,10 +6,10 @@
  * @element nldd-number-field
  * @keywords getal
  * @related nldd-slider, nldd-stepper
+ * @attr {'end'|'split'|'none'} spin-buttons - Where the decrement and increment buttons go: 'end' (the default) puts them side by side at the end, so the value lines up at the start with the other fields in a form; 'split' puts decrement at the start and increment at the end, with the value centered between them, for a short counter such as a quantity; 'none' leaves them out.
  * @attr {'sm'|'md'} size - Size: 'sm' | 'md' (default: 'md')
  * @attr {string} width - Width mode: 'full' (stretches to container) or any CSS length (e.g. '240px')
  * @attr {string} accessible-label - Accessible label (aria-label) forwarded to the native input
- * @attr {boolean} hide-spin-buttons - When set, hides the decrement and increment buttons
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
  * @attr {string} name - Name for form submission
  * @attr {number} value - Current value. Leave it out for an empty field, which submits an empty string and takes `min` and `max` as no reason to be invalid: only `required` asks for a value, as with a native number input. As a property, `null` is empty. In an empty field + and - are both enabled, and start at 0, or at the nearer end of the range when 0 lies outside it (`min="1"` starts at 1).
@@ -40,6 +40,7 @@ import { translate } from '../../../utilities/translations.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
 
 export type NumberFieldSize = 'sm' | 'md';
+export type NumberFieldSpinButtons = 'end' | 'split' | 'none';
 
 /** A number as a native number input accepts it: no hex, no Infinity. Above
  *  the class: an element already in the page upgrades while the class is
@@ -73,6 +74,9 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 	static blocksImplicitSubmission = true;
 
 
+	@property({ reflect: true, attribute: 'spin-buttons', converter: reflectNonDefault<NumberFieldSpinButtons>('end') })
+	spinButtons: NumberFieldSpinButtons = 'end';
+
 	@property({ reflect: true, converter: reflectNonDefault<NumberFieldSize>('md') })
 	size: NumberFieldSize = 'md';
 
@@ -83,9 +87,6 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 	/** Accessible label forwarded as aria-label to the native input. */
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
-
-	@property({ type: Boolean, reflect: true, attribute: 'hide-spin-buttons' })
-	hideSpinButtons = false;
 
 	/**
 	 * Marks the control as invalid.

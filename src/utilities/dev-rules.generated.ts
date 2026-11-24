@@ -680,6 +680,11 @@ export const devRules: DevRule[] = [
 		}
 	},
 	{
+		"id": "number-field-hide-spin-buttons-renamed",
+		"message": "`hide-spin-buttons` is now `spin-buttons=\"none\"`, and the attribute does nothing. Replace it here and on every other nldd-number-field.",
+		"context": "nldd-number-field[hide-spin-buttons]"
+	},
+	{
 		"id": "number-field-needs-name",
 		"message": "nldd-number-field needs `accessible-label` or a labeled nldd-form-field around it, or a screen reader cannot announce its purpose.",
 		"context": "nldd-number-field",
@@ -2124,6 +2129,11 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-notification-variant",
 		"message": "`variant` on nldd-notification takes: accent, critical, neutral, success, warning.",
 		"context": "nldd-notification[variant]:not([variant=\"accent\"], [variant=\"critical\"], [variant=\"neutral\"], [variant=\"success\"], [variant=\"warning\"])"
+	},
+	{
+		"id": "invalid-value-number-field-spin-buttons",
+		"message": "`spin-buttons` on nldd-number-field takes: end, none, split.",
+		"context": "nldd-number-field[spin-buttons]:not([spin-buttons=\"end\"], [spin-buttons=\"none\"], [spin-buttons=\"split\"])"
 	},
 	{
 		"id": "invalid-value-number-field-size",

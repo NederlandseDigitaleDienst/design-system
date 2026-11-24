@@ -17889,6 +17889,16 @@
             },
             {
               "kind": "field",
+              "name": "spinButtons",
+              "type": {
+                "text": "NumberFieldSpinButtons"
+              },
+              "default": "'end'",
+              "attribute": "spin-buttons",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "size",
               "type": {
                 "text": "NumberFieldSize"
@@ -17917,16 +17927,6 @@
               "default": "''",
               "description": "Accessible label forwarded as aria-label to the native input.",
               "attribute": "accessible-label"
-            },
-            {
-              "kind": "field",
-              "name": "hideSpinButtons",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "hide-spin-buttons",
-              "reflects": true
             },
             {
               "kind": "field",
@@ -18379,6 +18379,18 @@
           ],
           "attributes": [
             {
+              "name": "spin-buttons",
+              "type": {
+                "text": "NumberFieldSpinButtons"
+              },
+              "default": "'end'",
+              "fieldName": "spinButtons",
+              "expandedType": {
+                "text": "'end' | 'none' | 'split'"
+              },
+              "description": "Where the decrement and increment buttons go: 'end' (the default) puts them side by side at the end, so the value lines up at the start with the other fields in a form; 'split' puts decrement at the start and increment at the end, with the value centered between them, for a short counter such as a quantity; 'none' leaves them out."
+            },
+            {
               "name": "size",
               "type": {
                 "text": "NumberFieldSize"
@@ -18407,15 +18419,6 @@
               "default": "''",
               "description": "Accessible label (aria-label) forwarded to the native input",
               "fieldName": "accessibleLabel"
-            },
-            {
-              "name": "hide-spin-buttons",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "hideSpinButtons",
-              "description": "When set, hides the decrement and increment buttons"
             },
             {
               "name": "invalid",
