@@ -83,6 +83,8 @@ const SHOWN_WHOLE = { options: 4, characters: 16 };
 
 /** The width of a field in the controls, and below which width of the list the descriptions fold away. */
 const FIELD_WIDTH = 'min(240px, 50%)';
+/** A number is short: a counter with its buttons on either side. */
+const NUMBER_WIDTH = '144px';
 const NARROW_CONTROLS = 560;
 
 /** Puts a value chosen elsewhere into a control of the list. */
@@ -696,7 +698,7 @@ export class SiteStage extends HTMLElement {
 				infos.push({ label, button, text });
 			}
 			input.setAttribute('accessible-label', name);
-			const fits = ['nldd-switch', 'nldd-segmented-control'].includes(input.localName);
+			const fits = ['nldd-switch', 'nldd-segmented-control', 'nldd-number-field'].includes(input.localName);
 			const cell = nldd('cell', { 'horizontal-alignment': 'right', 'vertical-alignment': 'top', ...(fits ? {} : { width: FIELD_WIDTH }) }, [input]);
 			rows.push({ name, item: nldd('list-item', {}, [label, nldd('spacer-cell', { size: '12' }), cell]), content });
 		};
@@ -1115,7 +1117,7 @@ export class SiteStage extends HTMLElement {
 			return nldd('dropdown', {}, [select]);
 		}
 		if (control.kind === 'number') {
-			const input = nldd('number-field', text === '' ? {} : { value: text });
+			const input = nldd('number-field', { 'spin-buttons': 'split', width: NUMBER_WIDTH, ...(text === '' ? {} : { value: text }) });
 			input.addEventListener('input', (event) => {
 				const { value } = (event as CustomEvent<{ value: number | null }>).detail;
 				change(value === null ? '' : String(value));
