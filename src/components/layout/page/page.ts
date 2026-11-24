@@ -485,6 +485,8 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 	 * An anchor or a focused field lies past the bar's collapse anchor, so by the
 	 * time it is scrolled into view the bar is compact: the scroll padding takes
 	 * that height up front, or the bar grows over what was just scrolled to.
+	 * Only a bar slotted straight into the header counts: one inside a wrapper
+	 * is not measured, and an anchor then lands under its compact height.
 	 */
 	private _measureBarGrowth(): number {
 		let growth = 0;
