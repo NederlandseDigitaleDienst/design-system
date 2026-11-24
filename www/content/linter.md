@@ -6,6 +6,8 @@
 npx @nldd/design-system lint src
 ```
 
+`nldd lint` is geen ESLint-plugin en vervangt je eigen linter niet. ESLint, Biome of Oxlint kijken naar je JavaScript; `nldd lint` kijkt naar hoe je de componenten gebruikt, ook in templates en gebouwde HTML, waar die linters niet komen. Draai ze naast elkaar.
+
 ## Wat hij vindt
 
 - Tags, attributen, slots, waarden en iconen die niet bestaan, of niet meer.
@@ -29,7 +31,7 @@ npx @nldd/design-system lint --fix
 npx @nldd/design-system explain button-needs-name
 ```
 
-Je krijgt de melding, het succescriterium van WCAG dat de regel bewaakt, en markup die goed en fout is. Hetzelfde staat op de pagina van de regel, onder [Alle regels](#alle-regels).
+Je krijgt de melding, het succescriterium van WCAG dat de regel bewaakt, en markup die goed en fout is. Hetzelfde staat op de pagina van de regel, onder [Lintregels](/lintregels/).
 
 ### De regels van een component
 
@@ -73,3 +75,7 @@ Een voorbeeld dat bewust afwijkt, krijgt een onderdrukking met de reden erbij. Z
 De groep `pure` zet een project zelf aan, met `--pure` of in `.nldd-lint.json`. Die regels melden eigen opmaak van een app: een `class`, een `style`, kale HTML of een stylesheet.
 
 De linter vraagt Node 20.19 of nieuwer.
+
+## Alle lintregels
+
+Elke regel heeft een pagina, met de melding, de reden en markup die goed en fout is: [alle lintregels](/lintregels/), per groep.

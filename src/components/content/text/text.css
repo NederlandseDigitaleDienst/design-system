@@ -136,6 +136,8 @@ nldd-text > :is(p, span) code {
 	padding: var(--_text-code-padding);
 	font-family: var(--_text-code-font-family);
 	font-size: var(--_text-code-font-size);
+	/* wrapCodeText in text-wrap.ts; text.test.ts keeps the two equal. */
+	overflow-wrap: anywhere;
 }
 
 nldd-text > :is(p, span) q {

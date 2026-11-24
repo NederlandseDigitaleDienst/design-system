@@ -1,6 +1,9 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import '../../../assets/styles/variables.css';
 import './tag.js';
+import { wrapUiText } from '../../../assets/styles/text-wrap.js';
+import { wrapOf, wrapOfSets } from '../../../assets/styles/text-wrap.fixtures.js';
 import type { NLDDTag } from './tag.js';
 
 describe('nldd-tag', () => {
@@ -220,5 +223,32 @@ describe('nldd-tag', () => {
 				expect(icon!.getAttribute('icon')).toBe('check-mark');
 			});
 		});
+	});
+});
+
+describe('nldd-tag – breaking long words', () => {
+	let el: HTMLElement;
+
+	afterEach(() => cleanup(el));
+
+	const cases = [
+		'<nldd-tag text="Arbeidsongeschiktheidsverzekering"></nldd-tag>',
+		'<nldd-tag icon="check-mark" text="Omgevingsvergunning aanvragen"></nldd-tag>',
+		'<nldd-tag size="sm" text="Omgevingsvergunning"></nldd-tag>',
+	];
+
+	it.each(cases)('keeps the text inside a tag of 100px: %s', async (html) => {
+		el = await fixture(`<div style="width: 100px">${html}</div>`);
+		const tag = el.querySelector('nldd-tag') as NLDDTag;
+		await tag.updateComplete;
+		const box = tag.shadowRoot!.querySelector('.tag')!;
+		expect(box.scrollWidth).toBeLessThanOrEqual(Math.ceil(box.getBoundingClientRect().width));
+	});
+
+	it('breaks with wrapUiText', async () => {
+		el = await fixture('<div><nldd-tag text="Dakisolatie"></nldd-tag></div>');
+		const tag = el.querySelector('nldd-tag') as NLDDTag;
+		await tag.updateComplete;
+		expect(wrapOf(tag.shadowRoot!.querySelector('.tag__text')!)).toEqual(wrapOfSets(wrapUiText));
 	});
 });

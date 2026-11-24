@@ -1,5 +1,6 @@
 import { css } from 'lit';
 import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { wrapCodeText, wrapUiText } from '../../../assets/styles/text-wrap.js';
 
 export const fileFieldStyles = css`
 	:host {
@@ -242,7 +243,7 @@ export const fileFieldStyles = css`
 	.file-field__text {
 		padding-block: var(--primitives-space-8);
 		white-space: normal;
-		overflow-wrap: anywhere;
+		${wrapUiText}
 		text-wrap: balance;
 	}
 
@@ -431,7 +432,7 @@ export const fileFieldStyles = css`
 	:is(.file-field__name, .file-field__folder).is-wrapped {
 		display: block;
 		white-space: normal;
-		overflow-wrap: anywhere;
+		${wrapCodeText}
 		text-wrap: balance;
 	}
 

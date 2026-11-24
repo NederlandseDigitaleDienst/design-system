@@ -373,6 +373,77 @@ describe('nldd-one-time-code-field', () => {
 		expect(active()).toBe(1);
 	});
 
+	it('moves to the box before on Backspace in an empty field, where the input sends no beforeinput', async () => {
+		// Emptying each box in turn leaves the caret in the last one, over an empty input.
+		el = await fixture('<nldd-one-time-code-field value="12345"></nldd-one-time-code-field>');
+		for (const index of [0, 1, 2, 3, 4]) {
+			await press(index);
+			await beforeInput('deleteContentBackward');
+		}
+		expect(el.value).toBe('');
+		expect(active()).toBe(4);
+		const event = new KeyboardEvent('keydown', { key: 'Backspace', bubbles: true, cancelable: true, composed: true });
+		input().dispatchEvent(event);
+		await el.updateComplete;
+		expect(event.defaultPrevented).toBe(true);
+		expect(active()).toBe(3);
+	});
+
+	it('empties a filled first box on Backspace with the caret before it, as the box is the unit', async () => {
+		el = await fixture('<nldd-one-time-code-field value="12"></nldd-one-time-code-field>');
+		await press(0);
+		input().setSelectionRange(0, 0);
+		const event = new KeyboardEvent('keydown', { key: 'Backspace', bubbles: true, cancelable: true, composed: true });
+		input().dispatchEvent(event);
+		await el.updateComplete;
+		expect(event.defaultPrevented).toBe(true);
+		expect(el.charAt(0)).toBe('');
+		expect(el.charAt(1)).toBe('2');
+		expect(active()).toBe(0);
+	});
+
+	it('leaves Backspace to beforeinput where the input has something to delete', async () => {
+		el = await fixture('<nldd-one-time-code-field value="12"></nldd-one-time-code-field>');
+		el.focus();
+		await el.updateComplete;
+		const event = new KeyboardEvent('keydown', { key: 'Backspace', bubbles: true, cancelable: true, composed: true });
+		input().dispatchEvent(event);
+		expect(event.defaultPrevented).toBe(false);
+		expect(el.value).toBe('12');
+	});
+
+	it('leaves Backspace on a selection from the start to the input', async () => {
+		el = await fixture('<nldd-one-time-code-field value="123"></nldd-one-time-code-field>');
+		el.focus();
+		await el.updateComplete;
+		input().setSelectionRange(0, input().value.length);
+		const event = new KeyboardEvent('keydown', { key: 'Backspace', bubbles: true, cancelable: true, composed: true });
+		input().dispatchEvent(event);
+		expect(event.defaultPrevented).toBe(false);
+	});
+
+	it('leaves a readonly or disabled field as it is on Backspace', async () => {
+		for (const flag of ['readonly', 'disabled']) {
+			if (el) cleanup(el);
+			el = await fixture(`<nldd-one-time-code-field value="12" ${flag}></nldd-one-time-code-field>`);
+			input().setSelectionRange(0, 0);
+			const event = new KeyboardEvent('keydown', { key: 'Backspace', bubbles: true, cancelable: true, composed: true });
+			input().dispatchEvent(event);
+			await el.updateComplete;
+			expect(event.defaultPrevented).toBe(false);
+			expect(el.value).toBe('12');
+		}
+	});
+
+	it('leaves Backspace during a composition to the input', async () => {
+		el = await fixture('<nldd-one-time-code-field></nldd-one-time-code-field>');
+		el.focus();
+		await el.updateComplete;
+		const event = new KeyboardEvent('keydown', { key: 'Backspace', isComposing: true, bubbles: true, cancelable: true, composed: true });
+		input().dispatchEvent(event);
+		expect(event.defaultPrevented).toBe(false);
+	});
+
 	it('keeps the focus ring on a readonly field, without a caret, and leaves its value alone', async () => {
 		el = await fixture('<nldd-one-time-code-field value="123456" readonly></nldd-one-time-code-field>');
 		el.focus();

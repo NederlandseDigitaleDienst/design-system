@@ -1,5 +1,6 @@
 import { css } from 'lit';
 import { inheritedTextReset, surfaceContent } from '../../../assets/styles/shadow-resets.js';
+import { wrapUiText } from '../../../assets/styles/text-wrap.js';
 
 export const admonitionStyles = css`
 	:host {
@@ -18,7 +19,7 @@ export const admonitionStyles = css`
 		--_admonition-content-color: var(--semantics-content-color);
 		--_admonition-title-bar-background-color: var(--semantics-surfaces-tinted-background-color);
 		--_admonition-title-bar-hover-background-color: var(--semantics-surfaces-tinted-is-hovered-background-color);
-		--_admonition-title-bar-min-height: var(--semantics-disclosures-title-bar-min-height);
+		--_admonition-title-bar-min-height: var(--semantics-controls-md-min-size);
 		--_admonition-title-bar-padding-block: var(--semantics-disclosures-title-bar-padding-block);
 		--_admonition-inset: var(--semantics-disclosures-inset);
 		--_admonition-gap: var(--semantics-disclosures-title-bar-gap);
@@ -172,7 +173,7 @@ export const admonitionStyles = css`
 		margin: 0;
 		min-width: 0;
 		flex: 1 1 0;
-		overflow-wrap: break-word;
+		${wrapUiText}
 		font: inherit;
 	}
 

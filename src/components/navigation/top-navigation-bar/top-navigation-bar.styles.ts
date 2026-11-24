@@ -1,6 +1,7 @@
 import { css, unsafeCSS } from 'lit';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { wrapUiText } from '../../../assets/styles/text-wrap.js';
 
 const smMax = unsafeCSS(queryBreakpoints.smMax);
 const mdMin = unsafeCSS(queryBreakpoints.mdMin);
@@ -389,7 +390,6 @@ export const topNavigationBarStyles = css`
 			padding-top: var(--primitives-space-4);
 			min-width: 0;
 			white-space: normal;
-			overflow-wrap: break-word;
 		}
 
 		@media (min-width: ${mdMin}) {
@@ -398,6 +398,13 @@ export const topNavigationBarStyles = css`
 
 		@media (min-width: ${lgMin}) {
 			font: var(--_top-navigation-bar-title-lg-font);
+		}
+	}
+
+	.top-navigation-bar__website-title-text {
+		@media (max-width: ${smMax}) {
+			min-width: 0;
+			${wrapUiText}
 		}
 	}
 

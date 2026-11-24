@@ -24,22 +24,28 @@ export default {
 		},
 	},
 	args: {
+		variant: 'person',
 		color: 'neutral',
 		size: '40',
 		iconAligned: false,
-		icon: '',
+		name: 'Bart van de Biezen',
 		initials: '',
+		icon: '',
 		src: '',
 		button: false,
 		accessibleLabel: '',
 		decorative: false,
 		tooltipTiming: 'delay',
-		name: 'Bart van de Biezen',
-		type: 'person',
 		href: '',
 		target: '',
 	},
 	argTypes: {
+		variant: {
+			control: 'select',
+			options: ['person', 'organization'],
+			description: 'Persoon of organisatie: bepaalt de vorm en het terugval-icoon',
+			table: { defaultValue: { summary: 'person' } },
+		},
 		color: {
 			control: 'select',
 			options: ['neutral', 'content'],
@@ -58,14 +64,18 @@ export default {
 			description: 'Krimpt de schijf naar 5/6 zodat de avatar optisch met een icoon uitlijnt',
 			table: { defaultValue: { summary: 'false' } },
 		},
-		icon: {
-			control: 'select',
-			options: ICONS,
-			description: 'Overschrijft het type-afhankelijke terugval-icoon',
+		name: {
+			control: 'text',
+			description: 'Naam; levert de afgeleide initialen en het toegankelijke label',
 		},
 		initials: {
 			control: 'text',
 			description: 'Expliciete initialen (overschrijft de afleiding uit name)',
+		},
+		icon: {
+			control: 'select',
+			options: ICONS,
+			description: 'Overschrijft het terugval-icoon van de variant',
 		},
 		src: {
 			control: 'text',
@@ -95,16 +105,6 @@ export default {
 				defaultValue: { summary: 'delay' },
 			},
 		},
-		name: {
-			control: 'text',
-			description: 'Naam; levert de afgeleide initialen en het toegankelijke label',
-		},
-		type: {
-			control: 'select',
-			options: ['person', 'organization'],
-			description: 'Bepaalt vorm en terugval-icoon',
-			table: { defaultValue: { summary: 'person' } },
-		},
 		href: {
 			control: 'text',
 			description: 'Maakt de avatar een link naar deze URL; de vorm zelf wordt de link, dus het klikgebied en de focusring volgen hem',
@@ -121,18 +121,18 @@ export default {
 
 const Template = (args: Record<string, any>) => html`
 	<nldd-avatar
+		variant=${args.variant || nothing}
 		color=${args.color || nothing}
 		size=${args.size || nothing}
 		?icon-aligned=${args.iconAligned}
-		icon=${args.icon || nothing}
+		name=${args.name || nothing}
 		initials=${args.initials || nothing}
+		icon=${args.icon || nothing}
 		src=${args.src || nothing}
 		?button=${args.button}
 		accessible-label=${args.accessibleLabel || nothing}
 		?decorative=${args.decorative}
 		tooltip-timing=${args.tooltipTiming || nothing}
-		name=${args.name || nothing}
-		type=${args.type || nothing}
 		href=${args.href || nothing}
 		target=${args.target || nothing}
 	></nldd-avatar>
@@ -143,35 +143,35 @@ export const Standaard = {
 };
 
 /**
- * Het type bepaalt de vorm en het terugval-icoon: een persoon krijgt een cirkel
+ * De variant bepaalt de vorm en het terugval-icoon: een persoon krijgt een cirkel
  * met een person-icoon, een organisatie een afgeronde vierkant met een
  * building-icoon. De vorm is het verschil dat je in een rij ziet, ook zonder de
  * namen te lezen. Initialen werken bij allebei, bij een organisatie vaak als
  * acroniem.
  */
-export const Types = {
+export const Varianten = {
 	render: () => html`
 		<nldd-container
 			layout="row"
 			gap="32"
 		>
 			${[
-				{ type: 'person', name: 'Bart van de Biezen', initials: '' },
-				{ type: 'organization', name: 'Team Uitvoering', initials: 'TU' },
-			].map(({ type, name, initials }) => html`
+				{ variant: 'person', name: 'Bart van de Biezen', initials: '' },
+				{ variant: 'organization', name: 'Team Uitvoering', initials: 'TU' },
+			].map(({ variant, name, initials }) => html`
 				<nldd-container
 					layout="row"
 					gap="12"
 					width="fit-content"
 				>
 					<nldd-avatar
-						type=${type}
+						variant=${variant}
 						name=${name}
 						initials=${initials || nothing}
 						size="48"
 					></nldd-avatar>
 					<nldd-avatar
-						type=${type}
+						variant=${variant}
 						size="48"
 					></nldd-avatar>
 				</nldd-container>
@@ -378,13 +378,13 @@ export const BredeInitialen = {
 				size="48"
 			></nldd-avatar>
 			<nldd-avatar
-				type="organization"
+				variant="organization"
 				initials="LVVN"
 				decorative
 				size="48"
 			></nldd-avatar>
 			<nldd-avatar
-				type="organization"
+				variant="organization"
 				initials="LVVN"
 				decorative
 				size="40"
@@ -396,7 +396,7 @@ export const BredeInitialen = {
 
 /**
  * Met een `src` toont de avatar de afbeelding, bijgesneden op een vierkant en
- * geklipt op de vorm van het `type`.
+ * geklipt op de vorm van de `variant`.
  */
 export const MetAfbeelding = {
 	render: () => html`
@@ -438,7 +438,7 @@ export const TerugvalIcoon = {
 		>
 			<nldd-avatar size="48"></nldd-avatar>
 			<nldd-avatar
-				type="organization"
+				variant="organization"
 				size="48"
 			></nldd-avatar>
 			<nldd-avatar
@@ -474,7 +474,7 @@ export const LinkOfKnop = {
 				accessible-label="Profielmenu van Anke Jacobs openen"
 			></nldd-avatar>
 			<nldd-avatar
-				type="organization"
+				variant="organization"
 				name="Team Beleid"
 				size="48"
 				href="#team-beleid"

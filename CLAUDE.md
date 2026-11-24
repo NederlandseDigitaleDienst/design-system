@@ -144,6 +144,8 @@ Wil je toch handmatig iets toevoegen (bijv. iets dat semantic-release niet uit d
 
 Een icoon is een bestand in `src/components/content/icon/icons/`; de bestandsnaam is de icoonnaam. Staat er iets **tussen haakjes** in de naam, dan is dat een alias: haal het uit de bestandsnaam en zet het in `icon-aliases.js` (`'brand': 'seal-star'`). Een icoon staat op een canvas van 96×96, regular en light allebei (`ICON-STYLE-GUIDE.md`). Optimaliseer nieuwe bestanden naar de huisstijl met `npm run optimize:icons -- <bestand.svg> …` (svgo, instellingen in `scripts/svgo.config.mjs`). Een export op 24×24 of 32×32 zet het script eerst naar 96 en rondt pas daarna af; een andere viewBox weigert het. Verder: geen `width`/`height`, `fill="currentColor"` in plaats van een vaste kleur, geen `fill-rule`, pad afgerond op één decimaal, tabs, elk pad op een eigen regel. Draai het één keer, op de export uit Figma: een tweede ronde rondt opnieuw af en verschuift het icoon.
 
+Elk icoon staat in precies één categorie van `icon-categories.ts`, in de volgorde van de Figma-bibliotheek; daarop filtert de icon-gallery, en `icon-categories.test.ts` faalt op een icoon zonder categorie.
+
 Nieuwe en hertekende iconen krijgen een "Nieuw"- of "Bijgewerkt"-label in de icon-gallery. Die twee lijsten staan in `icon-gallery-status.ts` en worden bij elke batch **vervangen**, afgeleid uit de git-historie; dat bestand legt in zijn kop precies vast hoe je ze afleidt en welke valkuil er zit (`--follow` niet gebruiken).
 
 Draai daarna `npm run build:icons` (registry) en `npm run generate:skill-docs` (de icoon- en aliaslijst in `skills/nldd-design/reference.md`), en zet een nieuw icoon in de changelog onder `### Highlights`.
@@ -168,7 +170,7 @@ De landingspagina (`www/index.html`, met `www/main.ts` en `www/styles.css`) is m
 | `/patronen/<slug>/` | `src/patterns/<slug>/`, met de lintregels die naar het patroon wijzen eronder |
 | `/richtlijnen/`, `/themas/`, `/iconen/`, `/vertalingen/`, `/breakpoints/` | `src/docs/*.md` |
 | `/toegankelijkheid/` | `docs/ACCESSIBILITY.md`, met eronder de lintregels per succescriterium |
-| `/linter/<regel>/` | `src/rules/<groep>/<regel>.yaml`, een pagina per regel |
+| `/lintregels/`, `/lintregels/<regel>/` | `src/rules/<groep>/<regel>.yaml`, een pagina per regel |
 | `/changelog/`, `/changelog/<versie>/` | `CHANGELOG.md`, een pagina per versie |
 | `/aan-de-slag/` | `www/content/*.md` |
 

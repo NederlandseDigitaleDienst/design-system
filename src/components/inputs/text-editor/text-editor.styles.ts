@@ -1103,7 +1103,8 @@ export const textEditorStyles = css`
 		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_text-editor-link-badge-is-active-highlight-border-color);
 	}
 
-	.cm-link-badge nldd-icon {
+	.cm-link-badge__icon {
+		display: flex;
 		flex: none;
 		width: calc(0.65 * var(--_text-editor-link-badge-size));
 		height: calc(0.65 * var(--_text-editor-link-badge-size));

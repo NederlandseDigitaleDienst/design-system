@@ -178,7 +178,7 @@ describe('nldd-dropdown – state', () => {
 		const select = el.querySelector('select')!;
 		select.dispatchEvent(new ToggleEvent('toggle', { oldState: 'closed', newState: 'open' }));
 		await waitForUpdate(el);
-		expect(el.expanded).toBe(true);
+		expect(el._expanded).toBe(true);
 		expect(el.hasAttribute('expanded')).toBe(true);
 	});
 
@@ -190,18 +190,18 @@ describe('nldd-dropdown – state', () => {
 		await waitForUpdate(el);
 		select.dispatchEvent(new ToggleEvent('toggle', { oldState: 'open', newState: 'closed' }));
 		await waitForUpdate(el);
-		expect(el.expanded).toBe(false);
+		expect(el._expanded).toBe(false);
 	});
 
 	it('clears expanded when slotted select blurs', async () => {
 		el = await fixture<NLDDDropdown>(selectFixture());
 		await waitForUpdate(el);
 		const select = el.querySelector('select')!;
-		el.expanded = true;
+		el._expanded = true;
 		await waitForUpdate(el);
 		select.dispatchEvent(new FocusEvent('blur'));
 		await waitForUpdate(el);
-		expect(el.expanded).toBe(false);
+		expect(el._expanded).toBe(false);
 	});
 });
 

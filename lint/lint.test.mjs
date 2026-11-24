@@ -1064,6 +1064,13 @@ describe('--fix', () => {
 		assert.equal(flag('a.vue', bound), bound);
 	});
 
+	it('turns a flag into an attribute with a value, and leaves it where that attribute is already there', () => {
+		const flag = (name, source) => fixed(name, source).text;
+		assert.equal(flag('a.html', '<nldd-number-field accessible-label="a" hide-spin-buttons></nldd-number-field>'), '<nldd-number-field accessible-label="a" spin-buttons="none"></nldd-number-field>');
+		const both = '<nldd-number-field accessible-label="a" hide-spin-buttons spin-buttons="split"></nldd-number-field>';
+		assert.equal(flag('a.html', both), both);
+	});
+
 	it('names the rules about the values of a bound attribute that is gone', async () => {
 		const findings = (await createLinter(loadData()).lintSource("const a = <nldd-text-editor accessible-label=\"a\" appearance={b ? 'simple' : 'input-field'} />;", 'a.tsx')).findings;
 		const [finding] = findings.filter(({ rule }) => rule === 'unknown-attribute');

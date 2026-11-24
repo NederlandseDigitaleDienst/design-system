@@ -1,4 +1,5 @@
 import { css } from 'lit';
+import { wrapUiText } from '../../../assets/styles/text-wrap.js';
 import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
 
 export const checkboxFieldStyles = css`
@@ -50,13 +51,15 @@ export const checkboxFieldStyles = css`
 	}
 
 	.checkbox-field__label {
-		display: flex;
+		display: block;
+		min-width: 0;
 		cursor: default;
 		padding-top: calc((var(--semantics-controls-md-min-size) - 1em * var(--primitives-line-height-snug)) / 2);
 		flex-grow: 1;
 		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--primitives-font-body-md-regular-snug);
+		${wrapUiText}
 		text-wrap: pretty;
 	}
 

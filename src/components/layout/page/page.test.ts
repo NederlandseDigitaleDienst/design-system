@@ -3,6 +3,7 @@ import { fixture, cleanup, waitForUpdate, nextFrames } from '../../../test-utils
 import { loadTokens } from '../../../test-tokens.js';
 import './page.js';
 import '../sheet/sheet.js';
+import '../../navigation/top-title-bar/top-title-bar.js';
 import '../split-views/side-by-side-split-view/side-by-side-split-view.js';
 import '../split-views/bar-split-view/bar-split-view.js';
 
@@ -517,6 +518,33 @@ describe('nldd-page – sticky bars and focus', () => {
 		await nextFrames();
 		await nextFrames();
 		expect(footer.classList.contains('is-at-end')).toBe(true);
+	});
+
+	it('keeps an anchor clear of a title bar that turns compact on the way', async () => {
+		unloadTokens = loadTokens();
+		wrapper = await fixture(`
+			<div style="height: 400px; display: flex">
+				<nldd-page sticky-header data-scroll="nested">
+					<nldd-top-title-bar slot="header" text="Aanvraag A-1042" collapse-anchor="titel"></nldd-top-title-bar>
+					<h1 id="titel">Aanvraag A-1042</h1>
+					<div style="height: 800px"></div>
+					<h2 id="anker">Dakisolatie</h2>
+					<div style="height: 800px"></div>
+				</nldd-page>
+			</div>
+		`);
+		const el = wrapper.querySelector('nldd-page') as HTMLElement & { updateComplete: Promise<boolean> };
+		await el.updateComplete;
+		await nextFrames();
+		await nextFrames();
+		const bar = el.querySelector('nldd-top-title-bar')!;
+		expect(bar.offsetHeight).toBe(0);
+		el.querySelector('#anker')!.scrollIntoView({ block: 'start' });
+		await nextFrames();
+		await nextFrames();
+		expect(bar.classList.contains('is-compact')).toBe(true);
+		const header = el.shadowRoot!.querySelector('.page__header')!;
+		expect(el.querySelector('#anker')!.getBoundingClientRect().top).toBeGreaterThanOrEqual(header.getBoundingClientRect().bottom - 0.5);
 	});
 
 	describe('a scroller without anything to focus', () => {

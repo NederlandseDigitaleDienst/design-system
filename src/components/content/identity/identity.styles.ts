@@ -1,6 +1,7 @@
 import { css, unsafeCSS } from 'lit';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 import { slottedReset, inheritedTextReset, slottedBlockReset } from '../../../assets/styles/shadow-resets.js';
+import { wrapBodyText, wrapUiText } from '../../../assets/styles/text-wrap.js';
 
 const smMax = unsafeCSS(queryBreakpoints.smMax);
 
@@ -99,6 +100,7 @@ export const identityStyles = css`
 		--context-content-color: var(--_identity-text-color);
 		color: var(--_identity-text-color);
 		font: var(--_identity-text-font);
+		${wrapUiText}
 		text-wrap: pretty;
 	}
 
@@ -111,6 +113,7 @@ export const identityStyles = css`
 		--context-content-color: var(--_identity-supporting-text-color);
 		color: var(--_identity-supporting-text-color);
 		font: var(--_identity-supporting-text-font);
+		${wrapBodyText}
 		text-wrap: pretty;
 	}
 

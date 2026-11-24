@@ -1,7 +1,10 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import type { NLDDImage } from './image.js';
 import './image.js';
+import { loadTokens } from '../../../test-tokens.js';
+import { wrapBodyText } from '../../../assets/styles/text-wrap.js';
+import { wrapOf, wrapOfSets } from '../../../assets/styles/text-wrap.fixtures.js';
 
 describe('nldd-image', () => {
 	let el: HTMLElement;
@@ -497,5 +500,37 @@ describe('nldd-image missing text alternative', () => {
 		} finally {
 			host.remove();
 		}
+	});
+});
+
+describe('nldd-image – breaking long words', () => {
+	const WORD = 'Arbeidsongeschiktheidsverzekering';
+	let el: HTMLElement;
+	let removeTokens: () => void;
+
+	beforeEach(() => { removeTokens = loadTokens(); });
+
+	afterEach(() => {
+		cleanup(el);
+		removeTokens();
+	});
+
+	it('keeps a long word in the caption and the credit inside 180px', async () => {
+		el = await fixture(`<div style="width: 180px"><nldd-image aspect-ratio="4/3" caption="Folder over de ${WORD}" credit="Foto: ${WORD}team"></nldd-image></div>`);
+		const image = el.querySelector('nldd-image')!;
+		await waitForUpdate(image);
+		const caption = image.shadowRoot!.querySelector('.image__caption')!;
+		const range = document.createRange();
+		range.selectNodeContents(caption);
+		expect(range.getBoundingClientRect().right - el.getBoundingClientRect().right).toBeLessThanOrEqual(1);
+		expect(caption.scrollWidth).toBeLessThanOrEqual(caption.clientWidth);
+	});
+
+	it('gives the caption wrapBodyText', async () => {
+		el = await fixture('<nldd-image aspect-ratio="4/3" caption="Folder" credit="Foto"></nldd-image>');
+		await waitForUpdate(el);
+		const root = el.shadowRoot!;
+		expect(wrapOf(root.querySelector('.image__caption')!)).toEqual(wrapOfSets(wrapBodyText));
+		expect(wrapOf(root.querySelector('.image__credit')!)).toEqual(wrapOfSets(wrapBodyText));
 	});
 });

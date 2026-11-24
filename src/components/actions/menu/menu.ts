@@ -6,9 +6,6 @@ import { menuStyles } from './menu.styles.js';
 import { menuTemplate, type MenuVariant } from './menu.template.js';
 import { nlddMenuTranslations } from './menu.i18n.js';
 import type { NLDDMenuTranslations } from './menu.i18n.js';
-import '../../lists-and-tables/cells/icon-cell/icon-cell.js';
-import '../../lists-and-tables/cells/spacer-cell/spacer-cell.js';
-import '../../lists-and-tables/cells/text-cell/text-cell.js';
 import '../../content/icon/icon.js';
 import '../../content/keyboard-shortcut/keyboard-shortcut.js';
 import '../../status-and-feedback/inline-dialog/inline-dialog.js';
@@ -1274,7 +1271,7 @@ export class NLDDMenu extends LitElement {
 	 * Filter items based on a query string.
 	 *
 	 * Matching items are kept visible. Non-matching items are hidden. Matching
-	 * items receive `query=<query>` so their text-cell bolds the non-typed
+	 * items receive `query=<query>` so their text bolds the non-typed
 	 * remainder (predictive completion, the ARIA APG pattern for combobox).
 	 *
 	 * When the query is empty, all items are shown and `query` is cleared.

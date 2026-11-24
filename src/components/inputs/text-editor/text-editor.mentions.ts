@@ -125,7 +125,7 @@ export interface TypeaheadCandidate {
 	 *  initials come from the text. `initials` sets them outright, as on
 	 *  nldd-avatar. `avatar: {}` is enough for initials.
 	 *  The row then takes two lines, with the supporting text under the text. */
-	avatar?: { src?: string; type?: 'person' | 'organization'; name?: string; initials?: string };
+	avatar?: { src?: string; variant?: 'person' | 'organization'; name?: string; initials?: string };
 }
 
 /** The candidates for what was typed after the trigger. The source filters;
@@ -212,7 +212,7 @@ function renderLead(completion: Completion): Node | null {
 		avatar.setAttribute('decorative', '');
 		if (candidate.avatar.initials) avatar.setAttribute('initials', candidate.avatar.initials);
 		if (candidate.avatar.src) avatar.setAttribute('src', candidate.avatar.src);
-		if (candidate.avatar.type) avatar.setAttribute('type', candidate.avatar.type);
+		if (candidate.avatar.variant) avatar.setAttribute('variant', candidate.avatar.variant);
 		return avatar;
 	}
 	if (candidate.icon) {

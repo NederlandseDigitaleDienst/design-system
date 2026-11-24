@@ -36,8 +36,8 @@
  * text wants to be written differently.
  *
  * @element nldd-admonition
- * @keywords callout, note, opmerking, let op
- * @related nldd-banner, nldd-inline-dialog, nldd-blockquote
+ * @keywords callout, note, opmerking, let op, disclosure, uitklappen
+ * @related nldd-banner, nldd-inline-dialog, nldd-blockquote, nldd-accordion, nldd-rich-text
  *
  * @attr {'neutral'|'accent'|'success'|'warning'|'critical'} variant - Color and default icon (default: 'neutral')
  * @attr {string} text - Title in the bar above the content. Without it there is no bar

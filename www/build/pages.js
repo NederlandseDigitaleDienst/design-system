@@ -86,6 +86,11 @@ function withEntry(path, html, modules) {
 function writePages(pages) {
 	const modules = componentModules();
 	for (const [path, source] of Object.entries(pages)) {
+		// A page that only sends the reader on to where it moved runs nothing.
+		if (source.includes('http-equiv="refresh"')) {
+			writeIfChanged(join(generatedDir, path), source);
+			continue;
+		}
 		const { html, entryPath, entry } = withEntry(path, source, modules);
 		writeIfChanged(join(generatedDir, path), html);
 		writeIfChanged(join(generatedDir, entryPath), entry);

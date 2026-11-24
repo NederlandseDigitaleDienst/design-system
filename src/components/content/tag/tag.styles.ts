@@ -1,4 +1,5 @@
 import { css } from 'lit';
+import { wrapUiText } from '../../../assets/styles/text-wrap.js';
 import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
 
 export const tagStyles = css`
@@ -198,7 +199,6 @@ export const tagStyles = css`
 		--context-content-color: var(--_tag-content-color);
 		color: var(--_tag-content-color);
 		font: var(--_tag-font);
-		overflow-wrap: break-word;
 	}
 
 	@media (forced-colors: active) {
@@ -228,5 +228,7 @@ export const tagStyles = css`
 
 	.tag__text {
 		display: inline-block;
+		min-width: 0;
+		${wrapUiText}
 	}
 `;

@@ -81,8 +81,16 @@ const anchorObserver = sharedResizeObserver<NLDDTopTitleBar>(checkAnchors);
 
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
+/**
+ * What nldd-page reads from a bar in its header: the height the bar takes once
+ * compact. Shared as a type, so renaming it breaks the page's type check.
+ */
+export interface CompactingBar {
+	readonly _compactHeight: number | undefined;
+}
+
 @customElement('nldd-top-title-bar')
-export class NLDDTopTitleBar extends LitElement {
+export class NLDDTopTitleBar extends LitElement implements CompactingBar {
 	static override styles = topTitleBarStyles;
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
@@ -105,6 +113,19 @@ export class NLDDTopTitleBar extends LitElement {
 
 	@property({ type: String, attribute: 'collapse-anchor' })
 	collapseAnchor = '';
+
+	/**
+	 * @internal The height the bar takes once compact, also while it is not:
+	 * nldd-page reserves it in its scroll padding. Undefined without
+	 * `collapse-anchor`, when the bar keeps one state.
+	 */
+	get _compactHeight(): number | undefined {
+		if (!this.collapseAnchor) return undefined;
+		const group = this.shadowRoot?.querySelector('.top-title-bar__title-group');
+		if (!group) return undefined;
+		const style = getComputedStyle(group);
+		return parseFloat(style.marginTop) + parseFloat(style.minHeight);
+	}
 
 	@state()
 	_hasToolbarItems = false;

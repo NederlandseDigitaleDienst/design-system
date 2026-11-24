@@ -4,12 +4,11 @@
  * its frame stand, and the API tables that nldd-rich-text does not fit yet.
  */
 
-/* ## Code in tables and lists */
+/* ## Code in the API tables */
 
 /* Outside the layer below: the stylesheet of nldd-rich-text is not in a
    layer, so a rule in one would lose from it. */
-[data-site-api] td code,
-nldd-rich-text td code {
+[data-site-api] td code {
 	white-space: nowrap;
 	word-break: normal;
 	overflow-wrap: normal;
@@ -24,20 +23,26 @@ nldd-rich-text td code {
 	max-width: 280px;
 }
 
-/* With both sidebars on the screen the toolbar has the way back to the
+/* Where both sidebars fit beside main, the toolbar has the way back to the
    landing page (main.ts sets the attribute). */
-nldd-navigation-split-view[data-site-sidebars-shown] > [slot="primary-sidebar"] {
+nldd-navigation-split-view[data-site-wide] > [slot="primary-sidebar"] {
 	/* nldd-lint-disable-next-line internal-context-no-use -- the split view hides no back button in the first sidebar */
 	--context-back-button-display: none;
 }
 
+/* A rule is a step below its group, also beside the list of groups. */
+[data-site-back-always] {
+	/* nldd-lint-disable-next-line internal-context-no-use -- the split view hides the back of main beside its list */
+	--context-back-button-display: flex;
+}
+
 /* Not `hidden`: the toolbar sets that on its own items when they overflow. */
-body:not(:has(nldd-navigation-split-view[data-site-sidebars-shown])) [data-site-home] {
+body:not(:has(nldd-navigation-split-view[data-site-wide])) [data-site-home] {
 	display: none;
 }
 
 /* Without the way back the name lines up with the content below it. */
-body:not(:has(nldd-navigation-split-view[data-site-sidebars-shown])) nldd-toolbar-title {
+body:not(:has(nldd-navigation-split-view[data-site-wide])) nldd-toolbar-title {
 	margin-inline-start: var(--primitives-space-8);
 }
 
@@ -56,6 +61,15 @@ body:not(:has(nldd-navigation-split-view[data-site-sidebars-shown])) nldd-toolba
 		--context-inset-bottom: 0px;
 		padding-inline: var(--semantics-surfaces-highlight-border-width);
 		overflow-x: auto;
+	}
+
+	.site-stage__mat:last-child {
+		padding-block-end: var(--semantics-surfaces-highlight-border-width);
+
+		& > .site-stage__canvas {
+			border-end-start-radius: calc(var(--semantics-surfaces-corner-radius) - var(--semantics-surfaces-highlight-border-width));
+			border-end-end-radius: calc(var(--semantics-surfaces-corner-radius) - var(--semantics-surfaces-highlight-border-width));
+		}
 	}
 
 	.site-stage__mat--frame {

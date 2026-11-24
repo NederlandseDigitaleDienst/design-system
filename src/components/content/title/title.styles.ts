@@ -1,6 +1,7 @@
 import { css, unsafeCSS } from 'lit';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 import { slottedReset, inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { important, wrapBodyText, wrapDisplayText } from '../../../assets/styles/text-wrap.js';
 
 const smMax = unsafeCSS(queryBreakpoints.smMax);
 const mdMin = unsafeCSS(queryBreakpoints.mdMin);
@@ -16,9 +17,6 @@ export const titleStyles = css`
 	/* # Host */
 
 	:host {
-		--_title-hyphenate-limit-before: 5;
-		--_title-hyphenate-limit-after: 5;
-		--_title-hyphenate-limit-chars: 12 var(--_title-hyphenate-limit-before) var(--_title-hyphenate-limit-after);
 		--_title-sm-custom-size: initial;
 		--_title-md-custom-size: initial;
 		--_title-lg-custom-size: initial;
@@ -282,8 +280,8 @@ export const titleStyles = css`
 		--context-content-color: var(--context-content-secondary-color);
 		color: var(--context-content-secondary-color);
 		font: var(--_title-overline-font);
-		overflow-wrap: anywhere;
 		text-wrap: balance;
+		${wrapBodyText}
 	}
 
 	::slotted([slot="overline"]) {
@@ -294,8 +292,8 @@ export const titleStyles = css`
 		--context-content-color: var(--context-content-secondary-color) !important;
 		color: var(--context-content-secondary-color) !important;
 		font: var(--_title-overline-font) !important;
-		overflow-wrap: anywhere !important;
 		text-wrap: balance !important;
+		${important(wrapBodyText)}
 	}
 
 	/* The measure is in ch, so one value covers every size: ch scales with the
@@ -305,13 +303,8 @@ export const titleStyles = css`
 		max-width: 40ch;
 		color: var(--context-content-color);
 		font: var(--_title-font);
-		overflow-wrap: anywhere;
 		text-wrap: balance;
-		-webkit-hyphens: auto;
-		hyphens: auto;
-		-webkit-hyphenate-limit-before: var(--_title-hyphenate-limit-before);
-		-webkit-hyphenate-limit-after: var(--_title-hyphenate-limit-after);
-		hyphenate-limit-chars: var(--_title-hyphenate-limit-chars);
+		${wrapDisplayText}
 	}
 
 	::slotted(:not([slot])) {
@@ -321,13 +314,8 @@ export const titleStyles = css`
 		max-width: 40ch !important;
 		color: var(--context-content-color) !important;
 		font: var(--_title-font) !important;
-		overflow-wrap: anywhere !important;
 		text-wrap: balance !important;
-		-webkit-hyphens: auto !important;
-		hyphens: auto !important;
-		-webkit-hyphenate-limit-before: var(--_title-hyphenate-limit-before) !important;
-		-webkit-hyphenate-limit-after: var(--_title-hyphenate-limit-after) !important;
-		hyphenate-limit-chars: var(--_title-hyphenate-limit-chars) !important;
+		${important(wrapDisplayText)}
 	}
 
 	.title__supporting-text {
@@ -336,8 +324,8 @@ export const titleStyles = css`
 		--context-content-color: var(--context-content-secondary-color);
 		color: var(--context-content-secondary-color);
 		font: var(--_title-supporting-text-font);
-		overflow-wrap: anywhere;
 		text-wrap: balance;
+		${wrapBodyText}
 	}
 
 	::slotted([slot="supporting-text"]) {
@@ -348,8 +336,8 @@ export const titleStyles = css`
 		--context-content-color: var(--context-content-secondary-color) !important;
 		color: var(--context-content-secondary-color) !important;
 		font: var(--_title-supporting-text-font) !important;
-		overflow-wrap: anywhere !important;
 		text-wrap: balance !important;
+		${important(wrapBodyText)}
 	}
 
 	.title__end {

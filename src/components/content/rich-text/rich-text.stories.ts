@@ -388,6 +388,42 @@ export const Tabel = {
 	`,
 };
 
+export const BredeTabel = {
+	name: 'Brede tabel',
+	render: (args: Record<string, any>) => html`
+		<nldd-rich-text
+			spacing=${args.spacing}
+			?centered=${args.centered}
+		>
+				<h3>Besluiten</h3>
+				<p>Een tabel die niet past, scrolt binnen zijn kader. Eerst breekt de tekst in de cellen; pas als elke kolom zo smal is als zijn langste woord, scrolt de tabel.</p>
+				<table>
+					<tr>
+						<th>Aanvraag</th>
+						<th>Onderwerp</th>
+						<th>Status</th>
+						<th>Team</th>
+						<th>Besluit</th>
+					</tr>
+					<tr>
+						<td>A-1042</td>
+						<td>Dakisolatie</td>
+						<td>In behandeling</td>
+						<td>Uitvoering</td>
+						<td>https://mijndienst.example.nl/aanvragen/A-1042/besluit</td>
+					</tr>
+					<tr>
+						<td>A-1043</td>
+						<td>Warmtepomp</td>
+						<td>Afgerond</td>
+						<td>Beleid</td>
+						<td>https://mijndienst.example.nl/aanvragen/A-1043/besluit</td>
+					</tr>
+				</table>
+			</nldd-rich-text>
+	`,
+};
+
 export const Codeblok = {
 	render: (args: Record<string, any>) => html`
 		<nldd-container max-width="560px">

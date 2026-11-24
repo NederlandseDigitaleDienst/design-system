@@ -15,14 +15,57 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.29.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.28.1...v0.29.0) (2026-11-24)
+
 ### Highlights
 
-- **A step deeper in a sheet is a page in the same sheet, with a back button that says where it goes.** Put a second `nldd-page` beside the first, with `parent` naming the page it is a step of and `hidden` until its turn. `show()` shows it, and its `nldd-top-title-bar` gets a back button with the title of the parent page. A press goes back and puts focus on the control that opened the step; `back()` does the same for a step that ends with a choice. What you filled in on the first page stays, because that page is hidden, not removed. It works in an `nldd-window` and in a pane of a split view too, and a sheet or window takes its name from the page in view. The pattern [Bewerken in een sheet](https://design.digitaledienst.overheid.nl/patronen/edit-in-a-sheet/) shows it.
+- **Long text no longer runs out of a narrow space, in every component.** A title, label or button breaks a word of at least 12 letters by syllable, with a hyphen, and between two letters when even that does not fit. Body text, code and URLs break between two letters. A cell keeps at least 160px, or its longest word. Set `lang` on the page for hyphenation; without it a long word still breaks, just without a hyphen. Each component is listed under Fixed.
+
+### Breaking
+
+- **`spin-buttons` on `nldd-number-field` replaces `hide-spin-buttons`, and the buttons now sit together at the end by default.** The value lines up at the start, as in the other fields of a form, instead of centered between two buttons at the far ends of a wide field. `spin-buttons="split"` keeps the old layout, for a short counter such as a quantity; `spin-buttons="none"` leaves the buttons out, as `hide-spin-buttons` did. `nldd lint --fix` turns `hide-spin-buttons` into `spin-buttons="none"`.
+- **`type` on `nldd-avatar` is now `variant`**: `person` or `organization`, which sets the shape and the fallback icon together. `type` named the input type of a form field elsewhere in the system. The `avatar` of a candidate in the typeaheads of `nldd-text-editor` takes `variant` too. `nldd lint --fix` renames the attribute.
+- **`expanded` is no longer an attribute of `nldd-dropdown` and `nldd-token`.** Both set it themselves while their picker or menu is open, so writing it only made them look open. Open the menu of a token with its button, as before.
+- **`nldd-menu` no longer loads `nldd-icon-cell`, `nldd-spacer-cell` and `nldd-text-cell`.** An app that imports components one by one and uses those cells imports them itself; an app that imports the whole package changes nothing.
 
 ### Added
 
-- **The design guidelines say: do not open a sheet from a sheet, go a step further in the same sheet.**
-- **Three lint rules for steps, all `warn`:** `sheet-no-nested` for an `nldd-sheet` inside an `nldd-sheet`, `page-parent-not-found` for a `parent` that names no page, and `popover-no-steps` for steps in an `nldd-popover`, which hides its title bar and so the back button on md and up.
+- **`hyphens` on `nldd-text`** breaks a long word by syllable, with a hyphen, as `hyphens` on `nldd-rich-text` already does. It needs a `lang` on the page. The display sizes hyphenate as before, with or without it.
+- **`hyphens` on `nldd-text-cell`, `nldd-title-cell` and `nldd-description-cell`** does the same for the text in a cell.
+
+### Changed
+
+- **The title bar of `nldd-accordion-item` and a `details` in `nldd-rich-text` is as high as an lg control**, 56px, where it was 44px, so a question reads as a row you can tap. `nldd-admonition` stays at 44px: a note beside the text is meant to be compact. In both the disclosure icon now sits in the middle of the title, also when the title runs over two lines.
+- **A cell of `width="full"` is never narrower than 160px**, in `nldd-text-cell`, `nldd-title-cell` and `nldd-description-cell`, so its text stays readable. Beside a `fit-content` cell with a long value it used to shrink to nothing. A row too narrow for its cells now runs wider than its box: hide a cell at that width with `hide-below`, combine two, or set a `min-width` of your own, which always wins. A `max-width` below 160px lowers the floor with it, and in `nldd-table` the columns set the width as before. A theme sets the floor with `--semantics-cells-min-width`.
+- **The back button of a submenu in `nldd-menu` draws its own icon and text**, as a menu item does. The text of a menu item, its details and the back button break as the text of a button: a word of at least 12 letters by syllable, and a word in the details stays whole.
+- **A `fit-content` cell is never narrower than its longest word**, so a short value such as "In behandeling" breaks between words, not inside one. A long URL then stays whole: set `min-width="0"` on the cell to let it break. `min-width="max-content"` keeps the text on one line.
+- **The title of `nldd-banner`, `nldd-notification`, `nldd-admonition` and `nldd-accordion-item`, the text of `nldd-tooltip`, the instruction in `nldd-file-field`, and the summary of a `details` in `nldd-rich-text`, break a long word by syllable**, as the text of a button does: a word of at least 12 letters, with a hyphen. Before, it broke between two letters and could leave a few on a line of their own.
+
+### Fixed
+
+- **A link to an anchor no longer scrolls its target under the bar of `nldd-page`.** A `nldd-top-title-bar` with `collapse-anchor` takes no height at the top of the page and turns compact once you scroll past the anchor, so the page reserved only the fade above the target, and the bar then grew over it. The page now keeps the compact height of the bar free from the start, for a link to an anchor and for a focused field alike (WCAG 2.4.11).
+- **Backspace in an empty box of `nldd-one-time-code-field` moves to the box before it**, also where every box is empty, and with the caret before a filled first box it empties that box. With nothing before the caret Safari sent no input event for it, so the caret stayed put.
+- **`nldd-split-button` at `size="xs"` is as tall as its buttons**, and the main action and the chevron line up. The split button was 27px tall, the height of a line of text, with the buttons shifted inside it. A `nldd-button` of `width="full"` no longer grows with the line height around it either. A split button of `width="full"` now fills its container: only the outer box did, and the buttons kept their own width.
+- **A long word in `nldd-text` no longer runs out of a narrow box.** A compound, URL or code wider than the line now breaks between two letters at every body size, as text in `nldd-rich-text` does. Before, only the display sizes did that, and a card or column narrower than one word lost the end of it (WCAG 1.4.10).
+- **A long word in a `dt` or `dd` of `nldd-rich-text` no longer runs out of the column**, such as a hash or a URL. The columns of a definition list no longer widen to their longest word either.
+- **Inline `code` breaks when it is wider than the line**, in `nldd-rich-text` and in `nldd-text`. Before, it only did in a table cell of `nldd-rich-text`, and a tag name in a `dd` or a sentence ran out of a narrow column.
+- **A long word in `nldd-description-cell` no longer runs out of the cell.** It breaks between two letters, as in the other cells.
+- **A long word in a field no longer runs out of it.** The label and supporting label of `nldd-form-field` and the label of `nldd-checkbox-field`, `nldd-radio-button-field` and `nldd-switch-field` break as the text of a button: a word of at least 12 letters by syllable. The help text and a validation message break as body text: a word wider than the line between two letters.
+- **A long step title in `nldd-step-bar` no longer pushes the count out of the folded bar.** The title of the current step breaks, and "Stap 2 van 3" stays beside it on one line. In both forms a title breaks as the text of a button: a word of at least 12 letters by syllable, a shorter word whole, where before the wide bar could hyphenate a short word too.
+- **A long word in `nldd-inline-dialog` no longer runs out of it**, on either side when the text is centered. The title breaks as the text of a button, a word of at least 12 letters by syllable; the supporting text breaks as body text.
+- **A long text in `nldd-progress-bar` no longer pushes the value out of the bar.** The text breaks as the text of a button, a word of at least 12 letters by syllable, and the value stays on one line. It now sits at the end of the last line of the text, close to the bar, rather than beside the first.
+- **A long word in `nldd-identity` no longer runs out of it.** The name breaks as the text of a button, a word of at least 12 letters by syllable; the supporting text breaks as body text.
+- **A long word in `nldd-blockquote` no longer runs out of it**, nor in a `blockquote` in `nldd-rich-text`. The quote breaks as large text: a word of at least 12 letters by syllable, and between two letters when even that does not fit. The attribution breaks as body text.
+- **A long word in the caption or credit of `nldd-image` no longer runs past the image.** It breaks between two letters within the width of the image. The text shown when an image fails to load breaks as body text, so a short word there stays whole.
+- **A long word in the website title of `nldd-top-navigation-bar` no longer runs off a narrow screen.** It breaks as the text of a button: a word of at least 12 letters by syllable, and between two letters when even that does not fit. On md and lg the title stays on one line, as before.
+- **A long crumb in `nldd-breadcrumbs` no longer runs out of the trail.** The trail now flows as text: it wraps between items and within a long one, and a long word breaks by syllable, as the text of a button does. The chevron stays right after the last word of its item, rather than in the middle beside a crumb of two lines.
+- **A long word in the text of `nldd-skip-link` no longer runs out of its panel.** In a narrow column, such as a skip link past a set of filters, the word breaks by syllable, as the text of a button does.
+- **A long word in an item of the legal bar of `nldd-page-footer` no longer runs out of the footer.** It breaks by syllable, as the text of a button does.
+- **A long word in the label of `nldd-progress-circle` no longer runs out of a narrow tile.** It breaks by syllable, as the label of `nldd-progress-bar` does.
+- **The input of `nldd-token-field` no longer runs out of a narrow field.** It keeps its width of 200px where there is room, and takes the width of the field where there is not.
+- **A table in `nldd-rich-text` stays inside its box and scrolls at every width.** From a container of 641px it switched to a full-width table that could not scroll, so a long URL or a few extra columns pushed it past the edge of the text. A table now hugs its content on a wide screen too, as it already did on a narrow one. The text in a cell breaks first, and the table scrolls only once every column is at its longest word.
+- **A cell of a table in `nldd-rich-text` no longer keeps 160px on a narrow screen**, so a table of two short columns fits on a phone instead of scrolling. `hyphens` on `nldd-rich-text` now hyphenates the text in a `td` too.
+- **A long word in `nldd-button` and `nldd-tag` no longer runs out of it.** A word of at least 12 letters breaks by syllable, with a hyphen, such as "Omgevings-vergunning"; a shorter word and a name of a few words stay whole. Without a `lang` on the page a long word breaks between two letters. `single-line` and `max-width` on a button keep the text on one line with an ellipsis, as before.
 
 ## [0.28.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.28.0...v0.28.1) (2026-11-23)
 

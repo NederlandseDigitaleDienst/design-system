@@ -5,6 +5,8 @@ import { fixture, cleanup, waitForUpdate, until } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
 import type { NLDDTooltip } from './tooltip.js';
 import './tooltip.js';
+import { wrapUiText } from '../../../assets/styles/text-wrap.js';
+import { wrapOf, wrapOfSets } from '../../../assets/styles/text-wrap.fixtures.js';
 
 function isTooltipVisible(el: NLDDTooltip): boolean {
 	const tooltip = el.shadowRoot!.querySelector<HTMLElement>('.tooltip');
@@ -693,5 +695,19 @@ describe('nldd-tooltip – description in the light DOM', () => {
 		await until(() => isTooltipVisible(tooltip));
 		await new Promise((resolve) => setTimeout(resolve, 100));
 		expect(tooltip.shadowRoot!.querySelector('.tooltip')!.hasAttribute('reference-hidden')).toBe(false);
+	});
+});
+
+describe('nldd-tooltip – breaking long words', () => {
+	let el: NLDDTooltip;
+
+	afterEach(() => cleanup(el));
+
+	it('gives the text wrapUiText and keeps the shortcut on one line', async () => {
+		el = await fixture<NLDDTooltip>('<nldd-tooltip open text="Kopieer" shortcut="Mod+C"><button>Knop</button></nldd-tooltip>');
+		await waitForUpdate(el);
+		const root = el.shadowRoot!;
+		expect(wrapOf(root.querySelector('.tooltip__text')!)).toEqual(wrapOfSets(wrapUiText));
+		expect(getComputedStyle(root.querySelector('.tooltip__shortcut')!).whiteSpace).toBe('nowrap');
 	});
 });

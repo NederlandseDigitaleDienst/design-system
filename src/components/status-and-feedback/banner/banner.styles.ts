@@ -1,5 +1,6 @@
 import { css } from 'lit';
 import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { wrapBodyText, wrapUiText } from '../../../assets/styles/text-wrap.js';
 
 export const bannerStyles = css`
 	:host {
@@ -141,20 +142,16 @@ export const bannerStyles = css`
 		padding-top: calc(var(--_banner-text-variant-icon-offset) - var(--primitives-space-2));
 	}
 
-	/* A banner carries text it did not write: a server message, an identifier, a
-	   URL. One token longer than the banner is wide would otherwise run past the
-	   edge and get clipped, so a word that cannot fit on a line of its own is
-	   broken rather than lost. */
 	.banner__text {
 		margin: 0;
-		overflow-wrap: break-word;
+		${wrapUiText}
 		font: var(--primitives-font-body-md-bold-tight);
 		text-wrap: pretty;
 	}
 
 	.banner__supporting-text {
 		margin: 0;
-		overflow-wrap: break-word;
+		${wrapBodyText}
 		font: var(--primitives-font-body-md-regular-tight);
 		text-wrap: pretty;
 	}

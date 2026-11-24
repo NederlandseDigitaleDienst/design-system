@@ -309,3 +309,47 @@ describe('nldd-split-button – on a colored surface', () => {
 		expect(button.getAttribute('shortcut-mac')).toBe('Cmd+S');
 	});
 });
+
+describe('nldd-split-button – size and width', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const partsOf = async (host: HTMLElement) => {
+		const root = host.shadowRoot!;
+		const action = root.querySelector('nldd-button') as HTMLElement & { updateComplete: Promise<unknown> };
+		const chevron = root.querySelector('nldd-icon-button') as HTMLElement & { updateComplete: Promise<unknown> };
+		await action.updateComplete;
+		await chevron.updateComplete;
+		return {
+			block: root.querySelector('.split-button')!.getBoundingClientRect(),
+			action: action.shadowRoot!.querySelector('button')!.getBoundingClientRect(),
+			chevron: chevron.shadowRoot!.querySelector('button')!.getBoundingClientRect(),
+		};
+	};
+
+	for (const size of ['xs', 'sm', 'md', 'lg']) {
+		it(`is as tall as its buttons, which line up, at ${size}`, async () => {
+			el = await fixture(`<div style="line-height: 27px"><nldd-split-button size="${size}" text="Bewaar"></nldd-split-button></div>`);
+			const host = el.querySelector('nldd-split-button') as HTMLElement;
+			await waitForUpdate(host);
+			const { block, action, chevron } = await partsOf(host);
+			expect(action.height).toBe(chevron.height);
+			expect(block.height).toBe(action.height);
+			expect(action.top).toBe(block.top);
+			expect(chevron.top).toBe(block.top);
+		});
+	}
+
+	it('fills its container with width="full", the main action taking the room', async () => {
+		el = await fixture('<div style="width: 400px"><nldd-split-button width="full" text="Bewaar"></nldd-split-button></div>');
+		const host = el.querySelector('nldd-split-button') as HTMLElement;
+		await waitForUpdate(host);
+		const { block, action, chevron } = await partsOf(host);
+		expect(block.width).toBe(400);
+		expect(chevron.right).toBe(block.right);
+		expect(action.width).toBeGreaterThan(300);
+	});
+});

@@ -25,7 +25,7 @@ type El = HTMLElement & {
 
 const people: TypeaheadCandidate[] = [
 	{ id: '1', text: 'Anouk', supportingText: 'Beleid', avatar: {} },
-	{ id: '2', text: 'Antoine', supportingText: 'Data', avatar: { type: 'organization' } },
+	{ id: '2', text: 'Antoine', supportingText: 'Data', avatar: { variant: 'organization' } },
 ];
 const channels: TypeaheadCandidate[] = [
 	{ id: 'algemeen', text: 'algemeen', icon: 'tag' },
@@ -156,7 +156,7 @@ describe('nldd-text-editor typeaheads', () => {
 		expect(avatars[0]?.getAttribute('name')).toBe('Anouk');
 		expect(avatars[0]?.getAttribute('size')).toBe('32');
 		expect(avatars[0]?.hasAttribute('decorative')).toBe(true);
-		expect(avatars[1]?.getAttribute('type')).toBe('organization');
+		expect(avatars[1]?.getAttribute('variant')).toBe('organization');
 		// A list whose text is a username names the person for the initials.
 		closeCompletion(el.view);
 		el.mentionSource = undefined;

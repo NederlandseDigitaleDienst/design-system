@@ -89,12 +89,19 @@ export const numberFieldStyles = css`
 		--context-control-corner-radius: var(--_number-field-nested-control-corner-radius);
 	}
 
-	.number-field__decrement-button {
-		padding-left: var(--_number-field-spin-button-padding);
+	.number-field__spin-buttons {
+		display: flex;
+		height: 100%;
+		padding-inline-end: var(--_number-field-spin-button-padding);
+		gap: var(--_number-field-spin-button-padding);
 	}
 
-	.number-field__increment-button {
-		padding-right: var(--_number-field-spin-button-padding);
+	:host([spin-buttons="split"]) .number-field__decrement-button {
+		padding-inline-start: var(--_number-field-spin-button-padding);
+	}
+
+	:host([spin-buttons="split"]) .number-field__increment-button {
+		padding-inline-end: var(--_number-field-spin-button-padding);
 	}
 
 	.number-field__input {
@@ -104,10 +111,11 @@ export const numberFieldStyles = css`
 		border: none;
 		background: transparent;
 		min-width: 0;
-		padding: 0 var(--primitives-space-6);
+		padding-block: 0;
+		padding-inline: var(--_number-field-inline-padding) var(--primitives-space-6);
 		align-self: stretch;
 		flex-grow: 1;
-		text-align: center;
+		text-align: start;
 		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--_number-field-text-font);
@@ -124,10 +132,14 @@ export const numberFieldStyles = css`
 		-webkit-appearance: none;
 	}
 
-	:host([hide-spin-buttons]) .number-field__input {
+	:host([spin-buttons="split"]) .number-field__input {
+		padding: 0 var(--primitives-space-6);
+		text-align: center;
+	}
+
+	:host([spin-buttons="none"]) .number-field__input {
 		min-width: var(--primitives-space-80);
 		padding-inline: var(--_number-field-inline-padding);
-		text-align: left;
 	}
 
 `;
