@@ -49,9 +49,12 @@ class LinkOpenWidget extends WidgetType {
 		anchor.target = '_blank';
 		anchor.rel = 'noopener noreferrer';
 		anchor.setAttribute('aria-label', this.ariaLabel);
-		const icon = document.createElement('nldd-icon');
-		icon.setAttribute('icon', 'external-link');
-		icon.setAttribute('aria-hidden', 'true');
+		const icon = document.createElement('span');
+		icon.className = 'cm-link-badge__icon';
+		const glyph = document.createElement('nldd-icon');
+		glyph.setAttribute('icon', 'external-link');
+		glyph.setAttribute('aria-hidden', 'true');
+		icon.append(glyph);
 		// The editor steals mousedown to place the caret; keep the click ours.
 		anchor.addEventListener('mousedown', (event) => event.preventDefault());
 		if (!this.tooltip) {

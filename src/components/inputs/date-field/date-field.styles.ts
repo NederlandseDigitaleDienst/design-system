@@ -1,8 +1,5 @@
-import { css, unsafeCSS } from 'lit';
+import { css } from 'lit';
 import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
-import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
-
-const mdMin = unsafeCSS(queryBreakpoints.mdMin);
 
 export const dateFieldStyles = css`
 	:host {
@@ -258,14 +255,5 @@ export const dateFieldStyles = css`
 
 	.date-field__picker-button :is(nldd-button, nldd-icon-button, nldd-token) {
 		--context-control-corner-radius: var(--_date-field-nested-control-corner-radius);
-	}
-
-
-	/* The sheet's title bar only makes sense on a small screen, where the popover
-	   becomes a bottom sheet. It shows by default and is hidden from md up. */
-	@media (min-width: ${mdMin}) {
-		.date-field__picker-button nldd-top-title-bar {
-			display: none;
-		}
 	}
 `;

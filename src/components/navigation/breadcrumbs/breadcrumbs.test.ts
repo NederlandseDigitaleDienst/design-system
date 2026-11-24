@@ -126,7 +126,7 @@ describe('nldd-breadcrumbs – breaking long crumbs', () => {
 			const text = item.shadowRoot!.querySelector('.breadcrumbs__item')!;
 			const lines = [...text.getClientRects()];
 			expect(Math.max(...lines.map((line) => line.right)) - right, item.getAttribute('text')!).toBeLessThanOrEqual(1);
-			const chevron = item.shadowRoot!.querySelector('.breadcrumbs__separator nldd-icon')!.getBoundingClientRect();
+			const chevron = item.shadowRoot!.querySelector('.breadcrumbs__separator-icon')!.getBoundingClientRect();
 			if (!chevron.width) continue;
 			const last = lines[lines.length - 1];
 			expect(chevron.left - last.right).toBeLessThan(8);
@@ -153,7 +153,7 @@ describe('nldd-breadcrumbs – breaking long crumbs', () => {
 			for (const item of items) {
 				const lines = [...item.shadowRoot!.querySelector('.breadcrumbs__item')!.getClientRects()];
 				const last = lines[lines.length - 1];
-				const chevron = item.shadowRoot!.querySelector('.breadcrumbs__separator nldd-icon')!.getBoundingClientRect();
+				const chevron = item.shadowRoot!.querySelector('.breadcrumbs__separator-icon')!.getBoundingClientRect();
 				expect(chevron.top < last.bottom && chevron.bottom > last.top, `${width}px: ${item.getAttribute('text')}`).toBe(true);
 			}
 		}

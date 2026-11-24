@@ -28,7 +28,7 @@ export function breadcrumbsItemTemplate(component: NLDDBreadcrumbsItem): Templat
 	// collapses into it.
 	const separator = html`<span class="breadcrumbs__separator"
 		aria-hidden="true"
-	>\u2060<nldd-icon icon="chevron-right-small"></nldd-icon></span> `;
+	>\u2060<span class="breadcrumbs__separator-icon"><nldd-icon icon="chevron-right-small"></nldd-icon></span></span> `;
 	if (!component.current && component.href) {
 		return html`<span class="breadcrumbs__item"><a class="breadcrumbs__item-link"
 			href=${component.href}

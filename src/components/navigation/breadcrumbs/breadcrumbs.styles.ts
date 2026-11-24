@@ -14,12 +14,13 @@ const separatorStyles = css`
 		color: var(--semantics-content-secondary-color);
 	}
 
-	.breadcrumbs__separator nldd-icon {
+	.breadcrumbs__separator-icon {
 		position: absolute;
 		inset-inline-start: var(--primitives-space-4);
 		top: calc(50% + var(--_breadcrumbs-item-separator-vertical-offset));
 		width: var(--primitives-space-16);
 		height: var(--primitives-space-16);
+		display: flex;
 		translate: 0 -50%;
 	}
 `;
