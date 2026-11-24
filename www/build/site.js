@@ -1094,7 +1094,6 @@ const redirect = (to) => `<!doctype html>
 	<meta charset="utf-8">
 	<meta name="robots" content="noindex">
 	<meta http-equiv="refresh" content="0; url=${to}">
-	<link rel="canonical" href="${to}">
 	<title>Verhuisd</title>
 </head>
 <body><p>Deze pagina staat nu op <a href="${to}">${to}</a>.</p></body>
