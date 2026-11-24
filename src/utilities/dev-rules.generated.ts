@@ -774,7 +774,7 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "popover-no-steps",
-		"message": "A step with `parent` sits in an nldd-popover, which hides its title bar and so its back button on md and up. Put the steps in an nldd-sheet.",
+		"message": "A step with `parent` sits in an nldd-popover, which hides its title bar and so its back button. Put the steps in an nldd-sheet.",
 		"context": "nldd-popover nldd-page[parent]:not([parent=\"\"])"
 	},
 	{

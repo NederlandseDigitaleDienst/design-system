@@ -1125,8 +1125,7 @@ describe('nldd-text-editor – focus() before the view', () => {
 		box.innerHTML = '<nldd-text-editor accessible-label="Tekst" autofocus value="Hallo"></nldd-text-editor>';
 		const el = box.firstElementChild as HTMLElement & { updateComplete: Promise<boolean> };
 		el.focus();
-		await el.updateComplete;
-		await el.updateComplete;
+		await waitForUpdate(el);
 		expect(el.shadowRoot!.activeElement).toBe(el.shadowRoot!.querySelector('.cm-content'));
 	});
 
@@ -1137,8 +1136,7 @@ describe('nldd-text-editor – focus() before the view', () => {
 		const el = box.firstElementChild as HTMLElement & { updateComplete: Promise<boolean> };
 		el.focus();
 		box.querySelector('button')!.focus();
-		await el.updateComplete;
-		await el.updateComplete;
+		await waitForUpdate(el);
 		expect(document.activeElement).toBe(box.querySelector('button'));
 	});
 });

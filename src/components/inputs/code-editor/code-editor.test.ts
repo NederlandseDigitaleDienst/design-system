@@ -229,8 +229,7 @@ describe('nldd-code-editor – focus() before the view', () => {
 		box.innerHTML = '<nldd-code-editor accessible-label="Tekst" autofocus value="Hallo"></nldd-code-editor>';
 		const el = box.firstElementChild as HTMLElement & { updateComplete: Promise<boolean> };
 		el.focus();
-		await el.updateComplete;
-		await el.updateComplete;
+		await waitForUpdate(el);
 		expect(el.shadowRoot!.activeElement).toBe(el.shadowRoot!.querySelector('.cm-content'));
 	});
 
@@ -241,8 +240,7 @@ describe('nldd-code-editor – focus() before the view', () => {
 		const el = box.firstElementChild as HTMLElement & { updateComplete: Promise<boolean> };
 		el.focus();
 		box.querySelector('button')!.focus();
-		await el.updateComplete;
-		await el.updateComplete;
+		await waitForUpdate(el);
 		expect(document.activeElement).toBe(box.querySelector('button'));
 	});
 });

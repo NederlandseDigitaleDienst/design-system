@@ -362,6 +362,7 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 	override disconnectedCallback() {
 		super.disconnectedCallback();
 		_connectedPages.delete(this);
+		this._lastClicked = null;
 		firstMeasurement.cancel(this);
 		removeStandaloneScrollLayer(this);
 		this._scrollProvider?.unregisterScrollConsumer(this);
@@ -503,9 +504,11 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 		this.back();
 	};
 
-	/** Hands the parent page's title to the title bar, which shows it when it
-	 *  has no `back-text` of its own. */
-	/** @internal */
+	/**
+	 * Hands the parent page's title to the title bar, which shows it when it has
+	 * no `back-text` of its own.
+	 * @internal
+	 */
 	_syncBackText(): void {
 		const bar = this._titleBar;
 		if (bar) bar._parentPageText = this._parentPage?._title ?? '';

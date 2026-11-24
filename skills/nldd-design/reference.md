@@ -3170,7 +3170,7 @@ A page layout with optional sticky header and footer. Without sticky-header, the
 - `page-parent-not-found`: `parent` needs the id of an nldd-page beside this one, or the step has no page to go back to.
 - `pane-page-needs-name` (hint): Give this page an `accessible-label`, so it becomes a named region, or landmarks="page" if it holds the main content.
 - `pane-title-bar-needs-level` (hint): Set heading-level="2" on the title bar of a pane beside the main content: the screen has one h1.
-- `popover-no-steps`: A step with `parent` sits in an nldd-popover, which hides its title bar and so its back button on md and up. Put the steps in an nldd-sheet.
+- `popover-no-steps`: A step with `parent` sits in an nldd-popover, which hides its title bar and so its back button. Put the steps in an nldd-sheet.
 - `section-goes-in-page`: Put this section in an nldd-page: a section lays out by the width of the page, and the page makes its content the main landmark, scrolls it and tells sticky content where the bars are.
 - `section-no-own-background` (hint): Use `background` on the section: it cascades the surface to what is inside it.
 - `sheet-title-bar-needs-anchor` (hint): Put an nldd-title above the form and point `collapse-anchor` at it: the bar stays quiet until the heading scrolls away.
@@ -3301,7 +3301,7 @@ A non-modal floating panel anchored to a trigger element. Built on the native Po
 - `interestfor-no-effect`: This control has both `interestfor` and a popover in its `interest` slot, and opens only the slotted one. Remove one.
 - `popover-anchor-not-found`: Anchor element not found. Set `anchor` or `anchorElement` before calling show().
 - `popover-needs-name`: nldd-popover needs `accessible-label`, or a screen reader announces it without a name.
-- `popover-no-steps`: A step with `parent` sits in an nldd-popover, which hides its title bar and so its back button on md and up. Put the steps in an nldd-sheet.
+- `popover-no-steps`: A step with `parent` sits in an nldd-popover, which hides its title bar and so its back button. Put the steps in an nldd-sheet.
 - `popover-width-invalid`: This `width` is not supported and is ignored: the popover is an inline-size query container, so its width cannot come from its own content. Give it a CSS length instead.
 - `split-button-max-one-popup`: nldd-split-button opens one overlay: the one in the `popup` slot, or else the first. Remove the others.
 - `split-button-needs-popup`: nldd-split-button has no menu, so its chevron opens nothing. Put an nldd-menu or nldd-popover in its `popup` slot, or point `popovertarget` at one.

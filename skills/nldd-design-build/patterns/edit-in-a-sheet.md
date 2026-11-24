@@ -282,7 +282,7 @@ Deze compositie komt voor in vrijwel elke applicatie op dit designsysteem, in Vu
 `nldd lint` controleert dit:
 
 - `page-parent-not-found`: `parent` needs the id of an nldd-page beside this one, or the step has no page to go back to.
-- `popover-no-steps`: A step with `parent` sits in an nldd-popover, which hides its title bar and so its back button on md and up. Put the steps in an nldd-sheet.
+- `popover-no-steps`: A step with `parent` sits in an nldd-popover, which hides its title bar and so its back button. Put the steps in an nldd-sheet.
 - `sheet-needs-dismiss`: Set `dismiss-text` on the title bar, so the sheet has a visible way out.
 - `sheet-no-nested`: An nldd-sheet opens over another nldd-sheet. Show the next step in the same sheet, as an nldd-page with `parent`.
 - `split-view-no-sheet`: Render nldd-sheet at the document root: as a slotted child it takes the height of the pane, and a sticky footer comes loose.
