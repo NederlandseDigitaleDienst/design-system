@@ -272,9 +272,13 @@ export class SiteStage extends HTMLElement {
 		}
 		this.args = { ...this.story.args };
 
-		if (this.hasAttribute('bare')) {
-			this.replaceChildren();
-			this.draw(this);
+		// The example fills the section the page made for it, as children of that
+		// section: the stage steps aside, so a slot attribute on what the story
+		// renders reaches the section.
+		if (this.hasAttribute('unwrap')) {
+			const holder = document.createElement('div');
+			this.draw(holder);
+			this.replaceWith(...holder.childNodes);
 			return;
 		}
 		if (this.story.framed) this.buildFrame(file, name);

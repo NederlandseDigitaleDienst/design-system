@@ -35,15 +35,17 @@ const SITE_NAME = 'NLDD Designsysteem';
  * `stories` is the file the examples on the page come from; with `examples`
  * every story of that file follows the text, under that heading. With `rules`
  * the lint rules follow it: all of them by group, or with 'wcag' those that
- * name a success criterion, by criterion.
+ * name a success criterion, by criterion. With `fills` the one example on the
+ * page fills a sidebar section of its own, with the text before it as the
+ * header: a gallery and its filters.
  */
 const PROSE = [
 	{ path: '/aan-de-slag/', file: 'www/content/aan-de-slag.md', description: 'Installeer het pakket en zet je eerste component neer.' },
 	{ path: '/aan-de-slag/ai-assistent/', file: 'www/content/ai-assistent.md', description: 'Skills voor Claude Code en Cursor.' },
 	{ path: '/richtlijnen/', file: 'src/docs/design-guidelines.md', description: 'De ontwerpkeuzes van het systeem en de redenen erachter.' },
 	{ path: '/themas/', file: 'src/docs/themes.md', stories: 'src/docs/themes.stories.ts', examples: 'Elk thema op een pagina vol componenten', description: 'De accentkleur van je dienst, in licht en donker.' },
-	{ path: '/iconen/', file: 'src/docs/icons.md', stories: 'src/components/content/icon/icon-gallery.stories.ts', description: 'Alle iconen, met hun aliassen.' },
-	{ path: '/linter/', file: 'www/content/linter.md', rules: true, description: 'Controleer je code met nldd lint, en lees elke regel.' },
+	{ path: '/iconen/', file: 'src/docs/icons.md', stories: 'src/components/content/icon/icon-gallery.stories.ts', fills: true, description: 'Alle iconen, met hun aliassen.' },
+	{ path: '/linter/', file: 'www/content/linter.md', description: 'Controleer je code met nldd lint, en wat hij vindt.' },
 	{ path: '/breakpoints/', file: 'src/docs/breakpoints.md', description: 'Bij welke breedtes de layout verandert.' },
 	{ path: '/vertalingen/', file: 'src/docs/translations.md', description: 'Een interface in een andere taal dan Nederlands.' },
 	{ path: '/toegankelijkheid/', file: 'docs/ACCESSIBILITY.md', rules: 'wcag', description: 'Wat het systeem voor toegankelijkheid regelt, en wat jij nog doet.' },
@@ -121,6 +123,7 @@ const NAVIGATION = [
 			['Componenten', '/componenten/', 'blocks-9'],
 			['Patronen', '/patronen/', 'tree-structure'],
 			['Iconen', '/iconen/', 'triangle-square-circle'],
+			['Lintregels', '/lintregels/', 'checkbox-list'],
 		],
 	],
 	[
@@ -213,8 +216,10 @@ const aboutLinks = `<nldd-container
  * section once it scrolls away, the content below it, and a footer if any.
  */
 function pane({ slot, id, title, back, landmarks = false, body, footer = '' }) {
+	// A page that is a step below another in main keeps its way back on a wide
+	// screen too, where the split view hides the back of a page beside its list.
 	const backAttributes = back
-		? `\n\t\t\t\tback-text="${escapeHtml(back.text)}"${back.href ? `\n\t\t\t\tback-href="${back.href}"` : ''}`
+		? `\n\t\t\t\tback-text="${escapeHtml(back.text)}"${back.href ? `\n\t\t\t\tback-href="${back.href}"` : ''}${back.always ? '\n\t\t\t\tdata-site-back-always' : ''}`
 		: '';
 	return `<nldd-page
 			slot="${slot}"
@@ -479,14 +484,14 @@ ${head({ title: secondary && secondary.title !== title ? `${title} · ${secondar
 }
 
 /** The frame one live example stands on. */
-function stage(storyFile, story, { primary = false, bare = false, controls } = {}) {
+function stage(storyFile, story, { primary = false, unwrap = false, controls } = {}) {
 	const attributes = [
 		`file="${storyFile.file}"`,
 		`story="${story.exportName}"`,
 		`story-id="${story.id}"`,
 		`name="${escapeHtml(story.name)}"`,
 		primary ? 'primary' : '',
-		bare ? 'bare' : '',
+		unwrap ? 'unwrap' : '',
 	].filter(Boolean);
 	// The controls of an example are the attributes of its element, so they are
 	// handed to the stage as data rather than written per story.
@@ -527,12 +532,12 @@ function absoluteLinks(markdown, file) {
 	});
 }
 
-function renderProse(markdown, storyFile) {
+function renderProse(markdown, storyFile, { unwrap = false } = {}) {
 	const example = storyFile
 		? (name) => {
 				const story = storyFile.stories.find((s) => s.exportName === name);
 				if (!story) throw new Error(`Geen story ${name} in ${storyFile.file}`);
-				return stage(storyFile, story, { bare: storyFile.file.endsWith('icon-gallery.stories.ts') });
+				return stage(storyFile, story, { unwrap });
 			}
 		: undefined;
 	return renderMarkdown(markdown, { href: identity, example });
@@ -561,9 +566,7 @@ function prosePage({ title, rendered, extra = [] }) {
 	if (headings.length < 2 || headings.length > 24) {
 		return `		<nldd-simple-section grow>
 			${pageTitle(title)}
-			<nldd-container>
 ${body}
-			</nldd-container>
 		</nldd-simple-section>`;
 	}
 	return `		<nldd-sidebar-section
@@ -617,9 +620,7 @@ ${body}
 						.join('\n\t\t\t\t\t')}
 				</nldd-list>
 			</nldd-container>
-			<nldd-container>
 ${body}
-			</nldd-container>
 		</nldd-sidebar-section>`;
 }
 
@@ -709,8 +710,10 @@ function elementApi(element) {
  * With `search`, a field above the groups shortens the list as you type; each
  * row carries what it can be found by: its name, its slug (the tag) and its
  * group. When nothing is left, a message takes the height of the pane.
+ * With `idle`, the groups only show while you search, and `idle` (another
+ * list) stands in their place until then.
  */
-function siblingNav(groups, current, hrefOf, { label, search } = {}) {
+function siblingNav(groups, current, hrefOf, { label, search, idle } = {}) {
 	const lists = groups.map(
 		([group, items]) => `<nldd-container${search ? ' data-site-filter-group' : ''}>
 					${
@@ -768,7 +771,7 @@ function siblingNav(groups, current, hrefOf, { label, search } = {}) {
 					></nldd-list>
 				</nldd-container>`
 		: '';
-	const groupList = `<nldd-container gap="24">
+	const groupList = `<nldd-container gap="24"${idle ? '\n\t\t\t\tdata-site-filter-results\n\t\t\t\thidden' : ''}>
 				${[...lists, related].filter(Boolean).join('\n\t\t\t\t')}
 			</nldd-container>`;
 	if (!search) return groupList;
@@ -777,13 +780,33 @@ function siblingNav(groups, current, hrefOf, { label, search } = {}) {
 					placeholder="${escapeHtml(search.placeholder)}"
 					shortcut="/"
 				></nldd-search-field>
-				<nldd-spacer size="24"></nldd-spacer>
+				<nldd-spacer size="24"></nldd-spacer>${idle ? `\n\t\t\t\t<nldd-container data-site-filter-idle>\n\t\t\t\t${idle}\n\t\t\t\t</nldd-container>` : ''}
 				${groupList}
 				<nldd-inline-dialog
 					data-site-filter-empty
 					hidden
 					text="${escapeHtml(search.none)}"
 				></nldd-inline-dialog>`;
+}
+
+/**
+ * A page whose example fills the section: the text is the header, and the
+ * example puts its filters in the sidebar and its results in the main. It is
+ * the section itself, so nothing stands between the page and the filters.
+ */
+function filledSection({ title, rendered }) {
+	const blocks = rendered.blocks;
+	const at = blocks.findIndex((block) => block.includes('<site-stage'));
+	return `		<nldd-sidebar-section
+			sidebar-label="Filters"
+			translations='{"components.sidebar-section.sheet-dismiss-action": "Klaar"}'
+			grow
+		>
+			${pageTitle(title)}
+			<nldd-spacer slot="header" size="16"></nldd-spacer>
+${inSlot(stack(blocks.slice(0, at), 12), 'header')}
+			${blocks[at]}
+		</nldd-sidebar-section>`;
 }
 
 /**
@@ -797,9 +820,7 @@ function docBody({ title, intro = [], tabs = '', blocks }) {
 		intro.some((block) => block?.trim())
 			? `
 			<nldd-spacer slot="header" size="16"></nldd-spacer>
-			<nldd-container slot="header">
-${stack(intro, 12)}
-			</nldd-container>`
+${inSlot(stack(intro, 12), 'header')}`
 			: '',
 		tabs
 			? `
@@ -809,10 +830,27 @@ ${stack(intro, 12)}
 	].join('');
 	return `		<nldd-simple-section grow>
 			${title}${header}
-			<nldd-container>
 ${stack(blocks, 32)}
-			</nldd-container>
 		</nldd-simple-section>`;
+}
+
+const VOID_ELEMENTS = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr']);
+
+/**
+ * Puts every outermost element of `html` in `slot`. A section takes its header
+ * from children of its own, so a container around them would only add a level.
+ */
+function inSlot(html, slot) {
+	let depth = 0;
+	return html.replace(/<(\/?)([a-zA-Z][\w-]*)([^>]*?)(\/?)>/g, (tag, close, name, attributes, selfClosing) => {
+		if (close) {
+			depth--;
+			return tag;
+		}
+		const outermost = depth === 0;
+		if (!selfClosing && !VOID_ELEMENTS.has(name.toLowerCase())) depth++;
+		return outermost ? `<${name} slot="${slot}"${attributes}${selfClosing}>` : tag;
+	});
 }
 
 /** A block that ends in a heading: what comes next belongs to it. */
@@ -887,8 +925,7 @@ function relatedSection(component, byTag) {
 	const tags = [...new Set(component.elements.flatMap((element) => element.related ?? []))];
 	const related = [...new Set(tags.map((tag) => byTag.get(tag)))].filter((other) => other && other !== component);
 	if (!related.length) return '';
-	return `<nldd-container>
-					<nldd-title size="display-4">
+	return `<nldd-title size="display-4">
 						<h2>Gerelateerd</h2>
 					</nldd-title>
 					<nldd-spacer size="12"></nldd-spacer>
@@ -912,8 +949,7 @@ function relatedSection(component, byTag) {
 						</nldd-list-item>`,
 							)
 							.join('\n\t\t\t\t\t\t')}
-					</nldd-list>
-				</nldd-container>`;
+					</nldd-list>`;
 }
 
 /**
@@ -946,13 +982,22 @@ function componentPages(component, lintRules, byTag) {
 		// The example on the usage tab is the component itself, so it needs no heading.
 		const heading = options.primary
 			? ''
-			: `<nldd-title size="display-4">
+			: `<nldd-title
+						id="${story.id.split('--')[1]}"
+						size="display-4"
+					>
 						<h2>${escapeHtml(story.name)}</h2>
 					</nldd-title>`;
-		return `<nldd-container id="${story.id.split('--')[1]}">
-					${stack([heading, text, stage(component, story, options)], 12)}
-				</nldd-container>`;
+		return stack([heading, text, stage(component, story, options)], 12);
 	};
+	// With three examples or more, the tab starts with the way to each of them:
+	// the names in a row that wraps, so the list stays as short as it can.
+	const contents = (stories) =>
+		stories.length < 3
+			? ''
+			: `<nldd-link-group accessible-label="Voorbeelden">
+					${stories.map((story) => `<nldd-link href="#${story.id.split('--')[1]}" text="${escapeHtml(story.name)}"></nldd-link>`).join('\n\t\t\t\t\t')}
+				</nldd-link-group>`;
 	// The first story, with the controls, is where you try the component; the
 	// others each show one case of it, on a tab of their own.
 	const [first, ...others] = visible;
@@ -968,7 +1013,7 @@ function componentPages(component, lintRules, byTag) {
 			path: `${base}voorbeelden/`,
 			text: 'Voorbeelden',
 			title: `${component.name}, voorbeelden`,
-			body: others.map((story) => example(story)),
+			body: [contents(others), ...others.map((story) => example(story))],
 			shown: others.length > 0,
 		},
 		{ path: `${base}api/`, text: 'API', title: `${component.name}, API`, body: api, shown: api.length > 0 },
@@ -1040,9 +1085,34 @@ function seePath(see) {
 	return undefined;
 }
 
-const rulePath = (rule) => `/linter/${rule.id}/`;
+const rulePath = (rule) => `/lintregels/${rule.id}/`;
+
+/** A page that only sends the reader on, for an address that moved. */
+const redirect = (to) => `<!doctype html>
+<html lang="nl">
+<head>
+	<meta charset="utf-8">
+	<meta name="robots" content="noindex">
+	<meta http-equiv="refresh" content="0; url=${to}">
+	<link rel="canonical" href="${to}">
+	<title>Verhuisd</title>
+</head>
+<body><p>Deze pagina staat nu op <a href="${to}">${to}</a>.</p></body>
+</html>
+`;
 
 const countRules = (rules) => `${rules.length} ${rules.length === 1 ? 'regel' : 'regels'}`;
+
+/** The rules of one group, in main beside the list of groups. */
+function ruleGroupPage(group) {
+	return docBody({
+		title: pageTitle(group.name, { overline: 'Lintregels' }).replace('<h1>', '<h1 lang="en">'),
+		blocks: [
+			`<nldd-text text="${escapeHtml(`${group.question} ${countRules(group.rules)}.`)}"></nldd-text>`,
+			ruleList(group.rules, { label: `Regels in ${group.name}` }),
+		],
+	});
+}
 
 /**
  * Lint rules as rows: the id, what is wrong, and the level. A row opens the
@@ -1112,8 +1182,8 @@ ${rows.join('\n')}
 function rulesSection(rules) {
 	if (!rules.length) return '';
 	return `
-<nldd-container id="regels">
-	<nldd-title
+<nldd-title
+		id="regels"
 		size="display-4"
 		supporting-text="Wat nldd lint hier controleert. Een hint laat niets falen."
 	>
@@ -1125,8 +1195,7 @@ function rulesSection(rules) {
 	<nldd-link
 		href="/linter/"
 		text="Over de linter"
-	></nldd-link>
-</nldd-container>`;
+	></nldd-link>`;
 }
 
 /** The question each group of rules answers, in the order the linter asks them. */
@@ -1192,8 +1261,8 @@ function ruleSheets({ id, heading, supporting, label, groups }) {
 	</nldd-page>
 </nldd-sheet>`).join('\n');
 	const html = `
-<nldd-container id="${id}">
-	<nldd-title
+<nldd-title
+		id="${id}"
 		size="display-4"
 		supporting-text="${escapeHtml(supporting)}"
 	>
@@ -1206,25 +1275,8 @@ function ruleSheets({ id, heading, supporting, label, groups }) {
 	>
 	${rows}
 	</nldd-list>
-</nldd-container>
 ${sheets}`;
 	return { html, headings: [{ id, text: heading }] };
-}
-
-/** Every rule of the linter, by group, for the page about the linter. */
-function allRules(rules) {
-	return ruleSheets({
-		id: 'alle-regels',
-		heading: 'Alle regels',
-		supporting: `${rules.length} regels in zes groepen. De linter loopt ze in deze volgorde af.`,
-		label: 'Groepen van regels',
-		groups: RULE_GROUPS.map(([group, question]) => ({
-			key: group,
-			title: group,
-			about: question,
-			rules: rules.filter((rule) => rule.group === group),
-		})),
-	});
 }
 
 /**
@@ -1463,7 +1515,7 @@ export function buildPages({ base = '/' } = {}) {
 		);
 	}
 
-	for (const { path, file, title, description, stories: storiesPath, examples, rules } of PROSE) {
+	for (const { path, file, title, description, stories: storiesPath, examples, rules, fills } of PROSE) {
 		// A page written for the site can insert what is kept in one place, such
 		// as the list of skills. A file that is shown as it is in the repository
 		// has links relative to itself.
@@ -1475,8 +1527,8 @@ export function buildPages({ base = '/' } = {}) {
 			: absoluteLinks(read(file), file);
 		const storyFile = storiesPath ? parseStoryFile(resolve(repoRoot, storiesPath)) : undefined;
 		stories += storyFile?.stories.length ?? 0;
-		const rendered = renderProse(rules === 'wcag' ? criteriaLists(source) : source, storyFile);
-		const ruleIndex = rules === 'wcag' ? rulesByCriterion(lintRules) : rules ? allRules(lintRules) : undefined;
+		const rendered = renderProse(rules === 'wcag' ? criteriaLists(source) : source, storyFile, { unwrap: fills });
+		const ruleIndex = rules === 'wcag' ? rulesByCriterion(lintRules) : undefined;
 		if (ruleIndex) rendered.headings.push(...ruleIndex.headings);
 		const extra = ruleIndex
 			? [ruleIndex.html]
@@ -1485,7 +1537,7 @@ export function buildPages({ base = '/' } = {}) {
 					`<nldd-rich-text><h2 id="voorbeelden">${escapeHtml(examples)}</h2></nldd-rich-text>`,
 					...storyFile.stories.map(
 						(story) =>
-							`<nldd-container id="${story.id.split('--')[1]}">\n${stack([`<nldd-title size="display-5"><h3>${escapeHtml(story.name)}</h3></nldd-title>`, stage(storyFile, story)], 12)}\n</nldd-container>`,
+							stack([`<nldd-title id="${story.id.split('--')[1]}" size="display-5"><h3>${escapeHtml(story.name)}</h3></nldd-title>`, stage(storyFile, story)], 12),
 					),
 				]
 			: [];
@@ -1494,22 +1546,53 @@ export function buildPages({ base = '/' } = {}) {
 			path,
 			title ?? rendered.title,
 			description,
-			prosePage({ title: title ?? rendered.title, rendered, extra }),
+			fills ? filledSection({ title: title ?? rendered.title, rendered }) : prosePage({ title: title ?? rendered.title, rendered, extra }),
 		);
 	}
 
 	const byTag = new Map(components.flatMap((c) => c.elements.map((element) => [element.tagName, c])));
-	// A rule hangs under the page about the linter, which lists them all.
+	// The rules are a section of their own: the groups as its list, in the order
+	// the linter asks them, the rules of a group in main, and a rule opens in
+	// main with the way back to its group.
 	const patternNames = new Map(patterns.map((pattern) => [pattern.slug, pattern.name]));
-	for (const rule of lintRules) {
-		page(
-			rulePath(rule),
-			rule.id,
-			rule.message.replace(/`/g, ''),
-			rulePage(rule, { byTag, patternNames }),
-			undefined,
-			{ text: 'Linter', href: '/linter/' },
-		);
+	const ruleGroups = RULE_GROUPS.map(([group, question]) => ({
+		name: group,
+		slug: group,
+		question,
+		rules: lintRules.filter((rule) => rule.group === group),
+	})).filter((group) => group.rules.length);
+	// A search finds a rule in any group, by its id and the words of its message.
+	const ruleItems = new Map(lintRules.map((rule) => [rule, { name: rule.id, slug: rule.id, keywords: [rule.message.replace(/[`*]/g, '')] }]));
+	const ruleNav = (current, currentRule) => ({
+		title: 'Lintregels',
+		path: '/lintregels/',
+		empty: 'Kies een groep',
+		opensFirst: true,
+		nav: siblingNav(
+			ruleGroups.map((group) => [group.name, group.rules.map((rule) => ruleItems.get(rule))]),
+			currentRule && ruleItems.get(currentRule),
+			(item) => `/lintregels/${item.slug}/`,
+			{
+				search: { placeholder: 'Regel zoeken', none: 'Geen regel gevonden' },
+				idle: siblingNav([['', ruleGroups]], current, (group) => `/lintregels/${group.slug}/`, { label: 'Groepen van regels' }),
+			},
+		),
+	});
+	page('/lintregels/', 'Lintregels', `De ${lintRules.length} regels van nldd lint, in zes groepen.`, undefined, ruleNav());
+	for (const group of ruleGroups) {
+		page(`/lintregels/${group.slug}/`, group.name, `${group.question} ${countRules(group.rules)}.`, ruleGroupPage(group), ruleNav(group));
+		for (const rule of group.rules) {
+			page(
+				rulePath(rule),
+				rule.id,
+				rule.message.replace(/`/g, ''),
+				rulePage(rule, { byTag, patternNames }),
+				ruleNav(group, rule),
+				{ text: group.name, href: `/lintregels/${group.slug}/`, always: true },
+			);
+			// A rule had its page under the linter, and links to it are out there.
+			pages[`linter/${rule.id}/index.html`] = redirect(`${base === '/' ? '' : base.replace(/\/$/, '')}${rulePath(rule)}`);
+		}
 	}
 	// What the search shows under its matches: the pages they name in @related.
 	for (const component of components) {

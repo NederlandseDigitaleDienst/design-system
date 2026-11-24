@@ -31,7 +31,7 @@ npx @nldd/design-system lint --fix
 npx @nldd/design-system explain button-needs-name
 ```
 
-Je krijgt de melding, het succescriterium van WCAG dat de regel bewaakt, en markup die goed en fout is. Hetzelfde staat op de pagina van de regel, onder [Alle regels](#alle-regels).
+Je krijgt de melding, het succescriterium van WCAG dat de regel bewaakt, en markup die goed en fout is. Hetzelfde staat op de pagina van de regel, onder [Lintregels](/lintregels/).
 
 ### De regels van een component
 
@@ -75,3 +75,7 @@ Een voorbeeld dat bewust afwijkt, krijgt een onderdrukking met de reden erbij. Z
 De groep `pure` zet een project zelf aan, met `--pure` of in `.nldd-lint.json`. Die regels melden eigen opmaak van een app: een `class`, een `style`, kale HTML of een stylesheet.
 
 De linter vraagt Node 20.19 of nieuwer.
+
+## Alle lintregels
+
+Elke regel heeft een pagina, met de melding, de reden en markup die goed en fout is: [alle lintregels](/lintregels/), per groep.

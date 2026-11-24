@@ -116,6 +116,11 @@ function wireFilter(): void {
 			group.hidden = inGroup === 0;
 			shown += inGroup;
 		}
+		// A list that only shows while you search (the lint rules) stands in for
+		// another one until then (their groups).
+		const searching = words.length > 0;
+		for (const idle of pane.querySelectorAll<HTMLElement>('[data-site-filter-idle]')) idle.hidden = searching;
+		for (const results of pane.querySelectorAll<HTMLElement>('[data-site-filter-results]')) results.hidden = !searching;
 		const empty = pane.querySelector<HTMLElement>('[data-site-filter-empty]');
 		if (empty) empty.hidden = shown > 0;
 		showRelated(pane, words.length > 0);

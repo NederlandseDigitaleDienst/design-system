@@ -181,17 +181,47 @@ test('a pattern has a tab with the lint rules that point at it', () => {
 });
 
 test('a rule has a page of its own, which every list of rules links to', () => {
-	const rule = pages['linter/link-needs-href/index.html'];
+	const rule = pages['lintregels/link-needs-href/index.html'];
 	assert.match(rule, /<h1>link-needs-href<\/h1>/);
-	assert.match(rule, /back-text="Linter"\s+back-href="\/linter\/"/);
+	// Back to its group, also beside the list of groups.
+	assert.match(rule, /back-text="structure"\s+back-href="\/lintregels\/structure\/"\s+data-site-back-always/);
 	// The message is English on a Dutch page.
 	assert.match(rule, /<p lang="en">Give it an <code>href<\/code>/);
 	assert.match(rule, /WCAG22-nl\/#keyboard"[^>]*>2\.1\.1 Toetsenbord<\/a> \(niveau A\)/);
 	assert.match(rule, /<h2 id="goed">Goed<\/h2>[^]*<h2 id="fout">Fout<\/h2>[^]*<h2 id="onzeker">Onzeker<\/h2>[^]*<h2 id="de-regel">De regel<\/h2>/);
 	assert.match(rule, /blob\/main\/src\/rules\/structure\/link-needs-href\.yaml/);
-	assert.match(pages['componenten/link/lintregels/index.html'], /<nldd-list-item href="\/linter\/link-needs-href\/">/);
+	assert.match(pages['componenten/link/lintregels/index.html'], /<nldd-list-item href="\/lintregels\/link-needs-href\/">/);
 	// A rule only the running page can tell has no markup to show.
-	assert.doesNotMatch(pages['linter/sheet-needs-name/index.html'], /<h2 id="goed">/);
+	assert.doesNotMatch(pages['lintregels/sheet-needs-name/index.html'], /<h2 id="goed">/);
+});
+
+test('the examples tab starts with a link to each example, which has its anchor on its title', () => {
+	const page = pages['componenten/button/voorbeelden/index.html'];
+	assert.match(page, /<nldd-link-group accessible-label="Voorbeelden">\s*<nldd-link href="#horizontale-uitlijning"/);
+	assert.match(page, /<nldd-title\s+id="horizontale-uitlijning"/);
+	// No container stands between the section and what is in it.
+	assert.doesNotMatch(page.slice(page.lastIndexOf('<nldd-simple-section grow>')), /<nldd-container/);
+});
+
+test('the icon gallery fills the section of its page, with the text as its header', () => {
+	const page = pages['iconen/index.html'];
+	assert.match(page, /<\/nldd-top-title-bar>\s*<nldd-sidebar-section\s+sidebar-label="Filters"/);
+	assert.match(page, /<nldd-rich-text slot="header">[^]*<\/nldd-rich-text>\s*<site-stage [^>]*unwrap/);
+});
+
+test('the lint rules are a section of their own, with the groups as its list', () => {
+	const groups = pages['lintregels/index.html'];
+	assert.match(groups, /accessible-label="Groepen van regels"[^]*href="\/lintregels\/api\/"[^]*href="\/lintregels\/pure\/"/);
+	assert.match(groups, /data-site-opens-first/);
+	const group = pages['lintregels/structure/index.html'];
+	assert.match(group, /href="\/lintregels\/structure\/"\s+current/);
+	assert.match(group, /<nldd-list-item href="\/lintregels\/link-needs-href\/">/);
+	// The rule keeps its group chosen in the list.
+	assert.match(pages['lintregels/link-needs-href/index.html'], /href="\/lintregels\/structure\/"\s+current/);
+	// The old address sends the reader on.
+	assert.match(pages['linter/link-needs-href/index.html'], /http-equiv="refresh" content="0; url=\/lintregels\/link-needs-href\/"/);
+	// The guide about the linter ends with the way to every rule.
+	assert.match(pages['linter/index.html'], /href="\/lintregels\/"/);
 });
 
 test('every success criterion the linter knows has its Dutch name and an anchor of its own', () => {
@@ -205,9 +235,9 @@ test('the accessibility page lists the rules by success criterion, from every gr
 	assert.match(page, /<h2>Lintregels per succescriterium<\/h2>/);
 	// A rule of `copy` under the criterion it guards.
 	const sheet = page.slice(page.indexOf('<nldd-sheet\n\tid="lintregels-per-succescriterium-2-4-4"'));
-	assert.match(sheet, /text="2\.4\.4 Linkdoel \(in context\)"[^]*?href="\/linter\/link-no-vague-text\/"/);
+	assert.match(sheet, /text="2\.4\.4 Linkdoel \(in context\)"[^]*?href="\/lintregels\/link-no-vague-text\/"/);
 	// The rules of `a11y` without a criterion are still there.
-	assert.match(page, /id="lintregels-per-succescriterium-goede-praktijk"[^]*href="\/linter\/list-needs-name\/"/);
+	assert.match(page, /id="lintregels-per-succescriterium-goede-praktijk"[^]*href="\/lintregels\/list-needs-name\/"/);
 });
 
 test('the accessibility page shows who does what as a list per principle, with a tag per criterion', () => {

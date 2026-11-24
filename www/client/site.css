@@ -30,6 +30,12 @@ nldd-navigation-split-view[data-site-wide] > [slot="primary-sidebar"] {
 	--context-back-button-display: none;
 }
 
+/* A rule is a step below its group, also beside the list of groups. */
+[data-site-back-always] {
+	/* nldd-lint-disable-next-line internal-context-no-use -- the split view hides the back of main beside its list */
+	--context-back-button-display: flex;
+}
+
 /* Not `hidden`: the toolbar sets that on its own items when they overflow. */
 body:not(:has(nldd-navigation-split-view[data-site-wide])) [data-site-home] {
 	display: none;
