@@ -33,8 +33,8 @@
  * @attr {string} size - `full` (the default) scales with the container, like nldd-icon; or a fixed size in px (spacer-aligned: 16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96). The initials and the icon scale along
  * @attr {boolean} icon-aligned - Shrinks the visible shape to 5/6 of the host, centered, so the avatar aligns optically with an icon on the same grid (an icon glyph has built-in margin)
  * @attr {string} name - Name of the person or organization; supplies the derived initials and the accessible label
- * @attr {string} icon - Overrides the fallback icon of the variant
  * @attr {string} initials - Explicit initials, at most 4 characters, such as `KvK` or `LVVN` (overrides what is derived from `name`; also for organization acronyms). Four characters read well from 40px; below that use a shorter form
+ * @attr {string} icon - Overrides the fallback icon of the variant
  * @attr {string} src - Image source; falls back to initials or icon when it fails to load
  * @attr {string} srcset - Responsive source set for the image (the component sets `sizes` itself)
  * @attr {boolean} button - Makes the avatar a button; ignored when `href` is set
@@ -173,10 +173,10 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 	name = '';
 
 	@property({ type: String })
-	icon = '';
+	initials = '';
 
 	@property({ type: String })
-	initials = '';
+	icon = '';
 
 	@property({ type: String })
 	src = '';

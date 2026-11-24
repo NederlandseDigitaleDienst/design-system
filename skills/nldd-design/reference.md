@@ -642,8 +642,8 @@ Shows one person or organization as a compact, round (person) or rounded (organi
 | `size` | `string` | `full` (the default) scales with the container, like nldd-icon; or a fixed size in px (spacer-aligned: 16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96). The initials and the icon scale along |
 | `icon-aligned` | `boolean` | Shrinks the visible shape to 5/6 of the host, centered, so the avatar aligns optically with an icon on the same grid (an icon glyph has built-in margin) |
 | `name` | `string` | Name of the person or organization; supplies the derived initials and the accessible label |
-| `icon` | `string` | Overrides the fallback icon of the variant |
 | `initials` | `string` | Explicit initials, at most 4 characters, such as `KvK` or `LVVN` (overrides what is derived from `name`; also for organization acronyms). Four characters read well from 40px; below that use a shorter form |
+| `icon` | `string` | Overrides the fallback icon of the variant |
 | `src` | `string` | Image source; falls back to initials or icon when it fails to load |
 | `srcset` | `string` | Responsive source set for the image (the component sets `sizes` itself) |
 | `button` | `boolean` | Makes the avatar a button; ignored when `href` is set |

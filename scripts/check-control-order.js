@@ -101,8 +101,8 @@ export function firstViolation(canon, names, component) {
  */
 const MEANINGS = {
 	'avatar-group': { max: 'size' },
-	// The name of a person or organization is the content the initials come from.
-	avatar: { name: 'text' },
+	// The name and initials are the text the avatar shows before it falls back to an icon.
+	avatar: { name: 'text', initials: 'text' },
 	// The length and format of a code decide how many boxes there are and how they group.
 	'one-time-code-field': { length: 'status', format: 'status' },
 };

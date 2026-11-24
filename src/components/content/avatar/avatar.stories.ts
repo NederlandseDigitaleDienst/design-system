@@ -29,8 +29,8 @@ export default {
 		size: '40',
 		iconAligned: false,
 		name: 'Bart van de Biezen',
-		icon: '',
 		initials: '',
+		icon: '',
 		src: '',
 		button: false,
 		accessibleLabel: '',
@@ -68,14 +68,14 @@ export default {
 			control: 'text',
 			description: 'Naam; levert de afgeleide initialen en het toegankelijke label',
 		},
+		initials: {
+			control: 'text',
+			description: 'Expliciete initialen (overschrijft de afleiding uit name)',
+		},
 		icon: {
 			control: 'select',
 			options: ICONS,
 			description: 'Overschrijft het terugval-icoon van de variant',
-		},
-		initials: {
-			control: 'text',
-			description: 'Expliciete initialen (overschrijft de afleiding uit name)',
 		},
 		src: {
 			control: 'text',
@@ -126,8 +126,8 @@ const Template = (args: Record<string, any>) => html`
 		size=${args.size || nothing}
 		?icon-aligned=${args.iconAligned}
 		name=${args.name || nothing}
-		icon=${args.icon || nothing}
 		initials=${args.initials || nothing}
+		icon=${args.icon || nothing}
 		src=${args.src || nothing}
 		?button=${args.button}
 		accessible-label=${args.accessibleLabel || nothing}

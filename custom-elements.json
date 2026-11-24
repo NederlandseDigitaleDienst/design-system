@@ -5346,21 +5346,21 @@
             },
             {
               "kind": "field",
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "icon"
-            },
-            {
-              "kind": "field",
               "name": "initials",
               "type": {
                 "text": "string"
               },
               "default": "''",
               "attribute": "initials"
+            },
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "icon"
             },
             {
               "kind": "field",
@@ -5559,15 +5559,6 @@
               "description": "Name of the person or organization; supplies the derived initials and the accessible label"
             },
             {
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "icon",
-              "description": "Overrides the fallback icon of the variant"
-            },
-            {
               "name": "initials",
               "type": {
                 "text": "string"
@@ -5575,6 +5566,15 @@
               "default": "''",
               "fieldName": "initials",
               "description": "Explicit initials, at most 4 characters, such as `KvK` or `LVVN` (overrides what is derived from `name`; also for organization acronyms). Four characters read well from 40px; below that use a shorter form"
+            },
+            {
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "icon",
+              "description": "Overrides the fallback icon of the variant"
             },
             {
               "name": "src",
