@@ -544,11 +544,11 @@ describe('nldd-rich-text details', () => {
 		expect(getComputedStyle(el.querySelector('summary')!, '::before').rotate).toBe('180deg');
 	});
 
-	it('fills the whole bar with the summary, as high as an md control', async () => {
+	it('fills the whole bar with the summary, as high as an lg control', async () => {
 		el = await render(block());
 		const details = el.querySelector('details')!.getBoundingClientRect();
 		const summary = el.querySelector('summary')!.getBoundingClientRect();
-		expect(summary.height).toBeCloseTo(Math.max(44, metrics(el.querySelector('summary')!).line + 2 * metrics(el.querySelector('summary')!).padding), 0);
+		expect(summary.height).toBeCloseTo(Math.max(56, metrics(el.querySelector('summary')!).line + 2 * metrics(el.querySelector('summary')!).padding), 0);
 		expect(summary.left - details.left).toBeCloseTo(1, 0);
 		expect(details.right - summary.right).toBeCloseTo(1, 0);
 	});

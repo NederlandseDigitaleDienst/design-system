@@ -144,9 +144,9 @@ export const accordionItemStyles = css`
 	.accordion-item__disclosure-icon {
 		display: flex;
 		flex-shrink: 0;
-		margin-block-start: calc((1lh - var(--_accordion-item-disclosure-icon-size)) / 2);
 		width: var(--_accordion-item-disclosure-icon-size);
 		height: var(--_accordion-item-disclosure-icon-size);
+		align-self: center;
 		transition: rotate var(--_accordion-item-transition-duration) ease-out;
 	}
 

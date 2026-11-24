@@ -972,7 +972,7 @@
 	/* ## Disclosures */
 
 	--semantics-disclosures-inset: var(--primitives-space-12);
-	--semantics-disclosures-title-bar-min-height: var(--semantics-controls-md-min-size);
+	--semantics-disclosures-title-bar-min-height: var(--semantics-controls-lg-min-size);
 	--semantics-disclosures-title-bar-padding-block: var(--primitives-space-10);
 	--semantics-disclosures-title-bar-gap: var(--primitives-space-8);
 	--semantics-disclosures-title-bar-font: var(--primitives-font-body-md-medium-tight);

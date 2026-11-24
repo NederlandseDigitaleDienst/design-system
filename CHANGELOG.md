@@ -20,6 +20,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Changed
 
+- **The title bar of `nldd-accordion-item`, `nldd-admonition` and a `details` in `nldd-rich-text` is as high as an lg control**, 56px, where it was 44px, so a question reads as a row you can tap. In `nldd-accordion-item` the disclosure icon now sits in the middle of the title, also when the title runs over two lines.
 - **A cell of `width="full"` is never narrower than 160px**, in `nldd-text-cell`, `nldd-title-cell` and `nldd-description-cell`, so its text stays readable. Beside a `fit-content` cell with a long value it used to shrink to nothing. A row too narrow for its cells now runs wider than its box: hide a cell at that width with `hide-below`, combine two, or set a `min-width` of your own, which always wins. A `max-width` below 160px lowers the floor with it, and in `nldd-table` the columns set the width as before. A theme sets the floor with `--semantics-cells-min-width`.
 - **The back button of a submenu in `nldd-menu` draws its own icon and text**, as a menu item does. The text of a menu item, its details and the back button break as the text of a button: a word of at least 12 letters by syllable, and a word in the details stays whole. `nldd-menu` no longer loads `nldd-icon-cell`, `nldd-spacer-cell` and `nldd-text-cell`: an app that imports a single component and uses those cells imports them itself.
 - **A `fit-content` cell is never narrower than its longest word**, so a short value such as "In behandeling" breaks between words, not inside one. A long URL then stays whole: set `min-width="0"` on the cell to let it break. `min-width="max-content"` keeps the text on one line.
@@ -27,6 +28,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **Backspace in an empty box of `nldd-one-time-code-field` moves to the box before it**, also where every box is empty. With nothing in the field Safari sent no input event for it, so the caret stayed put.
 - **`nldd-split-button` at `size="xs"` is as tall as its buttons**, and the main action and the chevron line up. The split button was 27px tall, the height of a line of text, with the buttons shifted inside it. A `nldd-button` of `width="full"` no longer grows with the line height around it either. A split button of `width="full"` now fills its container: only the outer box did, and the buttons kept their own width.
 - **A long word in `nldd-text` no longer runs out of a narrow box.** A compound, URL or code wider than the line now breaks between two letters at every body size, as text in `nldd-rich-text` does. Before, only the display sizes did that, and a card or column narrower than one word lost the end of it (WCAG 1.4.10).
 - **A long word in a `dt` or `dd` of `nldd-rich-text` no longer runs out of the column**, such as a hash or a URL. The columns of a definition list no longer widen to their longest word either.
