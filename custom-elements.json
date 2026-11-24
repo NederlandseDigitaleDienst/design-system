@@ -18605,6 +18605,36 @@
             },
             {
               "kind": "field",
+              "name": "type",
+              "type": {
+                "text": "OneTimeCodeType"
+              },
+              "default": "'numeric'",
+              "attribute": "type",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "length",
+              "default": "6",
+              "attribute": "length",
+              "reflects": true,
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "format",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "format",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "size",
               "type": {
                 "text": "OneTimeCodeSize"
@@ -18680,36 +18710,6 @@
               },
               "default": "''",
               "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "type",
-              "type": {
-                "text": "OneTimeCodeType"
-              },
-              "default": "'numeric'",
-              "attribute": "type",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "length",
-              "default": "6",
-              "attribute": "length",
-              "reflects": true,
-              "type": {
-                "text": "number"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "format",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "format",
-              "reflects": true
             },
             {
               "kind": "field",
@@ -19173,6 +19173,36 @@
           ],
           "attributes": [
             {
+              "name": "type",
+              "type": {
+                "text": "OneTimeCodeType"
+              },
+              "default": "'numeric'",
+              "fieldName": "type",
+              "expandedType": {
+                "text": "'alphanumeric' | 'numeric'"
+              },
+              "description": "What the code holds: 'numeric' (default, digits only, raises the number keyboard) | 'alphanumeric' (letters and digits)"
+            },
+            {
+              "name": "length",
+              "default": "DEFAULT_LENGTH",
+              "fieldName": "length",
+              "description": "How many characters the code has (default: 6).",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "format",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "format",
+              "description": "The shape of a code that is printed in groups, such as '###-###' or '#### ####': each `#` is a box, anything else a separator you see but a screen reader does not hear. The number of `#` is then the length, so `format` wins over `length`. The value never holds a separator: '123-234' is submitted as '123234'. Leave it out for a code without groups, as most codes from a text message are."
+            },
+            {
               "name": "size",
               "type": {
                 "text": "OneTimeCodeSize"
@@ -19246,36 +19276,6 @@
               "default": "''",
               "fieldName": "value",
               "description": "The code"
-            },
-            {
-              "name": "type",
-              "type": {
-                "text": "OneTimeCodeType"
-              },
-              "default": "'numeric'",
-              "fieldName": "type",
-              "expandedType": {
-                "text": "'alphanumeric' | 'numeric'"
-              },
-              "description": "What the code holds: 'numeric' (default, digits only, raises the number keyboard) | 'alphanumeric' (letters and digits)"
-            },
-            {
-              "name": "length",
-              "default": "DEFAULT_LENGTH",
-              "fieldName": "length",
-              "description": "How many characters the code has (default: 6).",
-              "type": {
-                "text": "number"
-              }
-            },
-            {
-              "name": "format",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "format",
-              "description": "The shape of a code that is printed in groups, such as '###-###' or '#### ####': each `#` is a box, anything else a separator you see but a screen reader does not hear. The number of `#` is then the length, so `format` wins over `length`. The value never holds a separator: '123-234' is submitted as '123234'. Leave it out for a code without groups, as most codes from a text message are."
             },
             {
               "name": "required",

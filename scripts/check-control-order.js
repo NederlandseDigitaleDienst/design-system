@@ -99,7 +99,11 @@ export function firstViolation(canon, names, component) {
  * Names that mean something else in one component, and the name they go after.
  * The `max` of avatar-group decides how many avatars show: a group 1 choice.
  */
-const MEANINGS = { 'avatar-group': { max: 'size' } };
+const MEANINGS = {
+	'avatar-group': { max: 'size' },
+	// What the code is decides how many boxes there are and how they group.
+	'one-time-code-field': { type: 'status', length: 'status', format: 'status' },
+};
 
 /** A `max` right after `number` caps how that number shows, and keeps its place (badge). */
 function rankIn(canon, names, i, component) {

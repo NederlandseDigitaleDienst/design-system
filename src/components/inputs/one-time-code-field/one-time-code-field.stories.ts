@@ -25,6 +25,9 @@ export default {
 		},
 	},
 	args: {
+		type: 'numeric',
+		length: 6,
+		format: '',
 		size: 'md',
 		centered: false,
 		accessibleLabel: 'Code uit de sms',
@@ -33,14 +36,26 @@ export default {
 		uppercase: false,
 		invalid: false,
 		value: '',
-		type: 'numeric',
-		length: 6,
-		format: '',
 		required: false,
 		readonly: false,
 		disabled: false,
 	},
 	argTypes: {
+		type: {
+			control: 'select',
+			options: ['numeric', 'alphanumeric'],
+			description: 'Alleen cijfers, of letters en cijfers',
+			table: { defaultValue: { summary: 'numeric' } },
+		},
+		length: {
+			control: 'number',
+			description: 'Aantal tekens van de code',
+			table: { defaultValue: { summary: 6 } },
+		},
+		format: {
+			control: 'text',
+			description: 'Vorm van een code in groepen, zoals ###-###; elke # is een vakje en wint van length',
+		},
 		size: {
 			control: 'select',
 			options: ['sm', 'md', 'lg'],
@@ -81,21 +96,6 @@ export default {
 			control: 'text',
 			description: 'De code',
 		},
-		type: {
-			control: 'select',
-			options: ['numeric', 'alphanumeric'],
-			description: 'Alleen cijfers, of letters en cijfers',
-			table: { defaultValue: { summary: 'numeric' } },
-		},
-		length: {
-			control: 'number',
-			description: 'Aantal tekens van de code',
-			table: { defaultValue: { summary: 6 } },
-		},
-		format: {
-			control: 'text',
-			description: 'Vorm van een code in groepen, zoals ###-###; elke # is een vakje en wint van length',
-		},
 		required: {
 			control: 'boolean',
 			description: 'Verplicht; een code die niet af is telt ook als ongeldig',
@@ -114,8 +114,11 @@ export default {
 	},
 };
 
-const Template = ({ size, centered, accessibleLabel, accessibleDescription, uppercase, invalid, value, type, length, format, required, readonly, disabled }: Record<string, any>) => html`
+const Template = ({ type, length, format, size, centered, accessibleLabel, accessibleDescription, uppercase, invalid, value, required, readonly, disabled }: Record<string, any>) => html`
 	<nldd-one-time-code-field
+		type=${type || nothing}
+		length=${length ?? nothing}
+		format=${format || nothing}
 		size=${size || nothing}
 		?centered=${centered}
 		accessible-label=${accessibleLabel || nothing}
@@ -123,9 +126,6 @@ const Template = ({ size, centered, accessibleLabel, accessibleDescription, uppe
 		?uppercase=${uppercase}
 		?invalid=${invalid}
 		.value=${value ?? ''}
-		type=${type || nothing}
-		length=${length ?? nothing}
-		format=${format || nothing}
 		?required=${required}
 		?readonly=${readonly}
 		?disabled=${disabled}
