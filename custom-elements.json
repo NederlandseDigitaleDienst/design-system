@@ -4933,7 +4933,9 @@
             "inklappen"
           ],
           "related": [
-            "nldd-list"
+            "nldd-list",
+            "nldd-admonition",
+            "nldd-rich-text"
           ],
           "slots": [
             {
@@ -5110,12 +5112,16 @@
             "callout",
             "note",
             "opmerking",
-            "let op"
+            "let op",
+            "disclosure",
+            "uitklappen"
           ],
           "related": [
             "nldd-banner",
             "nldd-inline-dialog",
-            "nldd-blockquote"
+            "nldd-blockquote",
+            "nldd-accordion",
+            "nldd-rich-text"
           ],
           "slots": [
             {
@@ -7474,11 +7480,15 @@
             "prose",
             "markdown",
             "typography",
-            "opgemaakte tekst"
+            "opgemaakte tekst",
+            "disclosure",
+            "details"
           ],
           "related": [
             "nldd-text",
-            "nldd-title"
+            "nldd-title",
+            "nldd-accordion",
+            "nldd-admonition"
           ]
         }
       ],

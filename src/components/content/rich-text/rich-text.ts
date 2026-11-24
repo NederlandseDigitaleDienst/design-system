@@ -66,8 +66,8 @@
  * away short and additional: see the design guidelines on expand/collapse.
  *
  * @element nldd-rich-text
- * @keywords prose, markdown, typography, opgemaakte tekst
- * @related nldd-text, nldd-title
+ * @keywords prose, markdown, typography, opgemaakte tekst, disclosure, details
+ * @related nldd-text, nldd-title, nldd-accordion, nldd-admonition
  *
  * @attr {'flat'|'tight'|'snug'|'loose'} spacing - Spacing between elements: 'flat' | 'tight' | 'snug' (default) | 'loose'
  * @attr {boolean} centered - Centers the main column inside the container; without it, content is left-aligned
