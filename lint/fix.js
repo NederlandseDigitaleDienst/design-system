@@ -119,7 +119,9 @@ function removeEdits(source, finding, name) {
 
 /** One attribute that became another: a value written out that became a
  *  boolean, or a boolean that became a value (`spin-buttons="none"`). The whole
- *  attribute turns into `to`. The rule's context says which one it was. */
+ *  attribute turns into `to`, written as it lands in the tag: a bare name or
+ *  `name="value"`, so the name is what stands before `=`. A templated attribute
+ *  is left alone. The rule's context says which one it was. */
 function flagEdits(source, startTag, from, to) {
 	const found = findAttribute(startTag, from);
 	if (!found || found.prefix || found.templated || findAttribute(startTag, to.split('=')[0])) return [];
