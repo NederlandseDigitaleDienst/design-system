@@ -15,7 +15,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Added
 
-- **The design guidelines say: do not open a sheet from a sheet, go a step further in the same sheet.**
+- **The design guidelines say: do not open an overlay from an overlay of the same kind.** Go a step further in the sheet instead of opening a second one; a modal dialog from a sheet is fine.
 - **Three lint rules for steps, all `warn`:** `sheet-no-nested` for an `nldd-sheet` inside an `nldd-sheet`, `page-parent-not-found` for a `parent` that names no page, and `popover-no-steps` for steps in an `nldd-popover`, which hides its title bar and so the back button on md and up.
 
 ### Fixed
