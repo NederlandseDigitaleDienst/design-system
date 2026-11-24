@@ -81,11 +81,6 @@ describe('nldd-token – state', () => {
 		expect(el._expanded).toBe(false);
 	});
 
-	it('open reflects as attribute', async () => {
-		el = await fixture<NLDDToken>('<nldd-token control="menu" expanded>Label</nldd-token>');
-		await waitForUpdate(el);
-		expect(el.hasAttribute('expanded')).toBe(true);
-	});
 
 	it('menu icon-button is not expanded and has popup-type=menu when closed', async () => {
 		el = await fixture<NLDDToken>('<nldd-token control="menu">Label</nldd-token>');
@@ -95,11 +90,21 @@ describe('nldd-token – state', () => {
 		expect(button.getAttribute('popup-type')).toBe('menu');
 	});
 
-	it('menu icon-button is expanded when the menu is open', async () => {
-		el = await fixture<NLDDToken>('<nldd-token control="menu" expanded>Label</nldd-token>');
+	it('follows its slotted menu: expanded while it is open, on the host and on the chevron', async () => {
+		el = await fixture<NLDDToken>('<nldd-token control="menu"><nldd-menu slot="menu"><nldd-menu-item text="A"></nldd-menu-item></nldd-menu></nldd-token>');
 		await waitForUpdate(el);
 		const button = el.shadowRoot!.querySelector('.token__menu-action nldd-icon-button')!;
+		const menu = el.querySelector('nldd-menu') as HTMLElement;
+		(button as HTMLElement).click();
+		await waitForUpdate(el);
+		expect(el._expanded).toBe(true);
+		expect(el.hasAttribute('expanded')).toBe(true);
 		expect(button.hasAttribute('expanded')).toBe(true);
+		menu.hidePopover();
+		await waitForUpdate(el);
+		expect(el._expanded).toBe(false);
+		expect(el.hasAttribute('expanded')).toBe(false);
+		expect(button.hasAttribute('expanded')).toBe(false);
 	});
 
 	it('disabled reflects as attribute', async () => {

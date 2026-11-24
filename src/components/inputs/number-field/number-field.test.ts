@@ -534,6 +534,13 @@ describe('nldd-number-field – spin-buttons', () => {
 		expect(getComputedStyle(input).textAlign).toBe('start');
 	});
 
+	it('falls back to the buttons at the end for a value it does not know', async () => {
+		const { field, inputBox, decrement, increment } = await partsOf('spin-buttons="foo"');
+		expect(decrement!.left).toBeGreaterThan(inputBox.left);
+		expect(increment!.left).toBeGreaterThan(decrement!.right);
+		expect(field.right - increment!.right).toBeLessThan(8);
+	});
+
 	it('keeps the order input, decrement, increment for the keyboard', async () => {
 		await partsOf('');
 		const order = [...el.shadowRoot!.querySelectorAll('input, nldd-icon-button')].map((node) => node.getAttribute('icon') ?? 'input');
