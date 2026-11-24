@@ -6,7 +6,7 @@
  * image when `src` loads, otherwise the initials (from `initials` or derived
  * from `name`), and otherwise a fallback icon.
  *
- * `type` sets both the shape and the fallback icon: `person` gives a circle
+ * `variant` sets both the shape and the fallback icon: `person` gives a circle
  * with a person icon, `organization` a rounded square with a building icon. The
  * shape belongs to the meaning and cannot be set on its own. Override the
  * fallback icon with `icon` where that helps.
@@ -28,10 +28,12 @@
  * @keywords profile picture, profielfoto
  * @related nldd-identity, nldd-avatar-group, nldd-image
  *
+ * @attr {'person'|'organization'} variant - `person` (the default: a circle, person icon) or `organization` (a rounded square, building icon)
  * @attr {string} color - `neutral` (the default, a neutral fill) or `content` (fill in the content color: the `--context-content-color` a surface, a button or a selected row sets; text in the contrast color, so the avatar can replace an icon in a button for instance)
  * @attr {string} size - `full` (the default) scales with the container, like nldd-icon; or a fixed size in px (spacer-aligned: 16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96). The initials and the icon scale along
  * @attr {boolean} icon-aligned - Shrinks the visible shape to 5/6 of the host, centered, so the avatar aligns optically with an icon on the same grid (an icon glyph has built-in margin)
- * @attr {string} icon - Overrides the type-dependent fallback icon
+ * @attr {string} name - Name of the person or organization; supplies the derived initials and the accessible label
+ * @attr {string} icon - Overrides the fallback icon of the variant
  * @attr {string} initials - Explicit initials, at most 4 characters, such as `KvK` or `LVVN` (overrides what is derived from `name`; also for organization acronyms). Four characters read well from 40px; below that use a shorter form
  * @attr {string} src - Image source; falls back to initials or icon when it fails to load
  * @attr {string} srcset - Responsive source set for the image (the component sets `sizes` itself)
@@ -40,8 +42,6 @@
  * @attr {boolean} decorative - Hides the avatar from assistive software (use when the name already stands beside it as text)
  * @attr {boolean} no-tab - Takes the control out of the tab order (tabindex="-1"), for an avatar that is a link or a button inside a roving container (a row of an nldd-list). Does nothing on a decorative avatar.
  * @attr {string} tooltip-timing - When the name appears as a tooltip on hover or focus: `delay` (the default, after 700ms), `instant`, or `never`. An avatar shows no text, so without a tooltip the name is readable by assistive software only. A `decorative` avatar shows none regardless: there the name already stands beside it as text
- * @attr {string} name - Name of the person or organization; supplies the derived initials and the accessible label
- * @attr {string} type - `person` (circle, person icon) or `organization` (rounded, building icon); default `person`
  * @attr {string} href - Makes the avatar a link to this URL; the shape itself becomes the link, so the hit area and the focus ring follow it. As a link or a button the avatar needs size 24 or larger (WCAG 2.5.8)
  * @attr {string} target - Link target for href (e.g. '_blank'); completes rel and announces "Opens in a new tab". An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.
  * @attr {string} rel - Link rel for href; with target '_blank', 'noopener noreferrer' is added to whatever you set
@@ -56,7 +56,7 @@
  * 	size="48"
  * ></nldd-avatar>
  * <nldd-avatar
- * 	type="organization"
+ * 	variant="organization"
  * 	name="Kamer van Koophandel"
  * 	initials="KvK"
  * ></nldd-avatar>
@@ -86,7 +86,7 @@ import { avatarStyles } from './avatar.styles.js';
 import { avatarTemplate } from './avatar.template.js';
 import '../icon/icon.js';
 
-export type AvatarType = 'person' | 'organization';
+export type AvatarVariant = 'person' | 'organization';
 
 export type AvatarColor = 'neutral' | 'content';
 
@@ -157,6 +157,9 @@ const shapeObserver = sharedResizeObserver<NLDDAvatar>(fitAvatars);
 export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslations) {
 	static override styles = avatarStyles;
 
+	@property({ reflect: true, converter: reflectNonDefault<AvatarVariant>('person') })
+	variant: AvatarVariant = 'person';
+
 	@property({ reflect: true, converter: reflectNonDefault<AvatarColor>('neutral') })
 	color: AvatarColor = 'neutral';
 
@@ -165,6 +168,9 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 
 	@property({ type: Boolean, reflect: true, attribute: 'icon-aligned' })
 	iconAligned = false;
+
+	@property({ type: String })
+	name = '';
 
 	@property({ type: String })
 	icon = '';
@@ -204,12 +210,6 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 	@property({ reflect: true, attribute: 'tooltip-timing', converter: reflectNonDefault<'delay' | 'instant' | 'never'>('delay') })
 	tooltipTiming: 'delay' | 'instant' | 'never' = 'delay';
 
-	@property({ type: String })
-	name = '';
-
-	@property({ reflect: true, converter: reflectNonDefault<AvatarType>('person') })
-	type: AvatarType = 'person';
-
 	/** Makes the avatar one link: the shape itself becomes the <a>, so the click
 	 *  area and the focus ring follow its shape (an overlay would be square). */
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
@@ -245,7 +245,7 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 	/** Fallback icon when there is neither image nor initials. */
 	get resolvedIcon(): string {
 		if (this.icon) return this.icon;
-		return this.type === 'organization' ? 'building' : 'person';
+		return this.variant === 'organization' ? 'building' : 'person';
 	}
 
 	_onImageError = (): void => {

@@ -34,7 +34,7 @@ export const avatarStyles = css`
 		display: none;
 	}
 
-	:host([type="organization"]) {
+	:host([variant="organization"]) {
 		--_avatar-corner-radius: var(--semantics-tiles-corner-radius);
 	}
 

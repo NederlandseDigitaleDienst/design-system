@@ -64,6 +64,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-avatar:is([href]:not([href=\"\"]), [button]):is([size=\"16\"], [size=\"20\"])"
 	},
 	{
+		"id": "avatar-type-renamed",
+		"message": "The `type` attribute is now `variant`. Rename it here and on every other nldd-avatar.",
+		"context": "nldd-avatar[type]"
+	},
+	{
 		"id": "badge-color-renamed",
 		"message": "`color=\"inherit\"` is now `color=\"content\"`, and the old value does nothing. Rename it here and on every other nldd-badge.",
 		"context": "nldd-badge[color=\"inherit\"]"
@@ -1341,6 +1346,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-admonition[variant]:not([variant=\"accent\"], [variant=\"critical\"], [variant=\"neutral\"], [variant=\"success\"], [variant=\"warning\"])"
 	},
 	{
+		"id": "invalid-value-avatar-variant",
+		"message": "`variant` on nldd-avatar takes: organization, person.",
+		"context": "nldd-avatar[variant]:not([variant=\"organization\"], [variant=\"person\"])"
+	},
+	{
 		"id": "invalid-value-avatar-color",
 		"message": "`color` on nldd-avatar takes: content, neutral.",
 		"context": "nldd-avatar[color]:not([color=\"content\"], [color=\"neutral\"])"
@@ -1354,11 +1364,6 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-avatar-tooltip-timing",
 		"message": "`tooltip-timing` on nldd-avatar takes: delay, instant, never.",
 		"context": "nldd-avatar[tooltip-timing]:not([tooltip-timing=\"delay\"], [tooltip-timing=\"instant\"], [tooltip-timing=\"never\"])"
-	},
-	{
-		"id": "invalid-value-avatar-type",
-		"message": "`type` on nldd-avatar takes: organization, person.",
-		"context": "nldd-avatar[type]:not([type=\"organization\"], [type=\"person\"])"
 	},
 	{
 		"id": "invalid-value-badge-color",

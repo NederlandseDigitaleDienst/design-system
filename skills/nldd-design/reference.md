@@ -617,7 +617,7 @@ A note, tip or warning set apart in running text: what a `:::warning` becomes in
 
 ### `<nldd-avatar>`
 
-Shows one person or organization as a compact, round (person) or rounded (organization) representation. The content follows a fixed fallback chain: an image when `src` loads, otherwise the initials (from `initials` or derived from `name`), and otherwise a fallback icon. `type` sets both the shape and the fallback icon: `person` gives a circle with a person icon, `organization` a rounded square with a building icon. The shape belongs to the meaning and cannot be set on its own. Override the fallback icon with `icon` where that helps. Without `size` the avatar scales with its container, like `nldd-icon`; a fixed size (the same spacer-aligned scale, 16 through 96) is the exception. The initials and the icon scale along. Wide initials (WW, MMM) are scaled down automatically so they stay inside the shape. Four characters fit an organization acronym such as LVVN or JenV; they read well from 40px, so below that pick a shorter form. Accessibility: the host element carries the meaning. With a `name` (and without `decorative`) it gets `role="img"` with the name as its label. When the name already stands beside it as text, in an identity for instance, set `decorative` so the avatar stays hidden from assistive software. A dead `src` falls back to the initials or the icon, never to a broken-image icon.
+Shows one person or organization as a compact, round (person) or rounded (organization) representation. The content follows a fixed fallback chain: an image when `src` loads, otherwise the initials (from `initials` or derived from `name`), and otherwise a fallback icon. `variant` sets both the shape and the fallback icon: `person` gives a circle with a person icon, `organization` a rounded square with a building icon. The shape belongs to the meaning and cannot be set on its own. Override the fallback icon with `icon` where that helps. Without `size` the avatar scales with its container, like `nldd-icon`; a fixed size (the same spacer-aligned scale, 16 through 96) is the exception. The initials and the icon scale along. Wide initials (WW, MMM) are scaled down automatically so they stay inside the shape. Four characters fit an organization acronym such as LVVN or JenV; they read well from 40px, so below that pick a shorter form. Accessibility: the host element carries the meaning. With a `name` (and without `decorative`) it gets `role="img"` with the name as its label. When the name already stands beside it as text, in an identity for instance, set `decorative` so the avatar stays hidden from assistive software. A dead `src` falls back to the initials or the icon, never to a broken-image icon.
 
 **Keywords:** profile picture, profielfoto.
 
@@ -631,15 +631,18 @@ Shows one person or organization as a compact, round (person) or rounded (organi
 - `avatar-in-menu-bar-needs-icon-aligned` (hint): Set `icon-aligned` and `color="content"`, so the avatar lines up with the icons next to it and takes their color.
 - `avatar-needs-name`: An avatar with `href` or `button` needs `accessible-label` or `name`, or the control has no accessible name.
 - `avatar-no-small-target`: A link or button under 24px is too small a target (WCAG 2.5.8) unless nothing else to click lies within 24px of its center. Use size 24 or larger.
+- `avatar-type-renamed`: The `type` attribute is now `variant`. Rename it here and on every other nldd-avatar.
 
 **Attributes**
 
 | Attribute | Type | Description |
 | --- | --- | --- |
+| `variant` | `'person'\|'organization'` | `person` (the default: a circle, person icon) or `organization` (a rounded square, building icon) |
 | `color` | `string` | `neutral` (the default, a neutral fill) or `content` (fill in the content color: the `--context-content-color` a surface, a button or a selected row sets; text in the contrast color, so the avatar can replace an icon in a button for instance) |
 | `size` | `string` | `full` (the default) scales with the container, like nldd-icon; or a fixed size in px (spacer-aligned: 16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96). The initials and the icon scale along |
 | `icon-aligned` | `boolean` | Shrinks the visible shape to 5/6 of the host, centered, so the avatar aligns optically with an icon on the same grid (an icon glyph has built-in margin) |
-| `icon` | `string` | Overrides the type-dependent fallback icon |
+| `name` | `string` | Name of the person or organization; supplies the derived initials and the accessible label |
+| `icon` | `string` | Overrides the fallback icon of the variant |
 | `initials` | `string` | Explicit initials, at most 4 characters, such as `KvK` or `LVVN` (overrides what is derived from `name`; also for organization acronyms). Four characters read well from 40px; below that use a shorter form |
 | `src` | `string` | Image source; falls back to initials or icon when it fails to load |
 | `srcset` | `string` | Responsive source set for the image (the component sets `sizes` itself) |
@@ -648,8 +651,6 @@ Shows one person or organization as a compact, round (person) or rounded (organi
 | `decorative` | `boolean` | Hides the avatar from assistive software (use when the name already stands beside it as text) |
 | `no-tab` | `boolean` | Takes the control out of the tab order (tabindex="-1"), for an avatar that is a link or a button inside a roving container (a row of an nldd-list). Does nothing on a decorative avatar. |
 | `tooltip-timing` | `string` | When the name appears as a tooltip on hover or focus: `delay` (the default, after 700ms), `instant`, or `never`. An avatar shows no text, so without a tooltip the name is readable by assistive software only. A `decorative` avatar shows none regardless: there the name already stands beside it as text |
-| `name` | `string` | Name of the person or organization; supplies the derived initials and the accessible label |
-| `type` | `string` | `person` (circle, person icon) or `organization` (rounded, building icon); default `person` |
 | `href` | `string` | Makes the avatar a link to this URL; the shape itself becomes the link, so the hit area and the focus ring follow it. As a link or a button the avatar needs size 24 or larger (WCAG 2.5.8) |
 | `target` | `string` | Link target for href (e.g. '_blank'); completes rel and announces "Opens in a new tab". An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. |
 | `rel` | `string` | Link rel for href; with target '_blank', 'noopener noreferrer' is added to whatever you set |

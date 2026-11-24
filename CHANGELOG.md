@@ -12,6 +12,7 @@ here; consult the commit history if you need that level of detail.
 ### Breaking
 
 - **`spin-buttons` on `nldd-number-field` replaces `hide-spin-buttons`, and the buttons now sit together at the end by default.** The value lines up at the start, as in the other fields of a form, instead of centered between two buttons at the far ends of a wide field. `spin-buttons="split"` keeps the old layout, for a short counter such as a quantity; `spin-buttons="none"` leaves the buttons out, as `hide-spin-buttons` did. `nldd lint --fix` turns `hide-spin-buttons` into `spin-buttons="none"`.
+- **`type` on `nldd-avatar` is now `variant`**: `person` or `organization`, which sets the shape and the fallback icon together. `type` named the input type of a form field elsewhere in the system. The `avatar` of a candidate in the typeaheads of `nldd-text-editor` takes `variant` too. `nldd lint --fix` renames the attribute.
 - **`expanded` is no longer an attribute of `nldd-dropdown` and `nldd-token`.** Both set it themselves while their picker or menu is open, so writing it only made them look open. Open the menu of a token with its button, as before.
 
 ### Added

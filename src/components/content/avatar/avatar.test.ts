@@ -19,10 +19,10 @@ describe('nldd-avatar', () => {
 		expect(el.shadowRoot).not.toBeNull();
 	});
 
-	it('defaults to type person, default color, and a container-scaled size', async () => {
+	it('defaults to variant person, default color, and a container-scaled size', async () => {
 		el = await fixture('<nldd-avatar name="Bart van de Biezen"></nldd-avatar>');
 		await waitForUpdate(el);
-		expect(el.type).toBe('person');
+		expect(el.variant).toBe('person');
 		expect(el.color).toBe('neutral');
 		expect(el.size).toBe('full'); // full = scale to the container (like nldd-icon)
 	});
@@ -71,7 +71,7 @@ describe('nldd-avatar', () => {
 	});
 
 	it('shows an acronym of four characters, and caps longer initials there', async () => {
-		el = await fixture('<nldd-avatar type="organization" initials="LVVN" decorative></nldd-avatar>');
+		el = await fixture('<nldd-avatar variant="organization" initials="LVVN" decorative></nldd-avatar>');
 		await waitForUpdate(el);
 		expect(el.shadowRoot!.querySelector('.avatar__initials')!.textContent).toBe('LVVN');
 		el.initials = 'ABCDE';
@@ -212,7 +212,7 @@ describe('nldd-avatar', () => {
 	});
 
 	it('falls back to the building icon for an organization', async () => {
-		el = await fixture('<nldd-avatar type="organization" decorative></nldd-avatar>');
+		el = await fixture('<nldd-avatar variant="organization" decorative></nldd-avatar>');
 		await waitForUpdate(el);
 		expect(el.resolvedIcon).toBe('building');
 		expect(el.shadowRoot!.querySelector('.avatar__icon')!.getAttribute('icon')).toBe('building');

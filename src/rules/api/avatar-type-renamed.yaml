@@ -1,0 +1,8 @@
+severity: error
+context: 'nldd-avatar[type]'
+removed: ['type']
+fix: { rename: { type: variant } }
+message: 'The `type` attribute is now `variant`. Rename it here and on every other nldd-avatar.'
+examples:
+  passed: ['<nldd-avatar name="Team Beleid" variant="organization"></nldd-avatar>']
+  failed: ['<nldd-avatar name="Team Beleid" type="organization"></nldd-avatar>']
