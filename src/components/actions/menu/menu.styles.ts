@@ -190,7 +190,7 @@ export const menuStyles = css`
 
 	.menu__back-button-text {
 		min-width: 0;
-		/* No context: the text is the context the button sets. */
+		/* No context: the text reads the color the button sets. */
 		color: var(--context-content-color);
 		font: var(--primitives-font-body-md-regular-tight);
 		${wrapUiText}
@@ -347,7 +347,7 @@ export const menuItemStyles = css`
 
 	.menu__item-text {
 		min-width: 0;
-		/* No context: the text is the context the item sets. */
+		/* No context: the text reads the color the item sets. */
 		color: var(--context-content-color);
 		font: var(--primitives-font-body-md-regular-tight);
 		${wrapUiText}
