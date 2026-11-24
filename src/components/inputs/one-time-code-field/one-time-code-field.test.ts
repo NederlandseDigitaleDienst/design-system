@@ -422,6 +422,19 @@ describe('nldd-one-time-code-field', () => {
 		expect(event.defaultPrevented).toBe(false);
 	});
 
+	it('leaves a readonly or disabled field as it is on Backspace', async () => {
+		for (const flag of ['readonly', 'disabled']) {
+			if (el) cleanup(el);
+			el = await fixture(`<nldd-one-time-code-field value="12" ${flag}></nldd-one-time-code-field>`);
+			input().setSelectionRange(0, 0);
+			const event = new KeyboardEvent('keydown', { key: 'Backspace', bubbles: true, cancelable: true, composed: true });
+			input().dispatchEvent(event);
+			await el.updateComplete;
+			expect(event.defaultPrevented).toBe(false);
+			expect(el.value).toBe('12');
+		}
+	});
+
 	it('leaves Backspace during a composition to the input', async () => {
 		el = await fixture('<nldd-one-time-code-field></nldd-one-time-code-field>');
 		el.focus();
