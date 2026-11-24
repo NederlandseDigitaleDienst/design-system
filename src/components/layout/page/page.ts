@@ -208,7 +208,7 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 	@property({ type: Boolean, reflect: true, attribute: 'sticky-footer' })
 	stickyFooter = false;
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	parent = '';
 
 	@state()
@@ -445,7 +445,11 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 	show(): void {
 		const siblings = this._siblingPages;
 		const current = siblings.find((page) => page !== this && !page.hidden) ?? null;
-		const moveFocus = !!current && focusIsFree(current);
+		// Focus on the body counts only after a click in the current page: Safari
+		// does not focus the button it clicked. A show() from a timer leaves it.
+		const active = deepActiveElement();
+		const moveFocus = !!current && focusIsFree(current)
+			&& ((!!active && active !== document.body) || !!current._lastClicked);
 		if (current) {
 			this._focusReturn.remember(current._lastClicked);
 			current._lastClicked = null;
@@ -520,13 +524,23 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 		this._syncBackText();
 		const container = this.parentElement;
 		if (!this.parent || !container) return;
-		this._stepObserver = new MutationObserver(() => this._syncBackText());
-		this._stepObserver.observe(container, {
-			subtree: true,
-			childList: true,
-			attributes: true,
-			attributeFilter: ['text', 'id', 'hidden', 'slot'],
+		const observer = new MutationObserver(() => {
+			this._syncBackText();
+			observe();
 		});
+		// The pages beside this one, their headers and the title bars in those.
+		// Observing a node again replaces its options, so a rerun adds what is new.
+		const observe = () => {
+			observer.observe(container, { childList: true, subtree: false, attributes: true, attributeFilter: ['id', 'hidden', 'slot'] });
+			for (const page of this._siblingPages) {
+				observer.observe(page, { childList: true, attributes: true, attributeFilter: ['id', 'hidden', 'slot', 'accessible-label'] });
+				for (const header of page.querySelectorAll(':scope > [slot="header"]')) {
+					observer.observe(header, { childList: true, subtree: true, attributes: true, attributeFilter: ['text'] });
+				}
+			}
+		};
+		this._stepObserver = observer;
+		observe();
 	}
 
 	/**

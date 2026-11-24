@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate, nextFrames } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
 import './page.js';
@@ -798,6 +798,45 @@ describe('nldd-page – steps with parent', () => {
 		await pressBack('kiezer');
 		await nextFrames();
 		expect(document.activeElement).toBe(opener);
+	});
+
+	it('moves focus after a click that left it on the body, as in Safari', async () => {
+		await setup();
+		(document.activeElement as HTMLElement | null)?.blur();
+		page('opdracht').querySelector<HTMLElement>('#opener')!.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+		(document.activeElement as HTMLElement | null)?.blur();
+		page('kiezer').show();
+		await waitForUpdate(page('kiezer'));
+		await nextFrames();
+		expect(page('kiezer').contains(document.activeElement)).toBe(true);
+	});
+
+	it('leaves focus on the body for a show() nobody clicked for', async () => {
+		await setup();
+		(document.activeElement as HTMLElement | null)?.blur();
+		page('kiezer').show();
+		await waitForUpdate(page('kiezer'));
+		await nextFrames();
+		expect(document.activeElement).toBe(document.body);
+	});
+
+	it('does not sync on a text attribute in the content of a page beside it', async () => {
+		await setup();
+		page('kiezer').show();
+		await waitForUpdate(page('kiezer'));
+		const spy = vi.spyOn(page('kiezer') as Page & { _syncBackText(): void }, '_syncBackText');
+		page('opdracht').insertAdjacentHTML('beforeend', '<span text="a"></span>');
+		page('opdracht').querySelector('span')!.setAttribute('text', 'b');
+		await waitForUpdate(page('kiezer'));
+		const afterChild = spy.mock.calls.length;
+		page('opdracht').querySelector('span')!.setAttribute('text', 'c');
+		await waitForUpdate(page('kiezer'));
+		expect(spy.mock.calls.length).toBe(afterChild);
+	});
+
+	it('leaves a page without parent without a parent attribute', async () => {
+		await setup();
+		expect(page('opdracht').hasAttribute('parent')).toBe(false);
 	});
 
 	it('follows a page a framework shows by removing hidden', async () => {
