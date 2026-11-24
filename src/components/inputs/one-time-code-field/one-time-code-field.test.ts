@@ -399,6 +399,25 @@ describe('nldd-one-time-code-field', () => {
 		expect(el.value).toBe('12');
 	});
 
+	it('leaves Backspace on a selection from the start to the input', async () => {
+		el = await fixture('<nldd-one-time-code-field value="123"></nldd-one-time-code-field>');
+		el.focus();
+		await el.updateComplete;
+		input().setSelectionRange(0, input().value.length);
+		const event = new KeyboardEvent('keydown', { key: 'Backspace', bubbles: true, cancelable: true, composed: true });
+		input().dispatchEvent(event);
+		expect(event.defaultPrevented).toBe(false);
+	});
+
+	it('leaves Backspace during a composition to the input', async () => {
+		el = await fixture('<nldd-one-time-code-field></nldd-one-time-code-field>');
+		el.focus();
+		await el.updateComplete;
+		const event = new KeyboardEvent('keydown', { key: 'Backspace', isComposing: true, bubbles: true, cancelable: true, composed: true });
+		input().dispatchEvent(event);
+		expect(event.defaultPrevented).toBe(false);
+	});
+
 	it('keeps the focus ring on a readonly field, without a caret, and leaves its value alone', async () => {
 		el = await fixture('<nldd-one-time-code-field value="123456" readonly></nldd-one-time-code-field>');
 		el.focus();
