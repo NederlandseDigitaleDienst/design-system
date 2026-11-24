@@ -24,7 +24,7 @@ import { loadData } from '../../lint/linter.js';
 import { collectComponents, collectPatterns, parseStoryFile, repoRoot } from './sources.js';
 import { codeViewer, escapeHtml, headingId, renderMarkdown } from './markdown.js';
 import { controlFor } from './attribute-values.js';
-import { sortByCanon } from '../../scripts/check-control-order.js';
+import { readCanon, sortByCanon } from '../../scripts/check-control-order.js';
 import { MARKDOWN_INSERTS } from './skills.js';
 import { DEFAULT_THEME, themesByHue } from '../../scripts/lib/themes.js';
 
@@ -507,6 +507,9 @@ function controlsOf(component) {
 		attributes: sortByCanon(element.attributes ?? [], (a) => a.name, element.tagName.replace(/^nldd-/, ''))
 			.map((a) => controlFor(file, a, known[a.name]?.values))
 			.filter(Boolean),
+		// The content of a slot comes from the story, so the client places it
+		// among the attributes by the same canon.
+		canon: readCanon(),
 	};
 }
 

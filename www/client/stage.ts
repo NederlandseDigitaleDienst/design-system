@@ -43,6 +43,7 @@ interface AttributeControl {
 interface ControlsData {
 	tag: string;
 	attributes: AttributeControl[];
+	canon?: string[];
 }
 
 type Args = Record<string, unknown>;
@@ -115,6 +116,7 @@ function isChoice(control: AttributeControl, argType?: ArgType): boolean {
 let infoCount = 0;
 
 const kebab = (name: string) => name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+const camel = (name: string) => name.replace(/-([a-z0-9])/g, (_, c: string) => c.toUpperCase());
 
 function element<K extends keyof HTMLElementTagNameMap>(
 	tag: K,
@@ -656,7 +658,15 @@ export class SiteStage extends HTMLElement {
 		// after the name, so the name and the control stay side by side.
 		const infos: { label: HTMLElement; button: HTMLElement; text: HTMLElement }[] = [];
 		const popovers: HTMLElement[] = [];
-		const row = (name: string, input: HTMLElement, description: string) => {
+		// The content of a slot stands where the canon puts its name among the
+		// attributes (a quote before its cite), not after all of them.
+		const canon = this.controls?.canon ?? [];
+		const rankOf = (name: string) => {
+			const at = canon.findIndex((entry) => entry.toLowerCase() === camel(name).toLowerCase());
+			return at < 0 ? Infinity : at;
+		};
+		const rows: { name: string; item: HTMLElement; content: boolean }[] = [];
+		const row = (name: string, input: HTMLElement, description: string, content = false) => {
 			const title = element('p', '', `${name} `);
 			const label = nldd('text-cell', {}, [title]);
 			if (description) {
@@ -688,7 +698,7 @@ export class SiteStage extends HTMLElement {
 			input.setAttribute('accessible-label', name);
 			const fits = ['nldd-switch', 'nldd-segmented-control'].includes(input.localName);
 			const cell = nldd('cell', { 'horizontal-alignment': 'right', 'vertical-alignment': 'top', ...(fits ? {} : { width: FIELD_WIDTH }) }, [input]);
-			list.append(nldd('list-item', {}, [label, nldd('spacer-cell', { size: '12' }), cell]));
+			rows.push({ name, item: nldd('list-item', {}, [label, nldd('spacer-cell', { size: '12' }), cell]), content });
 		};
 
 		for (const attribute of attributes) {
@@ -744,8 +754,15 @@ export class SiteStage extends HTMLElement {
 			}, argType);
 			const input = build();
 			this.contentInputs.set(key, { input, build });
-			row(name, input, control.description);
+			row(name, input, control.description, true);
 		}
+		const ordered = rows.filter((r) => !r.content);
+		for (const r of rows.filter((r) => r.content)) {
+			const rank = rankOf(r.name);
+			const before = ordered.findIndex((o) => !o.content && rankOf(o.name) > rank);
+			ordered.splice(before < 0 ? ordered.length : before, 0, r);
+		}
+		list.append(...ordered.map((r) => r.item));
 		this.resets.push({
 			atStart: () =>
 				this.quick.every((entry) => this.atStart(entry)) &&
