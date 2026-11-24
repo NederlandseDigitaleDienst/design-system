@@ -15,6 +15,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.29.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.28.1...v0.29.0) (2026-11-24)
+
 ### Highlights
 
 - **Long text no longer runs out of a narrow space, in every component.** A title, label or button breaks a word of at least 12 letters by syllable, with a hyphen, and between two letters when even that does not fit. Body text, code and URLs break between two letters. A cell keeps at least 160px, or its longest word. Set `lang` on the page for hyphenation; without it a long word still breaks, just without a hyphen. Each component is listed under Fixed.
