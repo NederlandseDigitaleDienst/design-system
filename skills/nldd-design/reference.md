@@ -3192,7 +3192,7 @@ A page layout with optional sticky header and footer. Without sticky-header, the
 
 | Slot | Description |
 | --- | --- |
-| `header` | Header content |
+| `header` | Header content. Put a `nldd-top-title-bar` straight in this slot, not in a container: the page measures the bar there, so an anchor scrolled to stays clear of it |
 | _(default)_ | Main content (scrollable) |
 | `footer` | Footer content |
 

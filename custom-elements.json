@@ -42343,7 +42343,7 @@
           "slots": [
             {
               "name": "header",
-              "description": "Header content"
+              "description": "Header content. Put a `nldd-top-title-bar` straight in this slot, not in a container: the page measures the bar there, so an anchor scrolled to stays clear of it"
             },
             {
               "name": "",
