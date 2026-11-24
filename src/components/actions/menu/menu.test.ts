@@ -2230,6 +2230,32 @@ describe('nldd-menu drill-in status announcements (WCAG 4.1.3)', () => {
 		cleanup(root);
 	});
 
+	it('draws **bold** in the back button, as the item does', async () => {
+		forceDrillIn(true);
+		const root = await fixture<HTMLElement>(`
+			<nldd-menu>
+				<nldd-menu-item text="Aanvraag **A-1042**">
+					<nldd-menu>
+						<nldd-menu-item text="Open"></nldd-menu-item>
+					</nldd-menu>
+				</nldd-menu-item>
+			</nldd-menu>
+		`);
+		await waitForUpdate(root);
+		const item = root.querySelector(':scope > nldd-menu-item') as HTMLElement;
+		const submenu = item.querySelector(':scope > nldd-menu') as HTMLElement;
+		(root as HTMLElement & { showPopover: () => void }).showPopover();
+		await waitForUpdate(root);
+		openSubmenu(item, submenu);
+		await waitForUpdate(submenu);
+
+		const text = submenu.shadowRoot!.querySelector('.menu__back-button-text')!;
+		expect(text.textContent).toBe('Aanvraag A-1042');
+		expect(text.querySelector('strong, b')?.textContent).toBe('A-1042');
+
+		cleanup(root);
+	});
+
 	it('draws the back button without cells, and breaks its text inside it', async () => {
 		const removeTokens = loadTokens();
 		forceDrillIn(true);

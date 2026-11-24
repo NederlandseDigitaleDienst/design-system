@@ -3,7 +3,7 @@ import type { NLDDMenuItem, NLDDMenu, NLDDMenuGroup } from './menu.js';
 import { sanitizeUrl } from '../../../utilities/sanitize-url.js';
 import { linkRel } from '../../../utilities/link-rel.js';
 import { linkHintKey } from '../../../utilities/link-hint.js';
-import { renderQueryMark } from '../../../utilities/render-marked.js';
+import { renderBold, renderQueryMark } from '../../../utilities/render-marked.js';
 
 export type MenuVariant = 'menu' | 'listbox' | 'navigation';
 
@@ -65,7 +65,7 @@ export function menuTemplate(this: NLDDMenu, isEmpty: boolean, variant: MenuVari
 							@mouseenter=${this._handleBackMouseenter}
 						>
 							<span class="menu__back-button-icon"><nldd-icon icon="chevron-left"></nldd-icon></span>
-							<span class="menu__back-button-text">${this._parentItem!.text}</span>
+							<span class="menu__back-button-text">${renderBold(this._parentItem!.text)}</span>
 						</button>
 						<!-- Pure visual divider; role="none" keeps strict ARIA validators
 						     quiet (a focusable role="separator" inside a menu would need
