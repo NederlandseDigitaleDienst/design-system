@@ -662,8 +662,8 @@
     "@semantic-release/exec": "^7.1.0",
     "@semantic-release/git": "^11.0.1",
     "@types/react": "^19.3.0",
-    "@vitest/browser-playwright": "5.1.0",
-    "@vitest/coverage-v8": "5.1.0",
+    "@vitest/browser-playwright": "5.1.1",
+    "@vitest/coverage-v8": "5.1.1",
     "ajv": "^8.20.0",
     "axe-core": "^4.13.0",
     "conventional-changelog": "^8.1.0",
@@ -723,7 +723,7 @@
     "conventional-changelog-conventionalcommits": "10.2.1"
   },
   "optionalDependencies": {
-    "oxc-parser": "^0.158.0"
+    "oxc-parser": "^0.159.0"
   },
   "bin": {
     "nldd": "lint/cli.js"
