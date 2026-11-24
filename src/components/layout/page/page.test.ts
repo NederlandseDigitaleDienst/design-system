@@ -685,6 +685,43 @@ describe('nldd-page – steps with parent', () => {
 		expect(bar('opdracht')._backText).toBe('');
 	});
 
+	it('follows the title of the parent while the step is in view', async () => {
+		await setup();
+		page('kiezer').show();
+		await waitForUpdate(page('kiezer'));
+		bar('opdracht').setAttribute('text', 'Opdracht A-1042');
+		await waitForUpdate(page('kiezer'));
+		expect(bar('kiezer')._backText).toBe('Opdracht A-1042');
+
+		(bar('opdracht') as Bar & { text: string }).text = 'Opdracht A-1043';
+		await bar('opdracht').updateComplete;
+		await waitForUpdate(page('kiezer'));
+		expect(bar('kiezer')._backText).toBe('Opdracht A-1043');
+	});
+
+	it('follows a parent title bar added later, also inside a wrapper', async () => {
+		await setup();
+		page('opdracht').querySelector('nldd-top-title-bar')!.remove();
+		page('opdracht').setAttribute('accessible-label', 'Opdracht bewerken');
+		page('kiezer').show();
+		await waitForUpdate(page('kiezer'));
+		expect(bar('kiezer')._backText).toBe('Opdracht bewerken');
+
+		page('opdracht').insertAdjacentHTML('afterbegin', '<div slot="header"><nldd-top-title-bar text="Opdracht"></nldd-top-title-bar></div>');
+		await waitForUpdate(page('kiezer'));
+		expect(bar('kiezer')._backText).toBe('Opdracht');
+	});
+
+	it('follows an accessible-label set as a property on a parent without a title bar', async () => {
+		await setup();
+		page('opdracht').querySelector('nldd-top-title-bar')!.remove();
+		page('kiezer').show();
+		await waitForUpdate(page('kiezer'));
+		(page('opdracht') as Page & { accessibleLabel: string }).accessibleLabel = 'Opdracht bewerken';
+		await waitForUpdate(page('opdracht'));
+		expect(bar('kiezer')._backText).toBe('Opdracht bewerken');
+	});
+
 	it('keeps a back-text the consumer set', async () => {
 		await setup();
 		bar('kiezer').setAttribute('back-text', 'Terug');

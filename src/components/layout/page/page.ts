@@ -392,7 +392,11 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 		if (retagged) this._setupMainSlotListener();
 		if (changed.has('stickyHeader') || (retagged && this._scrollConfigured)) this._configureScroll();
 		this._syncSecondMain();
-		if (changed.has('parent')) this._syncBackText();
+		if (changed.has('parent')) this._watchSteps();
+		// Not reflected, so the observer of a step does not see it change.
+		if (changed.has('accessibleLabel') && this.id) {
+			for (const page of this._siblingPages) if (page.parent === this.id) page._syncBackText();
+		}
 	}
 
 	/** Where focus goes back to when this page's back button shows its parent. */
@@ -400,8 +404,8 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 	/** The last control clicked in this page, for Safari, where a click does not
 	 *  focus a button and there is no focus to remember. */
 	private _lastClicked: HTMLElement | null = null;
-	/** Watches this page's header and its own `hidden`, so the back button
-	 *  follows a title bar added later and a page a framework shows. */
+	/** Watches the pages beside a step, so its back button follows the title of
+	 *  its parent page, a title bar added later and a page a framework shows. */
 	private _stepObserver: MutationObserver | null = null;
 
 	/** @internal The pages beside this one: same parent, same slot. */
@@ -425,9 +429,11 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 		return header.querySelector('nldd-top-title-bar');
 	}
 
-	/** @internal What this page is called: its title bar's text, or else its label. */
+	/** @internal What this page is called: its title bar's text, or else its
+	 *  label. The attribute first, which is there before the bar is upgraded. */
 	get _title(): string {
-		return this._titleBar?.text || this.accessibleLabel;
+		const bar = this._titleBar;
+		return bar?.getAttribute('text') || bar?.text || this.accessibleLabel;
 	}
 
 	/**
@@ -499,16 +505,25 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 
 	/** Hands the parent page's title to the title bar, which shows it when it
 	 *  has no `back-text` of its own. */
-	private _syncBackText(): void {
+	/** @internal */
+	_syncBackText(): void {
 		const bar = this._titleBar;
 		if (bar) bar._parentPageText = this._parentPage?._title ?? '';
 	}
 
 	private _watchSteps(): void {
 		this._stepObserver?.disconnect();
-		this._stepObserver = new MutationObserver(() => this._syncBackText());
-		this._stepObserver.observe(this, { attributes: true, attributeFilter: ['hidden'], childList: true });
+		this._stepObserver = null;
 		this._syncBackText();
+		const container = this.parentElement;
+		if (!this.parent || !container) return;
+		this._stepObserver = new MutationObserver(() => this._syncBackText());
+		this._stepObserver.observe(container, {
+			subtree: true,
+			childList: true,
+			attributes: true,
+			attributeFilter: ['text', 'id', 'hidden', 'slot'],
+		});
 	}
 
 	/**
