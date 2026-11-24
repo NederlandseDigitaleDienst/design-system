@@ -352,7 +352,7 @@ export const buttonStyles = css`
 	}
 
 	:host([width="full"]) {
-		display: block;
+		display: flex;
 		width: 100%;
 	}
 

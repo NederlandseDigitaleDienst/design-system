@@ -23,6 +23,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **`nldd-split-button` at `size="xs"` is as tall as its buttons**, and the main action and the chevron line up. The split button was 27px tall, the height of a line of text, with the buttons shifted inside it. A `nldd-button` of `width="full"` no longer grows with the line height around it either. A split button of `width="full"` now fills its container: only the outer box did, and the buttons kept their own width.
 - **A long word in `nldd-text` no longer runs out of a narrow box.** A compound, URL or code wider than the line now breaks between two letters at every body size, as text in `nldd-rich-text` does. Before, only the display sizes did that, and a card or column narrower than one word lost the end of it (WCAG 1.4.10).
 - **A long word in a `dt` or `dd` of `nldd-rich-text` no longer runs out of the column**, such as a hash or a URL. The columns of a definition list no longer widen to their longest word either.
 - **Inline `code` breaks when it is wider than the line**, in `nldd-rich-text` and in `nldd-text`. Before, it only did in a table cell of `nldd-rich-text`, and a tag name in a `dd` or a sentence ran out of a narrow column.
