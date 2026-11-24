@@ -389,6 +389,19 @@ describe('nldd-one-time-code-field', () => {
 		expect(active()).toBe(3);
 	});
 
+	it('empties a filled first box on Backspace with the caret before it, as the box is the unit', async () => {
+		el = await fixture('<nldd-one-time-code-field value="12"></nldd-one-time-code-field>');
+		await press(0);
+		input().setSelectionRange(0, 0);
+		const event = new KeyboardEvent('keydown', { key: 'Backspace', bubbles: true, cancelable: true, composed: true });
+		input().dispatchEvent(event);
+		await el.updateComplete;
+		expect(event.defaultPrevented).toBe(true);
+		expect(el.charAt(0)).toBe('');
+		expect(el.charAt(1)).toBe('2');
+		expect(active()).toBe(0);
+	});
+
 	it('leaves Backspace to beforeinput where the input has something to delete', async () => {
 		el = await fixture('<nldd-one-time-code-field value="12"></nldd-one-time-code-field>');
 		el.focus();

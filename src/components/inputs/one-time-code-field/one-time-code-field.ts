@@ -559,7 +559,8 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 		if (this._asField || e.altKey || e.ctrlKey || e.metaKey) return;
 		// With nothing before the caret in the input there is nothing to delete,
 		// so Safari sends no beforeinput, and Backspace in an empty box did nothing.
-		// A selection and a composition stay with the input.
+		// A filled first box with the caret before it empties too: the box is the
+		// unit, as everywhere else. A selection and a composition stay with the input.
 		const { selectionStart, selectionEnd } = this._input;
 		if (
 			e.key === 'Backspace' && !e.isComposing && !this.readonly && !this.disabled

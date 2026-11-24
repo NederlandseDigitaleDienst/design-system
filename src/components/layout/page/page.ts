@@ -75,6 +75,7 @@ import { pageTemplate } from './page.template.js';
 import { setState } from '../../../utilities/element-state.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { LayoutPass, sharedResizeObserver } from '../../../utilities/layout-pass.js';
+import type { CompactingBar } from '../../navigation/top-title-bar/top-title-bar.js';
 
 /** What a page measures of its bars and its scroller, before it writes any of it. */
 interface PageInsets {
@@ -487,7 +488,7 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 	 */
 	private _measureBarGrowth(): number {
 		let growth = 0;
-		for (const el of this.querySelectorAll<HTMLElement & { _compactHeight?: number }>(':scope > [slot="header"]')) {
+		for (const el of this.querySelectorAll<HTMLElement & Partial<CompactingBar>>(':scope > [slot="header"]')) {
 			if (el._compactHeight === undefined) continue;
 			growth += Math.max(0, el._compactHeight - el.offsetHeight);
 		}

@@ -81,8 +81,16 @@ const anchorObserver = sharedResizeObserver<NLDDTopTitleBar>(checkAnchors);
 
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
+/**
+ * What nldd-page reads from a bar in its header: the height the bar takes once
+ * compact. Shared as a type, so renaming it breaks the page's type check.
+ */
+export interface CompactingBar {
+	readonly _compactHeight: number | undefined;
+}
+
 @customElement('nldd-top-title-bar')
-export class NLDDTopTitleBar extends LitElement {
+export class NLDDTopTitleBar extends LitElement implements CompactingBar {
 	static override styles = topTitleBarStyles;
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
