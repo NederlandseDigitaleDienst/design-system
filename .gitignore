@@ -3,6 +3,8 @@ node_modules/
 
 # Build output
 dist/
+storybook-static/
+.astro/
 
 # Environment variables (contains secrets)
 .env
