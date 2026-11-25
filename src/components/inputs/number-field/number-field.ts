@@ -18,6 +18,7 @@
  * @attr {number} step - Step size (default: 1)
  * @attr {boolean} required - A value has to be filled in. An empty field is then invalid.
  * @attr {boolean} disabled - Disabled state
+ * @attr {boolean} readonly - Readonly state: the value shows and submits but cannot be changed, and the +/- buttons are disabled
  * @attr {object} translations - Translations; unspecified keys fall back to Dutch
  *
  * @fires input - When the value changes (typing, +/- button, or on-commit correction); not for typing that reads as the same number, such as `1.0` after `1`. detail: { value: number | null }, null when the field is empty
@@ -123,6 +124,10 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
+	/** The value shows and submits but cannot be changed; the +/- buttons are disabled. */
+	@property({ type: Boolean, reflect: true })
+	readonly = false;
+
 	/** Override one or more translation keys. Unspecified keys fall back to Dutch. */
 	@property({ type: Object })
 	translations: Partial<NLDDNumberFieldTranslations> = {};
@@ -183,12 +188,12 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 	// — Actions ——————————————————————————————————————————————————————————————
 
 	public _handleDecrease(): void {
-		if (this.disabled) return;
+		if (this.disabled || this.readonly) return;
 		this._commitValue(this.value === null ? this._startValue() : this.value - this.step);
 	}
 
 	public _handleIncrease(): void {
-		if (this.disabled) return;
+		if (this.disabled || this.readonly) return;
 		this._commitValue(this.value === null ? this._startValue() : this.value + this.step);
 	}
 

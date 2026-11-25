@@ -571,4 +571,15 @@ describe('nldd-number-field – spin-buttons', () => {
 		expect(end).toBe(none);
 		expect(parseFloat(end)).toBeGreaterThan(6);
 	});
+
+	it('readonly: the input is read-only, the spin buttons are disabled, and stepping does nothing', async () => {
+		el = await fixture('<nldd-number-field value="5" readonly></nldd-number-field>');
+		const nf = el as NLDDNumberField;
+		const input = nf.shadowRoot!.querySelector('input')!;
+		expect(input.readOnly).toBe(true);
+		expect([...nf.shadowRoot!.querySelectorAll('nldd-icon-button')].every((b) => b.hasAttribute('disabled'))).toBe(true);
+		nf._handleIncrease();
+		await waitForUpdate(el);
+		expect(nf.value).toBe(5);
+	});
 });

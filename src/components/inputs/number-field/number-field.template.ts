@@ -16,7 +16,7 @@ export function numberFieldTemplate(component: NLDDNumberField): TemplateResult 
 				icon="minus"
 				text=${component._t('components.number-field.decrement-action')}
 				tooltip-timing="never"
-				?disabled=${component.disabled || !canDecrease}
+				?disabled=${component.disabled || component.readonly || !canDecrease}
 				@click=${component._handleDecrease}
 			></nldd-icon-button>
 		</div>
@@ -29,7 +29,7 @@ export function numberFieldTemplate(component: NLDDNumberField): TemplateResult 
 				icon="plus"
 				text=${component._t('components.number-field.increment-action')}
 				tooltip-timing="never"
-				?disabled=${component.disabled || !canIncrease}
+				?disabled=${component.disabled || component.readonly || !canIncrease}
 				@click=${component._handleIncrease}
 			></nldd-icon-button>
 		</div>
@@ -50,6 +50,7 @@ export function numberFieldTemplate(component: NLDDNumberField): TemplateResult 
 				max=${Number.isFinite(component.max) ? component.max : nothing}
 				step=${component.step}
 				?disabled=${component.disabled}
+				?readonly=${component.readonly}
 				?required=${component.required}
 				name=${component.name || nothing}
 				@keydown=${component._handleKeydown}
