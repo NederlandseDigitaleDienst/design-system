@@ -48,7 +48,7 @@
 import { LitElement, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
-import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
+import { FormAssociated, uncheckedValidity, type FormValue, type OwnValidity } from '../../../utilities/form-associated-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import type { RadioPosition } from '../../../utilities/radio-position.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
@@ -271,6 +271,15 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 		// Only checkbox/radio variants participate in form submission.
 		const submits = this.type === 'checkbox' || this.type === 'radio';
 		return submits && this.selected ? this.value : null;
+	}
+
+	/** A checkbox answers `required` itself, group-aware: it is satisfied when it,
+	 *  or any sibling in the group, is selected (`_groupHasSelection`). So a
+	 *  required group asks for at least one, not for every box. Radio answers it
+	 *  through its hidden validation input; a plain button is no form control. */
+	override ownValidity(): OwnValidity | null {
+		if (this.type !== 'checkbox') return null;
+		return uncheckedValidity({ required: this.required, checked: this.selected || this._groupHasSelection, disabled: this.disabled });
 	}
 
 	override connectedCallback(): void {
