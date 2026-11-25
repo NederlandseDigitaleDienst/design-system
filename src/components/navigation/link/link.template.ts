@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import type { NLDDLink } from './link.js';
 import { linkRel } from '../../../utilities/link-rel.js';
+import { sanitizeUrl } from '../../../utilities/sanitize-url.js';
 import { downloadLinkHintKey, markDownloadTarget } from '../../../utilities/link-hint.js';
 
 interface TemplateHelpers {
@@ -42,7 +43,7 @@ export function template(this: NLDDLink, helpers: TemplateHelpers) {
 		: nothing}</slot>`;
 	const label = html`<span class="link__label">${this._textSlot.has ? nothing : this.text}<slot @slotchange=${helpers.handleDefaultSlotChange}></slot></span>`;
 	return html`<a class="link"
-			href=${this.disabled ? nothing : (this.href || nothing)}
+			href=${this.disabled ? nothing : (sanitizeUrl(this.href, { allowData: this.download !== undefined }) || nothing)}
 			role=${this.disabled ? 'link' : nothing}
 			tabindex=${this.noTab ? '-1' : (this.disabled ? '0' : nothing)}
 			target=${this.disabled ? nothing : (this.target || nothing)}

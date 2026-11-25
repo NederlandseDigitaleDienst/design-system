@@ -1180,4 +1180,16 @@ describe('nldd-button – breaking long words', () => {
 		expect(getComputedStyle(text).textOverflow).toBe('ellipsis');
 		expect(getComputedStyle(text).whiteSpace).toBe('nowrap');
 	});
+
+	it('strips a javascript: href', async () => {
+		el = await fixture('<nldd-button href="javascript:alert(1)" text="x"></nldd-button>');
+		const a = (el as NLDDButton).shadowRoot!.querySelector('a');
+		expect(a?.getAttribute('href')).toBeNull();
+	});
+
+	it('keeps a blob: href on a download link', async () => {
+		el = await fixture('<nldd-button href="blob:https://example.com/u" download="f.csv" text="x"></nldd-button>');
+		const a = (el as NLDDButton).shadowRoot!.querySelector('a');
+		expect(a?.getAttribute('href')).toBe('blob:https://example.com/u');
+	});
 });

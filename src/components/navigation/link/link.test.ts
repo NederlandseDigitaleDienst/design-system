@@ -428,4 +428,16 @@ describe('<nldd-link> with an <a> of its own', () => {
 		expect(a.hasAttribute('aria-description')).toBe(false);
 		expect(el.shadowRoot!.querySelector('a')!.getAttribute('href')).toBe('/componenten');
 	});
+
+	it('strips a javascript: href', async () => {
+		el = await fixture('<nldd-link href="javascript:alert(1)">x</nldd-link>');
+		const a = (el as NLDDLink).shadowRoot!.querySelector('a');
+		expect(a?.getAttribute('href')).toBeNull();
+	});
+
+	it('keeps a blob: href on a download link', async () => {
+		el = await fixture('<nldd-link href="blob:https://example.com/u" download="f.csv">x</nldd-link>');
+		const a = (el as NLDDLink).shadowRoot!.querySelector('a');
+		expect(a?.getAttribute('href')).toBe('blob:https://example.com/u');
+	});
 });

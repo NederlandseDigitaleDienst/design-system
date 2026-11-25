@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import type { NLDDButton } from './button.js';
 import { linkRel } from '../../../utilities/link-rel.js';
+import { sanitizeUrl } from '../../../utilities/sanitize-url.js';
 import { downloadLinkHintKey, markDownloadTarget } from '../../../utilities/link-hint.js';
 import { hasShortcut, shortcutLabel } from '../../../utilities/shortcut.js';
 import '../../content/keyboard-shortcut/keyboard-shortcut.js';
@@ -121,7 +122,7 @@ export function template(this: NLDDButton, helpers: TemplateHelpers) {
 		const resolvedRel = linkRel(this.rel, this.target);
 		return html`
 			<a class=${buttonClass}
-				href=${this.href}
+				href=${sanitizeUrl(this.href, { allowData: this.download !== undefined }) || nothing}
 				target=${this.target || nothing}
 				rel=${resolvedRel || nothing}
 				download=${this.download ?? nothing}
