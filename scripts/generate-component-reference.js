@@ -35,7 +35,7 @@ const CATEGORY_TITLES = {
 	forms: 'Forms',
 	inputs: 'Inputs',
 	layout: 'Layout',
-	'lists-and-menus': 'Lists & menus',
+	'lists-and-tables': 'Lists & tables',
 	navigation: 'Navigation',
 	'status-and-feedback': 'Status & feedback',
 };
@@ -94,6 +94,17 @@ function renderComponent(c) {
 		for (const a of c.attrs) {
 			out.push(
 				`| \`${escapeCell(a.name)}\` | ${a.type ? `\`${escapeCell(a.type)}\`` : '—'} | ${escapeCell(a.description) || '—'} |`,
+			);
+		}
+		out.push('');
+	}
+	if (c.properties?.length) {
+		out.push('**Properties** (set in JavaScript, no matching attribute)', '');
+		out.push('| Property | Type | Description |');
+		out.push('| --- | --- | --- |');
+		for (const p of c.properties) {
+			out.push(
+				`| \`${escapeCell(p.name)}\` | ${p.type ? `\`${escapeCell(p.type)}\`` : '—'} | ${escapeCell(p.description) || '—'} |`,
 			);
 		}
 		out.push('');
