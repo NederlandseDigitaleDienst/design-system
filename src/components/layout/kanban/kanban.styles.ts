@@ -1,5 +1,5 @@
 import { css } from 'lit';
-import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { inheritedTextReset, visuallyHidden } from '../../../assets/styles/shadow-resets.js';
 
 export const kanbanStyles = css`
 
@@ -61,12 +61,7 @@ export const kanbanStyles = css`
 	}
 
 	.kanban__announcer {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		clip-path: inset(50%);
-		white-space: nowrap;
-		overflow: hidden;
+		${visuallyHidden}
 	}
 `;
 

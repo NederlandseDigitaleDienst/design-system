@@ -1,6 +1,6 @@
 import { css, unsafeCSS, type CSSResult } from 'lit';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
-import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { inheritedTextReset, visuallyHidden } from '../../../assets/styles/shadow-resets.js';
 import { wrapUiText } from '../../../assets/styles/text-wrap.js';
 
 const smMax = unsafeCSS(queryBreakpoints.smMax);
@@ -15,12 +15,7 @@ const compactBelow = (host: string, width: CSSResult) => css`
 	${unsafeCSS(host)} .step-bar__items {
 		/* Stays in the DOM for assistive tech. Standard visually-hidden recipe. */
 		@container (max-width: ${width}) {
-			position: absolute;
-			width: 1px;
-			height: 1px;
-			overflow: hidden;
-			clip-path: inset(50%);
-			white-space: nowrap;
+			${visuallyHidden}
 		}
 	}
 
@@ -259,12 +254,7 @@ export const stepBarItemStyles = css`
 
 	/* Standard visually-hidden recipe. */
 	.step-bar__item-status {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		clip-path: inset(50%);
-		white-space: nowrap;
+		${visuallyHidden}
 	}
 
 	.step-bar__item-control {

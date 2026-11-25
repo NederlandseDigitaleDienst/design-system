@@ -1,5 +1,5 @@
 import { css } from 'lit';
-import { linksFollowContent } from '../../../assets/styles/shadow-resets.js';
+import { linksFollowContent, visuallyHidden } from '../../../assets/styles/shadow-resets.js';
 
 export const listItemStyles = css`
 	:host {
@@ -152,15 +152,7 @@ export const listItemStyles = css`
 	}
 
 	.list-item__link-hint {
-		position: absolute;
-		margin: -1px;
-		border: 0;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		padding: 0;
-		white-space: nowrap;
-		clip-path: inset(50%);
+		${visuallyHidden}
 	}
 
 

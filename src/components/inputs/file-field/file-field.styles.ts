@@ -1,5 +1,5 @@
 import { css } from 'lit';
-import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { inheritedTextReset, visuallyHidden } from '../../../assets/styles/shadow-resets.js';
 import { wrapCodeText, wrapUiText } from '../../../assets/styles/text-wrap.js';
 
 export const fileFieldStyles = css`
@@ -454,12 +454,7 @@ export const fileFieldStyles = css`
 
 	.file-field__full-name,
 	.file-field__status {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		clip-path: inset(50%);
-		white-space: nowrap;
-		overflow: hidden;
+		${visuallyHidden}
 	}
 
 	.file-field__name-start {

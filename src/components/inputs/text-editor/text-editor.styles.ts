@@ -1,5 +1,5 @@
 import { css } from 'lit';
-import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { inheritedTextReset, visuallyHidden } from '../../../assets/styles/shadow-resets.js';
 
 export const textEditorStyles = css`
 
@@ -672,12 +672,7 @@ export const textEditorStyles = css`
 	}
 
 	.cm-md-task-box-label {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		clip-path: inset(50%);
-		white-space: nowrap;
+		${visuallyHidden}
 	}
 
 	/* The opening line of a code block is its head: the language on the left,
@@ -727,12 +722,7 @@ export const textEditorStyles = css`
 	}
 
 	.cm-md-code-copy-status {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		clip-path: inset(50%);
-		white-space: nowrap;
+		${visuallyHidden}
 	}
 
 	.cm-md-code-language {
@@ -895,12 +885,7 @@ export const textEditorStyles = css`
 	}
 
 	:host .cm-nldd-typeahead-status {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		clip-path: inset(50%);
-		white-space: nowrap;
+		${visuallyHidden}
 	}
 
 	:host .cm-tooltip.cm-nldd-typeahead-empty {

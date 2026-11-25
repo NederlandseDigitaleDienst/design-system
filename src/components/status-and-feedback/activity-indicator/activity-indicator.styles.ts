@@ -1,5 +1,5 @@
 import { css } from 'lit';
-import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { inheritedTextReset, visuallyHidden } from '../../../assets/styles/shadow-resets.js';
 
 export const activityIndicatorStyles = css`
 	:host {
@@ -219,12 +219,7 @@ export const activityIndicatorStyles = css`
 	   content of the role="status" host, but is visually hidden.
 	   Standard visually-hidden recipe. */
 	.activity-indicator__text--visually-hidden {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		clip-path: inset(50%);
-		white-space: nowrap;
+		${visuallyHidden}
 	}
 
 

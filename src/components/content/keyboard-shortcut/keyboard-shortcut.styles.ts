@@ -1,5 +1,5 @@
 import { css } from 'lit';
-import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { inheritedTextReset, visuallyHidden } from '../../../assets/styles/shadow-resets.js';
 
 export const keyboardShortcutStyles = css`
 	:host {
@@ -143,12 +143,7 @@ export const keyboardShortcutStyles = css`
 
 	/* Standard visually-hidden recipe. */
 	.keyboard-shortcut__key-name {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		clip-path: inset(50%);
-		white-space: nowrap;
+		${visuallyHidden}
 	}
 
 	.keyboard-shortcut__separator {

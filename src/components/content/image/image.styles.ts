@@ -1,5 +1,5 @@
 import { css } from 'lit';
-import { slottedReset, inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { inheritedTextReset, slottedReset, visuallyHidden } from '../../../assets/styles/shadow-resets.js';
 import { wrapBodyText } from '../../../assets/styles/text-wrap.js';
 
 export const imageStyles = css`
@@ -355,12 +355,7 @@ export const imageStyles = css`
 	   the announcement. Standard visually-hidden recipe. */
 
 	.image__status {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		clip-path: inset(50%);
-		white-space: nowrap;
+		${visuallyHidden}
 	}
 
 

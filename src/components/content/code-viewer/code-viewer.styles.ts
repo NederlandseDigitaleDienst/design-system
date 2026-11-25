@@ -1,5 +1,5 @@
 import { css } from 'lit';
-import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { inheritedTextReset, visuallyHidden } from '../../../assets/styles/shadow-resets.js';
 
 export const codeViewerStyles = css`
 	:host {
@@ -311,12 +311,7 @@ export const codeViewerStyles = css`
 
 	.cm-diff-line-label,
 	.code-viewer__diff-summary {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		clip-path: inset(50%);
-		white-space: nowrap;
+		${visuallyHidden}
 		-webkit-user-select: none;
 		user-select: none;
 	}
@@ -338,12 +333,7 @@ export const codeViewerStyles = css`
 	}
 
 	.code-viewer__live-region {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		clip-path: inset(50%);
-		white-space: nowrap;
+		${visuallyHidden}
 	}
 
 

@@ -1,5 +1,5 @@
 import { css } from 'lit';
-import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { inheritedTextReset, visuallyHidden } from '../../../assets/styles/shadow-resets.js';
 
 export const datePickerStyles = css`
 	:host {
@@ -369,13 +369,7 @@ export const datePickerStyles = css`
 	/* ## Announcer */
 
 	.date-picker__announcer {
-		position: absolute;
-		clip-path: inset(50%);
-		margin: -1px;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		white-space: nowrap;
+		${visuallyHidden}
 	}
 
 
