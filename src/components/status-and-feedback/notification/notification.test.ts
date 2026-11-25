@@ -54,6 +54,13 @@ describe('nldd-notification', () => {
 		expect(el.parentElement).toBe(region);
 	});
 
+	it('de regio is een polite live region, zodat een melding erin wordt aangekondigd', async () => {
+		el = await maak('<nldd-notification text="Opgeslagen"></nldd-notification>');
+		const region = document.getElementById('nldd-notifications-area')!;
+		expect(region.getAttribute('aria-live')).toBe('polite');
+		expect(region.getAttribute('aria-atomic')).toBe('false');
+	});
+
 	it('neemt color-scheme en lang van zijn plek mee naar de regio', async () => {
 		const section = await fixture('<section lang="en" style="color-scheme: dark"><nldd-notification text="Saved"></nldd-notification></section>');
 		// It has left the section by now: it moves itself within a microtask.

@@ -208,6 +208,12 @@ function ensureArea(label: string): HTMLElement {
 	// A live region so a notification is announced wherever it was written; the
 	// urgency itself comes from each notification's own role.
 	area.setAttribute('role', 'region');
+	// aria-live so the area exists as a live region before any notification lands
+	// in it: a polite status inserted into a container that was not already live
+	// is read unreliably (NVDA/JAWS), where a change inside a standing live region
+	// is not. Critical notifications keep their role="alert" for assertive urgency.
+	area.setAttribute('aria-live', 'polite');
+	area.setAttribute('aria-atomic', 'false');
 	area.setAttribute('aria-label', label);
 	area.appendChild(makeExpander(area));
 	placeArea(area);
