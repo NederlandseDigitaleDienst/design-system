@@ -1319,3 +1319,27 @@ describe('nldd-date-picker breedte en periode-indicatoren', () => {
 		expect(style.borderStartEndRadius).not.toBe('0px');
 	});
 });
+
+
+describe('nldd-date-picker form participation', () => {
+	let form: HTMLFormElement;
+	afterEach(() => { if (form) cleanup(form); });
+
+	const data = (f: HTMLFormElement) => [...new FormData(f).entries()].map(([k, v]) => `${k}=${v}`).join(',');
+
+	it('submits a single date on its own name, without an nldd-date-field', async () => {
+		form = await fixture('<form><nldd-date-picker name="d" value="2026-11-25"></nldd-date-picker></form>') as HTMLFormElement;
+		const picker = form.querySelector('nldd-date-picker') as NLDDDatePicker;
+		await waitForUpdate(picker);
+		expect(data(form)).toBe('d=2026-11-25');
+	});
+
+	it('submits a period as an ISO 8601 interval start/end', async () => {
+		form = await fixture('<form><nldd-date-picker name="d" range></nldd-date-picker></form>') as HTMLFormElement;
+		const picker = form.querySelector('nldd-date-picker') as NLDDDatePicker;
+		picker.start = '2026-11-01';
+		picker.end = '2026-11-10';
+		await waitForUpdate(picker);
+		expect(data(form)).toBe('d=2026-11-01/2026-11-10');
+	});
+});
