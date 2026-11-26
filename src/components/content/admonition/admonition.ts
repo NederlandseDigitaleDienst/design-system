@@ -28,7 +28,7 @@
  * parser, so the app maps each type to an admonition. The types of Docusaurus,
  * remark-directive and markdown-it-container map as follows: `note` to
  * `variant="neutral"`, `info` to `variant="accent"`, `tip` to
- * `variant="success" icon="idea"`, `warning` and `caution` to
+ * `variant="success" icon="lightbulb-circle-filled"`, `warning` and `caution` to
  * `variant="warning"`, and `danger` to `variant="critical"`. The label of the
  * type, or the title given in the markdown, becomes `text`.
  *
