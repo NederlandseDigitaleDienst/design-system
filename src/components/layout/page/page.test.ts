@@ -737,6 +737,13 @@ describe('nldd-page – steps with parent', () => {
 		expect(page('kiezer').hidden).toBe(false);
 	});
 
+	it('drops the back text when the parent leaves', async () => {
+		await setup();
+		page('opdracht').remove();
+		await waitForUpdate(page('kiezer'));
+		expect(bar('kiezer')._backText).toBe('');
+	});
+
 	it('keeps a back-text the consumer set', async () => {
 		await setup();
 		bar('kiezer').setAttribute('back-text', 'Terug');
