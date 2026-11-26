@@ -9,6 +9,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.29.3](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.29.2...v0.29.3) (2026-11-26)
+
 ### Highlights
 
 - **Thirteen new icons and six redrawn ones.** New: `business-suitcase-light` (alias `work-light`), `component`, `cookie`, `file-csv` (alias `csv-document`), `foundation-light`, `languages`, `laptop`, `laptop-mobile`, `lightbulb-circle`, `lightbulb-circle-filled`, `seal`, `seal-filled` and `wi-fi` (alias `wifi`). Redrawn: `business-suitcase`, `color-chart`, `screwdriver-wrench`, `seal-check-mark`, `seal-star` and `wrench`. `icon="languages"` now shows its own icon instead of `globe`, which it was an alias of.
