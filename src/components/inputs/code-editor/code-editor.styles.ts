@@ -39,6 +39,9 @@ export const codeEditorStyles = css`
 
 		${inheritedTextReset}
 		display: flex;
+		/* Own stacking context so the border ring (--_code-editor-input-field-border-z-index)
+		   stays scoped and fades under a sticky header instead of punching through it. */
+		isolation: isolate;
 		min-height: 0;
 		flex-direction: column;
 		flex-grow: 1;
