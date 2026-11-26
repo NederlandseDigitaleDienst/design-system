@@ -21,6 +21,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **A pane of `nldd-navigation-split-view` with only hidden content shows its empty state.** A `hidden` page used to count as content, so the pane stayed blank instead.
 - **`nldd-file-field` shows a CSV file with its own icon.** A `.csv` file got the generic file icon; it now gets `file-csv`.
 - **`focus()` on `nldd-text-editor` and `nldd-code-editor` works right after the editor is put in the page.** A call before the editor had rendered did nothing, so an editor that htmx swapped in with `autofocus` never got focus. The editor now holds on to the call until it has rendered, as `nldd-text-field` does, unless focus has moved on in the meantime.
 

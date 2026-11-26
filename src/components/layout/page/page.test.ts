@@ -808,5 +808,4 @@ describe('nldd-page – steps with parent', () => {
 		await waitForUpdate(sheet);
 		expect(sheet._resolvedAccessibleLabel).toBe('Opdrachtgever kiezen');
 	});
-
 });
