@@ -83,8 +83,31 @@ const SHOWN_WHOLE = { options: 4, characters: 16 };
 
 /** The width of a field in the controls, and below which width of the list the descriptions fold away. */
 const FIELD_WIDTH = 'min(240px, 50%)';
-/** A number is short: a counter with its buttons on either side. */
+/** A number is short, whether a counter or a value with its buttons at the end. */
 const NUMBER_WIDTH = '144px';
+/**
+ * The numbers you count up one at a time, which get their buttons on either
+ * side. Any other number is a measure or a value you type, such as a height in
+ * pixels or a duration, with the buttons at the end. By attribute, or by tag
+ * and attribute where the same name is a value elsewhere (`max` on a badge).
+ */
+const COUNTERS = new Set([
+	'max-items',
+	'rows',
+	'panes',
+	'heading-level',
+	'order',
+	'sm-order',
+	'md-order',
+	'lg-order',
+	'current',
+	'total',
+	'number',
+	'priority',
+	'first-day-of-week',
+	'nldd-one-time-code-field length',
+	'nldd-avatar-group max',
+]);
 const NARROW_CONTROLS = 560;
 
 /** Puts a value chosen elsewhere into a control of the list. */
@@ -1123,7 +1146,8 @@ export class SiteStage extends HTMLElement {
 			return nldd('dropdown', {}, [select]);
 		}
 		if (control.kind === 'number') {
-			const input = nldd('number-field', { 'spin-buttons': 'split', width: NUMBER_WIDTH, ...(text === '' ? {} : { value: text }) });
+			const counter = COUNTERS.has(control.name) || COUNTERS.has(`${this.controls?.tag} ${control.name}`);
+			const input = nldd('number-field', { ...(counter ? { 'spin-buttons': 'split' } : {}), width: NUMBER_WIDTH, ...(text === '' ? {} : { value: text }) });
 			input.addEventListener('input', (event) => {
 				const { value } = (event as CustomEvent<{ value: number | null }>).detail;
 				change(value === null ? '' : String(value));
@@ -1131,14 +1155,16 @@ export class SiteStage extends HTMLElement {
 			return input;
 		}
 		// The manifest writes a missing default as the word.
+		// The default is marked as in a dropdown; the value stays the bare word.
+		const label = (value: string) => (value === control.default ? `${value} (standaard)` : value);
 		const placeholder: Record<string, string> =
-			control.default && control.default !== 'undefined' ? { placeholder: control.default } : {};
+			control.default && control.default !== 'undefined' ? { placeholder: label(control.default) } : {};
 		if (values) {
-			const input = nldd('combo-box', { value: text, text, 'allow-custom': true, ...placeholder }, [
+			const input = nldd('combo-box', { value: text, text: label(text), 'allow-custom': true, ...placeholder }, [
 				nldd(
 					'menu',
 					{},
-					values.map((value) => nldd('menu-item', { text: value, value })),
+					values.map((value) => nldd('menu-item', { text: label(value), value })),
 				),
 			]);
 			for (const type of ['input', 'change']) {
