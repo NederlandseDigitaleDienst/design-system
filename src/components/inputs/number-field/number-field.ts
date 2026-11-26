@@ -127,7 +127,6 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(withTranslations
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-
 	/** The value last committed or set from outside: what `change` compares with.
 	 *  Typing already moves `value`, so comparing with that would leave a typed
 	 *  number without its `change`. */
@@ -174,7 +173,6 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(withTranslations
 	private _clampValue(): void {
 		if (this.value !== null) this.value = this._clamp(this.value);
 	}
-
 
 	// — Actions ——————————————————————————————————————————————————————————————
 

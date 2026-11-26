@@ -160,7 +160,6 @@ export class NLDDTimePicker extends DescribedBy(FormAssociated(withTranslations(
 	@property({ type: Number })
 	step = 1;
 
-
 	/**
 	 * Where scrolling has landed, per column, for as long as it is not recorded.
 	 * Kept apart from `value`, which only records once scrolling comes to rest.
@@ -170,7 +169,6 @@ export class NLDDTimePicker extends DescribedBy(FormAssociated(withTranslations(
 	 */
 	@state()
 	private _scrolledTo: { hours: number | null; minutes: number | null } = { hours: null, minutes: null };
-
 
 	/** The chosen time as `HH:mm`, empty when there is none. */
 	override formValue(): FormValue {

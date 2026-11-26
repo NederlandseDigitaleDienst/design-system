@@ -213,7 +213,6 @@ function ensureArea(label: string): HTMLElement {
 	// is read unreliably (NVDA/JAWS), where a change inside a standing live region
 	// is not. Critical notifications keep their role="alert" for assertive urgency.
 	area.setAttribute('aria-live', 'polite');
-	area.setAttribute('aria-atomic', 'false');
 	area.setAttribute('aria-label', label);
 	area.appendChild(makeExpander(area));
 	placeArea(area);
