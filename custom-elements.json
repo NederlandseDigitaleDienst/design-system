@@ -6138,16 +6138,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDCodeViewerTranslations>"
-              },
-              "default": "{}",
-              "description": "Override one or more translation keys. Unspecified keys fall back to Dutch.",
-              "attribute": "translations"
-            },
-            {
               "kind": "method",
               "name": "focus",
               "return": {
@@ -6172,6 +6162,19 @@
                 "type": {
                   "text": "Promise<boolean>"
                 }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
               }
             }
           ],
@@ -6245,11 +6248,21 @@
             {
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDCodeViewerTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "description": "Override translation keys (e.g. the copy button labels and the scroll-region label); unset keys fall back to Dutch.",
-              "fieldName": "translations"
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Override translation keys (e.g. the copy button labels and the scroll-region label); unset keys fall back to Dutch."
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -30609,16 +30622,6 @@
             },
             {
               "kind": "field",
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDTextEditorTranslations>"
-              },
-              "default": "{}",
-              "description": "Override translation keys for the editor's assistive-tech strings (the\nopen-in-new-tab link badge and the annotation count badge). Unset keys fall\nback to Dutch.",
-              "attribute": "translations"
-            },
-            {
-              "kind": "field",
               "name": "mentionSource",
               "type": {
                 "text": "MentionSource | undefined"
@@ -31000,6 +31003,19 @@
                 }
               },
               "description": "The annotations currently in the editor, in CLEAN coordinates, each quote\nre-sliced from the current text, so a consumer can persist positions that\nmoved with edits (read this on save, then write the anchors back)."
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             },
             {
               "kind": "field",
@@ -31616,11 +31632,15 @@
             {
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDTextEditorTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "description": "Override the editor's assistive-tech strings (the open-in-new-tab link badge, the annotation count badge, the label of a task's box and the copy button of a code block). Unset keys fall back to Dutch.",
-              "fieldName": "translations"
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Override the editor's assistive-tech strings (the open-in-new-tab link badge, the annotation count badge, the label of a task's box and the copy button of a code block). Unset keys fall back to Dutch."
             },
             {
               "name": "accessible-description",
@@ -31793,6 +31813,12 @@
                 "text": "string"
               },
               "global": true
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -58438,7 +58464,7 @@
             {
               "name": "onResize",
               "type": {
-                "text": "(hosts: T[]) => void"
+                "text": "(hosts: T[], entriesOf: (host: T) => ResizeObserverEntry[]) => void"
               },
               "description": "gets the hosts with a target that changed size, each once,\nand only those still in the page.\nLike any ResizeObserver, a target is reported once when it is observed,\nalso for a host that joins a target another host already observes: the\nhosts that were there get that report too."
             }
@@ -60182,6 +60208,65 @@
           "declaration": {
             "name": "PageSectionMixin",
             "module": "src/utilities/page-section-mixin.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/picker-popover-controller.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "The focus restore a field shares around its picker popover (nldd-date-field,\nnldd-time-field).\n\nWith `delegatesFocus`, Safari does not focus a button on click: it focuses the\ntext field instead. On close the popover restores focus to the element from\nbefore it opened, so in Safari that lands on the input rather than the picker\nbutton. The field takes focus back itself, one microtask after the popover's\nown restore so it is not overwritten. A microtask rather than a frame: it\nbeats that same restore but is not throttled while the tab is unfocused.",
+          "name": "PickerPopoverController",
+          "members": [
+            {
+              "kind": "method",
+              "name": "focusTrigger",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "asked",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Focus the trigger button. `asked` forces it (a dismiss, Escape or an\nexplicit close); otherwise only when the close left focus loose, as after a\nclick beside the popover, and not when the click put focus elsewhere."
+            },
+            {
+              "kind": "method",
+              "name": "restoreFocus",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "asked",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "`focusTrigger`, one microtask after the popover's own restore."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "PickerPopoverController",
+          "declaration": {
+            "name": "PickerPopoverController",
+            "module": "src/utilities/picker-popover-controller.ts"
           }
         }
       ]
@@ -62149,7 +62234,7 @@
       "declarations": [
         {
           "kind": "mixin",
-          "description": "Mixin that adds i18n support to a LitElement component.\n\nProvides a `translations` property for overriding defaults,\na merged translations object, and a `_t()` method for lookups.",
+          "description": "Mixin that adds i18n to a LitElement component: a `translations` property for\noverriding defaults, and a `_t()` method for lookups.\n\nGeneric over its base, so it keeps that base's type. It composes on a plain\nLitElement, or on a richer base such as a form-associated one, and in either\nposition in a mixin chain: the base's own members stay visible on the result.",
           "name": "withTranslations",
           "members": [
             {
@@ -62176,7 +62261,7 @@
             {
               "name": "Base",
               "type": {
-                "text": "Constructor<LitElement> & typeof LitElement"
+                "text": "TBase"
               }
             },
             {

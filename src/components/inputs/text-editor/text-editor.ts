@@ -191,7 +191,7 @@ import { textEditorStyles } from './text-editor.styles.js';
 import { textEditorTemplate } from './text-editor.template.js';
 import { ANNOTATION_SENTINEL, stripSentinels, docToClean, cleanToDoc, sentinelPositions } from './text-editor.annotation-sentinels.js';
 import { nlddTextEditorTranslations, type NLDDTextEditorTranslations } from './text-editor.i18n.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { tasks } from './text-editor.tasks.js';
 import { codeCopy } from './text-editor.code-copy.js';
 import { setState } from '../../../utilities/element-state.js';
@@ -230,7 +230,7 @@ export { DEFAULT_TYPEAHEAD_QUERY } from './text-editor.mentions.js';
 export type { Annotation } from './text-editor.annotations.js';
 
 @customElement('nldd-text-editor')
-export class NLDDTextEditor extends NLDDCodeMirrorInput {
+export class NLDDTextEditor extends withTranslations(NLDDCodeMirrorInput, nlddTextEditorTranslations) {
 
 	static override styles = textEditorStyles;
 
@@ -256,11 +256,6 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 	@property({ type: Boolean, reflect: true, attribute: 'no-spellcheck' })
 	noSpellcheck = false;
 
-	/** Override translation keys for the editor's assistive-tech strings (the
-	 *  open-in-new-tab link badge and the annotation count badge). Unset keys fall
-	 *  back to Dutch. */
-	@property({ type: Object })
-	translations: Partial<NLDDTextEditorTranslations> = {};
 
 	/** Consumer-supplied @-mention source: called with the text typed after `@`
 	 *  and returns (a promise of) candidates. Property only (set via JS); without
@@ -361,12 +356,6 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 		});
 	}
 
-	/** Resolve a translation key, applying `{name}` placeholder substitution from
-	 *  `vars`. Consumer overrides via `translations` win; unset keys fall back to the
-	 *  Dutch defaults. */
-	public _t(key: keyof NLDDTextEditorTranslations, vars?: Record<string, string | number>): string {
-		return translate(this.translations, nlddTextEditorTranslations, key, vars);
-	}
 
 	private _labels: string | null = null;
 
