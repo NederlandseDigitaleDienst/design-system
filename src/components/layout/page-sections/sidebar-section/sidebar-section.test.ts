@@ -85,11 +85,20 @@ describe('nldd-sidebar-section', () => {
 	it('not collapsed (lg): the sidebar is a sticky box and the sheet holds no slot', async () => {
 		await make();
 		await setWidth(1200);
-		const box = el.shadowRoot!.querySelector<HTMLSlotElement>('.sidebar-section__sidebar-box > slot[name="sidebar"]');
+		const box = el.shadowRoot!.querySelector<HTMLSlotElement>('.sidebar-section__sidebar-box > aside > slot[name="sidebar"]');
 		expect(box).not.toBeNull();
 		expect(box!.assignedElements().length).toBe(1);
 		expect(el.shadowRoot!.querySelector('.sidebar-section__sheet slot[name="sidebar"]')).toBeNull();
 		expect(el.hasAttribute('collapsed')).toBe(false);
+	});
+
+	it('the aside in the box scrolls, so the scroll fade masks the content and not the edge', async () => {
+		await make();
+		await setWidth(1200);
+		const box = el.shadowRoot!.querySelector('.sidebar-section__sidebar-box')!;
+		const aside = box.querySelector('aside')!;
+		expect(getComputedStyle(aside).overflowY).toBe('auto');
+		expect(getComputedStyle(box).overflowY).toBe('visible');
 	});
 
 	it('the box takes the surface of the section around it, edged by a divider line', async () => {

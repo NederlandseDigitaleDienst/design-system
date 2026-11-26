@@ -1,5 +1,6 @@
 import { css, unsafeCSS } from 'lit';
 import { queryBreakpoints } from '../../../../assets/styles/breakpoints.js';
+import { scrollFade } from '../../../../assets/styles/scroll-fade.js';
 
 const smMax = unsafeCSS(queryBreakpoints.smMax);
 const mdMin = unsafeCSS(queryBreakpoints.mdMin);
@@ -166,15 +167,17 @@ export const sidebarSectionStyles = css`
 	/* # Box — the surface around it, edged by a divider. Sticky + scrollable only
 	   beside the main (wide); when stacked it's a plain full-width box above the
 	   main, so no sticky (which would scroll over the main) and no viewport
-	   height cap. The box is the aside itself: Firefox puts a tab stop on
-	   whatever scrolls, and that stop needs the landmark's role and name. */
+	   height cap. The box paints the surface and the aside in it scrolls, so
+	   the scroll fade masks the content and not the edge. Firefox puts a tab
+	   stop on whatever scrolls, and that stop needs the landmark's role and name. */
 
 	.sidebar-section__sidebar-box {
-		display: block;
+		display: flex;
 		box-sizing: border-box;
 		border-radius: var(--semantics-surfaces-corner-radius);
 		background-color: var(--_sidebar-section-sidebar-box-background-color);
 		box-shadow: inset 0 0 0 var(--semantics-surfaces-highlight-border-width) var(--_sidebar-section-sidebar-box-border-color);
+		flex-direction: column;
 
 		@container page-container (min-width: ${lgMin}) {
 			position: sticky;
@@ -183,7 +186,18 @@ export const sidebarSectionStyles = css`
 			/* What the scroller shows, not what the window is: a viewport-tall cap
 			   hangs out the bottom by the height of the chrome around the page. */
 			max-height: calc(var(--context-scroller-height, 100dvh) - var(--_sidebar-section-sticky-top) - var(--_sidebar-section-sticky-bottom));
+		}
+	}
+
+	.sidebar-section__sidebar-scroller {
+		display: block;
+		border-radius: inherit;
+		min-height: 0;
+
+		@container page-container (min-width: ${lgMin}) {
 			overflow-y: auto;
 		}
 	}
+
+	${scrollFade('.sidebar-section__sidebar-scroller')}
 `;
