@@ -35,7 +35,7 @@
  * @attr {string} name - Name for form submission (checkbox/radio)
  * @attr {string} value - Value for form submission (checkbox/radio)
  * @attr {'button' | 'checkbox' | 'radio'} type - What the button is: a button with aria-pressed, a native checkbox, or a radio (default: 'button')
- * @attr {boolean} required - Required state. Set by nldd-toggle-button-group.
+ * @attr {boolean} required - A checkbox has to be selected. On its own it asks for this button; in an nldd-toggle-button-group, which sets it on its buttons, for any button of the group.
  * @attr {boolean} disabled - Disabled state
  *
  *

@@ -35804,7 +35804,7 @@
               },
               "default": "false",
               "fieldName": "required",
-              "description": "Required state. Set by nldd-toggle-button-group."
+              "description": "A checkbox has to be selected. On its own it asks for this button; in an nldd-toggle-button-group, which sets it on its buttons, for any button of the group."
             },
             {
               "name": "disabled",

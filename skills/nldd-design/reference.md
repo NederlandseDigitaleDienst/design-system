@@ -2579,7 +2579,7 @@ A selectable button that toggles between selected and unselected. Available as a
 | `name` | `string` | Name for form submission (checkbox/radio) |
 | `value` | `string` | Value for form submission (checkbox/radio) |
 | `type` | `'button' \| 'checkbox' \| 'radio'` | What the button is: a button with aria-pressed, a native checkbox, or a radio (default: 'button') |
-| `required` | `boolean` | Required state. Set by nldd-toggle-button-group. |
+| `required` | `boolean` | A checkbox has to be selected. On its own it asks for this button; in an nldd-toggle-button-group, which sets it on its buttons, for any button of the group. |
 | `disabled` | `boolean` | Disabled state |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
