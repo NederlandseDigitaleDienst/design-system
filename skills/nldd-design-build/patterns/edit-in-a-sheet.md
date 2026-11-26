@@ -261,9 +261,9 @@ Soms vraagt een veld om een eigen scherm, zoals een team kiezen uit een lijst. O
 
 **De terugknop zegt waar je heen gaat.** De pagina met `parent` geeft zijn titelbalk een terugknop met de titel van de ouder, hier "Aanvraag A-1042 bewerken". Twee sheets over elkaar hebben elk een eigen sluitknop, en die zegt niet waar je uitkomt. "Annuleer" sluit hier de hele sheet, in elke stap.
 
-**Wat je in de eerste stap invulde, blijft staan.** De eerste pagina gaat niet weg maar wordt verborgen, dus de titel die je net typte, staat er nog als je terugkomt.
+**Welke pagina in beeld is, houd je zelf bij.** Zet `hidden` op de pagina die weggaat en haal hem weg bij de pagina die komt. Bij een stap verder zet je de focus in de nieuwe pagina, bij terug weer op de rij die de stap opende. Onthoud die rij bij de klik, niet via de focus: in Safari geeft een klik op een rij geen focus. De terugknop vuurt `back`; een keuze in de stap gaat dezelfde weg terug, en de gekozen waarde zet je zelf in de eerste pagina.
 
-**Een keuze gaat terug zoals de terugknop.** Roep `back()` aan op de stap: die toont de ouder en zet de focus terug op de rij die de stap opende. De gekozen waarde zet je zelf in de eerste pagina, want alleen jij weet waar hij hoort.
+**Houd beide pagina's in de DOM.** Render de stappen met `hidden`, niet een voor een met een conditie. Anders vindt de stap geen ouder om de titel van te nemen, en is wat in de eerste stap stond weg.
 
 **Geen eigen adres.** Een stap komt niet in de URL, en de terugknop van de browser gaat er niet doorheen. Verdient een stap een adres, dan is hij een pagina van de applicatie, met `back-href` op de titelbalk.
 

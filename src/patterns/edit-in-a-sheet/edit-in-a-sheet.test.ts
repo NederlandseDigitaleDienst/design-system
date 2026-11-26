@@ -88,7 +88,10 @@ describe('patroon: bewerken in een sheet, een stap verder', () => {
 		root?.remove();
 	});
 
-	type Stap = HTMLElement & { show(): void; back(): void };
+	type Stap = HTMLElement & { hidden: boolean };
+	const toon = (sheet: Element, id: string) => {
+		sheet.querySelectorAll<Stap>('nldd-page').forEach((pagina) => { pagina.hidden = pagina.id !== id; });
+	};
 
 	const mount = async () => {
 		const { default: step } = await import('./edit-in-a-sheet.step.html?raw');
@@ -111,7 +114,8 @@ describe('patroon: bewerken in een sheet, een stap verder', () => {
 	it('geeft de stap een terugknop met de titel van de aanvraag', async () => {
 		const sheet = await mount();
 		const team = sheet.querySelector<Stap>('#team')!;
-		team.show();
+		toon(sheet, 'team');
+		await waitForUpdate(team);
 		const bar = team.querySelector('nldd-top-title-bar') as HTMLElement & { updateComplete: Promise<boolean> };
 		await bar.updateComplete;
 		expect(bar.shadowRoot!.querySelector('.top-title-bar__text-back-button nldd-button')!.getAttribute('text')).toBe('Aanvraag A-1042 bewerken');
@@ -123,9 +127,8 @@ describe('patroon: bewerken in een sheet, een stap verder', () => {
 		const sheet = await mount();
 		const titel = sheet.querySelector('nldd-text-field') as HTMLElement & { value: string };
 		titel.value = 'Dakisolatie en ventilatie';
-		const team = sheet.querySelector<Stap>('#team')!;
-		team.show();
-		team.back();
+		toon(sheet, 'team');
+		toon(sheet, 'aanvraag');
 		expect(sheet.querySelector<Stap>('#aanvraag')!.hidden).toBe(false);
 		expect(titel.value).toBe('Dakisolatie en ventilatie');
 	});

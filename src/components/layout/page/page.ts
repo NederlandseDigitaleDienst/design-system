@@ -50,30 +50,26 @@
  * ## Steps
  * A step deeper in the same surface is a page beside the one it starts from,
  * in the same parent and slot, not a second sheet on top of the first. Give
- * each page an `id` and the deeper one a `parent`, and hide all but the first:
+ * each page an `id` and the deeper one a `parent`, and hide all but one with
+ * `hidden`:
  *
  *     <nldd-sheet>
  *         <nldd-page id="opdracht">…</nldd-page>
  *         <nldd-page id="kiezer" parent="opdracht" hidden>…</nldd-page>
  *     </nldd-sheet>
  *
- * `show()` on a page shows it and hides the pages beside it. A page with
- * `parent` gives the nldd-top-title-bar in its header a back button with the
- * title of that parent page (its title bar's `text`, or else its
- * `accessible-label`), unless the bar has a `back-text` of its own. A press on
- * it shows the parent and puts focus back on the control that opened the step.
- * That `back` goes no further, so a listener for the back of a split view's pane
- * does not hear it too. With `back-href` the bar is a link and the page leaves
- * it alone.
- *
- * The parent is structure, not history: a page opened straight away still goes
- * back to its parent. Nothing goes into the URL. A step that deserves an
- * address of its own is a page of the application, with `back-href`. In a
- * framework, bind `hidden` and listen for `show` to keep your state in step.
+ * A page with `parent` gives the nldd-top-title-bar in its header a back
+ * button, also in a split view's pane that hides it otherwise, with the title
+ * of that parent page (its title bar's `text`, or else its `accessible-label`),
+ * unless the bar has a `back-text` of its own. Which page is in view stays
+ * yours: on `back`, read `parent` of the page it comes from, hide that page,
+ * show the parent and put focus back on the control that opened the step. Keep
+ * the pages in the DOM with `hidden` rather than rendering one at a time, or
+ * the step finds no parent to take the title from.
  *
  * @element nldd-page
  * @keywords pagina
- * @related nldd-shell, nldd-window
+ * @related nldd-shell, nldd-window, nldd-sheet
  *
  * @attr {'inherit'|'base'|'tinted'} background - Use a gray background instead of white
  * @attr {string} accessible-label - Name of the landmark this page is: the region it becomes beside another page, or its main landmark
@@ -85,11 +81,6 @@
  * @slot header - Header content. Put a `nldd-top-title-bar` straight in this slot, not in a container: the page measures the bar there, so an anchor scrolled to stays clear of it
  * @slot - Main content (scrollable)
  * @slot footer - Footer content
- *
- * @fires show - Fired on a page that `show()` or a back button has just shown. Bubbles. Read the page from `event.target`
- *
- * @method show - Shows this page and hides the pages beside it, in the same parent and slot. Moves focus into it when focus was in the page it replaces
- * @method back - Shows the parent page and puts focus back on the control that opened this step, as the back button does. For a step that ends with a choice
  *
  * @cssprop --context-inset-top - Height of every bar above the content, sticky header included. Read it as `top` of anything sticky inside the page
  * @cssprop --context-inset-bottom - Height of every bar below the content, sticky footer included. Read it as `bottom` of anything sticky inside the page
@@ -105,8 +96,6 @@ import { pageTemplate } from './page.template.js';
 import { setState } from '../../../utilities/element-state.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { LayoutPass, sharedResizeObserver } from '../../../utilities/layout-pass.js';
-import { FocusReturn, focusAsLastInput, focusIsFree } from '../../../utilities/return-focus.js';
-import { deepActiveElement } from '../../../utilities/deep-active-element.js';
 import type { CompactingBar, NLDDTopTitleBar } from '../../navigation/top-title-bar/top-title-bar.js';
 
 /** What a page measures of its bars and its scroller, before it writes any of it. */
@@ -155,21 +144,6 @@ function holdsFocusable(page: Element): boolean {
 			if (walk(child)) return true;
 		}
 		return false;
-	};
-	return walk(page);
-}
-
-/** The first element in a page's content (all but its header) that Tab lands on, in light or shadow DOM. */
-function firstFocusable(page: Element): HTMLElement | null {
-	const walk = (parent: Element | ShadowRoot): HTMLElement | null => {
-		for (const child of parent.children) {
-			if (!(child instanceof HTMLElement) || child.hidden || child.inert) continue;
-			if (parent === page && child.slot === 'header') continue;
-			if (takesTab(child)) return child;
-			const inner = (child.shadowRoot && walk(child.shadowRoot)) || walk(child);
-			if (inner) return inner;
-		}
-		return null;
 	};
 	return walk(page);
 }
@@ -345,8 +319,6 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 			this._setupMainSlotListener();
 			this._watchSteps();
 		}
-		this.addEventListener('back', this._onBack);
-		this.addEventListener('click', this._onClick, { capture: true });
 	}
 
 	/** Switches from stand-alone to push once a shell (or sheet, or modal
@@ -362,7 +334,6 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 	override disconnectedCallback() {
 		super.disconnectedCallback();
 		_connectedPages.delete(this);
-		this._lastClicked = null;
 		firstMeasurement.cancel(this);
 		removeStandaloneScrollLayer(this);
 		this._scrollProvider?.unregisterScrollConsumer(this);
@@ -372,8 +343,6 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 		this._teardownMainSlotListener();
 		this._stepObserver?.disconnect();
 		this._stepObserver = null;
-		this.removeEventListener('back', this._onBack);
-		this.removeEventListener('click', this._onClick, { capture: true });
 	}
 
 	override firstUpdated() {
@@ -400,13 +369,8 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 		}
 	}
 
-	/** Where focus goes back to when this page's back button shows its parent. */
-	private _focusReturn = new FocusReturn();
-	/** The last control clicked in this page, for Safari, where a click does not
-	 *  focus a button and there is no focus to remember. */
-	private _lastClicked: HTMLElement | null = null;
 	/** Watches the pages beside a step, so its back button follows the title of
-	 *  its parent page, a title bar added later and a page a framework shows. */
+	 *  its parent page and a title bar added later. */
 	private _stepObserver: MutationObserver | null = null;
 
 	/** @internal The pages beside this one: same parent, same slot. */
@@ -436,77 +400,6 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 		const bar = this._titleBar;
 		return bar?.getAttribute('text') || bar?.text || this.accessibleLabel;
 	}
-
-	/**
-	 * Shows this page and hides the pages beside it. When focus was in the page
-	 * this one replaces, it moves into this page, and the control that had it is
-	 * remembered for the way back.
-	 */
-	show(): void {
-		const siblings = this._siblingPages;
-		const current = siblings.find((page) => page !== this && !page.hidden) ?? null;
-		// Focus on the body counts only after a click in the current page: Safari
-		// does not focus the button it clicked. A show() from a timer leaves it.
-		const active = deepActiveElement();
-		const moveFocus = !!current && focusIsFree(current)
-			&& ((!!active && active !== document.body) || !!current._lastClicked);
-		if (current) {
-			this._focusReturn.remember(current._lastClicked);
-			current._lastClicked = null;
-		}
-		this._reveal(siblings);
-		if (moveFocus) this._focusStart();
-	}
-
-	/** Shows this page among its siblings and says so. */
-	private _reveal(siblings: NLDDPage[]): void {
-		for (const page of siblings) page.hidden = page !== this;
-		this._syncBackText();
-		this.dispatchEvent(new CustomEvent('show', { bubbles: true }));
-	}
-
-	/** Focus into a page that has just been shown: an element with `autofocus`,
-	 *  else the first thing Tab lands on in its content, else its back button. */
-	private _focusStart(): void {
-		void this.updateComplete.then(() => {
-			const auto = this.querySelector<HTMLElement>('[autofocus]');
-			const target = auto ?? firstFocusable(this) ?? this._titleBar;
-			if (target) focusAsLastInput(target);
-		});
-	}
-
-	private _onClick = (event: Event): void => {
-		const target = event.target;
-		if (target instanceof HTMLElement && target !== this) this._lastClicked = target;
-	};
-
-	/**
-	 * Shows the parent page and puts focus back on the control that opened this
-	 * step, as the back button does. For a step that ends with a choice, so the
-	 * choice goes back the same way. Without a parent page it does nothing.
-	 */
-	back(): void {
-		const parent = this._parentPage;
-		if (!parent) return;
-		const hadFocus = focusIsFree(this);
-		parent._reveal(this._siblingPages);
-		if (!hadFocus) return;
-		// Opened straight away, the page remembers no control to go back to.
-		this._focusReturn.restore(this);
-		const active = deepActiveElement();
-		if (!active || active === document.body) parent._focusStart();
-	}
-
-	/**
-	 * The back of this page's own title bar shows the parent page. A back from a
-	 * page nested deeper, or from a bar with `back-href`, is not this page's.
-	 */
-	private _onBack = (event: Event): void => {
-		const bar = this._titleBar;
-		if (!this._parentPage || !bar || event.composedPath()[0] !== bar || bar.backHref) return;
-		event.stopPropagation();
-		this.back();
-	};
 
 	/**
 	 * Hands the parent page's title to the title bar, which shows it when it has

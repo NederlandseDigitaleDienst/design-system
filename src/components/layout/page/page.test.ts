@@ -660,10 +660,14 @@ describe('nldd-page – steps with parent', () => {
 		</div>
 	`;
 
-	type Page = HTMLElement & { show(): void; hidden: boolean };
+	type Page = HTMLElement & { hidden: boolean; parent: string };
 	type Bar = HTMLElement & { _backText: string; updateComplete: Promise<boolean> };
 	const page = (id: string) => el.querySelector<Page>(`#${id}`)!;
 	const bar = (id: string) => page(id).querySelector<Bar>('nldd-top-title-bar')!;
+	/** What an app does: show one page, hide the pages beside it. */
+	const view = (id: string) => {
+		for (const other of el.querySelectorAll<Page>('nldd-page')) other.hidden = other.id !== id;
+	};
 	const pressBack = async (id: string) => {
 		await bar(id).updateComplete;
 		bar(id).shadowRoot!.querySelector<HTMLElement>('.top-title-bar__text-back-button nldd-button')!.click();
@@ -687,7 +691,7 @@ describe('nldd-page – steps with parent', () => {
 
 	it('follows the title of the parent while the step is in view', async () => {
 		await setup();
-		page('kiezer').show();
+		view('kiezer');
 		await waitForUpdate(page('kiezer'));
 		bar('opdracht').setAttribute('text', 'Opdracht A-1042');
 		await waitForUpdate(page('kiezer'));
@@ -703,7 +707,7 @@ describe('nldd-page – steps with parent', () => {
 		await setup();
 		page('opdracht').querySelector('nldd-top-title-bar')!.remove();
 		page('opdracht').setAttribute('accessible-label', 'Opdracht bewerken');
-		page('kiezer').show();
+		view('kiezer');
 		await waitForUpdate(page('kiezer'));
 		expect(bar('kiezer')._backText).toBe('Opdracht bewerken');
 
@@ -715,11 +719,22 @@ describe('nldd-page – steps with parent', () => {
 	it('follows an accessible-label set as a property on a parent without a title bar', async () => {
 		await setup();
 		page('opdracht').querySelector('nldd-top-title-bar')!.remove();
-		page('kiezer').show();
+		view('kiezer');
 		await waitForUpdate(page('kiezer'));
 		(page('opdracht') as Page & { accessibleLabel: string }).accessibleLabel = 'Opdracht bewerken';
 		await waitForUpdate(page('opdracht'));
 		expect(bar('kiezer')._backText).toBe('Opdracht bewerken');
+	});
+
+	it('lets the back of a step through to the app, which reads parent off the page', async () => {
+		await setup();
+		view('kiezer');
+		await waitForUpdate(page('kiezer'));
+		const seen: string[] = [];
+		el.addEventListener('back', (event) => seen.push((event.target as HTMLElement).closest<Page>('nldd-page')!.parent));
+		await pressBack('kiezer');
+		expect(seen).toEqual(['opdracht']);
+		expect(page('kiezer').hidden).toBe(false);
 	});
 
 	it('keeps a back-text the consumer set', async () => {
@@ -733,96 +748,14 @@ describe('nldd-page – steps with parent', () => {
 		await setup();
 		page('opdracht').querySelector('nldd-top-title-bar')!.remove();
 		page('opdracht').setAttribute('accessible-label', 'Opdracht bewerken');
-		page('kiezer').show();
+		view('kiezer');
+		await waitForUpdate(page('kiezer'));
 		expect(bar('kiezer')._backText).toBe('Opdracht bewerken');
-	});
-
-	it('show() shows the page and hides the pages beside it, and fires show', async () => {
-		await setup();
-		const shown: string[] = [];
-		el.addEventListener('show', (event) => shown.push((event.target as HTMLElement).id));
-		page('kiezer').show();
-		expect(page('opdracht').hidden).toBe(true);
-		expect(page('kiezer').hidden).toBe(false);
-		expect(page('contact').hidden).toBe(true);
-		expect(shown).toEqual(['kiezer']);
-	});
-
-	it('goes back to the parent on back, and stops the event there', async () => {
-		await setup();
-		const heard: Event[] = [];
-		el.addEventListener('back', (event) => heard.push(event));
-		page('kiezer').show();
-		await pressBack('kiezer');
-		expect(page('opdracht').hidden).toBe(false);
-		expect(page('kiezer').hidden).toBe(true);
-		expect(heard).toHaveLength(0);
-	});
-
-	it('goes back to its parent when opened straight away, skipping nothing it was not', async () => {
-		await setup();
-		page('contact').show();
-		await pressBack('contact');
-		expect(page('kiezer').hidden).toBe(false);
-		expect(page('opdracht').hidden).toBe(true);
-	});
-
-	it('leaves a back with back-href alone', async () => {
-		await setup();
-		page('kiezer').show();
-		bar('kiezer').setAttribute('back-href', '/opdrachten/');
-		await bar('kiezer').updateComplete;
-		const heard: Event[] = [];
-		el.addEventListener('back', (event) => heard.push(event));
-		bar('kiezer').dispatchEvent(new CustomEvent('back', { bubbles: true, composed: true }));
-		expect(page('kiezer').hidden).toBe(false);
-		expect(heard).toHaveLength(1);
-	});
-
-	it('lets a back without parent through', async () => {
-		await setup();
-		const heard: Event[] = [];
-		el.addEventListener('back', (event) => heard.push(event));
-		bar('opdracht').dispatchEvent(new CustomEvent('back', { bubbles: true, composed: true }));
-		expect(heard).toHaveLength(1);
-	});
-
-	it('moves focus into the step, and back to the control that opened it', async () => {
-		await setup();
-		const opener = page('opdracht').querySelector<HTMLElement>('#opener')!;
-		opener.focus();
-		page('kiezer').show();
-		await waitForUpdate(page('kiezer'));
-		await nextFrames();
-		expect(page('kiezer').contains(document.activeElement)).toBe(true);
-		await pressBack('kiezer');
-		await nextFrames();
-		expect(document.activeElement).toBe(opener);
-	});
-
-	it('moves focus after a click that left it on the body, as in Safari', async () => {
-		await setup();
-		(document.activeElement as HTMLElement | null)?.blur();
-		page('opdracht').querySelector<HTMLElement>('#opener')!.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
-		(document.activeElement as HTMLElement | null)?.blur();
-		page('kiezer').show();
-		await waitForUpdate(page('kiezer'));
-		await nextFrames();
-		expect(page('kiezer').contains(document.activeElement)).toBe(true);
-	});
-
-	it('leaves focus on the body for a show() nobody clicked for', async () => {
-		await setup();
-		(document.activeElement as HTMLElement | null)?.blur();
-		page('kiezer').show();
-		await waitForUpdate(page('kiezer'));
-		await nextFrames();
-		expect(document.activeElement).toBe(document.body);
 	});
 
 	it('does not sync on a text attribute in the content of a page beside it', async () => {
 		await setup();
-		page('kiezer').show();
+		view('kiezer');
 		await waitForUpdate(page('kiezer'));
 		const spy = vi.spyOn(page('kiezer') as Page & { _syncBackText(): void }, '_syncBackText');
 		page('opdracht').insertAdjacentHTML('beforeend', '<span text="a"></span>');
@@ -854,20 +787,9 @@ describe('nldd-page – steps with parent', () => {
 		const sheet = el as HTMLElement & { _resolvedAccessibleLabel: string };
 		await waitForUpdate(sheet);
 		expect(sheet._resolvedAccessibleLabel).toBe('Opdracht');
-		page('kiezer').show();
+		view('kiezer');
 		await waitForUpdate(sheet);
 		expect(sheet._resolvedAccessibleLabel).toBe('Opdrachtgever kiezen');
 	});
 
-	it('back() goes to the parent like the back button, for a step that ends with a choice', async () => {
-		await setup();
-		const opener = page('opdracht').querySelector<HTMLElement>('#opener')!;
-		opener.focus();
-		page('kiezer').show();
-		await nextFrames();
-		(page('kiezer') as Page & { back(): void }).back();
-		await nextFrames();
-		expect(page('opdracht').hidden).toBe(false);
-		expect(document.activeElement).toBe(opener);
-	});
 });

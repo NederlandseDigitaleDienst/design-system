@@ -15,29 +15,44 @@ export const Standaard = patternStory(markup, (root) => {
 	});
 }, 520);
 
-type Stap = HTMLElement & { show(): void; back(): void };
 type Rij = HTMLElement & { selected: boolean };
 
 export const EenStapVerder = patternStory(step, (root) => {
 	const sheet = root.querySelector('nldd-sheet')!;
-	const aanvraag = root.querySelector('#aanvraag') as Stap;
-	const team = root.querySelector('#team') as Stap;
-	const teamCel = root.querySelector('#team-kiezen nldd-text-cell')!;
+	const paginas = [...sheet.querySelectorAll('nldd-page')];
+	const team = sheet.querySelector<HTMLElement>('#team')!;
+	const teamRij = sheet.querySelector<HTMLElement>('#team-kiezen')!;
+	const teamCel = teamRij.querySelector('nldd-text-cell')!;
+
+	// Welke pagina in beeld is, houdt de app bij. Onthoud de rij die de stap
+	// opende: in Safari geeft een klik geen focus, dus focus onthouden werkt niet.
+	let opener: HTMLElement | null = null;
+	const toon = (id: string) => {
+		paginas.forEach((pagina) => { pagina.hidden = pagina.id !== id; });
+	};
+	const terug = () => {
+		toon('aanvraag');
+		opener?.focus();
+	};
 
 	root.querySelector(':scope > nldd-page nldd-list-item')!.addEventListener('click', () => {
-		aanvraag.show();
+		toon('aanvraag');
 		sheet.open = true;
 	});
-	root.querySelector('#team-kiezen')!.addEventListener('click', () => team.show());
+	teamRij.addEventListener('click', () => {
+		opener = teamRij;
+		toon('team');
+		team.querySelector<HTMLElement>('nldd-list-item[selected]')?.focus();
+	});
+	// De terugknop van de stap vuurt back; een keuze gaat dezelfde weg terug.
+	team.addEventListener('back', terug);
 
-	// Een keuze gaat terug zoals de terugknop: back() toont de aanvraag en zet
-	// de focus op de rij die de stap opende.
 	const opties = [...team.querySelectorAll('nldd-list-item')] as Rij[];
 	opties.forEach((optie) => {
 		optie.addEventListener('click', () => {
 			opties.forEach((o) => { o.selected = o === optie; });
 			teamCel.setAttribute('supporting-text', optie.querySelector('nldd-text-cell')!.getAttribute('text')!);
-			team.back();
+			terug();
 		});
 	});
 }, 520);
