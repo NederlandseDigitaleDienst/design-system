@@ -132,7 +132,7 @@ Zolang de major 0 is, is minor het signaal voor een brekende wijziging en is elk
 
 **De leesbare inhoud schrijf je met de hand.** Dat is bewust: `nldd-avatar - nieuw component voor een persoon of organisatie` zegt een consument veel meer dan `refactor(avatar): rename css var`. Commit-titels schrijf je voor reviewers, changelog-entries voor consumers. Het gegenereerde deel is daarom expres niet meer dan het versiekopje; de `### Highlights` / `### Added`-secties eronder zijn handwerk.
 
-Laat daarom de regel `"preset": "conventionalcommits"` in `.releaserc.json` staan. Haal je die weg, dan valt de release-notes-generator terug op zijn eigen default en gaat hij de notes alsnog in `### Features` / `### Bug Fixes` opdelen, wat je juist niet wilt.
+Dat regelt de release-notes-generator in `.releaserc.json`. `presetConfig.types` noemt alleen een verborgen type `none`, zodat geen enkele commit een sectie als `### Features` of `### Bug Fixes` krijgt. `parserOpts` laat de generator geen breaking change herkennen, zodat ook `### ⚠ BREAKING CHANGES` wegblijft. Blijft alleen het kopje over. De versie bepaalt de commit-analyzer met zijn eigen `parserOpts`, dus een `!` geeft nog steeds een minor. Haal je een van de twee weg, dan komen de commits weer in de changelog. Tot semantic-release 26 leek het kopje vanzelf te gaan, maar dat kwam doordat een te oude `conventional-changelog-writer` de commits stilletjes liet vallen.
 
 Wil je toch handmatig iets toevoegen (bijv. iets dat semantic-release niet uit de commits haalt):
 
