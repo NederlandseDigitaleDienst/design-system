@@ -11,6 +11,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Highlights
 
+- **Thirteen new icons and six redrawn ones.** New: `business-suitcase-light` (alias `work-light`), `component`, `cookie`, `file-csv`, `foundation-light`, `languages`, `laptop`, `laptop-mobile`, `lightbulb-circle`, `lightbulb-circle-filled`, `seal`, `seal-filled` and `wi-fi` (alias `wifi`). Redrawn: `business-suitcase`, `color-chart`, `screwdriver-wrench`, `seal-check-mark`, `seal-star` and `wrench`. `icon="languages"` now shows its own icon instead of `globe`, which it was an alias of.
 - **A step deeper in a sheet is a page in the same sheet, with a back button that says where it goes.** Put a second `nldd-page` beside the first, with `parent` naming the page it is a step of and `hidden` until its turn. Its `nldd-top-title-bar` gets a back button with the title of the parent page, also in a pane of a split view, which hides that button otherwise. Which page is in view stays yours: on `back`, hide the step, show the parent and put focus back on the control that opened the step. What you filled in on the first page stays, because that page is hidden, not removed. A split view reads `empty` off the page in view, and a sheet or window takes its name from it. The pattern [Bewerken in een sheet](https://design.digitaledienst.overheid.nl/patronen/edit-in-a-sheet/) shows it.
 
 ### Added

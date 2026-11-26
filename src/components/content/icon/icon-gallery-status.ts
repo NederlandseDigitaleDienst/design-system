@@ -14,9 +14,9 @@
 // days old, which is what the label is for. A date rather than a rolling window
 // so the sets only move when someone recomputes them.
 //
-//   git log --since=2026-10-07T00:00 --reverse --find-renames --name-status --format= \
+//   git log --since=2026-10-29T00:00 --reverse --find-renames --name-status --format= \
 //     --invert-grep --grep='^feat!: one-time code field, column board' \
-//     --grep='^refactor(icon): round every icon to one decimal' \
+//     --grep='^feat!: an AI section to close the marketing page' \
 //     -- src/components/content/icon/icons
 //
 // The greps skip the two commits that rewrote every file without changing a
@@ -27,6 +27,10 @@
 // merge of the rounding, grep for the title of its merge instead. Keep a
 // filter as long as its commit falls inside the window; while it is still
 // uncommitted, leave it out of the "uncommitted counts as new" rule above.
+//
+// A filtered merge can still add an icon of its own: #358 brought
+// arrow-up-circle along with the rounding. Check each filtered merge with
+// `git show --name-status` and count what it added (A) as new.
 //
 // Read those events oldest first and chain renames forward to today's filename.
 // An icon born inside the window is new, under whatever name it ended up with;
@@ -39,61 +43,30 @@
 
 export const NEW_ICONS = new Set([
 	'arrow-up-circle',
-	'book-with-bookmark',
-	'chart-bar-x-axis',
-	'check-mark-square',
+	'business-suitcase-light',
 	'checkbox-list',
-	'color-chart',
-	'creditcard',
-	'ear',
-	'ear-slash',
-	'file-gif',
-	'file-heic',
-	'file-jpg',
-	'file-markdown',
-	'file-odf',
-	'file-odg',
-	'file-odp',
-	'file-ods',
-	'file-odt',
-	'file-pdf',
-	'file-png',
-	'file-svg',
-	'file-tiff',
-	'file-webp',
-	'flower',
-	'head-profile-with-brain',
-	'lightning-filled',
-	'lips',
-	'microscope',
-	'power-plug-socket',
+	'component',
+	'cookie',
+	'file-csv',
+	'foundation-light',
+	'languages',
+	'laptop',
+	'laptop-mobile',
+	'lightbulb-circle',
+	'lightbulb-circle-filled',
 	'projection-screen',
-	'rss',
-	'share-network',
-	'subscript',
-	'superscript',
-	'wrench',
+	'seal',
+	'seal-filled',
+	'wi-fi',
 ]);
 
 export const UPDATED_ICONS = new Set([
-	'bold',
-	'chart-line-x-y-axis',
-	'check-mark-circle-filled',
-	'check-mark-extra-small',
-	'eyeglasses',
-	'heading-1',
-	'heading-2',
-	'heading-3',
-	'heading-4',
-	'heading-5',
-	'heading-6',
-	'lightbulb',
-	'lightning',
-	'numbered-list',
-	'square-1',
+	'business-suitcase',
+	'color-chart',
+	'screwdriver-wrench',
+	'seal-check-mark',
+	'seal-star',
 	'square-arrow-up',
-	'strikethrough',
 	'task-list',
-	'text-format-size',
-	'underlined',
+	'wrench',
 ]);
