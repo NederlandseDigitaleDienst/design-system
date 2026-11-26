@@ -37,7 +37,7 @@ De plugin levert zes skills, en je assistent kiest zelf welke hij nodig heeft:
 
 {{skillsList}}
 
-Hoe je ze in Cursor zet en waar hun kennis vandaan komt, staat bij [werken met een AI-assistent](/aan-de-slag/ai-assistent/).
+Hoe je ze in Cursor zet en waar hun kennis vandaan komt, staat bij [werken met een AI-assistent](/handleidingen/ai-assistent/).
 
 ## Zonder bundler
 
@@ -54,7 +54,7 @@ Dat ene scriptbestand bevat alle componenten: ruim 2 MB, gzipped rond de 580 kB.
 
 Elke pagina begint met een [`nldd-shell`](/componenten/shell/) als buitenste element. Daarbinnen staat een [`nldd-page`](/componenten/page/) voor een pagina die je leest, of een split view voor een applicatie waarin je werkt. De twee [patronen](/patronen/) die dat uitwerken zijn de [contentpagina](/patronen/content-page/) en de [applicatie](/patronen/application/).
 
-Lees de [ontwerprichtlijnen](/richtlijnen/) voordat je een nieuwe interface ontwerpt. De componenten zijn op die keuzes gebouwd, bijvoorbeeld dat een knop niet disabled is en dat je optionele velden markeert in plaats van verplichte.
+Lees de [ontwerprichtlijnen](/handleidingen/richtlijnen/) voordat je een nieuwe interface ontwerpt. De componenten zijn op die keuzes gebouwd, bijvoorbeeld dat een knop niet disabled is en dat je optionele velden markeert in plaats van verplichte.
 
 ## Aanvullen in je editor
 
@@ -87,7 +87,7 @@ import '@nldd/design-system/vue';
 
 ## Een andere taal
 
-De componenten hebben Nederlandse standaardteksten. Een interface in een andere taal zet die teksten één keer, voor het hele pakket. Zie [vertalingen](/vertalingen/).
+De componenten hebben Nederlandse standaardteksten. Een interface in een andere taal zet die teksten één keer, voor het hele pakket. Zie [vertalingen](/handleidingen/vertalingen/).
 
 ## Bijwerken
 

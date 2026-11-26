@@ -9,6 +9,22 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **Thirteen new icons and six redrawn ones.** New: `business-suitcase-light` (alias `work-light`), `component`, `cookie`, `file-csv` (alias `csv-document`), `foundation-light`, `languages`, `laptop`, `laptop-mobile`, `lightbulb-circle`, `lightbulb-circle-filled`, `seal`, `seal-filled` and `wi-fi` (alias `wifi`). Redrawn: `business-suitcase`, `color-chart`, `screwdriver-wrench`, `seal-check-mark`, `seal-star` and `wrench`. `icon="languages"` now shows its own icon instead of `globe`, which it was an alias of.
+- **A step deeper in a sheet is a page in the same sheet, with a back button that says where it goes.** Put a second `nldd-page` beside the first, with `parent` naming the page it is a step of and `hidden` until its turn. Its `nldd-top-title-bar` gets a back button with the title of the parent page, also in a pane of a split view, which hides that button otherwise. Which page is in view stays yours: on `back`, hide the step, show the parent and put focus back on the control that opened the step. What you filled in on the first page stays, because that page is hidden, not removed. A split view reads `empty` off the page in view, and a sheet or window takes its name from it. The pattern [Bewerken in een sheet](https://design.digitaledienst.overheid.nl/patronen/edit-in-a-sheet/) shows it.
+
+### Added
+
+- **The design guidelines say: do not open an overlay from an overlay of the same kind.** Go a step further in the sheet instead of opening a second one; a modal dialog from a sheet is fine.
+- **Three lint rules for steps, all `warn`:** `sheet-no-nested` for an `nldd-sheet` inside an `nldd-sheet`, `page-parent-not-found` for a `parent` that names no page, and `popover-no-steps` for steps in an `nldd-popover`, which hides its title bar and so the back button on md and up.
+
+### Fixed
+
+- **A pane of `nldd-navigation-split-view` with only hidden content shows its empty state.** A `hidden` page used to count as content, so the pane stayed blank instead.
+- **`nldd-file-field` shows a CSV file with its own icon.** A `.csv` file got the generic file icon; it now gets `file-csv`.
+- **`focus()` on `nldd-text-editor` and `nldd-code-editor` works right after the editor is put in the page.** A call before the editor had rendered did nothing, so an editor that htmx swapped in with `autofocus` never got focus. The editor now holds on to the call until it has rendered, as `nldd-text-field` does, unless focus has moved on in the meantime.
+
 ## [0.29.2](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.29.1...v0.29.2) (2026-11-26)
 
 ## [0.29.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.29.0...v0.29.1) (2026-11-26)

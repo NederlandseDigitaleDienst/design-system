@@ -274,6 +274,9 @@ describe('nldd-file-field', () => {
 		choose(el, new File(['x'], 'foto.JPEG', { type: 'image/jpeg' }));
 		await waitForUpdate(el);
 		expect(el.shadowRoot!.querySelector('.file-field__file-icon')!.getAttribute('icon')).toBe('file-jpg');
+		choose(el, new File(['a,b'], 'export.csv', { type: 'text/csv' }));
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('.file-field__file-icon')!.getAttribute('icon')).toBe('file-csv');
 		choose(el, txt('notities.xyz'));
 		await waitForUpdate(el);
 		expect(el.shadowRoot!.querySelector('.file-field__file-icon')!.getAttribute('icon')).toBe('file');

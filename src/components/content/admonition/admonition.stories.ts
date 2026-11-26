@@ -119,7 +119,7 @@ export const Varianten = {
 			<nldd-admonition
 				variant="success"
 				text="Tip"
-				icon="idea"
+				icon="lightbulb-circle-filled"
 			>
 				<nldd-rich-text>
 					<p>Een foto van het hele schuine dak maakt de beoordeling sneller.</p>

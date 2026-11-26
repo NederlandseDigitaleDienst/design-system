@@ -22,6 +22,7 @@ const FORMAT_ICONS: Record<string, string> = {
 	heic: 'file-heic',
 	tif: 'file-tiff',
 	tiff: 'file-tiff',
+	csv: 'file-csv',
 	md: 'file-markdown',
 	markdown: 'file-markdown',
 	txt: 'file-text',

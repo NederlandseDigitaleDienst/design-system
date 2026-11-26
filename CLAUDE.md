@@ -152,7 +152,7 @@ Draai daarna `npm run build:icons` (registry) en `npm run generate:skill-docs` (
 
 ## Ontwerprichtlijnen
 
-De ontwerprichtlijnen staan in `src/docs/design-guidelines.md` (op de website `/richtlijnen/`): dat is de enige bron. Wijzig je ze, draai dan `npm run generate:skill-principles` (of `npm run generate:skill-docs`) en commit het resultaat. `skills/nldd-design/design-guidelines.md` is een gegenereerde kopie die met de plugin meereist en in sync moet blijven; er is geen aparte ontwerprichtlijnen-skill meer. Houd de tekst em-dash-vrij (komma's, punten of haakjes).
+De ontwerprichtlijnen staan in `src/docs/design-guidelines.md` (op de website `/handleidingen/richtlijnen/`): dat is de enige bron. Wijzig je ze, draai dan `npm run generate:skill-principles` (of `npm run generate:skill-docs`) en commit het resultaat. `skills/nldd-design/design-guidelines.md` is een gegenereerde kopie die met de plugin meereist en in sync moet blijven; er is geen aparte ontwerprichtlijnen-skill meer. Houd de tekst em-dash-vrij (komma's, punten of haakjes).
 
 Een ontwerpregel staat daarmee op één plek. Een skill of een patroon mag hem hoogstens in één zin noemen met een link naar de sectie, en schrijft hem niet opnieuw uit. Doe je dat wel, dan lopen de twee versies uiteen: de sticky-headerregel stond een tijd strenger in `nldd-design-build` dan in de richtlijn zelf, en niemand zag dat.
 
@@ -168,11 +168,11 @@ De landingspagina (`www/index.html`, met `www/main.ts` en `www/styles.css`) is m
 |--------|------|
 | `/componenten/<naam>/` | `<naam>.stories.ts` voor de voorbeelden, `custom-elements.json` voor de API-tabel |
 | `/patronen/<slug>/` | `src/patterns/<slug>/`, met de lintregels die naar het patroon wijzen eronder |
-| `/richtlijnen/`, `/themas/`, `/iconen/`, `/vertalingen/`, `/breakpoints/` | `src/docs/*.md` |
-| `/toegankelijkheid/` | `docs/ACCESSIBILITY.md`, met eronder de lintregels per succescriterium |
+| `/handleidingen/richtlijnen/`, `/handleidingen/themas/`, `/iconen/`, `/handleidingen/vertalingen/`, `/handleidingen/breakpoints/` | `src/docs/*.md` |
+| `/handleidingen/toegankelijkheid/` | `docs/ACCESSIBILITY.md`, met eronder de lintregels per succescriterium |
 | `/lintregels/`, `/lintregels/<regel>/` | `src/rules/<groep>/<regel>.yaml`, een pagina per regel |
 | `/changelog/`, `/changelog/<versie>/` | `CHANGELOG.md`, een pagina per versie |
-| `/aan-de-slag/` | `www/content/*.md` |
+| `/handleidingen/aan-de-slag/` | `www/content/*.md` |
 
 Een component heeft dus een pagina omdat het een stories-bestand heeft; niemand schrijft een componentpagina. De landingspagina heeft een balk met alleen het logo en de naam: ze leidt zelf, per sectie, naar de onderdelen. Elke pagina erachter is een applicatie, zoals het patroon Applicatie: een werkbalk boven een `nldd-navigation-split-view`. In de werkbalk staan een terugknop naar de landingspagina, de naam van de site en de themaknop. De eerste zijbalk heeft de secties (`NAVIGATION` in `site.js`) en onderaan de links over de site (`ABOUT`), de tweede de pagina's van een sectie die ze heeft (componenten, patronen, versies), en main de pagina zelf. Een overzicht als `/componenten/` laat main leeg, zodat een telefoon op de lijst opent. `/documentatie/` heeft alleen de secties en een lege main; daar gaat de terugknop van een pagina zonder eigen lijst heen. Wat op een smal scherm wegvalt, bereik je met de terugknop in de titelbalk. Er zijn geen breadcrumbs. Elke pagina is een eigen HTML-bestand, maar een klik herlaadt niet: `www/client/navigate.ts` haalt de volgende pagina op en vervangt alleen de panes die verschillen, zodat de zijbalken blijven staan. De themaknop opent een popover met het thema en de kleurmodus, zoals op de landingspagina: de keuze geldt voor elke pagina en elk voorbeeld, zodat je een component in de kleur van je eigen organisatie ziet.
 

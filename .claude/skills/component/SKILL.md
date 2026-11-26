@@ -482,7 +482,7 @@ showLoadMore, lazyLoad, collapseAnchor, contentPriority, priority, anchor,
 noTab, roving, timing, tooltipTiming, duration, noLightDismiss, noCollapse,
 wrap, singleLine, uppercase, syntax, annotatable, query,
 queryMarkMode, aliases, filterFn, firstDayOfWeek, hrefPattern,
-textEditorFor, textEditorCommand, sidebarSectionOnly
+textEditorFor, textEditorCommand, sidebarSectionOnly, parent
 
 [12. States]
 selected, checked, indeterminate, expanded, collapsed, open, active,

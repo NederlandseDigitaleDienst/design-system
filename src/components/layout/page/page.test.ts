@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate, nextFrames } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
 import './page.js';
@@ -634,5 +634,178 @@ describe('nldd-page – stand-alone, moved in the DOM', () => {
 		window.dispatchEvent(new Event('resize'));
 		await nextFrames();
 		expect(page.dataset.scroll).toBe('nested');
+	});
+});
+
+describe('nldd-page – steps with parent', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const STEPS = `
+		<div>
+			<nldd-page id="opdracht">
+				<nldd-top-title-bar slot="header" text="Opdracht" dismiss-text="Sluit"></nldd-top-title-bar>
+				<nldd-button id="opener" text="Opdrachtgever toevoegen"></nldd-button>
+			</nldd-page>
+			<nldd-page id="kiezer" parent="opdracht" hidden>
+				<nldd-top-title-bar slot="header" text="Opdrachtgever kiezen" dismiss-text="Sluit"></nldd-top-title-bar>
+				<nldd-text-field id="zoek" accessible-label="Zoek"></nldd-text-field>
+			</nldd-page>
+			<nldd-page id="contact" parent="kiezer" hidden>
+				<nldd-top-title-bar slot="header" text="Contactpersoon"></nldd-top-title-bar>
+			</nldd-page>
+		</div>
+	`;
+
+	type Page = HTMLElement & { hidden: boolean; parent: string };
+	type Bar = HTMLElement & { _backText: string; updateComplete: Promise<boolean> };
+	const page = (id: string) => el.querySelector<Page>(`#${id}`)!;
+	const bar = (id: string) => page(id).querySelector<Bar>('nldd-top-title-bar')!;
+	/** What an app does: show one page, hide the pages beside it. */
+	const view = (id: string) => {
+		for (const other of el.querySelectorAll<Page>('nldd-page')) other.hidden = other.id !== id;
+	};
+	const pressBack = async (id: string) => {
+		await bar(id).updateComplete;
+		bar(id).shadowRoot!.querySelector<HTMLElement>('.top-title-bar__text-back-button nldd-button')!.click();
+		await waitForUpdate(page(id));
+	};
+
+	async function setup() {
+		await import('../../navigation/top-title-bar/top-title-bar.js');
+		await import('../../actions/button/button.js');
+		await import('../../inputs/text-field/text-field.js');
+		el = await fixture(STEPS);
+		await waitForUpdate(page('kiezer'));
+	}
+
+	it('gives the title bar of a step the title of its parent as back text', async () => {
+		await setup();
+		expect(bar('kiezer')._backText).toBe('Opdracht');
+		expect(bar('contact')._backText).toBe('Opdrachtgever kiezen');
+		expect(bar('opdracht')._backText).toBe('');
+	});
+
+	it('follows the title of the parent while the step is in view', async () => {
+		await setup();
+		view('kiezer');
+		await waitForUpdate(page('kiezer'));
+		bar('opdracht').setAttribute('text', 'Opdracht A-1042');
+		await waitForUpdate(page('kiezer'));
+		expect(bar('kiezer')._backText).toBe('Opdracht A-1042');
+
+		(bar('opdracht') as Bar & { text: string }).text = 'Opdracht A-1043';
+		await bar('opdracht').updateComplete;
+		await waitForUpdate(page('kiezer'));
+		expect(bar('kiezer')._backText).toBe('Opdracht A-1043');
+	});
+
+	it('follows a parent title bar added later, also inside a wrapper', async () => {
+		await setup();
+		page('opdracht').querySelector('nldd-top-title-bar')!.remove();
+		page('opdracht').setAttribute('accessible-label', 'Opdracht bewerken');
+		view('kiezer');
+		await waitForUpdate(page('kiezer'));
+		expect(bar('kiezer')._backText).toBe('Opdracht bewerken');
+
+		page('opdracht').insertAdjacentHTML('afterbegin', '<div slot="header"><nldd-top-title-bar text="Opdracht"></nldd-top-title-bar></div>');
+		await waitForUpdate(page('kiezer'));
+		expect(bar('kiezer')._backText).toBe('Opdracht');
+	});
+
+	it('follows an accessible-label set as a property on a parent without a title bar', async () => {
+		await setup();
+		page('opdracht').querySelector('nldd-top-title-bar')!.remove();
+		view('kiezer');
+		await waitForUpdate(page('kiezer'));
+		(page('opdracht') as Page & { accessibleLabel: string }).accessibleLabel = 'Opdracht bewerken';
+		await waitForUpdate(page('opdracht'));
+		expect(bar('kiezer')._backText).toBe('Opdracht bewerken');
+	});
+
+	it('lets the back of a step through to the app, which reads parent off the page', async () => {
+		await setup();
+		view('kiezer');
+		await waitForUpdate(page('kiezer'));
+		const seen: string[] = [];
+		el.addEventListener('back', (event) => seen.push((event.target as HTMLElement).closest<Page>('nldd-page')!.parent));
+		await pressBack('kiezer');
+		expect(seen).toEqual(['opdracht']);
+		expect(page('kiezer').hidden).toBe(false);
+	});
+
+	it('drops the back text when the parent leaves', async () => {
+		await setup();
+		page('opdracht').remove();
+		await waitForUpdate(page('kiezer'));
+		expect(bar('kiezer')._backText).toBe('');
+	});
+
+	it('follows a parent that changes or goes', async () => {
+		await setup();
+		page('contact').parent = 'opdracht';
+		await waitForUpdate(page('contact'));
+		expect(bar('contact')._backText).toBe('Opdracht');
+		page('contact').removeAttribute('parent');
+		await waitForUpdate(page('contact'));
+		expect(bar('contact')._backText).toBe('');
+	});
+
+	it('keeps a back-text the consumer set', async () => {
+		await setup();
+		bar('kiezer').setAttribute('back-text', 'Terug');
+		await bar('kiezer').updateComplete;
+		expect(bar('kiezer')._backText).toBe('Terug');
+	});
+
+	it('falls back to the accessible-label of a parent without a title bar', async () => {
+		await setup();
+		page('opdracht').querySelector('nldd-top-title-bar')!.remove();
+		page('opdracht').setAttribute('accessible-label', 'Opdracht bewerken');
+		view('kiezer');
+		await waitForUpdate(page('kiezer'));
+		expect(bar('kiezer')._backText).toBe('Opdracht bewerken');
+	});
+
+	it('does not sync on a text attribute in the content of a page beside it', async () => {
+		await setup();
+		view('kiezer');
+		await waitForUpdate(page('kiezer'));
+		const spy = vi.spyOn(page('kiezer') as Page & { _syncBackText(): void }, '_syncBackText');
+		page('opdracht').insertAdjacentHTML('beforeend', '<span text="a"></span>');
+		page('opdracht').querySelector('span')!.setAttribute('text', 'b');
+		await waitForUpdate(page('kiezer'));
+		const afterChild = spy.mock.calls.length;
+		page('opdracht').querySelector('span')!.setAttribute('text', 'c');
+		await waitForUpdate(page('kiezer'));
+		expect(spy.mock.calls.length).toBe(afterChild);
+	});
+
+	it('leaves a page without parent without a parent attribute', async () => {
+		await setup();
+		expect(page('opdracht').hasAttribute('parent')).toBe(false);
+	});
+
+	it('follows a page a framework shows by removing hidden', async () => {
+		await setup();
+		page('opdracht').querySelector('nldd-top-title-bar')!.setAttribute('text', 'Opdracht bewerken');
+		page('opdracht').hidden = true;
+		page('kiezer').hidden = false;
+		await waitForUpdate(page('kiezer'));
+		expect(bar('kiezer')._backText).toBe('Opdracht bewerken');
+	});
+
+	it('names a sheet after the title bar of the step in view', async () => {
+		await import('../../navigation/top-title-bar/top-title-bar.js');
+		el = await fixture(`<nldd-sheet>${STEPS.replace(/<\/?div>/g, '')}</nldd-sheet>`);
+		const sheet = el as HTMLElement & { _resolvedAccessibleLabel: string };
+		await waitForUpdate(sheet);
+		expect(sheet._resolvedAccessibleLabel).toBe('Opdracht');
+		view('kiezer');
+		await waitForUpdate(sheet);
+		expect(sheet._resolvedAccessibleLabel).toBe('Opdrachtgever kiezen');
 	});
 });

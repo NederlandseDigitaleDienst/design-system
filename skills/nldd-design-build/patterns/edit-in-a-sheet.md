@@ -126,6 +126,147 @@ nldd-sheet                     open, placement, width; in de document-root
 
 **Zet de sheet in de document-root.** Die hoort niet in de inhoud van een split view: als slotted kind pikt die daar de hoogte van het paneel in, waarna een sticky footer los in het scherm komt te hangen. In een framework teleporteer je die naar `document.body`; [`nldd-sheet`](../../nldd-design/reference.md#nldd-sheet) legt uit waarom.
 
+## Een stap verder
+
+Soms vraagt een veld om een eigen scherm, zoals een team kiezen uit een lijst. Open daarvoor geen tweede sheet over de eerste. Ga in dezelfde sheet een stap verder: een tweede [`nldd-page`](../../nldd-design/reference.md#nldd-page) naast de eerste, met `parent` naar de pagina waar hij vandaan komt en `hidden` tot hij aan de beurt is.
+
+```html
+<nldd-page>
+  <nldd-simple-section>
+    <nldd-title
+      slot="header"
+      size="display-2"
+      text="Aanvragen"
+      heading-level="1"
+    ></nldd-title>
+    <nldd-list
+      appearance="box-base"
+      accessible-label="Aanvragen"
+    >
+      <nldd-list-item button>
+        <nldd-text-cell
+          text="Aanvraag A-1042"
+          supporting-text="Dakisolatie, in behandeling"
+        ></nldd-text-cell>
+        <nldd-spacer-cell size="12"></nldd-spacer-cell>
+        <nldd-icon-cell
+          size="20"
+          color="secondary"
+          icon="chevron-right"
+        ></nldd-icon-cell>
+      </nldd-list-item>
+    </nldd-list>
+  </nldd-simple-section>
+</nldd-page>
+
+<nldd-sheet
+  placement="right"
+  width="480px"
+>
+  <nldd-page
+    id="aanvraag"
+    sticky-header
+  >
+    <nldd-top-title-bar
+      slot="header"
+      text="Aanvraag A-1042 bewerken"
+      dismiss-text="Annuleer"
+      collapse-anchor="aanvraag-titel"
+    ></nldd-top-title-bar>
+    <nldd-simple-section>
+      <nldd-title
+        id="aanvraag-titel"
+        slot="header"
+        size="display-2"
+        text="Aanvraag A-1042 bewerken"
+        heading-level="1"
+      ></nldd-title>
+      <nldd-form name="aanvraag">
+        <nldd-form-field label="Titel">
+          <nldd-text-field
+            name="titel"
+            value="Dakisolatie"
+          ></nldd-text-field>
+        </nldd-form-field>
+        <nldd-list
+          appearance="box-base"
+          accessible-label="Behandeling"
+        >
+          <nldd-list-item
+            id="team-kiezen"
+            button
+          >
+            <nldd-text-cell
+              text="Team"
+              supporting-text="Uitvoering"
+            ></nldd-text-cell>
+            <nldd-spacer-cell size="12"></nldd-spacer-cell>
+            <nldd-icon-cell
+              size="20"
+              color="secondary"
+              icon="chevron-right"
+            ></nldd-icon-cell>
+          </nldd-list-item>
+        </nldd-list>
+        <nldd-form-actions>
+          <nldd-button-group>
+            <nldd-button
+              appearance="primary"
+              type="submit"
+              text="Bewaar"
+            ></nldd-button>
+          </nldd-button-group>
+        </nldd-form-actions>
+      </nldd-form>
+    </nldd-simple-section>
+  </nldd-page>
+  <nldd-page
+    id="team"
+    parent="aanvraag"
+    sticky-header
+    hidden
+  >
+    <nldd-top-title-bar
+      slot="header"
+      text="Team kiezen"
+      dismiss-text="Annuleer"
+      collapse-anchor="team-titel"
+    ></nldd-top-title-bar>
+    <nldd-simple-section>
+      <nldd-title
+        id="team-titel"
+        slot="header"
+        size="display-2"
+        text="Team kiezen"
+        heading-level="1"
+      ></nldd-title>
+      <nldd-list
+        appearance="box-base"
+        accessible-label="Teams"
+      >
+        <nldd-list-item
+          button
+          selected
+        >
+          <nldd-text-cell text="Uitvoering"></nldd-text-cell>
+        </nldd-list-item>
+        <nldd-list-item button>
+          <nldd-text-cell text="Beleid"></nldd-text-cell>
+        </nldd-list-item>
+      </nldd-list>
+    </nldd-simple-section>
+  </nldd-page>
+</nldd-sheet>
+```
+
+**De terugknop zegt waar je heen gaat.** De pagina met `parent` geeft zijn titelbalk een terugknop met de titel van de ouder, hier "Aanvraag A-1042 bewerken". Twee sheets over elkaar hebben elk een eigen sluitknop, en die zegt niet waar je uitkomt. "Annuleer" sluit hier de hele sheet, in elke stap.
+
+**Welke pagina in beeld is, houd je zelf bij.** Zet `hidden` op de pagina die weggaat en haal hem weg bij de pagina die komt. Bij een stap verder zet je de focus in de nieuwe pagina, bij terug weer op de rij die de stap opende. Onthoud die rij bij de klik, niet via de focus: in Safari geeft een klik op een rij geen focus. De terugknop vuurt `back`; een keuze in de stap gaat dezelfde weg terug, en de gekozen waarde zet je zelf in de eerste pagina.
+
+**Houd beide pagina's in de DOM.** Render de stappen met `hidden`, niet een voor een met een conditie. Anders vindt de stap geen ouder om de titel van te nemen, en is wat in de eerste stap stond weg.
+
+**Geen eigen adres.** Een stap komt niet in de URL, en de terugknop van de browser gaat er niet doorheen. Verdient een stap een adres, dan is hij een pagina van de applicatie, met `back-href` op de titelbalk.
+
 ## Toegankelijkheid
 
 Wat je gratis krijgt: de dialoogrol, sluiten met Esc en met een klik naast de sheet, de focus die binnen de sheet blijft en daarna terugkeert naar de knop die de sheet opende, en de naam uit de titelbalk.
@@ -140,7 +281,10 @@ Deze compositie komt voor in vrijwel elke applicatie op dit designsysteem, in Vu
 
 `nldd lint` controleert dit:
 
+- `page-parent-not-found`: `parent` needs the id of an nldd-page beside this one, or the step has no page to go back to.
+- `popover-no-steps`: A step with `parent` sits in an nldd-popover, which hides its title bar and so its back button. Put the steps in an nldd-sheet.
 - `sheet-needs-dismiss`: Set `dismiss-text` on the title bar, so the sheet has a visible way out.
+- `sheet-no-nested`: An nldd-sheet opens over another nldd-sheet. Show the next step in the same sheet, as an nldd-page with `parent`.
 - `split-view-no-sheet`: Render nldd-sheet at the document root: as a slotted child it takes the height of the pane, and a sticky footer comes loose.
 
 Hints: zo is het bedoeld. Die laten niets falen.

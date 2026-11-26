@@ -159,6 +159,8 @@ export const ICON_CATEGORIES: Record<string, string[]> = {
 		'heart-filled',
 		'megaphone',
 		'seal-check-mark',
+		'seal',
+		'seal-filled',
 		'seal-star',
 		'star',
 		'star-filled',
@@ -167,6 +169,7 @@ export const ICON_CATEGORIES: Record<string, string[]> = {
 		'tag-on-tag',
 	],
 	'Communicatie': [
+		'languages',
 		'at',
 		'envelope',
 		'link',
@@ -199,6 +202,7 @@ export const ICON_CATEGORIES: Record<string, string[]> = {
 		'file-pdf',
 		'file-odt',
 		'file-ods',
+		'file-csv',
 		'file-odp',
 		'file-odg',
 		'file-odf',
@@ -273,6 +277,8 @@ export const ICON_CATEGORIES: Record<string, string[]> = {
 		'diamond',
 		'lifebuoy',
 		'lightbulb',
+		'lightbulb-circle',
+		'lightbulb-circle-filled',
 	],
 	'Indeling': [
 		'rectangle',
@@ -342,6 +348,7 @@ export const ICON_CATEGORIES: Record<string, string[]> = {
 		'timer',
 	],
 	'Privacy en beveiliging': [
+		'cookie',
 		'key',
 		'lock-closed',
 		'lock-open',
@@ -369,6 +376,7 @@ export const ICON_CATEGORIES: Record<string, string[]> = {
 		'apartment-building-2',
 		'brick-wall',
 		'foundation',
+		'foundation-light',
 		'globe',
 		'house',
 		'house-apartment-building',
@@ -382,6 +390,7 @@ export const ICON_CATEGORIES: Record<string, string[]> = {
 		'signpost',
 	],
 	'Software en ontwikkeling': [
+		'component',
 		'app',
 		'puzzle-piece',
 		'puzzle-piece-badge-plus',
@@ -403,6 +412,8 @@ export const ICON_CATEGORIES: Record<string, string[]> = {
 		'rectangle-stack-chevron-left-forward-slash-chevron-right',
 	],
 	'Infrastructuur en hardware': [
+		'laptop',
+		'laptop-mobile',
 		'cpu',
 		'cylinder-split',
 		'cylinder-split-badge-lock',
@@ -434,6 +445,7 @@ export const ICON_CATEGORIES: Record<string, string[]> = {
 		'ship-wheel-badge-plus',
 	],
 	'Verbinding': [
+		'wi-fi',
 		'cloud-arrow-up',
 		'cloud-arrow-down',
 		'antenna-radio-waves',
@@ -446,6 +458,7 @@ export const ICON_CATEGORIES: Record<string, string[]> = {
 	],
 	'Kantoor': [
 		'business-suitcase',
+		'business-suitcase-light',
 		'network-structure',
 	],
 	'Overig': [

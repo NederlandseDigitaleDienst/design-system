@@ -65,14 +65,14 @@ test('the landing page is the one written by hand, with the head every page has'
 });
 
 test('every page behind the landing page is an application: a toolbar around a split view, without the bar of the landing page', () => {
-	for (const path of ['componenten/button/index.html', 'patronen/form/index.html', 'richtlijnen/index.html']) {
+	for (const path of ['componenten/button/index.html', 'patronen/form/index.html', 'handleidingen/richtlijnen/index.html']) {
 		assert.match(pages[path], /<nldd-bar-split-view>[^]*<nldd-navigation-split-view slot="main">/, path);
 		assert.match(pages[path], /data-site-home\s*>\s*<nldd-icon-button\s+icon="chevron-left"\s+text="Home"\s+href="\/"/, path);
 		assert.match(pages[path], /text="Documentatie"\s+heading-level="2"\s+back-text="Home"\s+back-href="\/"/, path);
 		assert.match(pages[path], /<nldd-toolbar-title\s+slot="start"\s+text="NLDD Designsysteem"\s+min-width="0"/, path);
 		assert.match(pages[path], /<nldd-page[^]*?slot="footer"[^]*?<nldd-link-group accessible-label="Over deze site" size="sm">/, path);
 		assert.doesNotMatch(pages[path], /nldd-top-navigation-bar|nldd-page-footer|nldd-breadcrumbs/, path);
-		for (const href of ['/componenten/', '/patronen/', '/themas/', '/toegankelijkheid/', '/changelog/']) {
+		for (const href of ['/componenten/', '/patronen/', '/handleidingen/themas/', '/handleidingen/toegankelijkheid/', '/changelog/']) {
 			assert.ok(pages[path].includes(`href="${href}"`), `${path} mist ${href}`);
 		}
 	}
@@ -220,8 +220,11 @@ test('the lint rules are a section of their own, with the groups as its list', (
 	assert.match(pages['lintregels/link-needs-href/index.html'], /href="\/lintregels\/structure\/"\s+current/);
 	// The old address sends the reader on.
 	assert.match(pages['linter/link-needs-href/index.html'], /http-equiv="refresh" content="0; url=\/lintregels\/link-needs-href\/"/);
+	// A guide that moved under /handleidingen/ sends the reader on, to the same heading.
+	assert.match(pages['richtlijnen/index.html'], /location\.replace\("\/handleidingen\/richtlijnen\/" \+ location\.hash\)/);
+	assert.match(pages['aan-de-slag/ai-assistent/index.html'], /url=\/handleidingen\/ai-assistent\/"/);
 	// The guide about the linter ends with the way to every rule.
-	assert.match(pages['linter/index.html'], /href="\/lintregels\/"/);
+	assert.match(pages['handleidingen/linter/index.html'], /href="\/lintregels\/"/);
 });
 
 test('every success criterion the linter knows has its Dutch name and an anchor of its own', () => {
@@ -231,7 +234,7 @@ test('every success criterion the linter knows has its Dutch name and an anchor 
 });
 
 test('the accessibility page lists the rules by success criterion, from every group', () => {
-	const page = pages['toegankelijkheid/index.html'];
+	const page = pages['handleidingen/toegankelijkheid/index.html'];
 	assert.match(page, /<h2>Lintregels per succescriterium<\/h2>/);
 	// A rule of `copy` under the criterion it guards.
 	const sheet = page.slice(page.indexOf('<nldd-sheet\n\tid="lintregels-per-succescriterium-2-4-4"'));
@@ -241,7 +244,7 @@ test('the accessibility page lists the rules by success criterion, from every gr
 });
 
 test('the accessibility page shows who does what as a list per principle, with a tag per criterion', () => {
-	const page = pages['toegankelijkheid/index.html'];
+	const page = pages['handleidingen/toegankelijkheid/index.html'];
 	for (const principle of ['Waarneembaar', 'Bedienbaar', 'Begrijpelijk', 'Robuust']) {
 		assert.match(page, new RegExp(`accessible-label="Succescriteria van het principe ${principle}"`));
 	}
@@ -362,7 +365,7 @@ test('the skills the site names are the skills the plugin ships', async () => {
 });
 
 test('the getting-started pages show how to install the skills', () => {
-	for (const path of ['aan-de-slag/index.html', 'aan-de-slag/ai-assistent/index.html']) {
+	for (const path of ['handleidingen/aan-de-slag/index.html', 'handleidingen/ai-assistent/index.html']) {
 		assert.match(pages[path], /\/plugin install nldd-design-system@nldd/, path);
 		assert.match(pages[path], /nldd-design-migrate/, path);
 	}

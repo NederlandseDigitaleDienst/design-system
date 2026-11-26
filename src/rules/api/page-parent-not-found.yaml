@@ -1,0 +1,10 @@
+severity: warn
+context: 'nldd-page[parent]'
+ref: { attr: parent, target: nldd-page }
+message: '`parent` needs the id of an nldd-page beside this one, or the step has no page to go back to.'
+see: patronen/edit-in-a-sheet
+examples:
+  passed:
+    - '<html><body><nldd-sheet><nldd-page id="aanvraag"></nldd-page><nldd-page id="team" parent="aanvraag" hidden></nldd-page></nldd-sheet></body></html>'
+  failed:
+    - '<html><body><nldd-sheet><nldd-page id="aanvraag"></nldd-page><nldd-page id="team" parent="aanvragen" hidden></nldd-page></nldd-sheet></body></html>'

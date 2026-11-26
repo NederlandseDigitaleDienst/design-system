@@ -130,6 +130,28 @@ const CASES: Record<string, string> = {
 	'nldd-code-viewer': '<nldd-code-viewer language="js">const a = 1;</nldd-code-viewer>',
 };
 
+/** Every element in the subtree, through shadow roots. */
+function deepAll(root: Element): Element[] {
+	const found: Element[] = [];
+	const walk = (node: Element | ShadowRoot) => {
+		for (const child of node.children) {
+			found.push(child);
+			walk(child);
+			if (child.shadowRoot) walk(child.shadowRoot);
+		}
+	};
+	if (root.shadowRoot) walk(root.shadowRoot);
+	walk(root);
+	return found;
+}
+
+// A tooltip adds a keydown listener to the document while it shows. Moved
+// under a resting pointer, an instant one (nldd-progress-circle) opens between
+// the two counts, which reads as a doubled listener.
+const silenceTooltips = (root: Element) => {
+	for (const tooltip of deepAll(root)) if (tooltip.localName === 'nldd-tooltip') tooltip.setAttribute('timing', 'never');
+};
+
 const settle = async (el: HTMLElement) => {
 	await waitForUpdate(el);
 	await new Promise((resolve) => setTimeout(resolve, 150));
@@ -146,6 +168,8 @@ describe('a component keeps its observers and listeners when it is moved', () =>
 		it(name, async () => {
 			el = await fixture(`<div><div id="a">${markup}</div><div id="b"></div></div>`);
 			const subject = el.querySelector('#a')!.firstElementChild as HTMLElement;
+			await settle(subject);
+			silenceTooltips(subject);
 			await settle(subject);
 			const before = snapshot(subject);
 			el.querySelector('#b')!.appendChild(subject);

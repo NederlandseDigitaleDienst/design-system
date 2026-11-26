@@ -17,6 +17,9 @@
  * anywhere else, with only the middle scrolling, and the text of the bar is
  * also the sheet's accessible name. Do not build a header of your own.
  *
+ * Open no sheet from a sheet: put the next step beside the first as an
+ * nldd-page with `parent`, which gives its title bar a back button.
+ *
  * Open and close it with `open`, bound to your state together with the close
  * event: the sheet clears `open` itself when the user closes it. show() and
  * hide() do the same for code without a binding. Keep the sheet in the DOM

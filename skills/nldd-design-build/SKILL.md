@@ -138,7 +138,7 @@ import '@nldd/design-system/themes/geel.css';   // of '@nldd/design-system/theme
 <html lang="nl" data-nldd-theme="geel">
 ```
 
-Een thema geldt voor de hele website. Een attribuut zonder geladen thema doet niets. Kleur zelf niets na om bij het thema te passen: elke rol kiest binnen zijn contrasteis de stap die het dichtst bij de themakleur ligt, en bij geel, rood, robijnrood en oranje wijkt het designsysteem bewust uit naar bijna zwart of grijs. Waarom, en hoe elk thema eruitziet, staat op de [pagina Thema's](https://design.digitaledienst.overheid.nl/themas/).
+Een thema geldt voor de hele website. Een attribuut zonder geladen thema doet niets. Kleur zelf niets na om bij het thema te passen: elke rol kiest binnen zijn contrasteis de stap die het dichtst bij de themakleur ligt, en bij geel, rood, robijnrood en oranje wijkt het designsysteem bewust uit naar bijna zwart of grijs. Waarom, en hoe elk thema eruitziet, staat op de [pagina Thema's](https://design.digitaledienst.overheid.nl/handleidingen/themas/).
 
 ## CSS-variabelen
 

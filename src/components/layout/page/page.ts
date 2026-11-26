@@ -47,6 +47,26 @@
  * knows which pane that is. Two pages that both render a main is invalid HTML,
  * and the page says so in development.
  *
+ * ## Steps
+ * A step deeper in the same surface is a page beside the one it starts from,
+ * in the same parent and slot, not a second sheet on top of the first. Give
+ * each page an `id` and the deeper one a `parent`, and hide all but one with
+ * `hidden`:
+ *
+ *     <nldd-sheet>
+ *         <nldd-page id="opdracht">…</nldd-page>
+ *         <nldd-page id="kiezer" parent="opdracht" hidden>…</nldd-page>
+ *     </nldd-sheet>
+ *
+ * A page with `parent` gives the nldd-top-title-bar in its header a back
+ * button, also in a split view's pane that hides it otherwise, with the title
+ * of that parent page (its title bar's `text`, or else its `accessible-label`),
+ * unless the bar has a `back-text` of its own. Which page is in view stays
+ * yours: on `back`, read `parent` of the page it comes from, hide that page,
+ * show the parent and put focus back on the control that opened the step. Keep
+ * the pages in the DOM with `hidden` rather than rendering one at a time, or
+ * the step finds no parent to take the title from.
+ *
  * @element nldd-page
  * @keywords pagina
  * @related nldd-shell, nldd-window, nldd-sheet
@@ -56,6 +76,7 @@
  * @attr {boolean} sticky-footer - Sticky footer
  * @attr {string} accessible-label - Name of the landmark this page is: the region it becomes beside another page, or its main landmark
  * @attr {'auto'|'page'|'region'} landmarks - Whether this page carries the document's landmarks: 'auto' (default) derives it from where the page sits, 'page' keeps banner, main and contentinfo, 'region' drops all three
+ * @attr {string} parent - Id of the page beside this one that this page is a step of. The back button of its title bar shows that page
  *
  * @slot header - Header content. Put a `nldd-top-title-bar` straight in this slot, not in a container: the page measures the bar there, so an anchor scrolled to stays clear of it
  * @slot - Main content (scrollable)
@@ -75,7 +96,7 @@ import { pageTemplate } from './page.template.js';
 import { setState } from '../../../utilities/element-state.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { LayoutPass, sharedResizeObserver } from '../../../utilities/layout-pass.js';
-import type { CompactingBar } from '../../navigation/top-title-bar/top-title-bar.js';
+import type { CompactingBar, NLDDTopTitleBar } from '../../navigation/top-title-bar/top-title-bar.js';
 
 /** What a page measures of its bars and its scroller, before it writes any of it. */
 interface PageInsets {
@@ -160,6 +181,9 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 
 	@property({ reflect: true, converter: reflectNonDefault<Landmarks>('auto') })
 	landmarks: Landmarks = 'auto';
+
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	parent = '';
 
 	@state()
 	_scrolled = false;
@@ -291,7 +315,10 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 		}
 		// Moved in the DOM: `firstUpdated` does not come again, and
 		// `disconnectedCallback` took this listener and observer down.
-		if (this.hasUpdated) this._setupMainSlotListener();
+		if (this.hasUpdated) {
+			this._setupMainSlotListener();
+			this._watchSteps();
+		}
 	}
 
 	/** Switches from stand-alone to push once a shell (or sheet, or modal
@@ -314,6 +341,8 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 		this._teardownScrollListener();
 		this._teardownInsetObserver();
 		this._teardownMainSlotListener();
+		this._stepObserver?.disconnect();
+		this._stepObserver = null;
 	}
 
 	override firstUpdated() {
@@ -322,6 +351,7 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 		if (this._scrollProvider) this._configureScroll();
 		else addStandaloneScrollLayer(this, this.ownerDocument);
 		this._setupMainSlotListener();
+		this._watchSteps();
 	}
 
 	override updated(changed: PropertyValues) {
@@ -332,6 +362,78 @@ export class NLDDPage extends LitElement implements StandaloneScrollLayer {
 		if (retagged) this._setupMainSlotListener();
 		if (changed.has('stickyHeader') || (retagged && this._scrollConfigured)) this._configureScroll();
 		this._syncSecondMain();
+		if (changed.has('parent')) this._watchSteps();
+		// Not reflected, so the observer of a step does not see it change.
+		if (changed.has('accessibleLabel') && this.id) {
+			for (const page of this._siblingPages) if (page.parent === this.id) page._syncBackText();
+		}
+	}
+
+	/** Watches the pages beside a step, so its back button follows the title of
+	 *  its parent page and a title bar added later. */
+	private _stepObserver: MutationObserver | null = null;
+
+	/** @internal The pages beside this one: same parent, same slot. */
+	get _siblingPages(): NLDDPage[] {
+		const parent = this.parentElement;
+		if (!parent) return [this];
+		return [...parent.children].filter((el): el is NLDDPage => el instanceof NLDDPage && el.slot === this.slot);
+	}
+
+	/** @internal The page `parent` names, among the pages beside this one. */
+	get _parentPage(): NLDDPage | null {
+		if (!this.parent) return null;
+		return this._siblingPages.find((page) => page !== this && page.id === this.parent) ?? null;
+	}
+
+	/** @internal The nldd-top-title-bar in this page's header. */
+	get _titleBar(): NLDDTopTitleBar | null {
+		const header = this.querySelector<HTMLElement>(':scope > [slot="header"]');
+		if (!header) return null;
+		if (header.localName === 'nldd-top-title-bar') return header as NLDDTopTitleBar;
+		return header.querySelector('nldd-top-title-bar');
+	}
+
+	/** @internal What this page is called: its title bar's text, or else its
+	 *  label. The attribute first, which is there before the bar is upgraded. */
+	get _title(): string {
+		const bar = this._titleBar;
+		return bar?.getAttribute('text') || bar?.text || this.accessibleLabel;
+	}
+
+	/**
+	 * Hands the parent page's title to the title bar, which shows it when it has
+	 * no `back-text` of its own.
+	 * @internal
+	 */
+	_syncBackText(): void {
+		const bar = this._titleBar;
+		if (bar) bar._parentPageText = this._parentPage?._title ?? '';
+	}
+
+	private _watchSteps(): void {
+		this._stepObserver?.disconnect();
+		this._stepObserver = null;
+		this._syncBackText();
+		const container = this.parentElement;
+		if (!this.parent || !container) return;
+		const observer = new MutationObserver(() => {
+			this._syncBackText();
+			observe();
+		});
+		// The pages beside this one, their headers and the title bars in those.
+		// Observing a node again replaces its options, so a rerun adds what is new.
+		const observe = () => {
+			observer.observe(container, { childList: true, subtree: false, attributes: true, attributeFilter: ['id', 'hidden', 'slot'] });
+			for (const page of this._siblingPages) {
+				observer.observe(page, { childList: true, attributes: true, attributeFilter: ['id', 'hidden', 'slot', 'accessible-label'] });
+				for (const header of page.querySelectorAll(':scope > [slot="header"]')) {
+					observer.observe(header, { childList: true, subtree: true, attributes: true, attributeFilter: ['text'] });
+				}
+			}
+		};
+		this._stepObserver = observer;
+		observe();
 	}
 
 	/**

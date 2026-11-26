@@ -773,6 +773,11 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
+		"id": "popover-no-steps",
+		"message": "A step with `parent` sits in an nldd-popover, which hides its title bar and so its back button. Put the steps in an nldd-sheet.",
+		"context": "nldd-popover nldd-page[parent]:not([parent=\"\"])"
+	},
+	{
 		"id": "popover-width-invalid",
 		"message": "This `width` is not supported and is ignored: the popover is an inline-size query container, so its width cannot come from its own content. Give it a CSS length instead.",
 		"context": "nldd-popover:is([width=\"auto\"], [width=\"fit-content\"], [width=\"min-content\"], [width=\"max-content\"], [width^=\"fit-content(\"])"
@@ -884,6 +889,11 @@ export const devRules: DevRule[] = [
 		"id": "sheet-needs-name",
 		"message": "No `accessible-label` and no nldd-top-title-bar with text inside. Screen readers will announce this dialog with a generic name. Give the title bar a text, or set `accessible-label`.",
 		"context": "nldd-sheet:state(unnamed)"
+	},
+	{
+		"id": "sheet-no-nested",
+		"message": "An nldd-sheet opens over another nldd-sheet. Show the next step in the same sheet, as an nldd-page with `parent`.",
+		"context": "nldd-sheet nldd-sheet"
 	},
 	{
 		"id": "shell-tag-renamed",

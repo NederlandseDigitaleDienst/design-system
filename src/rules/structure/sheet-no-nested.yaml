@@ -1,0 +1,9 @@
+severity: warn
+context: nldd-sheet nldd-sheet
+message: An nldd-sheet opens over another nldd-sheet. Show the next step in the same sheet, as an nldd-page with `parent`.
+see: patronen/edit-in-a-sheet
+examples:
+  passed:
+    - '<nldd-sheet><nldd-page id="aanvraag"></nldd-page><nldd-page id="team" parent="aanvraag" hidden></nldd-page></nldd-sheet>'
+  failed:
+    - '<nldd-sheet><nldd-page></nldd-page><nldd-sheet><nldd-page></nldd-page></nldd-sheet></nldd-sheet>'

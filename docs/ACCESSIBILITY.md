@@ -16,7 +16,7 @@ Wie met dit systeem bouwt, maakt webcontent met een hulpmiddel. Daar bestaat een
 |---|---|
 | B.2.5 Kant-en-klare content is toegankelijk | De componenten: rol, naam, toetsenbord en focus zitten erin |
 | B.2.4 Sjablonen zijn toegankelijk | De [patronen](https://design.digitaledienst.overheid.nl/patronen/), elk met een sectie Toegankelijkheid |
-| B.3.1 Hulp bij het controleren | [`nldd lint`](https://design.digitaledienst.overheid.nl/linter/), op broncode, op gebouwde pagina's en in de browser |
+| B.3.1 Hulp bij het controleren | [`nldd lint`](https://design.digitaledienst.overheid.nl/handleidingen/linter/), op broncode, op gebouwde pagina's en in de browser |
 | B.3.2 Hulp bij het herstellen | Elke melding zegt wat er moet veranderen, en `nldd explain` laat zien hoe het goed is |
 | B.4.1 Die hulp staat standaard aan, en in het zicht | Tijdens het ontwikkelen verschijnen meldingen over toegankelijkheid in de console. De regels van een component staan ook op zijn eigen pagina, op de tab Lintregels |
 | B.4.2 De documentatie geeft het goede voorbeeld | Herbruikbare en geteste voorbeelden zijn beschikbaar, bij elk component en elk patroon |
@@ -32,7 +32,7 @@ Wie met dit systeem bouwt, maakt webcontent met een hulpmiddel. Daar bestaat een
 - **Beweging en contrastinstellingen.** Animaties volgen `prefers-reduced-motion`. Bij gebruik van contrastinstellingen van het besturingssysteem (`forced-colors`) blijven randen, toestanden en de focusring zichtbaar.
 - **Meldingen.** Een [`nldd-status-bar`](https://design.digitaledienst.overheid.nl/componenten/status-bar/), een [`nldd-banner`](https://design.digitaledienst.overheid.nl/componenten/banner/) en een [`nldd-notification`](https://design.digitaledienst.overheid.nl/componenten/notification/) melden zichzelf aan een schermlezer (4.1.3). Een notificatie telt niet af terwijl je hem leest, en een kritieke verdwijnt nooit vanzelf (2.2.1).
 - **Wat verschijnt bij hover of focus.** Een tooltip verdwijnt niet als je er met je muis overheen gaat, blijft staan tot de hover of focus wordt weggehaald, en sluit met Escape, ook als de focus ergens anders staat (1.4.13).
-- **Standaardteksten.** Ingebouwde teksten, zoals de naam van een sluitknop, zijn Nederlands en zet je in één keer om naar een andere taal. Zie [Vertalingen](https://design.digitaledienst.overheid.nl/vertalingen/).
+- **Standaardteksten.** Ingebouwde teksten, zoals de naam van een sluitknop, zijn Nederlands en zet je in één keer om naar een andere taal. Zie [Vertalingen](https://design.digitaledienst.overheid.nl/handleidingen/vertalingen/).
 
 ## Wat jij nog moet doen
 
@@ -54,13 +54,13 @@ Wat een component precies doet en vraagt, staat op zijn eigen pagina. Elk patroo
 
 ## Wat de linter controleert
 
-[`nldd lint`](https://design.digitaledienst.overheid.nl/linter/) zit in het pakket en controleert je eigen code op wat hier staat. Per component betekent dat: zet je dit in, vergeet dan dat niet. Die regels staan op de tab Lintregels van elk component.
+[`nldd lint`](https://design.digitaledienst.overheid.nl/handleidingen/linter/) zit in het pakket en controleert je eigen code op wat hier staat. Per component betekent dat: zet je dit in, vergeet dan dat niet. Die regels staan op de tab Lintregels van elk component.
 
 ```bash
 npx @nldd/design-system lint src
 ```
 
-De groep `a11y` gaat over wat hulptechnologie mist, zoals een knop zonder naam. Regels uit andere groepen tellen net zo goed mee. Een link met de tekst "Lees meer" is een regel van `copy`, een control in een control een van `structure`, en een werkbalk die op een smal scherm een actie kwijtraakt een van `pattern`. Daarom noemt elke regel het succescriterium dat hij bewaakt, en staan ze [per criterium](https://design.digitaledienst.overheid.nl/toegankelijkheid/#lintregels-per-succescriterium) onderaan deze pagina. Elke regel heeft een eigen pagina, met wat hij zoekt en waar hij draait.
+De groep `a11y` gaat over wat hulptechnologie mist, zoals een knop zonder naam. Regels uit andere groepen tellen net zo goed mee. Een link met de tekst "Lees meer" is een regel van `copy`, een control in een control een van `structure`, en een werkbalk die op een smal scherm een actie kwijtraakt een van `pattern`. Daarom noemt elke regel het succescriterium dat hij bewaakt, en staan ze [per criterium](https://design.digitaledienst.overheid.nl/handleidingen/toegankelijkheid/#lintregels-per-succescriterium) onderaan deze pagina. Elke regel heeft een eigen pagina, met wat hij zoekt en waar hij draait.
 
 De linter meldt alleen wat zeker fout is. Een naam die er staat maar niets zegt, een alt-tekst die de afbeelding niet beschrijft en een volgorde die niet klopt, vindt hij niet. Een schone run zegt dus niet dat de pagina voldoet.
 

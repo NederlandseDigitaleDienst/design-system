@@ -217,3 +217,30 @@ describe('nldd-code-editor', () => {
 		cleanup(el2);
 	});
 });
+
+describe('nldd-code-editor – focus() before the view', () => {
+	let box: HTMLElement;
+
+	afterEach(() => box.remove());
+
+	it('focuses the editor once it has mounted, as htmx does with autofocus after a swap', async () => {
+		box = document.createElement('div');
+		document.body.append(box);
+		box.innerHTML = '<nldd-code-editor accessible-label="Tekst" autofocus value="Hallo"></nldd-code-editor>';
+		const el = box.firstElementChild as HTMLElement & { updateComplete: Promise<boolean> };
+		el.focus();
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.activeElement).toBe(el.shadowRoot!.querySelector('.cm-content'));
+	});
+
+	it('leaves focus that moved on before the mount', async () => {
+		box = document.createElement('div');
+		document.body.append(box);
+		box.innerHTML = '<nldd-code-editor accessible-label="Tekst"></nldd-code-editor><button>Elders</button>';
+		const el = box.firstElementChild as HTMLElement & { updateComplete: Promise<boolean> };
+		el.focus();
+		box.querySelector('button')!.focus();
+		await waitForUpdate(el);
+		expect(document.activeElement).toBe(box.querySelector('button'));
+	});
+});
