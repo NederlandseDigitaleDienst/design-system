@@ -70,7 +70,9 @@ updates:
     # `overrides` (#220). The release notes are meant to be only the version
     # heading (see Changelog in CLAUDE.md), and .releaserc.json gets there by
     # hiding every type and recognizing no breaking change. Preset 10.4.1
-    # detects a `!` header on its own and lists that commit anyway.
+    # detects a `!` header on its own and lists that commit anyway. (The
+    # earlier reason, writer 8 making generateNotes fail on 10.4, is gone:
+    # semantic-release 26 brings writer 9.)
     # scripts/release-notes.test.mjs fails on it, so try a newer preset
     # against that test before lifting this.
     ignore:

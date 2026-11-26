@@ -139,7 +139,13 @@ jobs:
       # the range instead of the lowest.
       - name: Read the lowest supported Node
         id: engines
-        run: echo "node=$(jq -r '.engines.node' package.json | sed 's/^>=//')" >> "$GITHUB_OUTPUT"
+        run: |
+          range=$(jq -r '.engines.node' package.json)
+          if [[ ! "$range" =~ ^\>=[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::engines.node is \"$range\"; this job reads only a plain >=x.y.z"
+            exit 1
+          fi
+          echo "node=${range#>=}" >> "$GITHUB_OUTPUT"
 
       - name: Setup Node.js
         uses: actions/setup-node@v7
