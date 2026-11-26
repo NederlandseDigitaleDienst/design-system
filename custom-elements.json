@@ -18472,7 +18472,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "The value shows and submits but cannot be changed; the +/- buttons are disabled.",
+              "description": "The value shows and submits but cannot be changed; the +/- buttons are hidden.",
               "attribute": "readonly",
               "reflects": true
             },
@@ -18974,7 +18974,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Readonly state: the value shows and submits but cannot be changed, and the +/- buttons are disabled",
+              "description": "Readonly state: the value shows and submits but cannot be changed. The +/- buttons are hidden, and the field keeps its width",
               "fieldName": "readonly"
             },
             {
@@ -18984,7 +18984,7 @@
               },
               "default": "false",
               "fieldName": "disabled",
-              "description": "Disabled state"
+              "description": "Disabled state. The +/- buttons are hidden, and the field keeps its width"
             },
             {
               "name": "accessible-description",
@@ -61142,7 +61142,7 @@
               }
             }
           ],
-          "description": "Sanitizes a URL for use in href attributes by stripping leading/trailing\nwhitespace (including unicode), removing embedded control characters that\nbrowsers strip during URL parsing (tab, newline, carriage return), and\nblocking dangerous protocols.\n\nBlocked protocols: javascript:, data:, vbscript:, blob:. With\n`{ allowData: true }` the data: and blob: URLs are permitted while\njavascript: and vbscript: stay blocked: a download link legitimately points\nat a data: or blob: URL, so a component passes this when its `download`\nattribute is set.\n\nNote: tuned for href contexts (<a>, navigation). Do not reuse for <img src>\nor other contexts without reviewing which protocols are safe there.\n\nReturns null for empty or dangerous URLs, the trimmed URL otherwise."
+          "description": "Sanitizes a URL for use in href attributes by stripping leading/trailing\nwhitespace (including unicode), removing embedded control characters that\nbrowsers strip during URL parsing (tab, newline, carriage return), and\nblocking dangerous protocols.\n\nBlocked protocols: javascript:, data:, vbscript:, blob:. With\n`{ allowData: true }` the data: and blob: URLs are permitted while\njavascript: and vbscript: stay blocked: a download link legitimately points\nat a data: or blob: URL, so a component passes this when its `download`\nattribute is set. The browser saves such a URL as a file and never runs\nit, so a `data:text/html` URL is harmless there.\n\nNote: tuned for href contexts (<a>, navigation). Do not reuse for <img src>\nor other contexts without reviewing which protocols are safe there.\n\nReturns null for empty or dangerous URLs, the trimmed URL otherwise."
         }
       ],
       "exports": [

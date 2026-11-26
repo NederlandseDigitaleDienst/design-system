@@ -8,7 +8,8 @@
  * `{ allowData: true }` the data: and blob: URLs are permitted while
  * javascript: and vbscript: stay blocked: a download link legitimately points
  * at a data: or blob: URL, so a component passes this when its `download`
- * attribute is set.
+ * attribute is set. The browser saves such a URL as a file and never runs
+ * it, so a `data:text/html` URL is harmless there.
  *
  * Note: tuned for href contexts (<a>, navigation). Do not reuse for <img src>
  * or other contexts without reviewing which protocols are safe there.

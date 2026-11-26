@@ -1798,8 +1798,8 @@ A numeric input field with decrement and increment buttons.
 | `max` | `number` | Maximum value (default: Infinity) |
 | `step` | `number` | Step size (default: 1) |
 | `required` | `boolean` | A value has to be filled in. An empty field is then invalid. |
-| `readonly` | `boolean` | Readonly state: the value shows and submits but cannot be changed, and the +/- buttons are disabled |
-| `disabled` | `boolean` | Disabled state |
+| `readonly` | `boolean` | Readonly state: the value shows and submits but cannot be changed. The +/- buttons are hidden, and the field keeps its width |
+| `disabled` | `boolean` | Disabled state. The +/- buttons are hidden, and the field keeps its width |
 | `translations` | `object` | Translations; unspecified keys fall back to Dutch |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |

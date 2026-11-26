@@ -582,4 +582,29 @@ describe('nldd-number-field – spin-buttons', () => {
 		await waitForUpdate(el);
 		expect(nf.value).toBe(5);
 	});
+
+	it('readonly and disabled hide the spin buttons and keep the width of the field', async () => {
+		const removeTokens = loadTokens();
+		el = await fixture('<nldd-number-field value="5"></nldd-number-field>');
+		const nf = el as NLDDNumberField;
+		const width = nf.getBoundingClientRect().width;
+		const buttons = () => [...nf.shadowRoot!.querySelectorAll('.number-field__decrement-button, .number-field__increment-button')];
+		for (const state of ['readonly', 'disabled'] as const) {
+			nf[state] = true;
+			await nf.updateComplete;
+			expect(buttons().every((b) => getComputedStyle(b).visibility === 'hidden')).toBe(true);
+			expect(nf.getBoundingClientRect().width).toBe(width);
+			nf[state] = false;
+			await nf.updateComplete;
+		}
+		nf.readonly = true;
+		await nf.updateComplete;
+		const field = getComputedStyle(nf.shadowRoot!.querySelector('.number-field')!);
+		const probe = document.createElement('div');
+		probe.style.backgroundColor = 'var(--semantics-input-fields-is-read-only-background-color)';
+		document.body.append(probe);
+		expect(field.backgroundColor).toBe(getComputedStyle(probe).backgroundColor);
+		probe.remove();
+		removeTokens();
+	});
 });

@@ -18,11 +18,12 @@ here; consult the commit history if you need that level of detail.
 ### Added
 
 - **`name` on `nldd-date-picker` and `nldd-time-picker`.** The picker submits on its own: a date as ISO, a period as an ISO 8601 interval `start/end`, a time as `HH:mm`. A form reset restores the value it started with.
-- **`readonly` on `nldd-number-field`.** The value shows and submits but cannot be changed, and the − and + buttons are disabled.
+- **`readonly` on `nldd-number-field`.** The value shows and submits but cannot be changed. The field looks like the other readonly fields, on a light surface without a border, and hides its − and + buttons while it keeps its width.
 - **The component reference in the skills lists the properties that have no attribute**, such as `formatValue` on `nldd-slider`, which you set in JavaScript.
 
 ### Changed
 
+- **A disabled `nldd-number-field` hides its − and + buttons**, as a readonly one does, and keeps its width. The disabled buttons lost their background, so the field looked shorter than it is.
 - **The sidebar of `nldd-sidebar-section` fades at the edge where more content waits**, as `nldd-menu` does: at the bottom while you can scroll down, at the top once you have scrolled. The box and its border stay sharp; only the content fades.
 
 ### Fixed
