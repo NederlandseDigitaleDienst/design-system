@@ -46,11 +46,11 @@ Op de home, zonder terugknop:
 
 <!-- voorbeeld: HeaderHome -->
 
-**Alleen wat op elke pagina nodig is.** Houd de header beperkt tot functies die bezoekers op elke pagina nodig hebben. De pagina’s vormen samen de navigatie, dus er staat geen rij met menu-items in de [`nldd-top-navigation-bar`](/componenten/top-navigation-bar/). Laat de header op een website met de pagina wegscrollen: een [`nldd-page`](/componenten/page/) kan hem vastzetten met `sticky-header`, maar een vaste header neemt ruimte in van de inhoud. Zie de ontwerprichtlijnen over [navigatie](/richtlijnen/#navigatie-en-structuur) en over [de sticky header](/richtlijnen/#visueel-en-layout).
+**Alleen wat op elke pagina nodig is.** Houd de header beperkt tot functies die bezoekers op elke pagina nodig hebben. De pagina’s vormen samen de navigatie, dus er staat geen rij met menu-items in de [`nldd-top-navigation-bar`](/componenten/top-navigation-bar/). Laat de header op een website met de pagina wegscrollen: een [`nldd-page`](/componenten/page/) kan hem vastzetten met `sticky-header`, maar een vaste header neemt ruimte in van de inhoud. Zie de ontwerprichtlijnen over [navigatie](/handleidingen/richtlijnen/#navigatie-en-structuur) en over [de sticky header](/handleidingen/richtlijnen/#visueel-en-layout).
 
 **Zoeken en taal.** Ze staan rechts en blijven op elke breedte zichtbaar. Zet ze in het `utility`-slot, als een [`nldd-menu-bar`](/componenten/menu-bar/). Taal is een uitklapbaar item met de afkorting van de huidige taal als tekst ("NL"), en een `nldd-menu` met een radio-item per taal, daar met de volledige naam. Met `content-priority="text"` blijven op smalle schermen de teksten "Zoeken" en "NL" staan en vallen de iconen weg, zodat de functies herkenbaar blijven.
 
-**Inloggen.** Heeft de site een persoonlijk deel, zoals een dossier, dan komt er een derde item bij, helemaal rechts. Voor wie niet is ingelogd is dat een link "Inloggen": het hele werkwoord, want het item leidt naar het inlogscherm en logt zelf niet in. Zie de [ontwerprichtlijnen](/richtlijnen/#copywriting).
+**Inloggen.** Heeft de site een persoonlijk deel, zoals een dossier, dan komt er een derde item bij, helemaal rechts. Voor wie niet is ingelogd is dat een link "Inloggen": het hele werkwoord, want het item leidt naar het inlogscherm en logt zelf niet in. Zie de [ontwerprichtlijnen](/handleidingen/richtlijnen/#copywriting).
 
 <!-- voorbeeld: HeaderLogin -->
 
@@ -82,7 +82,7 @@ Op de home, zonder kruimelpad:
 
 <!-- voorbeeld: FooterHome -->
 
-**Het kruimelpad.** Het staat in zijn eigen rij, boven de overige footerinhoud: een [`nldd-breadcrumbs`](/componenten/breadcrumbs/) in het `breadcrumbs`-slot van de [`nldd-page-footer`](/componenten/page-footer/). Zie de [ontwerprichtlijnen](/richtlijnen/#navigatie-en-structuur).
+**Het kruimelpad.** Het staat in zijn eigen rij, boven de overige footerinhoud: een [`nldd-breadcrumbs`](/componenten/breadcrumbs/) in het `breadcrumbs`-slot van de [`nldd-page-footer`](/componenten/page-footer/). Zie de [ontwerprichtlijnen](/handleidingen/richtlijnen/#navigatie-en-structuur).
 
 **De hoofdinhoud.** Wat er tussen het kruimelpad en de juridische links staat, is vrij in te vullen per website. De paginapatronen laten dat deel weg om hun voorbeeld kort te houden.
 

@@ -1211,7 +1211,7 @@ describe('a rule points at its page', () => {
 		const url = (id) => rules.find((rule) => rule.id === id).url;
 		assert.equal(url('form-actions-needs-button-group'), 'https://design.digitaledienst.overheid.nl/patronen/form/');
 		const guideline = rules.find((rule) => rule.see?.startsWith('ontwerprichtlijnen/'));
-		assert.equal(guideline.url, `https://design.digitaledienst.overheid.nl/richtlijnen/#${guideline.see.split('/')[1]}`);
+		assert.equal(guideline.url, `https://design.digitaledienst.overheid.nl/handleidingen/richtlijnen/#${guideline.see.split('/')[1]}`);
 	});
 });
 

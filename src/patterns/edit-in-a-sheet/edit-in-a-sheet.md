@@ -22,7 +22,7 @@ nldd-sheet                     open, placement, width; in de document-root
 
 ## Waarom zo
 
-**De uitweg staat bovenin, de primaire actie onder het laatste veld.** "Annuleer" zit in de [`nldd-top-title-bar`](/componenten/top-title-bar/), "Bewaar" staat in `nldd-form-actions` waar je kijkt als je klaar bent met het laatste veld. Zo staan ze niet naast elkaar, en gaat niemand op de automatische piloot naar de uitweg. Zet dus geen tweede knop naast "Bewaar"; zie de [ontwerprichtlijnen](/richtlijnen/). Wordt het formulier langer dan de sheet, dan kan de actie met `sticky-footer` op de pagina in beeld blijven, maar dat is de uitzondering: de knop staat dan buiten het formulier en heeft een `form` nodig die ernaar wijst, zie [formulier](/patronen/form/).
+**De uitweg staat bovenin, de primaire actie onder het laatste veld.** "Annuleer" zit in de [`nldd-top-title-bar`](/componenten/top-title-bar/), "Bewaar" staat in `nldd-form-actions` waar je kijkt als je klaar bent met het laatste veld. Zo staan ze niet naast elkaar, en gaat niemand op de automatische piloot naar de uitweg. Zet dus geen tweede knop naast "Bewaar"; zie de [ontwerprichtlijnen](/handleidingen/richtlijnen/). Wordt het formulier langer dan de sheet, dan kan de actie met `sticky-footer` op de pagina in beeld blijven, maar dat is de uitzondering: de knop staat dan buiten het formulier en heeft een `form` nodig die ernaar wijst, zie [formulier](/patronen/form/).
 
 **Noem waar de sheet over gaat.** "Aanvraag A-1042 bewerken" in plaats van "Aanvraag bewerken": een sheet opent meestal vanaf een rij tussen rijen die op elkaar lijken. De ingevulde velden zeggen het ook, maar alleen zolang ze in beeld zijn.
 

@@ -24,7 +24,7 @@ const SITE = 'https://design.digitaledienst.overheid.nl';
 export function seeUrl(see) {
 	if (!see) return undefined;
 	const [kind, slug] = see.split('/');
-	if (kind === 'ontwerprichtlijnen') return `${SITE}/richtlijnen/#${slug}`;
+	if (kind === 'ontwerprichtlijnen') return `${SITE}/handleidingen/richtlijnen/#${slug}`;
 	if (kind === 'patronen') return `${SITE}/patronen/${slug}/`;
 	if (kind === 'componenten') return `${SITE}/componenten/${slug}/`;
 	return undefined;

@@ -34,13 +34,13 @@ nldd-shell                            de buitenste schil
 
 ## Waarom zo
 
-**De home is een pagina met secties, en is zelf het menu.** Samen introduceren de secties wat eronder ligt, geven ze de ingangen ernaartoe en scheppen ze de verwachting van wat je daar vindt. Wat de site te bieden heeft staat zo in de inhoud, als kaarten en lijsten, en niet als een rij woorden in de bovenbalk. Zie de [ontwerprichtlijnen](/richtlijnen/#navigatie-en-structuur).
+**De home is een pagina met secties, en is zelf het menu.** Samen introduceren de secties wat eronder ligt, geven ze de ingangen ernaartoe en scheppen ze de verwachting van wat je daar vindt. Wat de site te bieden heeft staat zo in de inhoud, als kaarten en lijsten, en niet als een rij woorden in de bovenbalk. Zie de [ontwerprichtlijnen](/handleidingen/richtlijnen/#navigatie-en-structuur).
 
 **De hero zegt waar de site voor is.** De [`nldd-hero`](/componenten/hero/) is de eerste sectie. Hij noemt het belangrijkste doel, trekt de aandacht en is het visuele welkom. Is er één logische volgende stap, dan staat die erin als knop, zodat wie weet waarvoor die komt meteen verder kan. Is die er niet, dan heeft de hero geen knop. Een afbeelding mag, als die het welkom sterker maakt; wat telt staat in het paneel.
 
 **Elke sectie introduceert één onderdeel en geeft de ingang ernaartoe.** Kies de opzet van een sectie afhankelijk van wat bij de onderliggende informatie past.
 
-**De koppen vertellen samen het verhaal.** Zet de secties in de volgorde waarin je de site aan iemand zou uitleggen. Wie alleen de koppen leest, weet dan wat de site te bieden heeft. Lees ze daarom onder elkaar terug. Lopen ze als een verhaal, dan klopt de volgorde; hapert het, dan staat er een sectie verkeerd of zegt een kop niet wat eronder staat. Zie de ontwerprichtlijnen over [volgorde](/richtlijnen/#navigatie-en-structuur) en over [koppen](/richtlijnen/#copywriting).
+**De koppen vertellen samen het verhaal.** Zet de secties in de volgorde waarin je de site aan iemand zou uitleggen. Wie alleen de koppen leest, weet dan wat de site te bieden heeft. Lees ze daarom onder elkaar terug. Lopen ze als een verhaal, dan klopt de volgorde; hapert het, dan staat er een sectie verkeerd of zegt een kop niet wat eronder staat. Zie de ontwerprichtlijnen over [volgorde](/handleidingen/richtlijnen/#navigatie-en-structuur) en over [koppen](/handleidingen/richtlijnen/#copywriting).
 
 Het geraamte van de pagina, met de header en de footer, staat bij de [paginaopbouw](/patronen/page-structure/).
 

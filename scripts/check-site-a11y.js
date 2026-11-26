@@ -61,7 +61,7 @@ function targets() {
 		? paths.filter((path) => filters.some((f) => (f === '/' ? path === '/' : path.includes(f))))
 		: paths;
 	// The landing page and one page of each kind are checked in dark as well.
-	const dark = ['/', '/componenten/button/', '/patronen/form/', '/aan-de-slag/'].filter((path) => selected.includes(path));
+	const dark = ['/', '/componenten/button/', '/patronen/form/', '/handleidingen/aan-de-slag/'].filter((path) => selected.includes(path));
 	return [...selected.map((path) => ({ path, scheme: 'light' })), ...dark.map((path) => ({ path, scheme: 'dark' }))];
 }
 

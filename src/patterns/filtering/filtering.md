@@ -42,7 +42,7 @@ Het voorbeeld is smal, dus de filters zitten hier achter de knop. Is de sectie b
 
 **Toon wélke filters aanstaan, niet hoeveel.** Een strip met een [`nldd-token`](/componenten/token/) per actieve waarde zegt precies wat er is weggefilterd, en elk token is zijn eigen weg terug. Een token en geen tag of badge: alleen een token kun je weghalen. Zijn verwijderknop noemt het token al (`Verwijder "Status: In behandeling"`), dus daar hoef je niets voor te schrijven. Geef ook een waarde die nergens meer op uitkomt een token, met de naam die je wél kent: zonder token is dat een filter dat de lijst leegmaakt en dat je niet kunt weghalen.
 
-**Geen knop die alles tegelijk wist.** Die staat dan naast de kruisjes die er één weghalen, dus een misklik kost je de hele selectie die je net hebt opgebouwd, en er is geen weg terug. Per token weghalen is een paar klikken meer bij de aantallen die je in de praktijk ziet, en dat is het waard. Zie de [ontwerprichtlijnen](/richtlijnen/#invoer-en-formulieren).
+**Geen knop die alles tegelijk wist.** Die staat dan naast de kruisjes die er één weghalen, dus een misklik kost je de hele selectie die je net hebt opgebouwd, en er is geen weg terug. Per token weghalen is een paar klikken meer bij de aantallen die je in de praktijk ziet, en dat is het waard. Zie de [ontwerprichtlijnen](/handleidingen/richtlijnen/#invoer-en-formulieren).
 
 **De strip bestaat alleen zolang er filters zijn.** Haal met de laatste token ook de strip en de ruimte erboven weg, anders blijft er een gat staan tussen de werkbalk en de lijst waar niets meer in zit. Dat geldt voor elke losse `nldd-spacer` naast iets dat verdwijnt: die hoort bij wat eronder staat en gaat mee.
 

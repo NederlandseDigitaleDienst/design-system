@@ -35,7 +35,7 @@ De skills zijn geen losse documentatie die naast de site wordt bijgehouden.
 - De componentreferentie in de skills wordt gegenereerd uit dezelfde broncode als de [componentpagina's](/componenten/) hier.
 - De patronen in de skills zijn dezelfde tekst en dezelfde voorbeeldmarkup als de [patronen](/patronen/) hier.
 - Bij elke wijziging aan het systeem controleert een geautomatiseerde test of die twee nog bij hun bron passen, en of elke tag en elk attribuut in de voorbeelden echt bestaat.
-- De changelog en de [ontwerprichtlijnen](/richtlijnen/) in de skills worden bij elke release ververst.
+- De changelog en de [ontwerprichtlijnen](/handleidingen/richtlijnen/) in de skills worden bij elke release ververst.
 
 Een assistent met deze skills schrijft daardoor markup die klopt met de versie die je hebt geïnstalleerd. Controleren blijft jouw werk: bekijk het resultaat in een browser, met het toetsenbord en op een smal scherm.
 

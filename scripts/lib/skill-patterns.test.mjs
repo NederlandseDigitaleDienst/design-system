@@ -51,8 +51,8 @@ test('rewriteLink sends a link to the website to the page a skill reader can ope
 	assert.equal(rewriteLink('/patronen/confirm/', context), 'confirm.md');
 	assert.equal(rewriteLink('/componenten/sheet/', context), '../../nldd-design/reference.md#nldd-sheet');
 	assert.equal(rewriteLink('/componenten/top-title-bar/', context), '../../nldd-design/reference.md#nldd-top-title-bar');
-	assert.equal(rewriteLink('/richtlijnen/#visueel-en-layout', context), '../../nldd-design/design-guidelines.md#visueel-en-layout');
-	assert.equal(rewriteLink('/themas/', context), 'https://design.digitaledienst.overheid.nl/themas/');
+	assert.equal(rewriteLink('/handleidingen/richtlijnen/#visueel-en-layout', context), '../../nldd-design/design-guidelines.md#visueel-en-layout');
+	assert.equal(rewriteLink('/handleidingen/themas/', context), 'https://design.digitaledienst.overheid.nl/handleidingen/themas/');
 	assert.equal(
 		rewriteLink('https://github.com/NederlandseDigitaleDienst/design-system/blob/main/skills/nldd-design-build/examples/bootstrap-vue.md', context),
 		'../examples/bootstrap-vue.md',

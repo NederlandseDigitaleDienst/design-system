@@ -40,15 +40,15 @@ const SITE_NAME = 'NLDD Designsysteem';
  * header: a gallery and its filters.
  */
 const PROSE = [
-	{ path: '/aan-de-slag/', file: 'www/content/aan-de-slag.md', description: 'Installeer het pakket en zet je eerste component neer.' },
-	{ path: '/aan-de-slag/ai-assistent/', file: 'www/content/ai-assistent.md', description: 'Skills voor Claude Code en Cursor.' },
-	{ path: '/richtlijnen/', file: 'src/docs/design-guidelines.md', description: 'De ontwerpkeuzes van het systeem en de redenen erachter.' },
-	{ path: '/themas/', file: 'src/docs/themes.md', stories: 'src/docs/themes.stories.ts', examples: 'Elk thema op een pagina vol componenten', description: 'De accentkleur van je dienst, in licht en donker.' },
+	{ path: '/handleidingen/aan-de-slag/', file: 'www/content/aan-de-slag.md', description: 'Installeer het pakket en zet je eerste component neer.' },
+	{ path: '/handleidingen/ai-assistent/', file: 'www/content/ai-assistent.md', description: 'Skills voor Claude Code en Cursor.' },
+	{ path: '/handleidingen/richtlijnen/', file: 'src/docs/design-guidelines.md', description: 'De ontwerpkeuzes van het systeem en de redenen erachter.' },
+	{ path: '/handleidingen/themas/', file: 'src/docs/themes.md', stories: 'src/docs/themes.stories.ts', examples: 'Elk thema op een pagina vol componenten', description: 'De accentkleur van je dienst, in licht en donker.' },
 	{ path: '/iconen/', file: 'src/docs/icons.md', stories: 'src/components/content/icon/icon-gallery.stories.ts', fills: true, description: 'Alle iconen, met hun aliassen.' },
-	{ path: '/linter/', file: 'www/content/linter.md', description: 'Controleer je code met nldd lint, en wat hij vindt.' },
-	{ path: '/breakpoints/', file: 'src/docs/breakpoints.md', description: 'Bij welke breedtes de layout verandert.' },
-	{ path: '/vertalingen/', file: 'src/docs/translations.md', description: 'Een interface in een andere taal dan Nederlands.' },
-	{ path: '/toegankelijkheid/', file: 'docs/ACCESSIBILITY.md', rules: 'wcag', description: 'Wat het systeem voor toegankelijkheid regelt, en wat jij nog doet.' },
+	{ path: '/handleidingen/linter/', file: 'www/content/linter.md', description: 'Controleer je code met nldd lint, en wat hij vindt.' },
+	{ path: '/handleidingen/breakpoints/', file: 'src/docs/breakpoints.md', description: 'Bij welke breedtes de layout verandert.' },
+	{ path: '/handleidingen/vertalingen/', file: 'src/docs/translations.md', description: 'Een interface in een andere taal dan Nederlands.' },
+	{ path: '/handleidingen/toegankelijkheid/', file: 'docs/ACCESSIBILITY.md', rules: 'wcag', description: 'Wat het systeem voor toegankelijkheid regelt, en wat jij nog doet.' },
 ];
 
 /**
@@ -130,14 +130,14 @@ const NAVIGATION = [
 		'Handleidingen',
 		'Handleidingen',
 		[
-			['Aan de slag', '/aan-de-slag/'],
-			['Ontwerprichtlijnen', '/richtlijnen/'],
-			['Toegankelijkheid', '/toegankelijkheid/'],
-			["Thema's", '/themas/'],
-			['AI-assistent', '/aan-de-slag/ai-assistent/'],
-			['Linter', '/linter/'],
-			['Breakpoints', '/breakpoints/'],
-			['Vertalingen', '/vertalingen/'],
+			['Aan de slag', '/handleidingen/aan-de-slag/'],
+			['Ontwerprichtlijnen', '/handleidingen/richtlijnen/'],
+			['Toegankelijkheid', '/handleidingen/toegankelijkheid/'],
+			["Thema's", '/handleidingen/themas/'],
+			['AI-assistent', '/handleidingen/ai-assistent/'],
+			['Linter', '/handleidingen/linter/'],
+			['Breakpoints', '/handleidingen/breakpoints/'],
+			['Vertalingen', '/handleidingen/vertalingen/'],
 		],
 	],
 ];
@@ -153,6 +153,19 @@ const DOCS = 'Documentatie';
 
 /** The sections on a page of their own, with nothing chosen yet. */
 const DOCS_PATH = '/documentatie/';
+
+/** Where the guides were before they moved under /handleidingen/. */
+const MOVED = {
+	'/aan-de-slag/': '/handleidingen/aan-de-slag/',
+	'/aan-de-slag/ai-assistent/': '/handleidingen/ai-assistent/',
+	'/richtlijnen/': '/handleidingen/richtlijnen/',
+	'/themas/': '/handleidingen/themas/',
+	'/linter/': '/handleidingen/linter/',
+	'/breakpoints/': '/handleidingen/breakpoints/',
+	'/vertalingen/': '/handleidingen/vertalingen/',
+	'/toegankelijkheid/': '/handleidingen/toegankelijkheid/',
+	'/handleidingen/': DOCS_PATH,
+};
 
 /** The section a page belongs to: the one whose path is the longest start of it. */
 function currentSection(path) {
@@ -1080,7 +1093,7 @@ const SEVERITIES = {
 function seePath(see) {
 	const [kind, slug] = (see ?? '').split('/');
 	if (kind === 'patronen') return `/patronen/${slug}/`;
-	if (kind === 'ontwerprichtlijnen') return `/richtlijnen/#${slug}`;
+	if (kind === 'ontwerprichtlijnen') return `/handleidingen/richtlijnen/#${slug}`;
 	if (kind === 'componenten') return `/componenten/${slug}/`;
 	return undefined;
 }
@@ -1094,6 +1107,7 @@ const redirect = (to) => `<!doctype html>
 	<meta charset="utf-8">
 	<meta name="robots" content="noindex">
 	<meta http-equiv="refresh" content="0; url=${to}">
+	<script>location.replace(${JSON.stringify(to)} + location.hash);</script>
 	<title>Verhuisd</title>
 </head>
 <body><p>Deze pagina staat nu op <a href="${to}">${to}</a>.</p></body>
@@ -1192,7 +1206,7 @@ function rulesSection(rules) {
 	${ruleList(rules, { label: 'Lintregels' })}
 	<nldd-spacer size="12"></nldd-spacer>
 	<nldd-link
-		href="/linter/"
+		href="/handleidingen/linter/"
 		text="Over de linter"
 	></nldd-link>`;
 }
@@ -1593,6 +1607,8 @@ export function buildPages({ base = '/' } = {}) {
 			pages[`linter/${rule.id}/index.html`] = redirect(`${base === '/' ? '' : base.replace(/\/$/, '')}${rulePath(rule)}`);
 		}
 	}
+	const prefix = base === '/' ? '' : base.replace(/\/$/, '');
+	for (const [from, to] of Object.entries(MOVED)) pages[`${from.slice(1)}index.html`] = redirect(`${prefix}${to}`);
 	// What the search shows under its matches: the pages they name in @related.
 	for (const component of components) {
 		const tags = component.elements.flatMap((element) => element.related ?? []);
