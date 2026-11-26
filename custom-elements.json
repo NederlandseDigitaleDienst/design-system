@@ -38792,10 +38792,14 @@
               "kind": "field",
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDPageFooterTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "attribute": "translations"
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "attributes": [
@@ -38809,13 +38813,23 @@
               "fieldName": "accessibleLabel"
             },
             {
-              "type": {
-                "text": "Partial<NLDDPageFooterTranslations>"
-              },
-              "description": "Override translation keys; unset keys fall back to the Dutch default.",
               "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
               "default": "{}",
-              "fieldName": "translations"
+              "fieldName": "translations",
+              "description": "Override translation keys; unset keys fall back to the Dutch default.",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -48934,10 +48948,14 @@
               "kind": "field",
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDBreadcrumbsTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "attribute": "translations"
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "attributes": [
@@ -48953,11 +48971,21 @@
             {
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDBreadcrumbsTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
               "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
               "description": "Override translation keys; unset keys fall back to the Dutch default."
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
