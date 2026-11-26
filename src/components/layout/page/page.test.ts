@@ -744,6 +744,16 @@ describe('nldd-page – steps with parent', () => {
 		expect(bar('kiezer')._backText).toBe('');
 	});
 
+	it('follows a parent that changes or goes', async () => {
+		await setup();
+		page('contact').parent = 'opdracht';
+		await waitForUpdate(page('contact'));
+		expect(bar('contact')._backText).toBe('Opdracht');
+		page('contact').removeAttribute('parent');
+		await waitForUpdate(page('contact'));
+		expect(bar('contact')._backText).toBe('');
+	});
+
 	it('keeps a back-text the consumer set', async () => {
 		await setup();
 		bar('kiezer').setAttribute('back-text', 'Terug');

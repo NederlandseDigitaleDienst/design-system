@@ -3,7 +3,10 @@ import type { ReactiveController, ReactiveControllerHost } from 'lit';
 /** A title bar names the overlay closest around it, not one further out. */
 const OVERLAYS = 'nldd-sheet, nldd-window, nldd-modal-dialog, nldd-popover';
 
-/** Whether `bar` sits in a hidden element inside `host`: a page that is not the step in view. */
+/**
+ * Whether `bar` sits in any hidden element inside `host`, such as a page that
+ * is not the step in view. A bar there does not name the overlay.
+ */
 function inHiddenStep(bar: Element, host: Element): boolean {
 	for (let el = bar.parentElement; el && el !== host; el = el.parentElement) {
 		if (el.hasAttribute('hidden')) return true;
