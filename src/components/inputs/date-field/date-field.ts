@@ -69,7 +69,7 @@ import './../../actions/icon-button/icon-button.js';
 import './../../content/icon/icon.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
-import { focusAsLastInput, focusIsFree } from '../../../utilities/return-focus.js';
+import { PickerPopoverController } from '../../../utilities/picker-popover-controller.js';
 import { isPointerMode } from '../../../utilities/input-modality.js';
 import {
 	checkEnds,
@@ -390,6 +390,7 @@ export class NLDDDateField extends DescribedBy(FormAssociated(withTranslations(L
 	 * restoration has run, or ours would be the one overwritten.
 	 */
 	private _focusOnClose: 'trigger' | 'last-input' | null = null;
+	private _picker = new PickerPopoverController(this, () => this._pickerTrigger);
 
 	/**
 	 * Move focus to where the close intent asked for, with the caret at the end of
@@ -402,17 +403,16 @@ export class NLDDDateField extends DescribedBy(FormAssociated(withTranslations(L
 	private _applyCloseFocus(): void {
 		// Nothing asked, as after a click beside the popover: back to the button,
 		// unless the click put focus somewhere else on the page.
-		const intent = this._focusOnClose ?? (focusIsFree(this) ? 'trigger' : null);
-		this._focusOnClose = null;
-		if (intent === 'trigger') {
-			const trigger = this._pickerTrigger;
-			if (trigger) focusAsLastInput(trigger);
-			return;
-		}
-		if (intent === 'last-input') {
+		if (this._focusOnClose === 'last-input') {
+			this._focusOnClose = null;
 			const inputs = this._inputs;
 			this._focusAtEnd(inputs[inputs.length - 1]);
+			return;
 		}
+		// 'trigger' forces the button; otherwise fall to it only when focus is free.
+		const asked = this._focusOnClose === 'trigger';
+		this._focusOnClose = null;
+		this._picker.focusTrigger(asked);
 	}
 
 	public _handlePickerDismiss(e: Event): void {

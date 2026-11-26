@@ -67,7 +67,7 @@ import { timeFieldStyles } from './time-field.styles.js';
 import { timeFieldTemplate } from './time-field.template.js';
 import { nlddTimeFieldTranslations } from './time-field.i18n.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
-import { focusAsLastInput, focusIsFree } from '../../../utilities/return-focus.js';
+import { PickerPopoverController } from '../../../utilities/picker-popover-controller.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import {
 	checkText,
@@ -365,6 +365,7 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(withTranslations(L
 	 *  click, so there it lands on the input instead of the button. We take over,
 	 *  but only after that restore, otherwise ours gets overwritten. */
 	private _focusTriggerOnClose = false;
+	private _picker = new PickerPopoverController(this, () => this._pickerTrigger);
 
 	/** The value from before opening, and the last thing done in the picker.
 	 *  Together they decide on close whether what stands in the selection stays
@@ -406,12 +407,7 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(withTranslations(L
 		// popover's own restore, which in Safari lands on the text field.
 		const asked = this._focusTriggerOnClose;
 		this._focusTriggerOnClose = false;
-		// Microtask, not rAF: this beats that same restore but does not get
-		// throttled while the tab has no focus.
-		queueMicrotask(() => {
-			const trigger = this._pickerTrigger;
-			if (trigger && (asked || focusIsFree(this))) focusAsLastInput(trigger);
-		});
+		this._picker.restoreFocus(asked);
 	}
 
 	private _openPicker(): void {
