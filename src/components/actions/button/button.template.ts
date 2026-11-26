@@ -122,7 +122,7 @@ export function template(this: NLDDButton, helpers: TemplateHelpers) {
 		const resolvedRel = linkRel(this.rel, this.target);
 		return html`
 			<a class=${buttonClass}
-				href=${sanitizeUrl(this.href, { allowData: this.download !== undefined }) || nothing}
+				href=${sanitizeUrl(this.href, { allowData: this.download != null }) || nothing}
 				target=${this.target || nothing}
 				rel=${resolvedRel || nothing}
 				download=${this.download ?? nothing}

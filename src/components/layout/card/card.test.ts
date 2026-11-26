@@ -306,4 +306,15 @@ describe('<nldd-card> with download', () => {
 		await waitForUpdate(el);
 		expect(el.matches(':state(download-with-target)')).toBe(true);
 	});
+
+	it('strips a javascript: href, and keeps a data: href only with download', async () => {
+		el = await fixture('<nldd-card href="javascript:alert(1)" accessible-label="Verslag"></nldd-card>');
+		expect(el.shadowRoot!.querySelector('a')?.getAttribute('href') ?? null).toBeNull();
+		el.href = 'data:text/csv,a';
+		await el.updateComplete;
+		expect(el.shadowRoot!.querySelector('a')?.getAttribute('href') ?? null).toBeNull();
+		el.setAttribute('download', 'f.csv');
+		await el.updateComplete;
+		expect(el.shadowRoot!.querySelector('a')!.getAttribute('href')).toBe('data:text/csv,a');
+	});
 });

@@ -440,4 +440,11 @@ describe('<nldd-link> with an <a> of its own', () => {
 		const a = (el as NLDDLink).shadowRoot!.querySelector('a');
 		expect(a?.getAttribute('href')).toBe('blob:https://example.com/u');
 	});
+
+	it('strips a blob: href again once download is removed', async () => {
+		el = await fixture('<nldd-link href="blob:https://example.com/u" download="f.csv">x</nldd-link>');
+		el.removeAttribute('download');
+		await (el as NLDDLink).updateComplete;
+		expect((el as NLDDLink).shadowRoot!.querySelector('a')?.getAttribute('href')).toBeNull();
+	});
 });

@@ -1342,4 +1342,12 @@ describe('nldd-date-picker form participation', () => {
 		await waitForUpdate(picker);
 		expect(data(form)).toBe('d=2026-11-01/2026-11-10');
 	});
+
+	it('submits a period empty until both ends are set', async () => {
+		form = await fixture('<form><nldd-date-picker name="d" range></nldd-date-picker></form>') as HTMLFormElement;
+		const picker = form.querySelector('nldd-date-picker') as NLDDDatePicker;
+		picker.start = '2026-11-01';
+		await waitForUpdate(picker);
+		expect(data(form)).toBe('d=');
+	});
 });

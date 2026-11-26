@@ -1192,4 +1192,11 @@ describe('nldd-button – breaking long words', () => {
 		const a = (el as NLDDButton).shadowRoot!.querySelector('a');
 		expect(a?.getAttribute('href')).toBe('blob:https://example.com/u');
 	});
+
+	it('strips a blob: href again once download is removed', async () => {
+		el = await fixture('<nldd-button href="blob:https://example.com/u" download="f.csv" text="x"></nldd-button>');
+		el.removeAttribute('download');
+		await (el as NLDDButton).updateComplete;
+		expect((el as NLDDButton).shadowRoot!.querySelector('a')?.getAttribute('href')).toBeNull();
+	});
 });
