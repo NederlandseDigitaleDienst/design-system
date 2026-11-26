@@ -507,6 +507,7 @@ export class SiteStage extends HTMLElement {
 
 		const mat = this.mat;
 		this.canvas.dataset.surface = 'base';
+		this.canvas.style.paddingTop = this.story?.parameters.stage?.paddingTop ?? '';
 		if (this.frame) {
 			mat.classList.add('site-stage__mat--frame');
 			mat.append(this.frame);
@@ -781,6 +782,7 @@ export class SiteStage extends HTMLElement {
 		this.append(nldd('spacer', { size: '12' }), list, ...popovers);
 		this.observe(new ResizeObserver(() => {
 			const narrow = list.offsetWidth < NARROW_CONTROLS;
+			list.toggleAttribute('data-narrow', narrow);
 			// Out of the cell rather than hidden: the cell's own style on a slotted
 			// paragraph outranks the hidden attribute.
 			for (const { label, button, text } of infos) {

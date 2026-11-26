@@ -120,6 +120,20 @@ body:not(:has(nldd-navigation-split-view[data-site-wide])) nldd-toolbar-title {
 		border: var(--semantics-dividers-thickness) solid var(--semantics-dividers-color);
 	}
 
+	/* Narrow, the label holds only the name: it keeps its line up to 60%
+	   of the row, and the field takes what is left. */
+	.site-stage__controls[data-narrow] > nldd-list-item {
+		& > nldd-text-cell {
+			flex: 0 0 auto;
+			max-width: 60%;
+		}
+
+		& > nldd-cell {
+			flex: 1 1 0;
+			width: auto;
+		}
+	}
+
 	/* ## Around the stage */
 
 	[data-site-api] table {

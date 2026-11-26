@@ -165,7 +165,7 @@ function primaryNavigation(path) {
 	return NAVIGATION.map(
 		([group, label, items]) => `${
 			group
-				? `<nldd-title size="display-5">
+				? `<nldd-title size="display-4">
 					<h3>${escapeHtml(group)}</h3>
 				</nldd-title>
 				<nldd-spacer size="8"></nldd-spacer>
@@ -293,7 +293,7 @@ function themePicker({ compact = false } = {}) {
 								<nldd-top-title-bar
 									slot="header"
 									text="Weergave"
-									dismiss-text="Sluit"
+									dismiss-text="Klaar"
 								></nldd-top-title-bar>
 								<nldd-container padding="16">
 									<nldd-title
@@ -595,7 +595,7 @@ ${body}
 			>
 				<nldd-title
 					sidebar-section-only="expanded"
-					size="display-5"
+					size="display-4"
 				>
 					<h2>Op deze pagina</h2>
 				</nldd-title>
@@ -718,7 +718,7 @@ function siblingNav(groups, current, hrefOf, { label, search, idle } = {}) {
 		([group, items]) => `<nldd-container${search ? ' data-site-filter-group' : ''}>
 					${
 						group
-							? `<nldd-title size="display-5">
+							? `<nldd-title size="display-4">
 						<h3>${escapeHtml(group)}</h3>
 					</nldd-title>
 					<nldd-spacer size="8"></nldd-spacer>
@@ -759,7 +759,7 @@ function siblingNav(groups, current, hrefOf, { label, search, idle } = {}) {
 					data-site-filter-related
 					hidden
 				>
-					<nldd-title size="display-5">
+					<nldd-title size="display-4">
 						<h3>Gerelateerd</h3>
 					</nldd-title>
 					<nldd-spacer size="8"></nldd-spacer>
