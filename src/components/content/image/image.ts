@@ -75,9 +75,8 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { imageStyles } from './image.styles.js';
 import { imageTemplate } from './image.template.js';
 import { nlddImageTranslations } from './image.i18n.js';
-import type { NLDDImageTranslations } from './image.i18n.js';
 import '../icon/icon.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { setState } from '../../../utilities/element-state.js';
 
 export type ImageShape = 'square' | 'rounded' | 'circle';
@@ -114,7 +113,7 @@ function hasAriaName(el: Element): boolean {
 }
 
 @customElement('nldd-image')
-export class NLDDImage extends LitElement {
+export class NLDDImage extends withTranslations(LitElement, nlddImageTranslations) {
 	static override styles = imageStyles;
 
 	@property({ reflect: true, converter: reflectNonDefault<ImageShape>('square') })
@@ -173,13 +172,7 @@ export class NLDDImage extends LitElement {
 	@property({ type: String })
 	loading: ImageLoading = 'lazy';
 
-	/** Override one or more translation keys. Unspecified keys fall back to Dutch. */
-	@property({ type: Object })
-	translations: Partial<NLDDImageTranslations> = {};
 
-	public _t(key: keyof NLDDImageTranslations): string {
-		return translate(this.translations, nlddImageTranslations, key);
-	}
 
 	/** Cache key: the raw lqip attribute string at the time of the last
 	 *  parse. Lit dirty-checks by reference, so without caching every render

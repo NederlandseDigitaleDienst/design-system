@@ -32,27 +32,18 @@ import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js'
 import { reorderHandleCellStyles } from './reorder-handle-cell.styles.js';
 import { template } from './reorder-handle-cell.template.js';
 import { nlddReorderHandleCellTranslations } from './reorder-handle-cell.i18n.js';
-import type { NLDDReorderHandleCellTranslations } from './reorder-handle-cell.i18n.js';
-import { translate } from '../../../../utilities/translations.js';
+import { withTranslations } from '../../../../utilities/with-translations.js';
 
 type Size = 'sm' | 'md';
 
 @customElement('nldd-reorder-handle-cell')
-export class NLDDReorderHandleCell extends ReorderHandleMixin(LitElement, true) {
+export class NLDDReorderHandleCell extends ReorderHandleMixin(withTranslations(LitElement, nlddReorderHandleCellTranslations), true) {
 	static override styles = reorderHandleCellStyles;
 
 	@property({ reflect: true, converter: reflectNonDefault<Size>('md') })
 	size: Size = 'md';
 
-	/** Override one or more translation keys. Unset keys fall back to the Dutch default. */
-	@property({ type: Object })
-	translations: Partial<NLDDReorderHandleCellTranslations> = {};
 
-	// — i18n ————————————————————————————————————————————————————————————————
-
-	private _t(key: keyof NLDDReorderHandleCellTranslations): string {
-		return translate(this.translations, nlddReorderHandleCellTranslations, key);
-	}
 
 	override render() {
 		const label = this._t('components.reorder-handle-cell.accessible-label');

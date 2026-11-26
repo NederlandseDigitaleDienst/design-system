@@ -49,9 +49,8 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { progressBarStyles, progressBarSegmentIndicatorStyles } from './progress-bar.styles.js';
 import { progressBarTemplate, segmentIndicatorTemplate } from './progress-bar.template.js';
 import { nlddProgressBarTranslations } from './progress-bar.i18n.js';
-import type { NLDDProgressBarTranslations } from './progress-bar.i18n.js';
 import '../../content/tooltip/tooltip.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { setState } from '../../../utilities/element-state.js';
 
 /** Indeterminate ↔ determinate crossfade duration. Must stay in sync with
@@ -114,7 +113,7 @@ export class NLDDProgressBarSegmentIndicator extends LitElement {
 // # nldd-progress-bar
 
 @customElement('nldd-progress-bar')
-export class NLDDProgressBar extends LitElement {
+export class NLDDProgressBar extends withTranslations(LitElement, nlddProgressBarTranslations) {
 	static override styles = progressBarStyles;
 
 	@property({ reflect: true, converter: reflectNonDefault<ProgressBarVariant>('progress') })
@@ -150,9 +149,6 @@ export class NLDDProgressBar extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<number>(100) })
 	max = 100;
 
-	/** Override one or more translation keys. Unspecified keys fall back to Dutch. */
-	@property({ type: Object })
-	translations: Partial<NLDDProgressBarTranslations> = {};
 
 	@state()
 	private _segmentIndicators: NLDDProgressBarSegmentIndicator[] = [];
@@ -170,9 +166,6 @@ export class NLDDProgressBar extends LitElement {
 	private _exitTimeout?: ReturnType<typeof setTimeout>;
 	private _enterTimeout?: ReturnType<typeof setTimeout>;
 
-	public _t(key: keyof NLDDProgressBarTranslations): string {
-		return translate(this.translations, nlddProgressBarTranslations, key);
-	}
 
 	/** Returns true when the user has provided segment children. */
 	get _hasSegmentIndicators(): boolean {

@@ -63,11 +63,10 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { internalsOf } from '../../../utilities/element-state.js';
 import { ownerForm } from '../../../utilities/owner-form.js';
 import { popoverTargetOf } from '../../../utilities/overlay-invoker.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { splitButtonStyles } from './split-button.styles.js';
 import { splitButtonTemplate } from './split-button.template.js';
 import { nlddSplitButtonTranslations } from './split-button.i18n.js';
-import type { NLDDSplitButtonTranslations } from './split-button.i18n.js';
 import type { NLDDIconButton } from '../icon-button/icon-button.js';
 import './../button/button.js';
 import './../icon-button/icon-button.js';
@@ -85,7 +84,7 @@ export type SplitButtonAppearance =
 	| 'content-tinted';
 
 @customElement('nldd-split-button')
-export class NLDDSplitButton extends LitElement {
+export class NLDDSplitButton extends withTranslations(LitElement, nlddSplitButtonTranslations) {
 	static override styles = splitButtonStyles;
 
 	/** Form-associated, so a submit split button finds the form it sits in:
@@ -154,14 +153,7 @@ export class NLDDSplitButton extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-	@property({ type: Object })
-	translations: Partial<NLDDSplitButtonTranslations> = {};
 
-	// — i18n —————————————————————————————————————————————————————————————————
-
-	public _t(key: keyof NLDDSplitButtonTranslations, vars?: Record<string, string | number>): string {
-		return translate(this.translations, nlddSplitButtonTranslations, key, vars);
-	}
 
 	/** The appearance for the two buttons inside: they take the aliases'
 	 *  meaning, not the alias, so 'secondary' is never a fall-through there. */

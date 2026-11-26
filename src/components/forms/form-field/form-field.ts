@@ -64,9 +64,8 @@ import {
 	formFieldHelpTextTemplate,
 } from './form-field.template.js';
 import { setState, styleValueState } from '../../../utilities/element-state.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddFormFieldTranslations } from './form-field.i18n.js';
-import type { NLDDFormFieldTranslations } from './form-field.i18n.js';
 
 export type LabelAlignment = 'top' | 'left' | 'right';
 
@@ -122,7 +121,7 @@ function generateId(): string {
 type ValidationListHost = HTMLElement & { onItemVisibilityChange: (() => void) | null };
 
 @customElement('nldd-form-field')
-export class NLDDFormField extends LitElement {
+export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTranslations) {
 	static override styles = formFieldStyles;
 
 	/**
@@ -171,13 +170,7 @@ export class NLDDFormField extends LitElement {
 	@property({ type: Boolean })
 	optional = false;
 
-	/** Override one or more translation keys. Unset keys fall back to Dutch. */
-	@property({ type: Object })
-	translations: Partial<NLDDFormFieldTranslations> = {};
 
-	public _t(key: keyof NLDDFormFieldTranslations): string {
-		return translate(this.translations, nlddFormFieldTranslations, key);
-	}
 
 	private _childObserver: MutationObserver | null = null;
 	/** Watches the validation lists for items that come or go. */

@@ -85,7 +85,7 @@ import '../../sheet/sheet.js';
 import '../../page/page.js';
 import '../../../navigation/top-title-bar/top-title-bar.js';
 import type { NLDDSheet } from '../../sheet/sheet.js';
-import { translate } from '../../../../utilities/translations.js';
+import { withTranslations } from '../../../../utilities/with-translations.js';
 import { focusTemporarily, hashTarget, samePageHash } from '../../../../utilities/focus-target.js';
 import { LayoutPass, sharedResizeObserver } from '../../../../utilities/layout-pass.js';
 import { FramePass } from '../../../../utilities/frame-pass.js';
@@ -144,7 +144,7 @@ function adoptOnlyRule(root: Node): void {
 }
 
 @customElement('nldd-sidebar-section')
-export class NLDDSidebarSection extends PageSectionMixin(LitElement) {
+export class NLDDSidebarSection extends PageSectionMixin(withTranslations(LitElement, nlddSidebarSectionTranslations)) {
 	static override styles = [pageSectionBackgroundStyles, sidebarSectionStyles];
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
@@ -165,9 +165,6 @@ export class NLDDSidebarSection extends PageSectionMixin(LitElement) {
 	@property({ type: Boolean, reflect: true })
 	collapsed = false;
 
-	/** Override translation keys (sheet title fallback and dismiss label); unset keys fall back to Dutch. */
-	@property({ type: Object })
-	translations: Partial<typeof nlddSidebarSectionTranslations> = {};
 
 	@query('.sidebar-section__sheet')
 	private _sheet?: NLDDSheet;
@@ -185,9 +182,6 @@ export class NLDDSidebarSection extends PageSectionMixin(LitElement) {
 		return this._t('components.sidebar-section.sheet-dismiss-action');
 	}
 
-	private _t(key: keyof typeof nlddSidebarSectionTranslations): string {
-		return translate(this.translations, nlddSidebarSectionTranslations, key);
-	}
 
 	override connectedCallback(): void {
 		super.connectedCallback();

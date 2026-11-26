@@ -61,8 +61,7 @@ import { setState } from '../../../utilities/element-state.js';
 import { termStyles } from './term.styles.js';
 import { termTemplate } from './term.template.js';
 import { nlddTermTranslations } from './term.i18n.js';
-import type { NLDDTermTranslations } from './term.i18n.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import type { NLDDPopover } from '../../layout/popover/popover.js';
 import '../../layout/popover/popover.js';
 import '../../layout/container/container.js';
@@ -75,7 +74,7 @@ import '../title/title.js';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 
 @customElement('nldd-term')
-export class NLDDTerm extends LitElement {
+export class NLDDTerm extends withTranslations(LitElement, nlddTermTranslations) {
 	static override styles = termStyles;
 
 	@property({ type: String, reflect: true })
@@ -90,9 +89,6 @@ export class NLDDTerm extends LitElement {
 	@property({ type: String, reflect: true })
 	popovertarget = '';
 
-	/** Override one or more translation keys. Unspecified keys fall back to Dutch. */
-	@property({ type: Object })
-	translations: Partial<NLDDTermTranslations> = {};
 
 	/** The term as it shows: the slotted text without the whitespace around
 	 *  it, which the underline would otherwise run into. */
@@ -260,9 +256,6 @@ export class NLDDTerm extends LitElement {
 	}
 
 
-	public _t(key: keyof NLDDTermTranslations): string {
-		return translate(this.translations, nlddTermTranslations, key);
-	}
 
 	override focus(options?: FocusOptions): void {
 		this._triggerEl?.focus(options);

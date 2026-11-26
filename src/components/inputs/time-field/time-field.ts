@@ -65,10 +65,10 @@ import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { timeFieldStyles } from './time-field.styles.js';
 import { timeFieldTemplate } from './time-field.template.js';
-import { nlddTimeFieldTranslations, type NLDDTimeFieldTranslations } from './time-field.i18n.js';
+import { nlddTimeFieldTranslations } from './time-field.i18n.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { focusAsLastInput, focusIsFree } from '../../../utilities/return-focus.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import {
 	checkText,
 	commitText,
@@ -87,7 +87,7 @@ const MAX_PICKER_ROWS = 7;
 const MIN_PICKER_ROWS = 3;
 
 @customElement('nldd-time-field')
-export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
+export class NLDDTimeField extends DescribedBy(FormAssociated(withTranslations(LitElement, nlddTimeFieldTranslations))) {
 
 	static override shadowRootOptions = {
 		...LitElement.shadowRootOptions,
@@ -162,9 +162,6 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-	/** Override one or more translation keys. Keys left out fall back to Dutch. */
-	@property({ type: Object })
-	translations: Partial<NLDDTimeFieldTranslations> = {};
 
 
 	/**
@@ -224,9 +221,6 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 	@state()
 	_display = '';
 
-	public _t(key: keyof NLDDTimeFieldTranslations): string {
-		return translate(this.translations, nlddTimeFieldTranslations, key);
-	}
 
 	public get _fieldLabel(): string {
 		return this.accessibleLabel || this._t('components.time-field.default-label');

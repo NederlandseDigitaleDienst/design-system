@@ -45,17 +45,17 @@ import { property } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
 import { windowStyles } from './window.styles.js';
 import { windowTemplate } from './window.template.js';
-import { nlddWindowTranslations, type NLDDWindowTranslations } from './window.i18n.js';
+import { nlddWindowTranslations } from './window.i18n.js';
 import { TitleBarLabelController } from '../../../utilities/title-bar-label-controller.js';
 import { ModalOverlay } from '../../../utilities/modal-overlay.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { setState } from '../../../utilities/element-state.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 
 export type NLDDWindowScheme = 'inherit' | 'light' | 'dark';
 
 @customElement('nldd-window')
-export class NLDDWindow extends LitElement {
+export class NLDDWindow extends withTranslations(LitElement, nlddWindowTranslations) {
 	static override styles = windowStyles;
 
 	@property({ reflect: true, converter: reflectNonDefault<NLDDWindowScheme>('inherit') })
@@ -91,12 +91,6 @@ export class NLDDWindow extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	open = false;
 
-	/**
-	 * Override one or more translation keys.
-	 * Unset keys fall back to the Dutch default.
-	 */
-	@property({ type: Object })
-	translations: Partial<NLDDWindowTranslations> = {};
 
 	private _titleBar = new TitleBarLabelController(this);
 
@@ -145,11 +139,6 @@ export class NLDDWindow extends LitElement {
 		}
 	}
 
-	// — i18n ——————————————————————————————————————————————————————————————————
-
-	private _t(key: keyof NLDDWindowTranslations): string {
-		return translate(this.translations, nlddWindowTranslations, key);
-	}
 
 	get _resolvedAccessibleLabel(): string {
 		return this.accessibleLabel || this._titleBar.text || this._t('components.window.accessible-label');

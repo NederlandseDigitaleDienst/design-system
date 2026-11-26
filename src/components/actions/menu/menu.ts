@@ -5,7 +5,6 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { menuStyles } from './menu.styles.js';
 import { menuTemplate, type MenuVariant } from './menu.template.js';
 import { nlddMenuTranslations } from './menu.i18n.js';
-import type { NLDDMenuTranslations } from './menu.i18n.js';
 import '../../content/icon/icon.js';
 import '../../content/keyboard-shortcut/keyboard-shortcut.js';
 import '../../status-and-feedback/inline-dialog/inline-dialog.js';
@@ -13,7 +12,7 @@ import { isKeyboardMode, isTouchMode } from '../../../utilities/input-modality.j
 import { FocusReturn } from '../../../utilities/return-focus.js';
 import { OverlayInvoker, TriggerAria, watchTrigger, type InvokableOverlay } from '../../../utilities/overlay-invoker.js';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { NLDDMenuItem } from './menu-item.js';
 import { MenuPointerController, menuElementFromPoint } from './menu.pointer.js';
 import { SubmenuLevel } from './menu.chain.js';
@@ -107,7 +106,7 @@ const HOVER_OPEN_MAX_MS = 150;
  * @slot footer - Free content shown below the items, outside `role="menu"` (same rules as `header`; also unpadded and root-only). Example: a short note or a link.
  * @slot empty - Shown when no items are visible. Defaults to `nldd-inline-dialog` driven by `empty-text` / `empty-supporting-text`. Slot content overrides the default dialog entirely.
  */
-export class NLDDMenu extends LitElement {
+export class NLDDMenu extends withTranslations(LitElement, nlddMenuTranslations) {
 	static override styles = menuStyles;
 
 	/**
@@ -190,12 +189,6 @@ export class NLDDMenu extends LitElement {
 	@property({ attribute: false })
 	filterFn: (query: string, item: NLDDMenuItem) => boolean = defaultFilterFn;
 
-	/**
-	 * Override one or more translation keys.
-	 * Unset keys fall back to the Dutch default.
-	 */
-	@property({ type: Object })
-	translations: Partial<NLDDMenuTranslations> = {};
 
 	@state()
 	private _isEmpty = false;
@@ -261,12 +254,7 @@ export class NLDDMenu extends LitElement {
 	_collapsedByPointerGesture = false;
 	private _cleanupAutoUpdate: (() => void) | null = null;
 
-	// — i18n ——————————————————————————————————————————————————————————————————
-
 	/** @internal */
-	_t(key: keyof NLDDMenuTranslations, vars?: Record<string, string | number>): string {
-		return translate(this.translations, nlddMenuTranslations, key, vars);
-	}
 
 	/** Resolved empty text: emptyText attribute takes precedence, then i18n fallback. */
 	get _resolvedEmptyText(): string {

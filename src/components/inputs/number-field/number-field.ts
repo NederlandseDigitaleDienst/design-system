@@ -33,11 +33,10 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { numberFieldStyles } from './number-field.styles.js';
 import { numberFieldTemplate } from './number-field.template.js';
 import { nlddNumberFieldTranslations } from './number-field.i18n.js';
-import type { NLDDNumberFieldTranslations } from './number-field.i18n.js';
 import './../../actions/icon-button/icon-button.js';
 import './../../content/icon/icon.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
 
 export type NumberFieldSize = 'sm' | 'md';
@@ -57,7 +56,7 @@ function emptyOrNumber(value: string | null): number | null {
 }
 
 @customElement('nldd-number-field')
-export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
+export class NLDDNumberField extends DescribedBy(FormAssociated(withTranslations(LitElement, nlddNumberFieldTranslations))) {
 
 	static override styles = numberFieldStyles;
 
@@ -128,9 +127,6 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	readonly = false;
 
-	/** Override one or more translation keys. Unspecified keys fall back to Dutch. */
-	@property({ type: Object })
-	translations: Partial<NLDDNumberFieldTranslations> = {};
 
 	/** The value last committed or set from outside: what `change` compares with.
 	 *  Typing already moves `value`, so comparing with that would leave a typed
@@ -179,11 +175,6 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 		if (this.value !== null) this.value = this._clamp(this.value);
 	}
 
-	// — i18n —————————————————————————————————————————————————————————————————
-
-	public _t(key: keyof NLDDNumberFieldTranslations): string {
-		return translate(this.translations, nlddNumberFieldTranslations, key);
-	}
 
 	// — Actions ——————————————————————————————————————————————————————————————
 

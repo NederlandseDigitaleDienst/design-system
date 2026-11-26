@@ -4,8 +4,8 @@ import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { toolbarTitleStyles } from './toolbar.styles.js';
 import { toolbarTitleTemplate } from './toolbar-title.template.js';
-import { nlddToolbarTranslations, type NLDDToolbarTranslations } from './toolbar.i18n.js';
-import { translate } from '../../../utilities/translations.js';
+import { nlddToolbarTranslations } from './toolbar.i18n.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { styleState, styleValueState } from '../../../utilities/element-state.js';
 import type { Size } from './toolbar-item.js';
 
@@ -32,7 +32,7 @@ type TitleAlign = 'left' | 'center';
  * @slot action - Optional trailing control (e.g. an xs nldd-icon-button), shown inline after the title and tuned to sit against it. Empty by default.
  */
 @customElement('nldd-toolbar-title')
-export class NLDDToolbarTitle extends LitElement {
+export class NLDDToolbarTitle extends withTranslations(LitElement, nlddToolbarTranslations) {
 	static override styles = toolbarTitleStyles;
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
@@ -59,12 +59,7 @@ export class NLDDToolbarTitle extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	target = '';
 
-	@property({ type: Object })
-	translations: Partial<NLDDToolbarTranslations> = {};
 
-	public _t(key: keyof NLDDToolbarTranslations): string {
-		return translate(this.translations, nlddToolbarTranslations, key);
-	}
 
 	private _size: Size = 'md';
 	private _soloFluid = false;

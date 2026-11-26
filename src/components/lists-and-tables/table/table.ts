@@ -82,10 +82,9 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { tableStyles, tableRowStyles } from './table.styles.js';
 import { tableTemplate, tableRowTemplate } from './table.template.js';
 import { nlddTableTranslations } from './table.i18n.js';
-import type { NLDDTableTranslations } from './table.i18n.js';
 import { breakpointPx, rootFontSize } from '../../../assets/styles/breakpoints.js';
 import '../../status-and-feedback/inline-dialog/inline-dialog.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { setState } from '../../../utilities/element-state.js';
 import { afterParse } from '../../../utilities/after-parse.js';
 import { LayoutPass } from '../../../utilities/layout-pass.js';
@@ -142,7 +141,7 @@ const scrollPass = new LayoutPass<NLDDTable>((tables) => {
 // # nldd-table
 
 @customElement('nldd-table')
-export class NLDDTable extends LitElement {
+export class NLDDTable extends withTranslations(LitElement, nlddTableTranslations) {
 	static override styles = tableStyles;
 
 	@property({ reflect: true, converter: reflectNonDefault<TableBackground>('base') })
@@ -174,8 +173,6 @@ export class NLDDTable extends LitElement {
 	@property({ reflect: true, attribute: 'accessible-label', converter: reflectNonDefault<string>('') })
 	accessibleLabel = '';
 
-	@property({ type: Object })
-	translations: Partial<NLDDTableTranslations> = {};
 
 	private _rowsObserver?: MutationObserver;
 	/** @internal Last observed content-box width, to resolve the active track list. */
@@ -183,9 +180,6 @@ export class NLDDTable extends LitElement {
 	/** An empty-state update waits for the parse; see _scheduleEmpty. */
 	private _emptyPending = false;
 
-	public _t(key: keyof NLDDTableTranslations): string {
-		return translate(this.translations, nlddTableTranslations, key);
-	}
 
 	override connectedCallback(): void {
 		super.connectedCallback();

@@ -77,8 +77,7 @@ import { validationListStyles, validationItemStyles } from './validation-list.st
 import { validationListTemplate, validationItemTemplate } from './validation-list.template.js';
 import { setState, styleState } from '../../../utilities/element-state.js';
 import { nlddValidationListTranslations } from './validation-list.i18n.js';
-import type { NLDDValidationListTranslations } from './validation-list.i18n.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 
 /** A control that can report its own validity to the form. */
 interface ValidatableControl extends Element {
@@ -185,7 +184,7 @@ export class NLDDValidationItem extends LitElement {
    ============================================================ */
 
 @customElement('nldd-validation-list')
-export class NLDDValidationList extends LitElement {
+export class NLDDValidationList extends withTranslations(LitElement, nlddValidationListTranslations) {
 	static override styles = validationListStyles;
 
 	@property({ type: Boolean, reflect: true })
@@ -236,8 +235,6 @@ export class NLDDValidationList extends LitElement {
 	@property({ attribute: false })
 	value?: string;
 
-	@property({ type: Object })
-	translations: Partial<NLDDValidationListTranslations> = {};
 
 	/**
 	 * @internal Called when one of the items shows or hides. Set by
@@ -245,9 +242,6 @@ export class NLDDValidationList extends LitElement {
 	 */
 	onItemVisibilityChange: (() => void) | null = null;
 
-	_t(key: keyof NLDDValidationListTranslations, vars?: Record<string, string | number>): string {
-		return translate(this.translations, nlddValidationListTranslations, key, vars);
-	}
 
 	@state()
 	private _resolved: Element | null = null;

@@ -48,9 +48,8 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { progressCircleStyles, progressCircleSegmentIndicatorStyles } from './progress-circle.styles.js';
 import { progressCircleTemplate, getCircumference, getStrokeWidthPx } from './progress-circle.template.js';
 import { nlddProgressCircleTranslations } from './progress-circle.i18n.js';
-import type { NLDDProgressCircleTranslations } from './progress-circle.i18n.js';
 import '../../content/tooltip/tooltip.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 
 /** Indeterminate ↔ determinate crossfade duration. Must stay in sync with
  *  --primitives-transition-duration-slow used by the matching CSS animations
@@ -101,7 +100,7 @@ export class NLDDProgressCircleSegmentIndicator extends LitElement {
 // # nldd-progress-circle
 
 @customElement('nldd-progress-circle')
-export class NLDDProgressCircle extends LitElement {
+export class NLDDProgressCircle extends withTranslations(LitElement, nlddProgressCircleTranslations) {
 	static override styles = progressCircleStyles;
 
 	@property({ reflect: true, converter: reflectNonDefault<ProgressCircleVariant>('progress') })
@@ -137,8 +136,6 @@ export class NLDDProgressCircle extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<number>(100) })
 	max = 100;
 
-	@property({ type: Object })
-	translations: Partial<NLDDProgressCircleTranslations> = {};
 
 	@state()
 	private _segmentIndicators: NLDDProgressCircleSegmentIndicator[] = [];
@@ -171,9 +168,6 @@ export class NLDDProgressCircle extends LitElement {
 	 *  @internal */
 	readonly _uid = `pc-${NLDDProgressCircle._idCounter++}`;
 
-	public _t(key: keyof NLDDProgressCircleTranslations): string {
-		return translate(this.translations, nlddProgressCircleTranslations, key);
-	}
 
 	get _hasSegmentIndicators(): boolean {
 		return this._segmentIndicators.length > 0;

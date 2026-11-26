@@ -51,19 +51,19 @@ import { OverlayInvoker, type InvokableOverlay } from '../../../utilities/overla
 import { FormAssociated, type FormValue, type OwnValidity } from '../../../utilities/form-associated-mixin.js';
 import { tokenFieldStyles } from './token-field.styles.js';
 import { tokenFieldTemplate } from './token-field.template.js';
-import { nlddTokenFieldTranslations, type NLDDTokenFieldTranslations } from './token-field.i18n.js';
+import { nlddTokenFieldTranslations } from './token-field.i18n.js';
 import type { NLDDMenu, NLDDMenuItem } from '../../actions/menu/menu.js';
 import '../../actions/menu/menu.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
 
 /** Trailing control rendered on each token. */
 export type TokenFieldControl = 'dismiss' | 'menu';
 
 @customElement('nldd-token-field')
-export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
+export class NLDDTokenField extends DescribedBy(FormAssociated(withTranslations(LitElement, nlddTokenFieldTranslations))) {
 
 	static override styles = tokenFieldStyles;
 
@@ -162,8 +162,6 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-	@property({ type: Object })
-	translations: Partial<NLDDTokenFieldTranslations> = {};
 
 	/** The current text in the inline input; drives the menu filter. */
 	@state()
@@ -211,9 +209,6 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 		close: (): void => this._closeMenu(),
 	});
 
-	public _t(key: keyof NLDDTokenFieldTranslations): string {
-		return translate(this.translations, nlddTokenFieldTranslations, key);
-	}
 
 	// — Lifecycle ————————————————————————————————————————————————————————————
 

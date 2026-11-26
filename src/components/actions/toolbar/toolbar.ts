@@ -36,8 +36,7 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { toolbarStyles } from './toolbar.styles.js';
 import { template, type ToolbarChild } from './toolbar.template.js';
 import { nlddToolbarTranslations } from './toolbar.i18n.js';
-import type { NLDDToolbarTranslations } from './toolbar.i18n.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { NLDDToolbarItem, type Size, type SizingElement } from './toolbar-item.js';
 import { NLDDToolbarTitle } from './toolbar-title.js';
 import { OverflowMenu } from '../../../utilities/overflow-menu.js';
@@ -149,7 +148,7 @@ const onFontsLoaded = (): void => {
 // # Component
 
 @customElement('nldd-toolbar')
-export class NLDDToolbar extends LitElement {
+export class NLDDToolbar extends withTranslations(LitElement, nlddToolbarTranslations) {
 	static override styles = toolbarStyles;
 
 	@property({ reflect: true, converter: reflectNonDefault<Size>('md') })
@@ -161,14 +160,7 @@ export class NLDDToolbar extends LitElement {
 	@property({ reflect: true, attribute: 'accessible-label', converter: reflectNonDefault<string>('') })
 	accessibleLabel = '';
 
-	@property({ type: Object })
-	translations: Partial<NLDDToolbarTranslations> = {};
 
-	// — i18n —————————————————————————————————————————————————————————————————
-
-	public _t(key: keyof NLDDToolbarTranslations): string {
-		return translate(this.translations, nlddToolbarTranslations, key);
-	}
 
 	/** The menu for what does not fit. @internal */
 	readonly _overflowMenu = new OverflowMenu(this, { id: 'nldd-toolbar-overflow-menu' });

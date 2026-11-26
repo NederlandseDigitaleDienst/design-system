@@ -63,13 +63,12 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { dateFieldStyles } from './date-field.styles.js';
 import { dateFieldTemplate, PICKER_POPOVER_WIDTH } from './date-field.template.js';
 import { nlddDateFieldTranslations } from './date-field.i18n.js';
-import type { NLDDDateFieldTranslations } from './date-field.i18n.js';
 import type { NLDDDatePicker } from './../date-picker/date-picker.js';
 import type { NLDDPopover } from './../../layout/popover/popover.js';
 import './../../actions/icon-button/icon-button.js';
 import './../../content/icon/icon.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { focusAsLastInput, focusIsFree } from '../../../utilities/return-focus.js';
 import { isPointerMode } from '../../../utilities/input-modality.js';
 import {
@@ -84,7 +83,7 @@ import {
 } from './date-field.dates.js';
 
 @customElement('nldd-date-field')
-export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
+export class NLDDDateField extends DescribedBy(FormAssociated(withTranslations(LitElement, nlddDateFieldTranslations))) {
 
 	static override shadowRootOptions = {
 		...LitElement.shadowRootOptions,
@@ -161,9 +160,6 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-	/** Override one or more translation keys. Keys left out fall back to Dutch. */
-	@property({ type: Object })
-	translations: Partial<NLDDDateFieldTranslations> = {};
 
 	/**
 	 * What the user sees and types, one text per end: one for a date, two for a
@@ -333,11 +329,6 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 
-	// — i18n —————————————————————————————————————————————————————————————————
-
-	public _t(key: keyof NLDDDateFieldTranslations): string {
-		return translate(this.translations, nlddDateFieldTranslations, key);
-	}
 
 	/**
 	 * The field's accessible name, with a fallback so the input is never nameless.

@@ -37,11 +37,11 @@ import { customElement } from '../../../utilities/custom-element.js';
 import { cssTimeToMs } from '../../../utilities/css-time.js';
 import { timePickerStyles } from './time-picker.styles.js';
 import { timePickerTemplate } from './time-picker.template.js';
-import { nlddTimePickerTranslations, type NLDDTimePickerTranslations } from './time-picker.i18n.js';
+import { nlddTimePickerTranslations } from './time-picker.i18n.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
 import { fromMinutes, resolveRules, toMinutes, type TimeRules } from '../time-field/time-field.times.js';
 import { LayoutPass } from '../../../utilities/layout-pass.js';
@@ -111,7 +111,7 @@ function goLive(picker: NLDDTimePicker): void {
 }
 
 @customElement('nldd-time-picker')
-export class NLDDTimePicker extends DescribedBy(FormAssociated(LitElement)) {
+export class NLDDTimePicker extends DescribedBy(FormAssociated(withTranslations(LitElement, nlddTimePickerTranslations))) {
 
 	static override styles = timePickerStyles;
 
@@ -160,8 +160,6 @@ export class NLDDTimePicker extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Number })
 	step = 1;
 
-	@property({ type: Object })
-	translations: Partial<NLDDTimePickerTranslations> = {};
 
 	/**
 	 * Where scrolling has landed, per column, for as long as it is not recorded.
@@ -174,9 +172,6 @@ export class NLDDTimePicker extends DescribedBy(FormAssociated(LitElement)) {
 	private _scrolledTo: { hours: number | null; minutes: number | null } = { hours: null, minutes: null };
 
 
-	public _t(key: keyof NLDDTimePickerTranslations): string {
-		return translate(this.translations, nlddTimePickerTranslations, key);
-	}
 
 	/** The chosen time as `HH:mm`, empty when there is none. */
 	override formValue(): FormValue {
