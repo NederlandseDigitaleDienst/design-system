@@ -15765,7 +15765,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Name for form submission; the picker submits on its own, so it works in a form without an nldd-date-field. A single date submits as ISO, a period as an ISO 8601 interval `start/end`.",
+              "description": "Name for form submission; the picker submits on its own, so it works in a form without an nldd-date-field. A single date submits as ISO, a period as an ISO 8601 interval `start/end`, and as empty until both ends are set.",
               "fieldName": "name"
             },
             {

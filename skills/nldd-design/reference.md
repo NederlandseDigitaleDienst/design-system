@@ -1608,7 +1608,7 @@ A calendar for picking a date or a period. The component works on its own (inlin
 | `week-numbers` | `boolean` | Shows ISO week numbers in a column on the left. |
 | `first-day-of-week` | `number` | First day of the week, 0 is Sunday. Default 1 (Monday). |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
-| `name` | `string` | Name for form submission; the picker submits on its own, so it works in a form without an nldd-date-field. A single date submits as ISO, a period as an ISO 8601 interval `start/end`. |
+| `name` | `string` | Name for form submission; the picker submits on its own, so it works in a form without an nldd-date-field. A single date submits as ISO, a period as an ISO 8601 interval `start/end`, and as empty until both ends are set. |
 | `value` | `string` | The chosen date as ISO (yyyy-mm-dd). Only without `range`. |
 | `start` | `string` | Start of the period as ISO. Only with `range`. |
 | `end` | `string` | End of the period as ISO. Only with `range`. |
