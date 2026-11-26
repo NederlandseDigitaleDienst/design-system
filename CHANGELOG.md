@@ -9,6 +9,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.29.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.29.0...v0.29.1) (2026-11-26)
+
 ### Highlights
 
 - **`nldd-date-picker` and `nldd-time-picker` take part in a form on their own**, with `name`, so a picker without an `nldd-date-field` or `nldd-time-field` around it submits its value. See Added.
