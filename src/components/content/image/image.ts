@@ -23,13 +23,13 @@
  *
  * @attr {'square'|'rounded'|'circle'} shape - Corner shape (default: 'square')
  * @attr {number|string|'full'} width - Display width, never wider than the parent. `full` (default) fills the parent. A number is pixels and also sets the `<img>` layout-hint width; any other CSS length (`20rem`, `50%`) only sets the width, so reserve space with `height` or `aspect-ratio`. Written as an inline `max-width` on the host, so it holds against a rule from a parent such as `nldd-rich-text`, and against one of your own.
- * @attr {number} height - Intrinsic height (for layout reservation)
+ * @attr {number} height - Height in pixels as a layout hint for the `<img>`, not a display height. With a `width` in pixels the browser takes the ratio of the two and reserves the space before the image loads; the shown height follows from the width. With any other `width` it does nothing: reserve space with `aspect-ratio` instead.
+ * @attr {string} aspect-ratio - Aspect ratio in CSS form (e.g. "16/9", "1/1", "4/3").
+ *   "16:9" colon notation is also accepted for convenience.
  * @attr {string} src - Image URL
  * @attr {string} srcset - Responsive source set
  * @attr {string} sizes - Source sizes hint
  * @attr {string} alt - Alt text for the image from `src`. Required unless `decorative`; slotted media carries its own.
- * @attr {string} aspect-ratio - Aspect ratio in CSS form (e.g. "16/9", "1/1", "4/3").
- *   "16:9" colon notation is also accepted for convenience.
  * @attr {'cover'|'contain'|'fill'|'scale-down'|'none'} object-fit - default: 'cover'
  * @attr {'center'|'top'|'bottom'|'left'|'right'} object-position - default: 'center'
  * @attr {string} lqip - Loading preview (LQIP, low-quality image placeholder) as a CSV string
@@ -130,6 +130,9 @@ export class NLDDImage extends withTranslations(LitElement, nlddImageTranslation
 	@property({ type: Number, reflect: true })
 	height?: number;
 
+	@property({ reflect: true, attribute: 'aspect-ratio', converter: reflectNonDefault<string>('') })
+	aspectRatio = '';
+
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	src = '';
 
@@ -141,9 +144,6 @@ export class NLDDImage extends withTranslations(LitElement, nlddImageTranslation
 
 	@property({ type: String })
 	alt = '';
-
-	@property({ reflect: true, attribute: 'aspect-ratio', converter: reflectNonDefault<string>('') })
-	aspectRatio = '';
 
 	@property({ reflect: true, attribute: 'object-fit', converter: reflectNonDefault<ImageObjectFit>('cover') })
 	objectFit: ImageObjectFit = 'cover';

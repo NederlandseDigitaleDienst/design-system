@@ -6696,6 +6696,16 @@
             },
             {
               "kind": "field",
+              "name": "aspectRatio",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "aspect-ratio",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "src",
               "type": {
                 "text": "string"
@@ -6730,16 +6740,6 @@
               },
               "default": "''",
               "attribute": "alt"
-            },
-            {
-              "kind": "field",
-              "name": "aspectRatio",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "aspect-ratio",
-              "reflects": true
             },
             {
               "kind": "field",
@@ -6868,7 +6868,16 @@
                 "text": "number | undefined"
               },
               "fieldName": "height",
-              "description": "Intrinsic height (for layout reservation)"
+              "description": "Height in pixels as a layout hint for the `<img>`, not a display height. With a `width` in pixels the browser takes the ratio of the two and reserves the space before the image loads; the shown height follows from the width. With any other `width` it does nothing: reserve space with `aspect-ratio` instead."
+            },
+            {
+              "name": "aspect-ratio",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "aspectRatio",
+              "description": "Aspect ratio in CSS form (e.g. \"16/9\", \"1/1\", \"4/3\"). \"16:9\" colon notation is also accepted for convenience."
             },
             {
               "name": "src",
@@ -6905,15 +6914,6 @@
               "default": "''",
               "fieldName": "alt",
               "description": "Alt text for the image from `src`. Required unless `decorative`; slotted media carries its own."
-            },
-            {
-              "name": "aspect-ratio",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "aspectRatio",
-              "description": "Aspect ratio in CSS form (e.g. \"16/9\", \"1/1\", \"4/3\"). \"16:9\" colon notation is also accepted for convenience."
             },
             {
               "name": "object-fit",
@@ -39626,6 +39626,27 @@
             },
             {
               "kind": "field",
+              "name": "mediaHeight",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "media-height",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "mediaAspectRatio",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Media aspect-ratio in CSS form ('16/9' or '16:9'); default '21/9'. Drives\nthe hero height on md/lg and the media strip height on sm.",
+              "attribute": "media-aspect-ratio",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "mainWidth",
               "type": {
                 "text": "HeroMainWidth"
@@ -39690,27 +39711,6 @@
               },
               "default": "''",
               "attribute": "media-alt"
-            },
-            {
-              "kind": "field",
-              "name": "mediaAspectRatio",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Media aspect-ratio in CSS form ('16/9' or '16:9'); default '21/9'. Drives\nthe hero height on md/lg and the media strip height on sm.",
-              "attribute": "media-aspect-ratio",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "mediaHeight",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "media-height",
-              "reflects": true
             },
             {
               "kind": "field",
@@ -39954,6 +39954,24 @@
               "fieldName": "width"
             },
             {
+              "name": "media-height",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "mediaHeight",
+              "description": "Fixed height of the media area, any CSS length (e.g. '320px', '40vh'); wins over media-aspect-ratio. An invalid value falls back to the ratio"
+            },
+            {
+              "name": "media-aspect-ratio",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Aspect ratio of the media area (CSS form, '16/9' or '16:9'); default '21/9'. On md/lg it sets the height of the hero, on sm the height of the media area",
+              "fieldName": "mediaAspectRatio"
+            },
+            {
               "name": "main-width",
               "type": {
                 "text": "HeroMainWidth"
@@ -40018,24 +40036,6 @@
               "default": "''",
               "fieldName": "mediaAlt",
               "description": "Alt text for media-src; empty means decorative"
-            },
-            {
-              "name": "media-aspect-ratio",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Aspect ratio of the media area (CSS form, '16/9' or '16:9'); default '21/9'. On md/lg it sets the height of the hero, on sm the height of the media area",
-              "fieldName": "mediaAspectRatio"
-            },
-            {
-              "name": "media-height",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "mediaHeight",
-              "description": "Fixed height of the media area, any CSS length (e.g. '320px', '40vh'); wins over media-aspect-ratio. An invalid value falls back to the ratio"
             },
             {
               "name": "background",

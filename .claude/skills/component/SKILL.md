@@ -423,7 +423,7 @@ noLogo, noBlink
 
 [2. Sizing]
 resize, rows, width, minWidth, maxWidth, height, minHeight, maxHeight,
-fullWidth, smFullHeight, grow, fluid, soloFluid, shrinkable, mainWidth,
+aspectRatio, mediaHeight, mediaAspectRatio, fullWidth, smFullHeight, grow, fluid, soloFluid, shrinkable, mainWidth,
 overlapSize, itemMinWidth, itemMaxWidth, containerSize
 
 [3. Space]
@@ -444,7 +444,7 @@ supportingLabel, optional, placeholder, number, details, hint, headingLevel,
 icon, startIcon, endIcon, selectedIcon, containerColor,
 initials, src, srcset, sizes, alt, image, imageSrcset, avatarSrc,
 avatarSrcset, avatarAlt, mediaSrc, mediaSrcset, mediaSizes, mediaAlt,
-mediaAspectRatio, mediaHeight, aspectRatio, objectFit, objectPosition,
+objectFit, objectPosition,
 lqip, decoding, fetchPriority, caption, credit,
 quote, attribution, cite, definition, source, sourceHref, keys, macKeys,
 windowsKeys, linuxKeys, language, diff, hyphens,
