@@ -122,7 +122,8 @@ jobs:
 
   # Consumers run `nldd lint` on the Node in `engines`, while every other job
   # runs on .nvmrc, which is newer. Without this job a newer Node API in lint/
-  # would only show on a consumer's machine.
+  # would only show on a consumer's machine. Only lint/ ships to consumers;
+  # the tests in scripts/ and www/build run on .nvmrc alone.
   linter-min-node:
     name: Linter on the lowest supported Node
     runs-on: ubuntu-latest
@@ -146,11 +147,10 @@ jobs:
           node-version: ${{ steps.engines.outputs.node }}
           cache: 'npm'
 
-      # Development dependencies want a newer Node, so npm warns (EBADENGINE)
-      # but installs. The linter itself only needs what is in `dependencies`
-      # and `optionalDependencies`.
+      # --omit=dev installs what a consumer gets, so a linter that needs a
+      # development dependency fails here too.
       - name: Install dependencies
-        run: npm ci --ignore-scripts
+        run: npm ci --omit=dev --ignore-scripts
 
       - name: Test the linter
         run: node --test lint/*.test.mjs
