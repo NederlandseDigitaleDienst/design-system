@@ -119,3 +119,47 @@ jobs:
           npm run test:vue-types
           npm run generate:react-types
           npm run test:react-types
+
+  # Consumers run `nldd lint` on the Node in `engines`, while every other job
+  # runs on .nvmrc, which is newer. Without this job a newer Node API in lint/
+  # would only show on a consumer's machine. Only lint/ ships to consumers;
+  # the tests in scripts/ and www/build run on .nvmrc alone.
+  linter-min-node:
+    name: Linter on the lowest supported Node
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      # Read from `engines`, so this job moves along when the minimum does.
+      # setup-node can read package.json itself, but takes the newest Node in
+      # the range instead of the lowest.
+      - name: Read the lowest supported Node
+        id: engines
+        run: |
+          range=$(jq -r '.engines.node' package.json)
+          if [[ ! "$range" =~ ^\>=[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::engines.node is \"$range\"; this job reads only a plain >=x.y.z"
+            exit 1
+          fi
+          echo "node=${range#>=}" >> "$GITHUB_OUTPUT"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ steps.engines.outputs.node }}
+          cache: 'npm'
+
+      # --omit=dev installs what a consumer gets, so a linter that needs a
+      # development dependency fails here too.
+      - name: Install dependencies
+        run: npm ci --omit=dev --ignore-scripts
+
+      - name: Test the linter
+        run: node --test lint/*.test.mjs
+
+      - name: Lint the site with the CLI
+        run: npm run lint:www

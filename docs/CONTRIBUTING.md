@@ -26,7 +26,7 @@ Code mag later. Draait het patroon eenmaal, dan moet elke `nldd-*`-tag in de doc
 
 ## Lokaal draaien
 
-Je hebt Node 20.19 of hoger nodig.
+Je hebt de Node uit `.nvmrc` nodig (`nvm use`): daarop draaien CI en de release. De linter zelf vraagt Node 20.19 of hoger, en CI test hem ook daarop.
 
 ```bash
 npm ci

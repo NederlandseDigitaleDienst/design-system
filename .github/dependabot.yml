@@ -67,16 +67,14 @@ updates:
           - minor
           - patch
     # The release-notes preset stays on 10.2.1, pinned in package.json and in
-    # `overrides` (#220). 10.4.0 refuses conventional-changelog-writer below 9,
-    # and @semantic-release/release-notes-generator, which renders our notes,
-    # still brings writer 8: the release then dies in generateNotes, which is
-    # how 0.8.84 failed. Tests and builds pass either way, so nothing in CI
-    # would catch a bump before the release does.
-    #
-    # Remove this once release-notes-generator depends on
-    # conventional-changelog-writer@9 (`npm ls conventional-changelog-writer`).
-    # It comes in through semantic-release and not as a direct dependency, so
-    # no Dependabot PR will say when that happened.
+    # `overrides` (#220). The release notes are meant to be only the version
+    # heading (see Changelog in CLAUDE.md), and .releaserc.json gets there by
+    # hiding every type and recognizing no breaking change. Preset 10.4.1
+    # detects a `!` header on its own and lists that commit anyway. (The
+    # earlier reason, writer 8 making generateNotes fail on 10.4, is gone:
+    # semantic-release 26 brings writer 9.)
+    # scripts/release-notes.test.mjs fails on it, so try a newer preset
+    # against that test before lifting this.
     ignore:
       - dependency-name: conventional-changelog-conventionalcommits
 

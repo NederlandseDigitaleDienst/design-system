@@ -12,7 +12,9 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { analyzeCommits } from '@semantic-release/commit-analyzer';
+import { importReleasePlugin } from './lib/release-plugin.js';
+
+const { analyzeCommits } = await importReleasePlugin('@semantic-release/commit-analyzer');
 
 const root = join(import.meta.dirname, '..');
 const config = JSON.parse(readFileSync(join(root, '.releaserc.json'), 'utf8'));
