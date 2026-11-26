@@ -288,6 +288,9 @@ export const aliases = {
 	// file-badge-plus
 	'new-document': 'file-badge-plus',
 
+	// file-csv
+	'csv-document': 'file-csv',
+
 	// file-gif
 	'gif-document': 'file-gif',
 
