@@ -9,6 +9,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.29.2](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.29.1...v0.29.2) (2026-11-26)
+
 ## [0.29.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.29.0...v0.29.1) (2026-11-26)
 
 ### Highlights
