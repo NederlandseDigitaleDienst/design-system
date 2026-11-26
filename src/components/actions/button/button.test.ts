@@ -1180,4 +1180,29 @@ describe('nldd-button – breaking long words', () => {
 		expect(getComputedStyle(text).textOverflow).toBe('ellipsis');
 		expect(getComputedStyle(text).whiteSpace).toBe('nowrap');
 	});
+
+	it('strips a javascript: href', async () => {
+		el = await fixture('<nldd-button href="javascript:alert(1)" text="x"></nldd-button>');
+		const a = (el as NLDDButton).shadowRoot!.querySelector('a');
+		expect(a?.getAttribute('href')).toBeNull();
+	});
+
+	it('keeps a blob: href on a download link', async () => {
+		el = await fixture('<nldd-button href="blob:https://example.com/u" download="f.csv" text="x"></nldd-button>');
+		const a = (el as NLDDButton).shadowRoot!.querySelector('a');
+		expect(a?.getAttribute('href')).toBe('blob:https://example.com/u');
+	});
+
+	it('keeps a data: href with a bare download, which names no file', async () => {
+		el = await fixture('<nldd-button href="data:text/csv,a" download text="x"></nldd-button>');
+		const a = (el as NLDDButton).shadowRoot!.querySelector('a');
+		expect(a?.getAttribute('href')).toBe('data:text/csv,a');
+	});
+
+	it('strips a blob: href again once download is removed', async () => {
+		el = await fixture('<nldd-button href="blob:https://example.com/u" download="f.csv" text="x"></nldd-button>');
+		el.removeAttribute('download');
+		await (el as NLDDButton).updateComplete;
+		expect((el as NLDDButton).shadowRoot!.querySelector('a')?.getAttribute('href')).toBeNull();
+	});
 });

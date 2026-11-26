@@ -65,10 +65,10 @@ import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { timeFieldStyles } from './time-field.styles.js';
 import { timeFieldTemplate } from './time-field.template.js';
-import { nlddTimeFieldTranslations, type NLDDTimeFieldTranslations } from './time-field.i18n.js';
+import { nlddTimeFieldTranslations } from './time-field.i18n.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
-import { focusAsLastInput, focusIsFree } from '../../../utilities/return-focus.js';
-import { translate } from '../../../utilities/translations.js';
+import { PickerPopoverController } from '../../../utilities/picker-popover-controller.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import {
 	checkText,
 	commitText,
@@ -87,7 +87,7 @@ const MAX_PICKER_ROWS = 7;
 const MIN_PICKER_ROWS = 3;
 
 @customElement('nldd-time-field')
-export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
+export class NLDDTimeField extends DescribedBy(FormAssociated(withTranslations(LitElement, nlddTimeFieldTranslations))) {
 
 	static override shadowRootOptions = {
 		...LitElement.shadowRootOptions,
@@ -162,11 +162,6 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-	/** Override one or more translation keys. Keys left out fall back to Dutch. */
-	@property({ type: Object })
-	translations: Partial<NLDDTimeFieldTranslations> = {};
-
-
 	/**
 	 * Whether a fine pointer is in use. The picker already sets its row height
 	 * with a media query, but a button's size is an attribute and so cannot be
@@ -223,10 +218,6 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 	 *  carries a valid time or nothing. */
 	@state()
 	_display = '';
-
-	public _t(key: keyof NLDDTimeFieldTranslations): string {
-		return translate(this.translations, nlddTimeFieldTranslations, key);
-	}
 
 	public get _fieldLabel(): string {
 		return this.accessibleLabel || this._t('components.time-field.default-label');
@@ -371,6 +362,7 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 	 *  click, so there it lands on the input instead of the button. We take over,
 	 *  but only after that restore, otherwise ours gets overwritten. */
 	private _focusTriggerOnClose = false;
+	private _picker = new PickerPopoverController(this, () => this._pickerTrigger);
 
 	/** The value from before opening, and the last thing done in the picker.
 	 *  Together they decide on close whether what stands in the selection stays
@@ -412,12 +404,7 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 		// popover's own restore, which in Safari lands on the text field.
 		const asked = this._focusTriggerOnClose;
 		this._focusTriggerOnClose = false;
-		// Microtask, not rAF: this beats that same restore but does not get
-		// throttled while the tab has no focus.
-		queueMicrotask(() => {
-			const trigger = this._pickerTrigger;
-			if (trigger && (asked || focusIsFree(this))) focusAsLastInput(trigger);
-		});
+		this._picker.restoreFocus(asked);
 	}
 
 	private _openPicker(): void {

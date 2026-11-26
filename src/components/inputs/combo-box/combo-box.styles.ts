@@ -23,6 +23,7 @@ export const comboBoxStyles = css`
 
 		${inheritedTextReset}
 		display: block;
+		isolation: isolate;
 		width: var(--_combo-box-width);
 		max-width: 100%;
 		-webkit-tap-highlight-color: transparent;

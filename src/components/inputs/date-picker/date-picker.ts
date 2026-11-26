@@ -23,6 +23,7 @@
  * @attr {boolean} week-numbers - Shows ISO week numbers in a column on the left.
  * @attr {number} first-day-of-week - First day of the week, 0 is Sunday. Default 1 (Monday).
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
+ * @attr {string} name - Name for form submission; the picker submits on its own, so it works in a form without an nldd-date-field. A single date submits as ISO, a period as an ISO 8601 interval `start/end`, and as empty until both ends are set.
  * @attr {string} value - The chosen date as ISO (yyyy-mm-dd). Only without `range`.
  * @attr {string} start - Start of the period as ISO. Only with `range`.
  * @attr {string} end - End of the period as ISO. Only with `range`.
@@ -51,6 +52,7 @@ import type { NLDDDatePickerTranslations } from './date-picker.i18n.js';
 import './../../actions/icon-button/icon-button.js';
 import './../../actions/button/button.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
+import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
 
@@ -137,15 +139,19 @@ function clampIso(iso: string, min: string, max: string): string {
 }
 
 @customElement('nldd-date-picker')
-export class NLDDDatePicker extends DescribedBy(withTranslations<NLDDDatePickerTranslations>(
+export class NLDDDatePicker extends DescribedBy(FormAssociated(withTranslations<NLDDDatePickerTranslations>(
 	LitElement,
 	nlddDatePickerTranslations,
-)) {
+))) {
 	static override styles = datePickerStyles;
 
 	/** Says this is the control an nldd-form-field is about, so the field can
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
+
+	/** What a reset restores and what bfcache saves: the chosen date, or the ends
+	 *  of a period. */
+	static formProperties = ['value', 'start', 'end'];
 
 	/** Width: 'full' or a CSS length. Empty is the intrinsic seven-cell width. */
 	@property({ reflect: true, converter: reflectNonDefault('') })
@@ -171,6 +177,11 @@ export class NLDDDatePicker extends DescribedBy(withTranslations<NLDDDatePickerT
 	 */
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
+
+	/** Name for form submission. The picker submits on its own, so it works in a
+	 *  form without an nldd-date-field around it. */
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	name = '';
 
 	@property({ type: String })
 	value = '';
@@ -313,6 +324,13 @@ export class NLDDDatePicker extends DescribedBy(withTranslations<NLDDDatePickerT
 		super.disconnectedCallback();
 		document.removeEventListener('pointerup', this._onDocumentPointerUp);
 		this._stackedQuery?.removeEventListener('change', this._handleStackedChange);
+	}
+
+	/** A single date is its own ISO value; a period is an ISO 8601 interval
+	 *  `start/end`, matching nldd-date-field, and empty until both ends are set. */
+	override formValue(): FormValue {
+		if (this.range) return this.start && this.end ? `${this.start}/${this.end}` : '';
+		return this.value;
 	}
 
 	override willUpdate(changed: PropertyValues): void {

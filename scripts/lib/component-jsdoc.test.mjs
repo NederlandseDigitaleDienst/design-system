@@ -54,6 +54,11 @@ test('reads a custom property an app may use from @cssprop, with a description o
 	assert.throws(() => parse(['@element nldd-thing', '@cssprop inset-top - no dashes'].join('\n')), /takes a custom property name/);
 });
 
+test('reads a JavaScript-only property from @prop, with its type', () => {
+	const [component] = parse(['@element nldd-thing', '@prop {(iso: string) => boolean} isDateUnavailable - Marks dates', 'as unselectable'].join('\n'));
+	assert.deepEqual(component.properties, [{ name: 'isDateUnavailable', type: '(iso: string) => boolean', description: 'Marks dates as unselectable' }]);
+});
+
 test('reads search words from @keywords, lower case, and other components from @related', () => {
 	const [component] = parse(['@element nldd-thing', '@keywords Toast, snackbar', '@related nldd-banner, nldd-status-bar'].join('\n'));
 	assert.deepEqual(component.keywords, ['toast', 'snackbar']);

@@ -55,6 +55,7 @@ export const sliderStyles = css`
 		${inheritedTextReset}
 		box-sizing: border-box;
 		display: block;
+		isolation: isolate;
 		width: 100%;
 		-webkit-tap-highlight-color: transparent;
 	}

@@ -36,10 +36,6 @@ export const numberFieldStyles = css`
 		pointer-events: none;
 	}
 
-	:host([disabled]) nldd-icon-button {
-		opacity: 1;
-	}
-
 	:host {
 		width: var(--_number-field-width);
 		max-width: 100%;
@@ -69,6 +65,11 @@ export const numberFieldStyles = css`
 		align-items: center;
 	}
 
+	:host([readonly]) .number-field {
+		border-color: var(--semantics-input-fields-is-read-only-border-color);
+		background-color: var(--semantics-input-fields-is-read-only-background-color);
+	}
+
 	.number-field:has(.number-field__input:focus-visible) {
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
@@ -87,6 +88,11 @@ export const numberFieldStyles = css`
 
 	:is(.number-field__decrement-button, .number-field__increment-button) nldd-icon-button {
 		--context-control-corner-radius: var(--_number-field-nested-control-corner-radius);
+	}
+
+	/* Hidden, not removed: the field keeps its width when it turns readonly or disabled. */
+	:host(:is([readonly], [disabled])) :is(.number-field__decrement-button, .number-field__increment-button) {
+		visibility: hidden;
 	}
 
 	.number-field__spin-buttons {

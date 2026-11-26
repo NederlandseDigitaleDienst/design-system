@@ -24,6 +24,7 @@ export const switchStyles = css`
 		--_switch-is-selected-thumb-background-color: var(--semantics-controls-is-selected-mark-color);
 
 		display: inline-block;
+		isolation: isolate;
 		position: relative;
 		width: var(--_switch-track-width);
 		height: var(--_switch-track-height);

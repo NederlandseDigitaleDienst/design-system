@@ -359,4 +359,10 @@ describe('nldd-avatar no-tab', () => {
 		await waitForUpdate(el);
 		expect(el.shadowRoot!.querySelector('a')!.hasAttribute('tabindex')).toBe(false);
 	});
+
+	it('strips a javascript: href', async () => {
+		el = await fixture<NLDDAvatar>('<nldd-avatar name="Jan" href="javascript:alert(1)"></nldd-avatar>');
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('a')?.getAttribute('href') ?? null).toBeNull();
+	});
 });

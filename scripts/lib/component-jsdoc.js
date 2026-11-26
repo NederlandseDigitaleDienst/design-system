@@ -158,6 +158,7 @@ function parseComponent(block, filePath, fallbackTag) {
 		slots: [],
 		events: [],
 		accepts: [],
+		properties: [],
 		cssProperties: [],
 		keywords: [],
 		related: [],
@@ -242,6 +243,16 @@ function parseComponent(block, filePath, fallbackTag) {
 				if (!current) break;
 				const entry = parseNamedTag(rest);
 				current.slots.push(entry);
+				lastEntry = entry;
+				break;
+			}
+			case 'prop': {
+				// A JavaScript property with no matching attribute, such as a
+				// function or an object a consumer assigns (date-picker's
+				// is-date-unavailable, file-field's files). Same shape as @attr.
+				if (!current) break;
+				const entry = parseTypedTag(rest);
+				current.properties.push(entry);
 				lastEntry = entry;
 				break;
 			}

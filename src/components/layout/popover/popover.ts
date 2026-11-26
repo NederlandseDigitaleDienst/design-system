@@ -99,17 +99,17 @@ import { computePosition, flip, shift, size, autoUpdate, type Placement } from '
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { popoverStyles } from './popover.styles.js';
 import { popoverTemplate } from './popover.template.js';
-import { nlddPopoverTranslations, type NLDDPopoverTranslations } from './popover.i18n.js';
+import { nlddPopoverTranslations } from './popover.i18n.js';
 import { isPointerMode } from '../../../utilities/input-modality.js';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { isDismissFromTitleBar } from '../../../utilities/dismiss-from-title-bar.js';
 import { setState } from '../../../utilities/element-state.js';
 import { FocusReturn, focusAsLastInput } from '../../../utilities/return-focus.js';
 import { invokesNatively, OverlayInvoker, TriggerAria, watchTrigger, type InvokableOverlay } from '../../../utilities/overlay-invoker.js';
 
 @customElement('nldd-popover')
-export class NLDDPopover extends LitElement {
+export class NLDDPopover extends withTranslations(LitElement, nlddPopoverTranslations) {
 	static override styles = popoverStyles;
 
 	@property({ type: String, reflect: true })
@@ -154,13 +154,6 @@ export class NLDDPopover extends LitElement {
 
 	@property({ type: Boolean, reflect: true })
 	open = false;
-
-	/**
-	 * Override one or more translation keys.
-	 * Unset keys fall back to the Dutch default.
-	 */
-	@property({ type: Object })
-	translations: Partial<NLDDPopoverTranslations> = {};
 
 	private _isOpen = false;
 	/** True when this popover picks its own popover mode: the consumer set none. */
@@ -307,12 +300,6 @@ export class NLDDPopover extends LitElement {
 			if (!this.bottom) this.style.removeProperty('bottom');
 			if (this._isOpen) this.reposition();
 		}
-	}
-
-	// — i18n ——————————————————————————————————————————————————————————————————
-
-	private _t(key: keyof NLDDPopoverTranslations): string {
-		return translate(this.translations, nlddPopoverTranslations, key);
 	}
 
 	get _resolvedAccessibleLabel(): string {

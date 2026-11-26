@@ -81,8 +81,8 @@ import { customElement } from '../../../utilities/custom-element.js';
 import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
-import { translate } from '../../../utilities/translations.js';
-import { nlddSliderTranslations, type NLDDSliderTranslations } from './slider.i18n.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
+import { nlddSliderTranslations } from './slider.i18n.js';
 import { sliderStyles } from './slider.styles.js';
 import { sliderTemplate } from './slider.template.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
@@ -114,7 +114,7 @@ function decimalsOf(number: number): number {
 }
 
 @customElement('nldd-slider')
-export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
+export class NLDDSlider extends DescribedBy(FormAssociated(withTranslations(LitElement, nlddSliderTranslations))) {
 	static override styles = sliderStyles;
 
 	static formProperties = ['value', 'startValue', 'endValue'];
@@ -177,9 +177,6 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-	@property({ type: Object })
-	translations: Partial<NLDDSliderTranslations> = {};
-
 	@property({ attribute: false })
 	formatValue: ((value: number) => string) | null = null;
 
@@ -206,10 +203,6 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 	 *  past the other one. */
 	private _arrowKey = false;
 
-	/** @internal */
-	_t(key: keyof NLDDSliderTranslations): string {
-		return translate(this.translations, nlddSliderTranslations, key);
-	}
 
 	// — Values ———————————————————————————————————————————————————————————————
 

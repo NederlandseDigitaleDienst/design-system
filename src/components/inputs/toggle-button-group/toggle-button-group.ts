@@ -18,7 +18,7 @@
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
  * @attr {string} name - Forwarded to all buttons
  * @attr {'button' | 'checkbox' | 'radio'} type - Selection mode (default: 'checkbox')
- * @attr {boolean} required - Marks the group as required. Enforced in radio mode; in checkbox mode only announced.
+ * @attr {boolean} required - Marks the group as required: at least one button has to be selected. Enforced in both radio and checkbox mode.
  * @attr {boolean} disabled - Disables all buttons
  *
  * @slot - nldd-toggle-button elements
@@ -83,15 +83,11 @@ export class NLDDToggleButtonGroup extends LitElement {
 	/**
 	 * Marks the group as required: something has to be selected.
 	 *
-	 * Handed to the items, because that is where the platform reads it. One
-	 * required radio makes the whole group required, and the browser writes its
-	 * own message in the user's language.
-	 *
-	 * Only in radio mode. The same attribute on a checkbox means that box has to
-	 * be ticked, so spreading it over a checkbox group would demand all of them
-	 * instead of one. HTML has no way to say "at least one of these", and
-	 * neither do we: `aria-required` still goes on the group so assistive
-	 * software says it, but nothing enforces it.
+	 * Handed to every item in both modes. A toggle button carries no native
+	 * control, so it answers `required` itself: it is satisfied when it, or any
+	 * sibling in the group, is selected (`_groupHasSelection`). So `required` asks
+	 * "at least one of these", radio and checkbox alike, which HTML has no native
+	 * way to say. `aria-required` goes on the group so assistive software says it.
 	 */
 	@property({ type: Boolean, reflect: true })
 	required = false;
@@ -110,8 +106,8 @@ export class NLDDToggleButtonGroup extends LitElement {
 		single: () => this.type === 'radio',
 		// A name is only meaningful for checkbox and radio.
 		name: () => this.type === 'button' ? null : this.name,
-		// Only in radio mode. See the note on `required`.
-		required: () => this.required && this.type === 'radio',
+		// Both modes: a button is satisfied when it or a sibling is selected.
+		required: () => this.required && this.type !== 'button',
 		forward: (button) => {
 			button.type = this.type;
 			button.appearance = this.appearance;

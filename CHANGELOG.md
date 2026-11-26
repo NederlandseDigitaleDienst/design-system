@@ -9,6 +9,36 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **`nldd-date-picker` and `nldd-time-picker` take part in a form on their own**, with `name`, so a picker without an `nldd-date-field` or `nldd-time-field` around it submits its value. See Added.
+- **1 accessibility fix:** a notification is now announced reliably by NVDA and JAWS. See Fixed.
+- **A `javascript:` URL in `href` no longer reaches the link** in five components. See Security.
+
+### Added
+
+- **`name` on `nldd-date-picker` and `nldd-time-picker`.** The picker submits on its own: a date as ISO, a period as an ISO 8601 interval `start/end`, a time as `HH:mm`. A form reset restores the value it started with.
+- **`readonly` on `nldd-number-field`.** The value shows and submits but cannot be changed. The field looks like the other readonly fields, on a light surface without a border, and hides its − and + buttons while it keeps its width.
+- **The component reference in the skills lists the properties that have no attribute**, such as `formatValue` on `nldd-slider`, which you set in JavaScript.
+
+### Changed
+
+- **A disabled `nldd-number-field` hides its − and + buttons**, as a readonly one does, and keeps its width. The disabled buttons lost their background, so the field looked shorter than it is.
+- **The sidebar of `nldd-sidebar-section` fades at the edge where more content waits**, as `nldd-menu` does: at the bottom while you can scroll down, at the top once you have scrolled. The box and its border stay sharp; only the content fades.
+
+### Fixed
+
+- **A notification is announced reliably by NVDA and JAWS.** The area that holds the notifications is now a polite live region from the start, so a notification placed in it is read. A critical notification stays assertive (WCAG 4.1.3).
+- **`nldd-number-field` fires one `input` event per change, with its value.** The native `input` of the field inside also reached a listener, without a `detail`, so a handler that read `event.detail.value` got `undefined` after the real value.
+- **`required` on `nldd-toggle-button-group` asks for at least one selected button in checkbox mode too.** It was only enforced with `type="radio"`; with checkboxes it was announced, but a form submitted without a selection.
+- **Fields and controls stay under a sticky header.** A focused button in a field, the input of a switch or one-time-code field, the thumb of a slider, a focused accordion title and the border of `nldd-code-editor` and `nldd-text-editor` painted over an `nldd-page` header as the page scrolled. Every component that lifts something inside it now keeps that layer to itself.
+- **`nldd-segmented-control` with `width="fit-content"` follows the alignment of its parent.** It always sat at the start, so in an `nldd-cell` with `horizontal-alignment="right"` or a centering container it stayed on the left. In `nldd-form-field` it still sits at the start, at its own width.
+- **The component reference in the skills names the category Lists & tables**, where it still said Lists & menus.
+
+### Security
+
+- **A `javascript:` or `vbscript:` URL in `href` no longer reaches the link** of `nldd-link`, `nldd-button`, `nldd-card`, `nldd-list-item` and `nldd-avatar`: the component leaves the `href` out. A `data:` or `blob:` URL passes only with `download`, for a link that saves a file.
+
 ## [0.29.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.28.1...v0.29.0) (2026-11-24)
 
 ### Highlights

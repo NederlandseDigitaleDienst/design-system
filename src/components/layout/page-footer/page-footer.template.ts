@@ -41,7 +41,7 @@ export function pageFooterTemplate(component: NLDDPageFooter): TemplateResult {
 }
 
 export function pageFooterLegalBarTemplate(component: NLDDPageFooterLegalBar): TemplateResult {
-	const label = component._t('components.page-footer.legal-bar-accessible-label');
+	const label = component.accessibleLabel || component._t('components.page-footer.legal-bar-accessible-label');
 	return html`
 		<nav class="page-footer__legal-bar"
 			aria-label=${label || nothing}

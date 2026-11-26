@@ -58,13 +58,12 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { collectionStyles } from './collection.styles.js';
 import { collectionTemplate } from './collection.template.js';
 import { nlddCollectionTranslations } from './collection.i18n.js';
-import type { NLDDCollectionTranslations } from './collection.i18n.js';
 import '../../actions/button/button.js';
 import '../../actions/button-bar/button-bar.js';
 import '../../actions/icon-button/icon-button.js';
 import '../../content/icon/icon.js';
 import { spacingToValue, type SpacingSize } from '../../../utilities/spacing-scale.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { markListItems } from '../../../utilities/list-items.js';
 import { afterParse } from '../../../utilities/after-parse.js';
 import { LayoutPass, sharedResizeObserver } from '../../../utilities/layout-pass.js';
@@ -81,7 +80,7 @@ const overflowObserver = sharedResizeObserver<NLDDCollection>((hosts) => {
 });
 
 @customElement('nldd-collection')
-export class NLDDCollection extends LitElement {
+export class NLDDCollection extends withTranslations(LitElement, nlddCollectionTranslations) {
 	static override styles = collectionStyles;
 
 	@property({ reflect: true, converter: reflectNonDefault<Layout>('grid') })
@@ -115,15 +114,6 @@ export class NLDDCollection extends LitElement {
 
 	@property({ type: Boolean, reflect: true, attribute: 'lazy-load' })
 	lazyLoad = false;
-
-	@property({ type: Object })
-	translations: Partial<NLDDCollectionTranslations> = {};
-
-	// — i18n —————————————————————————————————————————————————————————————————
-
-	public _t(key: keyof NLDDCollectionTranslations): string {
-		return translate(this.translations, nlddCollectionTranslations, key);
-	}
 
 	@state()
 	_visibleCount = 0;

@@ -3290,16 +3290,6 @@
               "description": "Custom filter function. Defaults to case-insensitive substring match\non text, value, and aliases attributes."
             },
             {
-              "kind": "field",
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDMenuTranslations>"
-              },
-              "default": "{}",
-              "description": "Override one or more translation keys.\nUnset keys fall back to the Dutch default.",
-              "attribute": "translations"
-            },
-            {
               "kind": "method",
               "name": "filter",
               "privacy": "public",
@@ -3395,6 +3385,19 @@
                 }
               },
               "description": "Recalculate position and size relative to the anchor element."
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "attributes": [
@@ -3493,13 +3496,23 @@
               "name": "filterFn"
             },
             {
-              "type": {
-                "text": "Partial<NLDDMenuTranslations>"
-              },
-              "description": "Override one or more translation keys.",
               "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
               "default": "{}",
-              "fieldName": "translations"
+              "fieldName": "translations",
+              "description": "Override one or more translation keys.",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -3755,10 +3768,14 @@
               "kind": "field",
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDSplitButtonTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "attribute": "translations"
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "events": [
@@ -3921,10 +3938,14 @@
             {
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDSplitButtonTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
               "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
               "description": "Translations; unset keys fall back to Dutch"
             },
             {
@@ -3933,6 +3954,12 @@
               "type": {
                 "text": "string"
               }
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -4233,10 +4260,14 @@
               "kind": "field",
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDToolbarTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "attribute": "translations"
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "attributes": [
@@ -4316,13 +4347,23 @@
               "fieldName": "target"
             },
             {
-              "type": {
-                "text": "Partial<NLDDToolbarTranslations>"
-              },
-              "description": "Override translation keys (the new-tab announcement); unset keys fall back to Dutch.",
               "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
               "default": "{}",
-              "fieldName": "translations"
+              "fieldName": "translations",
+              "description": "Override translation keys (the new-tab announcement); unset keys fall back to Dutch.",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -4678,10 +4719,14 @@
               "kind": "field",
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDToolbarTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "attribute": "translations"
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "attributes": [
@@ -4718,11 +4763,21 @@
             {
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDToolbarTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
               "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
               "description": "Override translation keys (e.g. the overflow button label); unset keys fall back to Dutch."
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -6083,16 +6138,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDCodeViewerTranslations>"
-              },
-              "default": "{}",
-              "description": "Override one or more translation keys. Unspecified keys fall back to Dutch.",
-              "attribute": "translations"
-            },
-            {
               "kind": "method",
               "name": "focus",
               "return": {
@@ -6117,6 +6162,19 @@
                 "type": {
                   "text": "Promise<boolean>"
                 }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
               }
             }
           ],
@@ -6190,11 +6248,21 @@
             {
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDCodeViewerTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "description": "Override translation keys (e.g. the copy button labels and the scroll-region label); unset keys fall back to Dutch.",
-              "fieldName": "translations"
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Override translation keys (e.g. the copy button labels and the scroll-region label); unset keys fall back to Dutch."
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -6628,6 +6696,16 @@
             },
             {
               "kind": "field",
+              "name": "aspectRatio",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "aspect-ratio",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "src",
               "type": {
                 "text": "string"
@@ -6662,16 +6740,6 @@
               },
               "default": "''",
               "attribute": "alt"
-            },
-            {
-              "kind": "field",
-              "name": "aspectRatio",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "aspect-ratio",
-              "reflects": true
             },
             {
               "kind": "field",
@@ -6762,11 +6830,14 @@
               "kind": "field",
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDImageTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "description": "Override one or more translation keys. Unspecified keys fall back to Dutch.",
-              "attribute": "translations"
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "attributes": [
@@ -6797,7 +6868,16 @@
                 "text": "number | undefined"
               },
               "fieldName": "height",
-              "description": "Intrinsic height (for layout reservation)"
+              "description": "Height in pixels as a layout hint for the `<img>`, not a display height. With a `width` in pixels the browser takes the ratio of the two and reserves the space before the image loads; the shown height follows from the width. With any other `width` it does nothing: reserve space with `aspect-ratio` instead."
+            },
+            {
+              "name": "aspect-ratio",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "aspectRatio",
+              "description": "Aspect ratio in CSS form (e.g. \"16/9\", \"1/1\", \"4/3\"). \"16:9\" colon notation is also accepted for convenience."
             },
             {
               "name": "src",
@@ -6834,15 +6914,6 @@
               "default": "''",
               "fieldName": "alt",
               "description": "Alt text for the image from `src`. Required unless `decorative`; slotted media carries its own."
-            },
-            {
-              "name": "aspect-ratio",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "aspectRatio",
-              "description": "Aspect ratio in CSS form (e.g. \"16/9\", \"1/1\", \"4/3\"). \"16:9\" colon notation is also accepted for convenience."
             },
             {
               "name": "object-fit",
@@ -6942,11 +7013,21 @@
             {
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDImageTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "description": "Override translation keys (e.g. the message shown when the image fails to load); unset keys fall back to Dutch.",
-              "fieldName": "translations"
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Override translation keys (e.g. the message shown when the image fails to load); unset keys fall back to Dutch."
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -7380,10 +7461,14 @@
               "kind": "field",
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDRichTextTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "attribute": "translations"
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "attributes": [
@@ -7420,11 +7505,21 @@
             {
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDRichTextTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
               "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
               "description": "Override translation keys; unset keys fall back to Dutch"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -7757,16 +7852,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDTermTranslations>"
-              },
-              "default": "{}",
-              "description": "Override one or more translation keys. Unspecified keys fall back to Dutch.",
-              "attribute": "translations"
-            },
-            {
               "kind": "method",
               "name": "focus",
               "return": {
@@ -7783,6 +7868,19 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "attributes": [
@@ -7825,11 +7923,21 @@
             {
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDTermTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "description": "Override translation keys (the label before the source).",
-              "fieldName": "translations"
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Override translation keys (the label before the source)."
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -8452,15 +8560,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDTokenTranslations>"
-              },
-              "default": "{}",
-              "attribute": "translations"
-            },
-            {
               "kind": "method",
               "name": "focus",
               "return": {
@@ -8478,6 +8577,19 @@
                 }
               ],
               "description": "Force the focus ring so the whole token reads as focused when it is focused\nprogrammatically (a token-field's roving keyboard navigation). Safari does not\nmark a tabindex=-1 host :focus-visible on a scripted focus, so ask for it\nexplicitly; Chrome ignores the option and relies on its own keyboard heuristic."
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "events": [
@@ -8547,11 +8659,21 @@
             {
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDTokenTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
               "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
               "description": "Override translation keys; unset keys fall back to Dutch"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -8998,11 +9120,14 @@
               "kind": "field",
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDFormFieldTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "description": "Override one or more translation keys. Unset keys fall back to Dutch.",
-              "attribute": "translations"
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "attributes": [
@@ -9048,11 +9173,21 @@
             {
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDFormFieldTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "description": "Override translation keys, such as the text of the optional badge; unset keys fall back to Dutch",
-              "fieldName": "translations"
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Override translation keys, such as the text of the optional badge; unset keys fall back to Dutch"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -9524,10 +9659,14 @@
               "kind": "field",
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDValidationListTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "attribute": "translations"
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "attributes": [
@@ -9561,11 +9700,21 @@
             {
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDValidationListTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
               "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
               "description": "Override translation keys (the line the list shows when the field is invalid and no item fails); unset keys fall back to Dutch."
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -13285,15 +13434,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDComboBoxTranslations>"
-              },
-              "default": "{}",
-              "attribute": "translations"
-            },
-            {
               "kind": "method",
               "name": "formValue",
               "return": {
@@ -13636,6 +13776,19 @@
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "attributes": [
@@ -13821,15 +13974,6 @@
               "description": "Disabled state"
             },
             {
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDComboBoxTranslations>"
-              },
-              "default": "{}",
-              "fieldName": "translations",
-              "description": "Override translation keys; unset keys fall back to Dutch"
-            },
-            {
               "name": "accessible-description",
               "type": {
                 "text": "string"
@@ -13854,6 +13998,19 @@
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
               }
+            },
+            {
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Override translation keys; unset keys fall back to Dutch"
             }
           ],
           "mixins": [
@@ -13864,6 +14021,10 @@
             {
               "name": "FormAssociated",
               "module": "/src/utilities/form-associated-mixin.js"
+            },
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -14412,16 +14573,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDDateFieldTranslations>"
-              },
-              "default": "{}",
-              "description": "Override one or more translation keys. Keys left out fall back to Dutch.",
-              "attribute": "translations"
-            },
-            {
               "kind": "method",
               "name": "formResetCallback",
               "return": {
@@ -14752,6 +14903,19 @@
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "attributes": [
@@ -14912,15 +15076,6 @@
               "description": "Disabled state."
             },
             {
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDDateFieldTranslations>"
-              },
-              "default": "{}",
-              "description": "Translations; unspecified keys fall back to Dutch.",
-              "fieldName": "translations"
-            },
-            {
               "name": "accessible-description",
               "type": {
                 "text": "string"
@@ -14945,6 +15100,19 @@
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
               }
+            },
+            {
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Translations; unspecified keys fall back to Dutch."
             }
           ],
           "mixins": [
@@ -14955,6 +15123,10 @@
             {
               "name": "FormAssociated",
               "module": "/src/utilities/form-associated-mixin.js"
+            },
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -15030,6 +15202,20 @@
             },
             {
               "kind": "field",
+              "name": "formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "['value', 'start', 'end']",
+              "description": "What a reset restores and what bfcache saves: the chosen date, or the ends\nof a period.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "width",
               "type": {
                 "text": "string"
@@ -15076,6 +15262,17 @@
               "default": "false",
               "description": "Marks the control as invalid.\n\nAnnounced and not drawn. What is wrong belongs in an\nnldd-validation-list, in words: a red ring around a single\ncheckbox or radio would say the option is wrong, while it is the question\nthat is unanswered. `aria-invalid` still goes on the control, because\nchoosing not to show something is not a reason to keep quiet about it.",
               "attribute": "invalid",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Name for form submission. The picker submits on its own, so it works in a\nform without an nldd-date-field around it.",
+              "attribute": "name",
               "reflects": true
             },
             {
@@ -15140,6 +15337,20 @@
                 "text": "(iso: string) => boolean | undefined"
               },
               "description": "Marks individual dates as unselectable - weekends, holidays, dates already booked."
+            },
+            {
+              "kind": "method",
+              "name": "formValue",
+              "return": {
+                "type": {
+                  "text": "FormValue"
+                }
+              },
+              "description": "A single date is its own ISO value; a period is an ISO 8601 interval\n`start/end`, matching nldd-date-field, and empty until both ends are set.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
             },
             {
               "kind": "method",
@@ -15233,6 +15444,253 @@
             },
             {
               "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "internals",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDefault",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "What a reset puts `name` back to: its attribute, or the first render.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "FormValue"
+                  }
+                },
+                {
+                  "name": "_mode",
+                  "optional": true,
+                  "type": {
+                    "text": "'restore' | 'autocomplete'"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitFormEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "init",
+                  "default": "{}",
+                  "type": {
+                    "text": "EventInit"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formState",
+              "return": {
+                "type": {
+                  "text": "FormValue | undefined"
+                }
+              },
+              "description": "Extra state kept for bfcache and state restore, when the submitted\nvalue alone cannot rebuild the control (a combo box submits a code but\nshows a label). Override alongside `formValue()`.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "commitFormValue",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Commit the value now, from the handler that changed it.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationTarget",
+              "return": {
+                "type": {
+                  "text": "HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null"
+                }
+              },
+              "description": "The native control this host speaks for.\n\nThe constraint attributes are handed to a control inside the shadow\nroot, and that control is not a member of the form around the host: the\nform sees the host, the host sees the control, and without something\njoining them a `required` field submits empty. Override when the control\nis not the first one in the shadow root, or return null for a component\nthat has no native control to speak for.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "A reason the host is invalid that no attribute can express: a server that\nrefused the value, or an nldd-validation-list whose rule it fails. Kept\nbeside the native flags rather than replacing them, because\n`setValidity` writes the whole set at once and the two arrive from\ndifferent places at different times.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "commitValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Hands the control's verdict to the form, as the host's own.\n\nCalled on every render and from `commitFormValue`, so it follows the\nvalue for the same reason and with the same timing.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "disabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "translations",
               "type": {
                 "text": "Partial<T>"
@@ -15300,6 +15758,15 @@
               "default": "false",
               "description": "Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.",
               "fieldName": "invalid"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Name for form submission; the picker submits on its own, so it works in a form without an nldd-date-field. A single date submits as ISO, a period as an ISO 8601 interval `start/end`, and as empty until both ends are set.",
+              "fieldName": "name"
             },
             {
               "name": "value",
@@ -15399,6 +15866,10 @@
             {
               "name": "DescribedBy",
               "module": "/src/utilities/described-by-mixin.js"
+            },
+            {
+              "name": "FormAssociated",
+              "module": "/src/utilities/form-associated-mixin.js"
             },
             {
               "name": "withTranslations",
@@ -16355,15 +16826,6 @@
             },
             {
               "kind": "field",
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDFileFieldTranslations>"
-              },
-              "default": "{}",
-              "attribute": "translations"
-            },
-            {
-              "kind": "field",
               "name": "files",
               "type": {
                 "text": "File[]"
@@ -16744,6 +17206,19 @@
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "attributes": [
@@ -16862,15 +17337,6 @@
               "description": "Disabled state"
             },
             {
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDFileFieldTranslations>"
-              },
-              "default": "{}",
-              "fieldName": "translations",
-              "description": "Override translation keys; unset keys fall back to Dutch"
-            },
-            {
               "name": "accessible-description",
               "type": {
                 "text": "string"
@@ -16895,6 +17361,19 @@
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
               }
+            },
+            {
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Override translation keys; unset keys fall back to Dutch"
             }
           ],
           "mixins": [
@@ -16905,6 +17384,10 @@
             {
               "name": "FormAssociated",
               "module": "/src/utilities/form-associated-mixin.js"
+            },
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -17984,6 +18467,17 @@
             },
             {
               "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The value shows and submits but cannot be changed; the +/- buttons are hidden.",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "disabled",
               "type": {
                 "text": "boolean"
@@ -17991,16 +18485,6 @@
               "default": "false",
               "attribute": "disabled",
               "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDNumberFieldTranslations>"
-              },
-              "default": "{}",
-              "description": "Override one or more translation keys. Unspecified keys fall back to Dutch.",
-              "attribute": "translations"
             },
             {
               "kind": "method",
@@ -18353,6 +18837,19 @@
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "events": [
@@ -18472,22 +18969,22 @@
               "fieldName": "required"
             },
             {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Readonly state: the value shows and submits but cannot be changed. The +/- buttons are hidden, and the field keeps its width",
+              "fieldName": "readonly"
+            },
+            {
               "name": "disabled",
               "type": {
                 "text": "boolean"
               },
               "default": "false",
               "fieldName": "disabled",
-              "description": "Disabled state"
-            },
-            {
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDNumberFieldTranslations>"
-              },
-              "default": "{}",
-              "description": "Translations; unspecified keys fall back to Dutch",
-              "fieldName": "translations"
+              "description": "Disabled state. The +/- buttons are hidden, and the field keeps its width"
             },
             {
               "name": "accessible-description",
@@ -18514,6 +19011,19 @@
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
               }
+            },
+            {
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Translations; unspecified keys fall back to Dutch"
             }
           ],
           "mixins": [
@@ -18524,6 +19034,10 @@
             {
               "name": "FormAssociated",
               "module": "/src/utilities/form-associated-mixin.js"
+            },
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -19642,16 +20156,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDPasswordFieldTranslations>"
-              },
-              "default": "{}",
-              "description": "Override one or more translation keys. Unset keys fall back to Dutch.",
-              "attribute": "translations"
-            },
-            {
               "kind": "method",
               "name": "formValue",
               "return": {
@@ -20002,6 +20506,19 @@
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "attributes": [
@@ -20160,15 +20677,6 @@
               "description": "Disabled state"
             },
             {
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDPasswordFieldTranslations>"
-              },
-              "default": "{}",
-              "description": "Override translation keys; unset keys fall back to Dutch",
-              "fieldName": "translations"
-            },
-            {
               "name": "accessible-description",
               "type": {
                 "text": "string"
@@ -20193,6 +20701,19 @@
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
               }
+            },
+            {
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Override translation keys; unset keys fall back to Dutch"
             }
           ],
           "mixins": [
@@ -20203,6 +20724,10 @@
             {
               "name": "FormAssociated",
               "module": "/src/utilities/form-associated-mixin.js"
+            },
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -21945,16 +22470,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDSearchFieldTranslations>"
-              },
-              "default": "{}",
-              "description": "Override one or more translation keys. Unset keys fall back to Dutch.",
-              "attribute": "translations"
-            },
-            {
               "kind": "method",
               "name": "formValue",
               "return": {
@@ -22304,6 +22819,19 @@
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "events": [
@@ -22488,15 +23016,6 @@
               "description": "Disabled state"
             },
             {
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDSearchFieldTranslations>"
-              },
-              "default": "{}",
-              "description": "Override translation keys; unset keys fall back to Dutch",
-              "fieldName": "translations"
-            },
-            {
               "name": "accessible-description",
               "type": {
                 "text": "string"
@@ -22521,6 +23040,19 @@
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
               }
+            },
+            {
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Override translation keys; unset keys fall back to Dutch"
             }
           ],
           "mixins": [
@@ -22531,6 +23063,10 @@
             {
               "name": "FormAssociated",
               "module": "/src/utilities/form-associated-mixin.js"
+            },
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -23618,15 +24154,6 @@
             },
             {
               "kind": "field",
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDSliderTranslations>"
-              },
-              "default": "{}",
-              "attribute": "translations"
-            },
-            {
-              "kind": "field",
               "name": "formatValue",
               "type": {
                 "text": "((value: number) => string) | null"
@@ -23976,6 +24503,19 @@
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "events": [
@@ -24140,15 +24680,6 @@
               "description": "Disabled state"
             },
             {
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDSliderTranslations>"
-              },
-              "default": "{}",
-              "fieldName": "translations",
-              "description": "Override translation keys; unset keys fall back to Dutch"
-            },
-            {
               "name": "accessible-description",
               "type": {
                 "text": "string"
@@ -24173,6 +24704,19 @@
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
               }
+            },
+            {
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Override translation keys; unset keys fall back to Dutch"
             }
           ],
           "mixins": [
@@ -24183,6 +24727,10 @@
             {
               "name": "FormAssociated",
               "module": "/src/utilities/form-associated-mixin.js"
+            },
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -24334,16 +24882,6 @@
               "default": "false",
               "attribute": "disabled",
               "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDStepperTranslations>"
-              },
-              "default": "{}",
-              "description": "Override one or more translation keys. Unspecified keys fall back to Dutch.",
-              "attribute": "translations"
             },
             {
               "kind": "method",
@@ -24688,6 +25226,19 @@
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "attributes": [
@@ -24776,15 +25327,6 @@
               "description": "Disabled state"
             },
             {
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDStepperTranslations>"
-              },
-              "default": "{}",
-              "description": "Translations; unspecified keys fall back to Dutch",
-              "fieldName": "translations"
-            },
-            {
               "name": "accessible-description",
               "type": {
                 "text": "string"
@@ -24809,6 +25351,19 @@
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
               }
+            },
+            {
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Translations; unspecified keys fall back to Dutch"
             }
           ],
           "mixins": [
@@ -24819,6 +25374,10 @@
             {
               "name": "FormAssociated",
               "module": "/src/utilities/form-associated-mixin.js"
+            },
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -30063,16 +30622,6 @@
             },
             {
               "kind": "field",
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDTextEditorTranslations>"
-              },
-              "default": "{}",
-              "description": "Override translation keys for the editor's assistive-tech strings (the\nopen-in-new-tab link badge and the annotation count badge). Unset keys fall\nback to Dutch.",
-              "attribute": "translations"
-            },
-            {
-              "kind": "field",
               "name": "mentionSource",
               "type": {
                 "text": "MentionSource | undefined"
@@ -30454,6 +31003,19 @@
                 }
               },
               "description": "The annotations currently in the editor, in CLEAN coordinates, each quote\nre-sliced from the current text, so a consumer can persist positions that\nmoved with edits (read this on save, then write the anchors back)."
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             },
             {
               "kind": "field",
@@ -31070,11 +31632,15 @@
             {
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDTextEditorTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "description": "Override the editor's assistive-tech strings (the open-in-new-tab link badge, the annotation count badge, the label of a task's box and the copy button of a code block). Unset keys fall back to Dutch.",
-              "fieldName": "translations"
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Override the editor's assistive-tech strings (the open-in-new-tab link badge, the annotation count badge, the label of a task's box and the copy button of a code block). Unset keys fall back to Dutch."
             },
             {
               "name": "accessible-description",
@@ -31247,6 +31813,12 @@
                 "text": "string"
               },
               "global": true
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -32864,16 +33436,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDTimeFieldTranslations>"
-              },
-              "default": "{}",
-              "description": "Override one or more translation keys. Keys left out fall back to Dutch.",
-              "attribute": "translations"
-            },
-            {
               "kind": "method",
               "name": "formValue",
               "return": {
@@ -33204,6 +33766,19 @@
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "attributes": [
@@ -33364,15 +33939,6 @@
               "description": "Disabled state."
             },
             {
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDTimeFieldTranslations>"
-              },
-              "default": "{}",
-              "description": "Translations; unspecified keys fall back to Dutch.",
-              "fieldName": "translations"
-            },
-            {
               "name": "accessible-description",
               "type": {
                 "text": "string"
@@ -33397,6 +33963,19 @@
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
               }
+            },
+            {
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Translations; unspecified keys fall back to Dutch."
             }
           ],
           "mixins": [
@@ -33407,6 +33986,10 @@
             {
               "name": "FormAssociated",
               "module": "/src/utilities/form-associated-mixin.js"
+            },
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -33498,6 +34081,20 @@
             },
             {
               "kind": "field",
+              "name": "formProperties",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "['value']",
+              "description": "What a reset restores and what bfcache saves.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "rows",
               "type": {
                 "text": "number"
@@ -33538,6 +34135,17 @@
             },
             {
               "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Name for form submission. The picker submits on its own, so it works in a\nform without an nldd-time-field around it.",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "value",
               "type": {
                 "text": "string"
@@ -33573,13 +34181,18 @@
               "attribute": "step"
             },
             {
-              "kind": "field",
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDTimePickerTranslations>"
+              "kind": "method",
+              "name": "formValue",
+              "return": {
+                "type": {
+                  "text": "FormValue"
+                }
               },
-              "default": "{}",
-              "attribute": "translations"
+              "description": "The chosen time as `HH:mm`, empty when there is none.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
             },
             {
               "kind": "method",
@@ -33687,6 +34300,266 @@
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "internals",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDefault",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "What a reset puts `name` back to: its attribute, or the first render.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "FormValue"
+                  }
+                },
+                {
+                  "name": "_mode",
+                  "optional": true,
+                  "type": {
+                    "text": "'restore' | 'autocomplete'"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitFormEvent",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "init",
+                  "default": "{}",
+                  "type": {
+                    "text": "EventInit"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formState",
+              "return": {
+                "type": {
+                  "text": "FormValue | undefined"
+                }
+              },
+              "description": "Extra state kept for bfcache and state restore, when the submitted\nvalue alone cannot rebuild the control (a combo box submits a code but\nshows a label). Override alongside `formValue()`.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "commitFormValue",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Commit the value now, from the handler that changed it.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationTarget",
+              "return": {
+                "type": {
+                  "text": "HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null"
+                }
+              },
+              "description": "The native control this host speaks for.\n\nThe constraint attributes are handed to a control inside the shadow\nroot, and that control is not a member of the form around the host: the\nform sees the host, the host sees the control, and without something\njoining them a `required` field submits empty. Override when the control\nis not the first one in the shadow root, or return null for a component\nthat has no native control to speak for.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "A reason the host is invalid that no attribute can express: a server that\nrefused the value, or an nldd-validation-list whose rule it fails. Kept\nbeside the native flags rather than replacing them, because\n`setValidity` writes the whole set at once and the two arrive from\ndifferent places at different times.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "commitValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Hands the control's verdict to the form, as the host's own.\n\nCalled on every render and from `commitFormValue`, so it follows the\nvalue for the same reason and with the same timing.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "disabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "events": [
@@ -33737,6 +34610,15 @@
               "fieldName": "invalid"
             },
             {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Name for form submission; the picker submits on its own, so it works in a form without an nldd-time-field. Submits the chosen time as `HH:mm`.",
+              "fieldName": "name"
+            },
+            {
               "name": "value",
               "type": {
                 "text": "string"
@@ -33773,15 +34655,6 @@
               "description": "Step in minutes (default 1). Decides which minutes are in the column."
             },
             {
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDTimePickerTranslations>"
-              },
-              "default": "{}",
-              "fieldName": "translations",
-              "description": "Translations; unspecified keys fall back to Dutch."
-            },
-            {
               "name": "accessible-description",
               "type": {
                 "text": "string"
@@ -33806,12 +34679,33 @@
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
               }
+            },
+            {
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Translations; unspecified keys fall back to Dutch."
             }
           ],
           "mixins": [
             {
               "name": "DescribedBy",
               "module": "/src/utilities/described-by-mixin.js"
+            },
+            {
+              "name": "FormAssociated",
+              "module": "/src/utilities/form-associated-mixin.js"
+            },
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -33962,7 +34856,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Marks the group as required: something has to be selected.\n\nHanded to the items, because that is where the platform reads it. One\nrequired radio makes the whole group required, and the browser writes its\nown message in the user's language.\n\nOnly in radio mode. The same attribute on a checkbox means that box has to\nbe ticked, so spreading it over a checkbox group would demand all of them\ninstead of one. HTML has no way to say \"at least one of these\", and\nneither do we: `aria-required` still goes on the group so assistive\nsoftware says it, but nothing enforces it.",
+              "description": "Marks the group as required: something has to be selected.\n\nHanded to every item in both modes. A toggle button carries no native\ncontrol, so it answers `required` itself: it is satisfied when it, or any\nsibling in the group, is selected (`_groupHasSelection`). So `required` asks\n\"at least one of these\", radio and checkbox alike, which HTML has no native\nway to say. `aria-required` goes on the group so assistive software says it.",
               "attribute": "required",
               "reflects": true
             },
@@ -34075,7 +34969,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Marks the group as required. Enforced in radio mode; in checkbox mode only announced.",
+              "description": "Marks the group as required: at least one button has to be selected. Enforced in both radio and checkbox mode.",
               "fieldName": "required"
             },
             {
@@ -34382,6 +35276,20 @@
             },
             {
               "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "A checkbox answers `required` itself, group-aware: it is satisfied when it,\nor any sibling in the group, is selected (`_groupHasSelection`). So a\nrequired group asks for at least one, not for every box. Radio answers it\nthrough its hidden validation input; a plain button is no form control.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "toggle",
               "return": {
                 "type": {
@@ -34658,20 +35566,6 @@
             },
             {
               "kind": "method",
-              "name": "ownValidity",
-              "return": {
-                "type": {
-                  "text": "OwnValidity | null"
-                }
-              },
-              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
-              "inheritedFrom": {
-                "name": "FormAssociated",
-                "module": "src/utilities/form-associated-mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -34910,7 +35804,7 @@
               },
               "default": "false",
               "fieldName": "required",
-              "description": "Required state. Set by nldd-toggle-button-group."
+              "description": "A checkbox has to be selected. On its own it asks for this button; in an nldd-toggle-button-group, which sets it on its buttons, for any button of the group."
             },
             {
               "name": "disabled",
@@ -35209,15 +36103,6 @@
               "default": "false",
               "attribute": "disabled",
               "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDTokenFieldTranslations>"
-              },
-              "default": "{}",
-              "attribute": "translations"
             },
             {
               "kind": "method",
@@ -35569,6 +36454,19 @@
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "events": [
@@ -35724,15 +36622,6 @@
               "description": "Disabled state"
             },
             {
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDTokenFieldTranslations>"
-              },
-              "default": "{}",
-              "fieldName": "translations",
-              "description": "Override translation keys; unset keys fall back to Dutch"
-            },
-            {
               "name": "accessible-description",
               "type": {
                 "text": "string"
@@ -35757,6 +36646,19 @@
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
               }
+            },
+            {
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Override translation keys; unset keys fall back to Dutch"
             }
           ],
           "mixins": [
@@ -35767,6 +36669,10 @@
             {
               "name": "FormAssociated",
               "module": "/src/utilities/form-associated-mixin.js"
+            },
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -36222,10 +37128,14 @@
               "kind": "field",
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDCollectionTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "attribute": "translations"
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "events": [
@@ -36337,11 +37247,21 @@
             {
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDCollectionTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
               "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
               "description": "Translation overrides; unset keys fall back to Dutch. Available keys: 'components.collection.previous-action', 'components.collection.next-action', 'components.collection.load-more-action'"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -37898,10 +38818,14 @@
               "kind": "field",
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDPageFooterTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "attribute": "translations"
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "attributes": [
@@ -37915,13 +38839,23 @@
               "fieldName": "accessibleLabel"
             },
             {
-              "type": {
-                "text": "Partial<NLDDPageFooterTranslations>"
-              },
-              "description": "Override translation keys; unset keys fall back to the Dutch default.",
               "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
               "default": "{}",
-              "fieldName": "translations"
+              "fieldName": "translations",
+              "description": "Override translation keys; unset keys fall back to the Dutch default.",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -38692,6 +39626,27 @@
             },
             {
               "kind": "field",
+              "name": "mediaHeight",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "media-height",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "mediaAspectRatio",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Media aspect-ratio in CSS form ('16/9' or '16:9'); default '21/9'. Drives\nthe hero height on md/lg and the media strip height on sm.",
+              "attribute": "media-aspect-ratio",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "mainWidth",
               "type": {
                 "text": "HeroMainWidth"
@@ -38756,27 +39711,6 @@
               },
               "default": "''",
               "attribute": "media-alt"
-            },
-            {
-              "kind": "field",
-              "name": "mediaAspectRatio",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Media aspect-ratio in CSS form ('16/9' or '16:9'); default '21/9'. Drives\nthe hero height on md/lg and the media strip height on sm.",
-              "attribute": "media-aspect-ratio",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "mediaHeight",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "media-height",
-              "reflects": true
             },
             {
               "kind": "field",
@@ -39020,6 +39954,24 @@
               "fieldName": "width"
             },
             {
+              "name": "media-height",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "mediaHeight",
+              "description": "Fixed height of the media area, any CSS length (e.g. '320px', '40vh'); wins over media-aspect-ratio. An invalid value falls back to the ratio"
+            },
+            {
+              "name": "media-aspect-ratio",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Aspect ratio of the media area (CSS form, '16/9' or '16:9'); default '21/9'. On md/lg it sets the height of the hero, on sm the height of the media area",
+              "fieldName": "mediaAspectRatio"
+            },
+            {
               "name": "main-width",
               "type": {
                 "text": "HeroMainWidth"
@@ -39084,24 +40036,6 @@
               "default": "''",
               "fieldName": "mediaAlt",
               "description": "Alt text for media-src; empty means decorative"
-            },
-            {
-              "name": "media-aspect-ratio",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Aspect ratio of the media area (CSS form, '16/9' or '16:9'); default '21/9'. On md/lg it sets the height of the hero, on sm the height of the media area",
-              "fieldName": "mediaAspectRatio"
-            },
-            {
-              "name": "media-height",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "mediaHeight",
-              "description": "Fixed height of the media area, any CSS length (e.g. '320px', '40vh'); wins over media-aspect-ratio. An invalid value falls back to the ratio"
             },
             {
               "name": "background",
@@ -40533,16 +41467,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "translations",
-              "type": {
-                "text": "Partial<typeof nlddSidebarSectionTranslations>"
-              },
-              "default": "{}",
-              "description": "Override translation keys (sheet title fallback and dismiss label); unset keys fall back to Dutch.",
-              "attribute": "translations"
-            },
-            {
               "kind": "method",
               "name": "show",
               "return": {
@@ -40768,6 +41692,19 @@
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "events": [
@@ -40838,15 +41775,6 @@
               "default": "false",
               "fieldName": "collapsed",
               "description": "Read-only, reflected: true while the sidebar is a sheet (the section is narrower than lg). Target it via CSS to reveal sheet-only chrome."
-            },
-            {
-              "name": "translations",
-              "type": {
-                "text": "Partial<typeof nlddSidebarSectionTranslations>"
-              },
-              "default": "{}",
-              "description": "Override translation keys (sheet title fallback, dismiss label); unset keys fall back to Dutch.",
-              "fieldName": "translations"
             },
             {
               "name": "background",
@@ -41056,6 +41984,19 @@
               }
             },
             {
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Override translation keys (sheet title fallback, dismiss label); unset keys fall back to Dutch."
+            },
+            {
               "name": "sidebar-section-only",
               "description": "Set on anything inside the section, at any depth: shows that element only while the sidebar is a sheet (`collapsed`), such as the button that opens it, or only while it is a box beside the main (`expanded`), such as a heading the sheet's title bar repeats. Put it on an nldd-spacer next to such an element too, so the space goes with it.",
               "type": {
@@ -41068,6 +42009,10 @@
             {
               "name": "PageSectionMixin",
               "module": "/src/utilities/page-section-mixin.js"
+            },
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -42214,25 +43159,6 @@
             },
             {
               "kind": "field",
-              "name": "accessibleLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "accessible-label"
-            },
-            {
-              "kind": "field",
-              "name": "landmarks",
-              "type": {
-                "text": "Landmarks"
-              },
-              "default": "'auto'",
-              "attribute": "landmarks",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "stickyHeader",
               "type": {
                 "text": "boolean"
@@ -42249,6 +43175,25 @@
               },
               "default": "false",
               "attribute": "sticky-footer",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "accessibleLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "accessible-label"
+            },
+            {
+              "kind": "field",
+              "name": "landmarks",
+              "type": {
+                "text": "Landmarks"
+              },
+              "default": "'auto'",
+              "attribute": "landmarks",
               "reflects": true
             },
             {
@@ -42274,6 +43219,24 @@
               "description": "Use a gray background instead of white"
             },
             {
+              "name": "sticky-header",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "stickyHeader",
+              "description": "Sticky header"
+            },
+            {
+              "name": "sticky-footer",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "stickyFooter",
+              "description": "Sticky footer"
+            },
+            {
               "name": "accessible-label",
               "type": {
                 "text": "string"
@@ -42293,24 +43256,6 @@
                 "text": "'auto' | 'page' | 'region'"
               },
               "description": "Whether this page carries the document's landmarks: 'auto' (default) derives it from where the page sits, 'page' keeps banner, main and contentinfo, 'region' drops all three"
-            },
-            {
-              "name": "sticky-header",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "stickyHeader",
-              "description": "Sticky header"
-            },
-            {
-              "name": "sticky-footer",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "stickyFooter",
-              "description": "Sticky footer"
             }
           ],
           "superclass": {
@@ -42338,7 +43283,8 @@
           ],
           "related": [
             "nldd-shell",
-            "nldd-window"
+            "nldd-window",
+            "nldd-sheet"
           ],
           "slots": [
             {
@@ -42511,16 +43457,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDPopoverTranslations>"
-              },
-              "default": "{}",
-              "description": "Override one or more translation keys.\nUnset keys fall back to the Dutch default.",
-              "attribute": "translations"
-            },
-            {
               "kind": "method",
               "name": "show",
               "return": {
@@ -42556,6 +43492,19 @@
                 }
               },
               "description": "Recomputes the position relative to the anchor. Called automatically on open."
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "attributes": [
@@ -42672,11 +43621,15 @@
             {
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDPopoverTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "description": "Override translation keys; unset keys fall back to the Dutch default.",
-              "fieldName": "translations"
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Override translation keys; unset keys fall back to the Dutch default."
             },
             {
               "name": "role",
@@ -42684,6 +43637,12 @@
               "type": {
                 "text": "string"
               }
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -43895,16 +44854,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDWindowTranslations>"
-              },
-              "default": "{}",
-              "description": "Override one or more translation keys.\nUnset keys fall back to the Dutch default.",
-              "attribute": "translations"
-            },
-            {
               "kind": "method",
               "name": "show",
               "return": {
@@ -43920,6 +44869,19 @@
                 "type": {
                   "text": "void"
                 }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
               }
             }
           ],
@@ -44023,11 +44985,21 @@
             {
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDWindowTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "description": "Override translation keys; unset keys fall back to the Dutch default.",
-              "fieldName": "translations"
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Override translation keys; unset keys fall back to the Dutch default."
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -44860,16 +45832,6 @@
             },
             {
               "kind": "field",
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDReorderHandleCellTranslations>"
-              },
-              "default": "{}",
-              "description": "Override one or more translation keys. Unset keys fall back to the Dutch default.",
-              "attribute": "translations"
-            },
-            {
-              "kind": "field",
               "name": "reorderHandle",
               "default": "handle",
               "attribute": "reorder-handle",
@@ -44877,6 +45839,19 @@
               "inheritedFrom": {
                 "name": "ReorderHandleMixin",
                 "module": "src/utilities/reorder-handle-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
               }
             }
           ],
@@ -44894,15 +45869,6 @@
               "description": "Handle size: 'sm' | 'md' (default: 'md')"
             },
             {
-              "name": "translations",
-              "type": {
-                "text": "Partial<NLDDReorderHandleCellTranslations>"
-              },
-              "default": "{}",
-              "description": "Override translation keys; unset keys fall back to Dutch. Sets the handle's accessible label.",
-              "fieldName": "translations"
-            },
-            {
               "name": "reorder-handle",
               "default": "handle",
               "fieldName": "reorderHandle",
@@ -44910,12 +45876,29 @@
                 "name": "ReorderHandleMixin",
                 "module": "src/utilities/reorder-handle-mixin.ts"
               }
+            },
+            {
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Override translation keys; unset keys fall back to Dutch. Sets the handle's accessible label."
             }
           ],
           "mixins": [
             {
               "name": "ReorderHandleMixin",
               "module": "/src/utilities/reorder-handle-mixin.js"
+            },
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -47460,11 +48443,14 @@
               "kind": "field",
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDListTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "description": "Override one or more translation keys. Unset keys fall back to the Dutch default.",
-              "attribute": "translations"
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "events": [
@@ -47542,13 +48528,23 @@
               }
             },
             {
-              "type": {
-                "text": "Partial<NLDDListTranslations>"
-              },
-              "description": "Override translation keys; unset keys fall back to Dutch",
               "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
               "default": "{}",
-              "fieldName": "translations"
+              "fieldName": "translations",
+              "description": "Override translation keys; unset keys fall back to Dutch",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -47676,10 +48672,14 @@
               "kind": "field",
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDTableTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "attribute": "translations"
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "attributes": [
@@ -47752,11 +48752,21 @@
             {
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDTableTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
               "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
               "description": "Override translation keys; unset keys fall back to Dutch"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -47965,10 +48975,14 @@
               "kind": "field",
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDBreadcrumbsTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "attribute": "translations"
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "attributes": [
@@ -47984,11 +48998,21 @@
             {
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDBreadcrumbsTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
               "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
               "description": "Override translation keys; unset keys fall back to the Dutch default."
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -49447,10 +50471,14 @@
               "kind": "field",
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDPaginationTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "attribute": "translations"
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "attributes": [
@@ -49502,11 +50530,21 @@
             {
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDPaginationTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
               "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
               "description": "Translations; unspecified keys fall back to Dutch"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -50780,10 +51818,14 @@
               "kind": "field",
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDActivityIndicatorTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "attribute": "translations"
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "attributes": [
@@ -50850,11 +51892,21 @@
             {
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDActivityIndicatorTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
               "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
               "description": "Override translation keys; unset keys fall back to Dutch"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -51259,11 +52311,14 @@
               "kind": "field",
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDBannerTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "description": "Override one or more translation keys. Unspecified keys fall back to Dutch.",
-              "attribute": "translations"
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "events": [
@@ -51348,11 +52403,21 @@
             {
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDBannerTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "description": "Override translation keys; unset keys fall back to Dutch",
-              "fieldName": "translations"
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Override translation keys; unset keys fall back to Dutch"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -52633,11 +53698,14 @@
               "kind": "field",
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDProgressBarTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "description": "Override one or more translation keys. Unspecified keys fall back to Dutch.",
-              "attribute": "translations"
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "attributes": [
@@ -52758,11 +53826,21 @@
             {
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDProgressBarTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "description": "Override translation keys; unset keys fall back to Dutch",
-              "fieldName": "translations"
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Override translation keys; unset keys fall back to Dutch"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -53040,10 +54118,14 @@
               "kind": "field",
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDProgressCircleTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
-              "attribute": "translations"
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "attributes": [
@@ -53164,11 +54246,21 @@
             {
               "name": "translations",
               "type": {
-                "text": "Partial<NLDDProgressCircleTranslations>"
+                "text": "Partial<T>"
               },
               "default": "{}",
               "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
               "description": "Override translation keys; unset keys fall back to Dutch"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -57373,7 +58465,7 @@
             {
               "name": "onResize",
               "type": {
-                "text": "(hosts: T[]) => void"
+                "text": "(hosts: T[], entriesOf: (host: T) => ResizeObserverEntry[]) => void"
               },
               "description": "gets the hosts with a target that changed size, each once,\nand only those still in the page.\nLike any ResizeObserver, a target is reported once when it is observed,\nalso for a host that joins a target another host already observes: the\nhosts that were there get that report too."
             }
@@ -59123,6 +60215,65 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/utilities/picker-popover-controller.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "The focus restore a field shares around its picker popover (nldd-date-field,\nnldd-time-field).\n\nWith `delegatesFocus`, Safari does not focus a button on click: it focuses the\ntext field instead. On close the popover restores focus to the element from\nbefore it opened, so in Safari that lands on the input rather than the picker\nbutton. The field takes focus back itself, one microtask after the popover's\nown restore so it is not overwritten. A microtask rather than a frame: it\nbeats that same restore but is not throttled while the tab is unfocused.",
+          "name": "PickerPopoverController",
+          "members": [
+            {
+              "kind": "method",
+              "name": "focusTrigger",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "asked",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Focus the trigger button. `asked` forces it (a dismiss, Escape or an\nexplicit close); otherwise only when the close left focus loose, as after a\nclick beside the popover, and not when the click put focus elsewhere."
+            },
+            {
+              "kind": "method",
+              "name": "restoreFocus",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "asked",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "`focusTrigger`, one microtask after the popover's own restore."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "PickerPopoverController",
+          "declaration": {
+            "name": "PickerPopoverController",
+            "module": "src/utilities/picker-popover-controller.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/utilities/radio-grouping.ts",
       "declarations": [
         {
@@ -59980,11 +61131,18 @@
             {
               "name": "url",
               "type": {
-                "text": "string | null"
+                "text": "string | null | undefined"
+              }
+            },
+            {
+              "name": "options",
+              "optional": true,
+              "type": {
+                "text": "{ allowData?: boolean }"
               }
             }
           ],
-          "description": "Sanitizes a URL for use in href attributes by stripping leading/trailing\nwhitespace (including unicode), removing embedded control characters that\nbrowsers strip during URL parsing (tab, newline, carriage return), and\nblocking dangerous protocols.\n\nBlocked protocols: javascript:, data:, vbscript:, blob:.\n\nNote: data: and blob: are blocked entirely because this utility is designed\nfor href contexts (<a>, navigation). Do not reuse for <img src>, download\nlinks, or other contexts where data: or blob: URLs are legitimate.\n\nReturns null for empty or dangerous URLs, the trimmed URL otherwise."
+          "description": "Sanitizes a URL for use in href attributes by stripping leading/trailing\nwhitespace (including unicode), removing embedded control characters that\nbrowsers strip during URL parsing (tab, newline, carriage return), and\nblocking dangerous protocols.\n\nBlocked protocols: javascript:, data:, vbscript:, blob:. With\n`{ allowData: true }` the data: and blob: URLs are permitted while\njavascript: and vbscript: stay blocked: a download link legitimately points\nat a data: or blob: URL, so a component passes this when its `download`\nattribute is set. The browser saves such a URL as a file and never runs\nit, so a `data:text/html` URL is harmless there.\n\nNote: tuned for href contexts (<a>, navigation). Do not reuse for <img src>\nor other contexts without reviewing which protocols are safe there.\n\nReturns null for empty or dangerous URLs, the trimmed URL otherwise."
         }
       ],
       "exports": [
@@ -61077,7 +62235,7 @@
       "declarations": [
         {
           "kind": "mixin",
-          "description": "Mixin that adds i18n support to a LitElement component.\n\nProvides a `translations` property for overriding defaults,\na merged translations object, and a `_t()` method for lookups.",
+          "description": "Mixin that adds i18n to a LitElement component: a `translations` property for\noverriding defaults, and a `_t()` method for lookups.\n\nGeneric over its base, so it keeps that base's type. It composes on a plain\nLitElement, or on a richer base such as a form-associated one, and in either\nposition in a mixin chain: the base's own members stay visible on the result.",
           "name": "withTranslations",
           "members": [
             {
@@ -61104,7 +62262,7 @@
             {
               "name": "Base",
               "type": {
-                "text": "Constructor<LitElement> & typeof LitElement"
+                "text": "TBase"
               }
             },
             {

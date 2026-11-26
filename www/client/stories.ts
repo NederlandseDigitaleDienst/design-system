@@ -12,7 +12,8 @@
  *   export const D = patternStory(markup);                        // an object from a helper
  *
  * Only what the stories in this repository use is supported. There are no play
- * functions, decorators or loaders, so there is no code for them here.
+ * functions, decorators or loaders, so there is no code for them here. Room
+ * around an example is `parameters.stage`, which the stage reads.
  */
 
 import { render as renderLit, type TemplateResult } from 'lit';
@@ -32,6 +33,8 @@ export interface ArgType {
 
 export interface StoryParameters {
 	layout?: string;
+	/** Room the canvas keeps above an example whose overlay sticks out over its top, such as the value tooltip of a slider. */
+	stage?: { paddingTop?: string };
 	controls?: { disable?: boolean; include?: string[] };
 	docs?: {
 		source?: {

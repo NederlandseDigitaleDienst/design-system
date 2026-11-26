@@ -90,8 +90,7 @@ import { property } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { nlddRichTextTranslations } from './rich-text.i18n.js';
-import type { NLDDRichTextTranslations } from './rich-text.i18n.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { setState } from '../../../utilities/element-state.js';
 
 type Spacing = 'flat' | 'tight' | 'snug' | 'loose';
@@ -115,7 +114,7 @@ function hasInlineContent(nodes: NodeListOf<ChildNode>): boolean {
 }
 
 @customElement('nldd-rich-text')
-export class NLDDRichText extends LitElement {
+export class NLDDRichText extends withTranslations(LitElement, nlddRichTextTranslations) {
 
 	@property({ reflect: true, converter: reflectNonDefault<Spacing>('snug') })
 	spacing: Spacing = 'snug';
@@ -125,13 +124,6 @@ export class NLDDRichText extends LitElement {
 
 	@property({ type: Boolean, reflect: true })
 	hyphens = false;
-
-	@property({ type: Object })
-	translations: Partial<NLDDRichTextTranslations> = {};
-
-	public _t(key: keyof NLDDRichTextTranslations): string {
-		return translate(this.translations, nlddRichTextTranslations, key);
-	}
 
 	private _mutationObserver?: MutationObserver;
 	private _resizeObserver?: ResizeObserver;
