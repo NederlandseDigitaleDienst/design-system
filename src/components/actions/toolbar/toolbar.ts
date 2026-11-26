@@ -41,7 +41,7 @@ import { NLDDToolbarItem, type Size, type SizingElement } from './toolbar-item.j
 import { NLDDToolbarTitle } from './toolbar-title.js';
 import { OverflowMenu } from '../../../utilities/overflow-menu.js';
 import { afterParse } from '../../../utilities/after-parse.js';
-import { LayoutPass } from '../../../utilities/layout-pass.js';
+import { LayoutPass, sharedResizeObserver, type SharedResizeObserver } from '../../../utilities/layout-pass.js';
 import { runSteps, type Steps } from './toolbar.steps.js';
 import {
 	areaWidth,
@@ -90,30 +90,29 @@ const areaPass = new LayoutPass<NLDDToolbar>(toolbars =>
  * back once per toolbar, and each callback measures a layout the previous one
  * changed; this one measures every toolbar that changed size in one pass.
  */
-const toolbarOf = new WeakMap<Element, NLDDToolbar>();
-let sizeObserver: ResizeObserver | null = null;
+let sizeObserver: SharedResizeObserver<NLDDToolbar> | null = null;
 
 function observeSize(target: Element, toolbar: NLDDToolbar): void {
-	sizeObserver ??= new ResizeObserver(entries => {
+	sizeObserver ??= sharedResizeObserver<NLDDToolbar>((toolbars, entriesOf) => {
 		const resized = new Set<NLDDToolbar>();
-		for (const entry of entries) {
-			const toolbar = toolbarOf.get(entry.target);
-			if (toolbar?._resized(entry)) resized.add(toolbar);
+		for (const toolbar of toolbars) {
+			// A toolbar watches itself and each item; _resized reads which from the
+			// entry (entry.target === this), so every one is handed over.
+			for (const entry of entriesOf(toolbar)) {
+				if (toolbar._resized(entry)) resized.add(toolbar);
+			}
 		}
 		if (!resized.size) return;
 		resized.forEach(toolbar => measurePass.schedule(toolbar, toolbar.ownerDocument));
 		measurePass.flush();
 	});
-	toolbarOf.set(target, toolbar);
-	sizeObserver.observe(target);
+	sizeObserver.observe(target, toolbar);
 }
 
-/** Only while the target is still this toolbar's: an item moved to another
- *  toolbar is that one's to watch. */
+/** Removes only this toolbar from the target: an item moved to another toolbar
+ *  stays watched for that one. */
 function unobserveSize(target: Element, toolbar: NLDDToolbar): void {
-	if (toolbarOf.get(target) !== toolbar) return;
-	sizeObserver?.unobserve(target);
-	toolbarOf.delete(target);
+	sizeObserver?.unobserve(target, toolbar);
 }
 
 /** The toolbars that build their children at the next task, in one timeout. */

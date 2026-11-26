@@ -125,4 +125,36 @@ describe('sharedResizeObserver', () => {
 		await frames();
 		expect(runs).toEqual([[here]]);
 	});
+
+	it('hands a host the entries of its targets, with their sizes', async () => {
+		const seen: Array<{ id: string; widths: number[] }> = [];
+		const observer = sharedResizeObserver<Host>((hosts, entriesOf) => {
+			for (const h of hosts) seen.push({ id: h.id, widths: entriesOf(h).map((e) => e.contentRect.width) });
+		});
+		const a = host('a');
+		observer.observe(box(100), a);
+		observer.observe(box(50), a);
+		await frames();
+		const first = seen.find((s) => s.id === 'a');
+		expect(first?.widths.slice().sort((x, y) => x - y)).toEqual([50, 100]);
+	});
+
+	it('stops reporting one target after unobserve, and keeps the rest', async () => {
+		const runs: string[][] = [];
+		const observer = sharedResizeObserver<Host>((hosts) => runs.push(hosts.map((h) => h.id)));
+		const a = host('a');
+		const t1 = box();
+		const t2 = box();
+		observer.observe(t1, a);
+		observer.observe(t2, a);
+		await frames();
+		expect(runs).toEqual([['a']]);
+		observer.unobserve(t1, a);
+		t1.style.width = '200px';
+		await frames();
+		expect(runs).toEqual([['a']]);
+		t2.style.width = '200px';
+		await frames();
+		expect(runs).toEqual([['a'], ['a']]);
+	});
 });

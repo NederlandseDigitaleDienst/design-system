@@ -2,6 +2,7 @@ import { LitElement } from 'lit';
 import type { PropertyValues } from 'lit';
 import { property, query, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
+import { sharedResizeObserver, type SharedResizeObserver } from '../../../utilities/layout-pass.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { listItemStyles } from './list-item.styles.js';
 import { template } from './list-item.template.js';
@@ -199,9 +200,7 @@ type DividerInsets = { degenerate: boolean; start: number | null; end: number | 
  *  together in the next frame. */
 const dividerQueue = new Set<NLDDListItem>();
 let dividerFrame = 0;
-/** Which row a watched element belongs to: the row itself or one of its markers. */
-const markerOwner = new WeakMap<Element, NLDDListItem>();
-let markerObserver: ResizeObserver | null = null;
+let markerObserver: SharedResizeObserver<NLDDListItem> | null = null;
 
 /**
  * Measures every row first and writes every inset after, so a list of thousands
@@ -226,13 +225,8 @@ function queueDivider(row: NLDDListItem): void {
 
 /** One observer for every row. Its first report after `observe()` comes once
  *  the page is laid out and before it paints, for all new rows at once. */
-function dividerObserver(): ResizeObserver {
-	return markerObserver ??= new ResizeObserver(entries => {
-		const rows = new Set<NLDDListItem>();
-		for (const entry of entries) {
-			const row = markerOwner.get(entry.target);
-			if (row) rows.add(row);
-		}
+function dividerObserver(): SharedResizeObserver<NLDDListItem> {
+	return markerObserver ??= sharedResizeObserver<NLDDListItem>((rows) => {
 		measureDividers(rows);
 	});
 }
@@ -927,13 +921,11 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 			&& targets.every((target, i) => target === this._observedMarkerTargets[i]);
 		if (same) return false;
 		for (const target of this._observedMarkerTargets) {
-			markerObserver?.unobserve(target);
-			if (markerOwner.get(target) === this) markerOwner.delete(target);
+			markerObserver?.unobserve(target, this);
 		}
 		this._observedMarkerTargets = targets;
 		for (const target of targets) {
-			markerOwner.set(target, this);
-			dividerObserver().observe(target);
+			dividerObserver().observe(target, this);
 		}
 		return true;
 	}
