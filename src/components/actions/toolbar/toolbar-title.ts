@@ -59,8 +59,6 @@ export class NLDDToolbarTitle extends withTranslations(LitElement, nlddToolbarTr
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	target = '';
 
-
-
 	private _size: Size = 'md';
 	private _soloFluid = false;
 

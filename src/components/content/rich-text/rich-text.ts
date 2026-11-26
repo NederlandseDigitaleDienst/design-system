@@ -125,8 +125,6 @@ export class NLDDRichText extends withTranslations(LitElement, nlddRichTextTrans
 	@property({ type: Boolean, reflect: true })
 	hyphens = false;
 
-
-
 	private _mutationObserver?: MutationObserver;
 	private _resizeObserver?: ResizeObserver;
 

@@ -165,7 +165,6 @@ export class NLDDSidebarSection extends PageSectionMixin(withTranslations(LitEle
 	@property({ type: Boolean, reflect: true })
 	collapsed = false;
 
-
 	@query('.sidebar-section__sheet')
 	private _sheet?: NLDDSheet;
 
@@ -181,7 +180,6 @@ export class NLDDSidebarSection extends PageSectionMixin(withTranslations(LitEle
 	get _sheetDismissText(): string {
 		return this._t('components.sidebar-section.sheet-dismiss-action');
 	}
-
 
 	override connectedCallback(): void {
 		super.connectedCallback();

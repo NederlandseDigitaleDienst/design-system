@@ -122,7 +122,6 @@ export class NLDDPasswordField extends DescribedBy(FormAssociated(withTranslatio
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-
 	@query('.password-field__input')
 	private _input!: HTMLInputElement;
 
@@ -141,7 +140,6 @@ export class NLDDPasswordField extends DescribedBy(FormAssociated(withTranslatio
 	override formValue(): FormValue {
 		return this.value;
 	}
-
 
 	/** Enter submits the form this field belongs to, the way the browser would
 	 *  if the input were not in a shadow root. */

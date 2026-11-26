@@ -120,7 +120,6 @@ export class NLDDActivityIndicator extends withTranslations(LitElement, nlddActi
 	@property({ type: Boolean, reflect: true })
 	complete = false;
 
-
 	@state()
 	_visible = false;
 
@@ -139,7 +138,6 @@ export class NLDDActivityIndicator extends withTranslations(LitElement, nlddActi
 		const slot = e.target as HTMLSlotElement;
 		this._hasContent = slot.assignedElements().length > 0;
 	};
-
 
 	/** Accessible name announced while loading. */
 	public get _accessibleName(): string {

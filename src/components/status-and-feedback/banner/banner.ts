@@ -93,7 +93,6 @@ export class NLDDBanner extends withTranslations(LitElement, nlddBannerTranslati
 	@property({ type: Boolean, reflect: true })
 	dismissible = false;
 
-
 	@state()
 	_hasContent = false;
 
@@ -105,8 +104,6 @@ export class NLDDBanner extends withTranslations(LitElement, nlddBannerTranslati
 	 *  cosmetic, but we keep cleanup symmetric with addEventListener. */
 	private _syncContent?: () => void;
 	private _syncActions?: () => void;
-
-
 
 	get _resolvedIcon(): string {
 		return this.icon || DEFAULT_ICONS[this.variant];

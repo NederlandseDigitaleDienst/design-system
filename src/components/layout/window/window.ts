@@ -91,7 +91,6 @@ export class NLDDWindow extends withTranslations(LitElement, nlddWindowTranslati
 	@property({ type: Boolean, reflect: true })
 	open = false;
 
-
 	private _titleBar = new TitleBarLabelController(this);
 
 	_modalOverlay = new ModalOverlay(this, {
@@ -138,7 +137,6 @@ export class NLDDWindow extends withTranslations(LitElement, nlddWindowTranslati
 			if (dialog) dialog.style.removeProperty('color-scheme');
 		}
 	}
-
 
 	get _resolvedAccessibleLabel(): string {
 		return this.accessibleLabel || this._titleBar.text || this._t('components.window.accessible-label');

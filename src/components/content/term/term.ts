@@ -89,7 +89,6 @@ export class NLDDTerm extends withTranslations(LitElement, nlddTermTranslations)
 	@property({ type: String, reflect: true })
 	popovertarget = '';
 
-
 	/** The term as it shows: the slotted text without the whitespace around
 	 *  it, which the underline would otherwise run into. */
 	@state()
@@ -254,8 +253,6 @@ export class NLDDTerm extends withTranslations(LitElement, nlddTermTranslations)
 	_handleBlur(): void {
 		this._spaceDown = false;
 	}
-
-
 
 	override focus(options?: FocusOptions): void {
 		this._triggerEl?.focus(options);

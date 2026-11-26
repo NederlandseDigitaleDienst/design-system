@@ -160,7 +160,6 @@ export class NLDDDateField extends DescribedBy(FormAssociated(withTranslations(L
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-
 	/**
 	 * What the user sees and types, one text per end: one for a date, two for a
 	 * period. Kept apart from `value`, which stays ISO.
@@ -327,8 +326,6 @@ export class NLDDDateField extends DescribedBy(FormAssociated(withTranslations(L
 		// an empty value would not change value and the text would stay.
 		this._texts = splitValue(this.value, this._endCount).map(formatDisplay);
 	}
-
-
 
 	/**
 	 * The field's accessible name, with a fallback so the input is never nameless.

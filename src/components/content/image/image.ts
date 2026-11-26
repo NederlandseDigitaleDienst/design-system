@@ -172,8 +172,6 @@ export class NLDDImage extends withTranslations(LitElement, nlddImageTranslation
 	@property({ type: String })
 	loading: ImageLoading = 'lazy';
 
-
-
 	/** Cache key: the raw lqip attribute string at the time of the last
 	 *  parse. Lit dirty-checks by reference, so without caching every render
 	 *  would emit a fresh object + array and force downstream re-evaluation

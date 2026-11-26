@@ -117,7 +117,6 @@ export class NLDDPageFooterLegalBar extends withTranslations(LitElement, nlddPag
 	@state()
 	_hasEnd = false;
 
-
 	_onSlotChange = (e: Event) => {
 		const slot = e.target as HTMLSlotElement;
 		markListItems(slot.assignedElements());

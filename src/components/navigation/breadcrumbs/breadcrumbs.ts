@@ -28,7 +28,6 @@ import { breadcrumbsTemplate, breadcrumbsItemTemplate } from './breadcrumbs.temp
 import { nlddBreadcrumbsTranslations } from './breadcrumbs.i18n.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 
-
 // # nldd-breadcrumbs-item
 
 /**

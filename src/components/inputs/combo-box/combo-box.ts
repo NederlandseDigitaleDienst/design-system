@@ -194,7 +194,6 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(withTranslations(Li
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-
 	@state()
 	_isOpen = false;
 
@@ -220,7 +219,6 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(withTranslations(Li
 
 	@query('.combo-box__input')
 	_input!: HTMLInputElement;
-
 
 
 	// — Lifecycle ————————————————————————————————————————————————————————————

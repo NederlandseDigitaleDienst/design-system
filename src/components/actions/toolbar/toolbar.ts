@@ -159,8 +159,6 @@ export class NLDDToolbar extends withTranslations(LitElement, nlddToolbarTransla
 	@property({ reflect: true, attribute: 'accessible-label', converter: reflectNonDefault<string>('') })
 	accessibleLabel = '';
 
-
-
 	/** The menu for what does not fit. @internal */
 	readonly _overflowMenu = new OverflowMenu(this, { id: 'nldd-toolbar-overflow-menu' });
 

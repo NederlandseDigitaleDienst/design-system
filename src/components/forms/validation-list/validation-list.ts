@@ -235,13 +235,11 @@ export class NLDDValidationList extends withTranslations(LitElement, nlddValidat
 	@property({ attribute: false })
 	value?: string;
 
-
 	/**
 	 * @internal Called when one of the items shows or hides. Set by
 	 * nldd-form-field, which describes its control with the items on screen.
 	 */
 	onItemVisibilityChange: (() => void) | null = null;
-
 
 	@state()
 	private _resolved: Element | null = null;

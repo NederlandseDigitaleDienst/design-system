@@ -75,7 +75,6 @@ export class NLDDToken extends withTranslations(LitElement, nlddTokenTranslation
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-
 	/** @internal What the menu button opens, for its aria-haspopup. */
 	@state()
 	_popupType: 'menu' | 'dialog' = 'menu';
@@ -94,7 +93,6 @@ export class NLDDToken extends withTranslations(LitElement, nlddTokenTranslation
 			.replace(/\s+/g, ' ')
 			.trim();
 	}
-
 
 	get _dismissLabel(): string {
 		const label = this.text || this._slotText;

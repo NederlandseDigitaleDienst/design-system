@@ -152,7 +152,6 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(withTranslations
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-
 	override updated(changed: PropertyValues): void {
 		// Runs after the DescribedBy controller, so the shortcut hint is added to
 		// the help and error texts of an nldd-form-field instead of replacing them.

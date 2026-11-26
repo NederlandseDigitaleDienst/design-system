@@ -149,7 +149,6 @@ export class NLDDProgressBar extends withTranslations(LitElement, nlddProgressBa
 	@property({ reflect: true, converter: reflectNonDefault<number>(100) })
 	max = 100;
 
-
 	@state()
 	private _segmentIndicators: NLDDProgressBarSegmentIndicator[] = [];
 
@@ -165,7 +164,6 @@ export class NLDDProgressBar extends withTranslations(LitElement, nlddProgressBa
 
 	private _exitTimeout?: ReturnType<typeof setTimeout>;
 	private _enterTimeout?: ReturnType<typeof setTimeout>;
-
 
 	/** Returns true when the user has provided segment children. */
 	get _hasSegmentIndicators(): boolean {

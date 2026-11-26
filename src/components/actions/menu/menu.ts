@@ -189,7 +189,6 @@ export class NLDDMenu extends withTranslations(LitElement, nlddMenuTranslations)
 	@property({ attribute: false })
 	filterFn: (query: string, item: NLDDMenuItem) => boolean = defaultFilterFn;
 
-
 	@state()
 	private _isEmpty = false;
 
@@ -253,8 +252,6 @@ export class NLDDMenu extends withTranslations(LitElement, nlddMenuTranslations)
 	 * @internal */
 	_collapsedByPointerGesture = false;
 	private _cleanupAutoUpdate: (() => void) | null = null;
-
-	/** @internal */
 
 	/** Resolved empty text: emptyText attribute takes precedence, then i18n fallback. */
 	get _resolvedEmptyText(): string {

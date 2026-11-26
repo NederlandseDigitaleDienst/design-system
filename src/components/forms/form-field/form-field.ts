@@ -170,8 +170,6 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 	@property({ type: Boolean })
 	optional = false;
 
-
-
 	private _childObserver: MutationObserver | null = null;
 	/** Watches the validation lists for items that come or go. */
 	private _listObserver: MutationObserver | null = null;
@@ -182,8 +180,6 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 
 	/** The last label this field wrote onto the control, so it only takes back its own. */
 	private _appliedLabel: string | null = null;
-
-	/** Keeps the "no input found" warning to one per field rather than one per mutation. */
 
 	override render() {
 		return formFieldTemplate(this);

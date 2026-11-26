@@ -45,8 +45,6 @@ export class NLDDPagination extends withTranslations(LitElement, nlddPaginationT
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-
-
 	_getVisiblePages(): (number | 'ellipsis')[] {
 		if (this.total <= 7) {
 			return Array.from({ length: this.total }, (_, i) => i + 1);

@@ -43,8 +43,6 @@ export class NLDDReorderHandleCell extends ReorderHandleMixin(withTranslations(L
 	@property({ reflect: true, converter: reflectNonDefault<Size>('md') })
 	size: Size = 'md';
 
-
-
 	override render() {
 		const label = this._t('components.reorder-handle-cell.accessible-label');
 		return template(this.size, label);

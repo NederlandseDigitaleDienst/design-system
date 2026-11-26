@@ -136,7 +136,6 @@ export class NLDDProgressCircle extends withTranslations(LitElement, nlddProgres
 	@property({ reflect: true, converter: reflectNonDefault<number>(100) })
 	max = 100;
 
-
 	@state()
 	private _segmentIndicators: NLDDProgressCircleSegmentIndicator[] = [];
 
@@ -167,7 +166,6 @@ export class NLDDProgressCircle extends withTranslations(LitElement, nlddProgres
 	 *  Browser-only: the module counter would need stable ids for SSR hydration.
 	 *  @internal */
 	readonly _uid = `pc-${NLDDProgressCircle._idCounter++}`;
-
 
 	get _hasSegmentIndicators(): boolean {
 		return this._segmentIndicators.length > 0;

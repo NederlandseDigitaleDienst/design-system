@@ -177,7 +177,6 @@ export class NLDDSlider extends DescribedBy(FormAssociated(withTranslations(LitE
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-
 	@property({ attribute: false })
 	formatValue: ((value: number) => string) | null = null;
 
@@ -204,7 +203,6 @@ export class NLDDSlider extends DescribedBy(FormAssociated(withTranslations(LitE
 	 *  past the other one. */
 	private _arrowKey = false;
 
-	/** @internal */
 
 	// — Values ———————————————————————————————————————————————————————————————
 

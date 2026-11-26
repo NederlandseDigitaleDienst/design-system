@@ -173,13 +173,11 @@ export class NLDDTable extends withTranslations(LitElement, nlddTableTranslation
 	@property({ reflect: true, attribute: 'accessible-label', converter: reflectNonDefault<string>('') })
 	accessibleLabel = '';
 
-
 	private _rowsObserver?: MutationObserver;
 	/** @internal Last observed content-box width, to resolve the active track list. */
 	_width = 0;
 	/** An empty-state update waits for the parse; see _scheduleEmpty. */
 	private _emptyPending = false;
-
 
 	override connectedCallback(): void {
 		super.connectedCallback();

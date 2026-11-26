@@ -88,7 +88,6 @@ export class NLDDStepper extends DescribedBy(FormAssociated(withTranslations(Lit
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-
 	override formValue(): FormValue {
 		return String(this.value);
 	}

@@ -162,8 +162,6 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(withTranslations(L
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-
-
 	/**
 	 * Whether a fine pointer is in use. The picker already sets its row height
 	 * with a media query, but a button's size is an attribute and so cannot be
@@ -220,7 +218,6 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(withTranslations(L
 	 *  carries a valid time or nothing. */
 	@state()
 	_display = '';
-
 
 	public get _fieldLabel(): string {
 		return this.accessibleLabel || this._t('components.time-field.default-label');

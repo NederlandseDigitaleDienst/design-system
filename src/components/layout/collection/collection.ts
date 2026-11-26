@@ -115,8 +115,6 @@ export class NLDDCollection extends withTranslations(LitElement, nlddCollectionT
 	@property({ type: Boolean, reflect: true, attribute: 'lazy-load' })
 	lazyLoad = false;
 
-
-
 	@state()
 	_visibleCount = 0;
 

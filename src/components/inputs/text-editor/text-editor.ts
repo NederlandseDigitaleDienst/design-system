@@ -256,7 +256,6 @@ export class NLDDTextEditor extends withTranslations(NLDDCodeMirrorInput, nlddTe
 	@property({ type: Boolean, reflect: true, attribute: 'no-spellcheck' })
 	noSpellcheck = false;
 
-
 	/** Consumer-supplied @-mention source: called with the text typed after `@`
 	 *  and returns (a promise of) candidates. Property only (set via JS); without
 	 *  it, @-typeahead is inert. */
@@ -355,7 +354,6 @@ export class NLDDTextEditor extends withTranslations(NLDDCodeMirrorInput, nlddTe
 			this._toolbar.reflect();
 		});
 	}
-
 
 	private _labels: string | null = null;
 

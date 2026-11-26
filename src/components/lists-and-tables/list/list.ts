@@ -238,7 +238,6 @@ export class NLDDList extends withTranslations(LitElement, nlddListTranslations)
 	@property({ reflect: true, converter: reflectNonDefault<ListType>('list') })
 	type: ListType = 'list';
 
-
 	@state()
 
 	@state()

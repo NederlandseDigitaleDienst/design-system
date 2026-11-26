@@ -205,7 +205,6 @@ export class NLDDFileField extends DescribedBy(FormAssociated(withTranslations(L
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-
 	/** @internal A folder is many files, so `directory` takes several too. */
 	get _multiple(): boolean {
 		return this.multiple || this.directory;
@@ -305,8 +304,6 @@ export class NLDDFileField extends DescribedBy(FormAssociated(withTranslations(L
 
 	@query('.file-field__menu-anchor')
 	private _menuAnchor!: HTMLElement | null;
-
-	/** @internal */
 
 	/** @internal */
 	public _chooseLabel(): string {

@@ -153,8 +153,6 @@ export class NLDDSplitButton extends withTranslations(LitElement, nlddSplitButto
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-
-
 	/** The appearance for the two buttons inside: they take the aliases'
 	 *  meaning, not the alias, so 'secondary' is never a fall-through there. */
 	public _buttonAppearance(): string {

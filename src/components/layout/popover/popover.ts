@@ -155,7 +155,6 @@ export class NLDDPopover extends withTranslations(LitElement, nlddPopoverTransla
 	@property({ type: Boolean, reflect: true })
 	open = false;
 
-
 	private _isOpen = false;
 	/** True when this popover picks its own popover mode: the consumer set none. */
 	private _managesMode = false;
@@ -302,7 +301,6 @@ export class NLDDPopover extends withTranslations(LitElement, nlddPopoverTransla
 			if (this._isOpen) this.reposition();
 		}
 	}
-
 
 	get _resolvedAccessibleLabel(): string {
 		return this.accessibleLabel || this._t('components.popover.accessible-label');

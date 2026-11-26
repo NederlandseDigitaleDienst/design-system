@@ -162,7 +162,6 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(withTranslations(
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-
 	/** The current text in the inline input; drives the menu filter. */
 	@state()
 	_text = '';

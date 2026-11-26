@@ -415,7 +415,6 @@ export class NLDDCodeViewer extends withTranslations(NLDDCodeMirrorElement, nldd
 		});
 	}
 
-
 	/* Lazy grammar loading is async; surface the in-flight load through
 	 * updateComplete so consumers (and tests) can await el.updateComplete and
 	 * see the final highlighted output. */
