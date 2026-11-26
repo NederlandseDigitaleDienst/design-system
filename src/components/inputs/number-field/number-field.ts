@@ -199,6 +199,7 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(withTranslations
 	}
 
 	public _handleInput(e: Event): void {
+		e.stopPropagation();
 		if (this.disabled) return;
 		const input = e.target as HTMLInputElement;
 		// A number input reads as empty while it holds no number yet ("-", "1e"),
@@ -213,6 +214,7 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(withTranslations
 
 	/** Fires on blur or Enter. Clamps the value; an emptied field stays empty. */
 	public _handleChange(e: Event): void {
+		e.stopPropagation();
 		if (this.disabled) return;
 		const input = e.target as HTMLInputElement;
 		// Text that is no number (badInput) reads as '' here, so it commits as empty.

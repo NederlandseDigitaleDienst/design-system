@@ -35,6 +35,7 @@ here; consult the commit history if you need that level of detail.
 ### Fixed
 
 - **A notification is announced reliably by NVDA and JAWS.** The area that holds the notifications is now a polite live region from the start, so a notification placed in it is read. A critical notification stays assertive (WCAG 4.1.3).
+- **`nldd-number-field` fires one `input` event per change, with its value.** The native `input` of the field inside also reached a listener, without a `detail`, so a handler that read `event.detail.value` got `undefined` after the real value.
 - **`required` on `nldd-toggle-button-group` asks for at least one selected button in checkbox mode too.** It was only enforced with `type="radio"`; with checkboxes it was announced, but a form submitted without a selection.
 - **The border of `nldd-code-editor` and `nldd-text-editor` no longer shows through a sticky header.** It now fades under the header with the rest of the field.
 - **`nldd-segmented-control` with `width="fit-content"` follows the alignment of its parent.** It always sat at the start, so in an `nldd-cell` with `horizontal-alignment="right"` or a centering container it stayed on the left. In `nldd-form-field` it still sits at the start, at its own width.
