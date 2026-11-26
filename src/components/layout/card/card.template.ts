@@ -21,7 +21,7 @@ export function cardTemplate(component: NLDDCard): TemplateResult {
 		>
 			${component.href ? html`
 				<a class="card__action"
-					href=${sanitizeUrl(component.href, { allowData: component.download != null }) || nothing}
+					href=${sanitizeUrl(component.href, { allowData: typeof component.download === 'string' }) || nothing}
 					target=${component.target || nothing}
 					rel=${linkRel(component.rel, component.target) || nothing}
 					download=${component.download ?? nothing}

@@ -55,7 +55,7 @@ export const template = (
 	if (href) {
 		return html`<div class=${blockClass}>
 			<a class="list-item__action"
-				href=${sanitizeUrl(href, { allowData: download != null }) || nothing}
+				href=${sanitizeUrl(href, { allowData: typeof download === 'string' }) || nothing}
 				target=${target ?? nothing}
 				rel=${linkRel(rel, target) || nothing}
 				download=${download ?? nothing}
