@@ -1,5 +1,6 @@
 import { css, unsafeCSS } from 'lit';
 import { queryBreakpoints } from '../../../../assets/styles/breakpoints.js';
+import { scrollFade } from '../../../../assets/styles/scroll-fade.js';
 
 const smMax = unsafeCSS(queryBreakpoints.smMax);
 const mdMin = unsafeCSS(queryBreakpoints.mdMin);
@@ -33,12 +34,12 @@ export const sidebarSectionStyles = css`
 		--_sidebar-section-lg-padding-bottom: initial;
 		--_sidebar-section-max-width: var(--semantics-page-sections-body-max-width);
 		/* 24px clear of the insets nldd-page publishes. 24 is the depth of a
-		   sticky header's fade, so the box starts where the fade ends. */
+		   sticky header's fade, so the sidebar starts where the fade ends. */
 		--_sidebar-section-sticky-top: calc(var(--context-inset-top, 0px) + var(--primitives-space-24));
 		--_sidebar-section-sticky-bottom: calc(var(--context-inset-bottom, 0px) + var(--primitives-space-24));
 		--_sidebar-section-width: var(--primitives-area-320);
-		--_sidebar-section-sidebar-box-background-color: var(--context-background-color);
-		--_sidebar-section-sidebar-box-border-color: var(--semantics-dividers-color);
+		--_sidebar-section-sidebar-background-color: var(--context-background-color);
+		--_sidebar-section-sidebar-border-color: var(--semantics-dividers-color);
 
 		display: flex;
 		width: 100%;
@@ -151,39 +152,41 @@ export const sidebarSectionStyles = css`
 	}
 
 
-	/* # Sidebar — full-width when stacked (narrow, [no-collapse]); a fixed-width
-	   column beside the main when wide. */
+	/* # Sidebar — stacked: full width, not sticky. Wide: a column as tall as its
+	   content, so it sticks. The aside in it scrolls, so the fade masks the content
+	   and not the edge; Firefox gives what scrolls a tab stop that needs its name. */
 
 	.sidebar-section__sidebar {
-		flex-shrink: 0;
-
-		@container page-container (min-width: ${lgMin}) {
-			width: var(--_sidebar-section-width);
-			max-width: var(--_sidebar-section-width);
-		}
-	}
-
-	/* # Box — the surface around it, edged by a divider. Sticky + scrollable only
-	   beside the main (wide); when stacked it's a plain full-width box above the
-	   main, so no sticky (which would scroll over the main) and no viewport
-	   height cap. The box is the aside itself: Firefox puts a tab stop on
-	   whatever scrolls, and that stop needs the landmark's role and name. */
-
-	.sidebar-section__sidebar-box {
-		display: block;
+		display: flex;
 		box-sizing: border-box;
 		border-radius: var(--semantics-surfaces-corner-radius);
-		background-color: var(--_sidebar-section-sidebar-box-background-color);
-		box-shadow: inset 0 0 0 var(--semantics-surfaces-highlight-border-width) var(--_sidebar-section-sidebar-box-border-color);
+		background-color: var(--_sidebar-section-sidebar-background-color);
+		box-shadow: inset 0 0 0 var(--semantics-surfaces-highlight-border-width) var(--_sidebar-section-sidebar-border-color);
+		flex-direction: column;
+		flex-shrink: 0;
 
 		@container page-container (min-width: ${lgMin}) {
 			position: sticky;
 			top: var(--_sidebar-section-sticky-top);
 			bottom: var(--_sidebar-section-sticky-bottom);
+			width: var(--_sidebar-section-width);
+			max-width: var(--_sidebar-section-width);
 			/* What the scroller shows, not what the window is: a viewport-tall cap
 			   hangs out the bottom by the height of the chrome around the page. */
 			max-height: calc(var(--context-scroller-height, 100dvh) - var(--_sidebar-section-sticky-top) - var(--_sidebar-section-sticky-bottom));
+			align-self: flex-start;
+		}
+	}
+
+	.sidebar-section__sidebar-scroller {
+		display: block;
+		border-radius: inherit;
+		min-height: 0;
+
+		@container page-container (min-width: ${lgMin}) {
 			overflow-y: auto;
 		}
 	}
+
+	${scrollFade('.sidebar-section__sidebar-scroller')}
 `;

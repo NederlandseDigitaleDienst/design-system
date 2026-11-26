@@ -110,3 +110,21 @@ export const surfaceContent = css`
 	--context-content-warning-color: var(--semantics-content-warning-color);
 	--context-content-critical-color: var(--semantics-content-critical-color);
 `;
+
+/**
+ * The visually-hidden recipe: in the accessibility tree, off the screen. For a
+ * live region or a label that assistive tech reads but no one sees. Placed in a
+ * selector's body: `.x { ${visuallyHidden} }`. The public nldd-visually-hidden
+ * element keeps its own copy, with `!important`, so it wins in a consumer's page.
+ */
+export const visuallyHidden = css`
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	border: 0;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+`;

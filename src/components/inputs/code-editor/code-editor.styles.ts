@@ -39,6 +39,7 @@ export const codeEditorStyles = css`
 
 		${inheritedTextReset}
 		display: flex;
+		isolation: isolate;
 		min-height: 0;
 		flex-direction: column;
 		flex-grow: 1;

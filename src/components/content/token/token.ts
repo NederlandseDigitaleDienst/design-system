@@ -32,17 +32,17 @@ import { SlotContent } from '../../../utilities/slot-content.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { tokenStyles } from './token.styles.js';
 import { tokenTemplate } from './token.template.js';
-import { nlddTokenTranslations, type NLDDTokenTranslations } from './token.i18n.js';
+import { nlddTokenTranslations } from './token.i18n.js';
 import type { NLDDMenu } from '../../actions/menu/menu.js';
 import type { NLDDPopover } from '../../layout/popover/popover.js';
 import './../../actions/icon-button/icon-button.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { OverlayInvoker } from '../../../utilities/overlay-invoker.js';
 
 export type TokenControl = 'none' | 'dismiss' | 'menu';
 
 @customElement('nldd-token')
-export class NLDDToken extends LitElement {
+export class NLDDToken extends withTranslations(LitElement, nlddTokenTranslations) {
 	static override styles = tokenStyles;
 
 	/** @internal Whether the default slot holds text, which wins over `text`. */
@@ -75,9 +75,6 @@ export class NLDDToken extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-	@property({ type: Object })
-	translations: Partial<NLDDTokenTranslations> = {};
-
 	/** @internal What the menu button opens, for its aria-haspopup. */
 	@state()
 	_popupType: 'menu' | 'dialog' = 'menu';
@@ -95,10 +92,6 @@ export class NLDDToken extends LitElement {
 			.join('')
 			.replace(/\s+/g, ' ')
 			.trim();
-	}
-
-	public _t(key: keyof NLDDTokenTranslations): string {
-		return translate(this.translations, nlddTokenTranslations, key);
 	}
 
 	get _dismissLabel(): string {

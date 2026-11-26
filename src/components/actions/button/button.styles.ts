@@ -1,5 +1,5 @@
 import { css } from 'lit';
-import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { inheritedTextReset, visuallyHidden } from '../../../assets/styles/shadow-resets.js';
 import { wrapUiText } from '../../../assets/styles/text-wrap.js';
 
 export const buttonStyles = css`
@@ -549,15 +549,7 @@ export const buttonStyles = css`
 	/* Visually-hidden link hint (another website, a new tab);
 	   part of the link's accessible name but never shown. Standard recipe. */
 	.button__link-hint {
-		position: absolute;
-		margin: -1px;
-		border: 0;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		padding: 0;
-		white-space: nowrap;
-		clip-path: inset(50%);
+		${visuallyHidden}
 	}
 
 	:host([single-line]) .button__supporting-text,

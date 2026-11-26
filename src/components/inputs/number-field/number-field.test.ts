@@ -571,4 +571,52 @@ describe('nldd-number-field – spin-buttons', () => {
 		expect(end).toBe(none);
 		expect(parseFloat(end)).toBeGreaterThan(6);
 	});
+
+	it('readonly: the input is read-only, the spin buttons are disabled, and stepping does nothing', async () => {
+		el = await fixture('<nldd-number-field value="5" readonly></nldd-number-field>');
+		const nf = el as NLDDNumberField;
+		const input = nf.shadowRoot!.querySelector('input')!;
+		expect(input.readOnly).toBe(true);
+		expect([...nf.shadowRoot!.querySelectorAll('nldd-icon-button')].every((b) => b.hasAttribute('disabled'))).toBe(true);
+		nf._handleIncrease();
+		await waitForUpdate(el);
+		expect(nf.value).toBe(5);
+	});
+
+	it('fires only its own input event, with the value, not the native one of the inner input', async () => {
+		el = await fixture('<nldd-number-field></nldd-number-field>');
+		const details: unknown[] = [];
+		el.addEventListener('input', (event) => details.push((event as CustomEvent).detail));
+		const input = el.shadowRoot!.querySelector('input')!;
+		input.value = '5';
+		input.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true }));
+		input.value = '';
+		input.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true }));
+		expect(details).toEqual([{ value: 5 }, { value: null }]);
+	});
+
+	it('readonly and disabled hide the spin buttons and keep the width of the field', async () => {
+		const removeTokens = loadTokens();
+		el = await fixture('<nldd-number-field value="5"></nldd-number-field>');
+		const nf = el as NLDDNumberField;
+		const width = nf.getBoundingClientRect().width;
+		const buttons = () => [...nf.shadowRoot!.querySelectorAll('.number-field__decrement-button, .number-field__increment-button')];
+		for (const state of ['readonly', 'disabled'] as const) {
+			nf[state] = true;
+			await nf.updateComplete;
+			expect(buttons().every((b) => getComputedStyle(b).visibility === 'hidden')).toBe(true);
+			expect(nf.getBoundingClientRect().width).toBe(width);
+			nf[state] = false;
+			await nf.updateComplete;
+		}
+		nf.readonly = true;
+		await nf.updateComplete;
+		const field = getComputedStyle(nf.shadowRoot!.querySelector('.number-field')!);
+		const probe = document.createElement('div');
+		probe.style.backgroundColor = 'var(--semantics-input-fields-is-read-only-background-color)';
+		document.body.append(probe);
+		expect(field.backgroundColor).toBe(getComputedStyle(probe).backgroundColor);
+		probe.remove();
+		removeTokens();
+	});
 });

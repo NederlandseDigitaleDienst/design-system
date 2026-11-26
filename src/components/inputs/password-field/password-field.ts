@@ -38,12 +38,11 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { passwordFieldStyles } from './password-field.styles.js';
 import { passwordFieldTemplate } from './password-field.template.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddPasswordFieldTranslations } from './password-field.i18n.js';
-import type { NLDDPasswordFieldTranslations } from './password-field.i18n.js';
 
 @customElement('nldd-password-field')
-export class NLDDPasswordField extends DescribedBy(FormAssociated(LitElement)) {
+export class NLDDPasswordField extends DescribedBy(FormAssociated(withTranslations(LitElement, nlddPasswordFieldTranslations))) {
 
 	static override shadowRootOptions = {
 		...LitElement.shadowRootOptions,
@@ -123,10 +122,6 @@ export class NLDDPasswordField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-	/** Override one or more translation keys. Unset keys fall back to Dutch. */
-	@property({ type: Object })
-	translations: Partial<NLDDPasswordFieldTranslations> = {};
-
 	@query('.password-field__input')
 	private _input!: HTMLInputElement;
 
@@ -144,10 +139,6 @@ export class NLDDPasswordField extends DescribedBy(FormAssociated(LitElement)) {
 
 	override formValue(): FormValue {
 		return this.value;
-	}
-
-	public _t(key: keyof NLDDPasswordFieldTranslations): string {
-		return translate(this.translations, nlddPasswordFieldTranslations, key);
 	}
 
 	/** Enter submits the form this field belongs to, the way the browser would

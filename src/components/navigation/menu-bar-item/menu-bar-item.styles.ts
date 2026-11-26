@@ -1,5 +1,5 @@
 import { css } from 'lit';
-import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { inheritedTextReset, visuallyHidden } from '../../../assets/styles/shadow-resets.js';
 
 export const menuBarItemStyles = css`
 	:host {
@@ -186,15 +186,7 @@ export const menuBarItemStyles = css`
 
 	:host([icon-only]) .menu-bar-item__text,
 	:host([content-priority="icon"]:state(compact):is([icon]:not([icon=""]), [data-has-icon])) .menu-bar-item__text {
-		position: absolute;
-		margin: -1px;
-		border: 0;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		padding: 0;
-		white-space: nowrap;
-		clip-path: inset(50%);
+		${visuallyHidden}
 	}
 
 	:host([content-priority="text"]:state(compact)) .menu-bar-item__icon {

@@ -42,8 +42,8 @@ import {
 	pageFooterLegalBarTemplate,
 	pageFooterLegalBarItemTemplate,
 } from './page-footer.template.js';
-import { nlddPageFooterTranslations, type NLDDPageFooterTranslations } from './page-footer.i18n.js';
-import { translate } from '../../../utilities/translations.js';
+import { nlddPageFooterTranslations } from './page-footer.i18n.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { setState } from '../../../utilities/element-state.js';
 import { markListItems } from '../../../utilities/list-items.js';
 
@@ -105,27 +105,17 @@ if (!customElements.get('nldd-page-footer-legal-bar-item')) {
  * @slot start - Items rendered flush-left (e.g. © notice, version).
  * @slot end - Items rendered flush-right (e.g. privacy, accessibility).
  */
-export class NLDDPageFooterLegalBar extends LitElement {
+export class NLDDPageFooterLegalBar extends withTranslations(LitElement, nlddPageFooterTranslations) {
 	static override styles = pageFooterLegalBarStyles;
 
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
-
-	@property({ type: Object })
-	translations: Partial<NLDDPageFooterTranslations> = {};
 
 	@state()
 	_hasStart = false;
 
 	@state()
 	_hasEnd = false;
-
-	_t(key: keyof NLDDPageFooterTranslations): string {
-		if (key === 'components.page-footer.legal-bar-accessible-label' && this.accessibleLabel) {
-			return this.accessibleLabel;
-		}
-		return translate(this.translations, nlddPageFooterTranslations, key);
-	}
 
 	_onSlotChange = (e: Event) => {
 		const slot = e.target as HTMLSlotElement;

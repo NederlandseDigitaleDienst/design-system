@@ -52,11 +52,10 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { bannerStyles } from './banner.styles.js';
 import { bannerTemplate } from './banner.template.js';
 import { nlddBannerTranslations } from './banner.i18n.js';
-import type { NLDDBannerTranslations } from './banner.i18n.js';
 import '../../content/icon/icon.js';
 import '../../actions/button-group/button-group.js';
 import '../../actions/icon-button/icon-button.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 
 export type BannerVariant = 'neutral' | 'accent' | 'success' | 'warning' | 'critical';
 export type BannerSize = 'sm' | 'md';
@@ -70,7 +69,7 @@ const DEFAULT_ICONS: Record<BannerVariant, string> = {
 };
 
 @customElement('nldd-banner')
-export class NLDDBanner extends LitElement {
+export class NLDDBanner extends withTranslations(LitElement, nlddBannerTranslations) {
 	static override styles = bannerStyles;
 
 	@property({ reflect: true, converter: reflectNonDefault<BannerVariant>('neutral') })
@@ -94,10 +93,6 @@ export class NLDDBanner extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	dismissible = false;
 
-	/** Override one or more translation keys. Unspecified keys fall back to Dutch. */
-	@property({ type: Object })
-	translations: Partial<NLDDBannerTranslations> = {};
-
 	@state()
 	_hasContent = false;
 
@@ -109,11 +104,6 @@ export class NLDDBanner extends LitElement {
 	 *  cosmetic, but we keep cleanup symmetric with addEventListener. */
 	private _syncContent?: () => void;
 	private _syncActions?: () => void;
-
-
-	public _t(key: keyof NLDDBannerTranslations): string {
-		return translate(this.translations, nlddBannerTranslations, key);
-	}
 
 	get _resolvedIcon(): string {
 		return this.icon || DEFAULT_ICONS[this.variant];

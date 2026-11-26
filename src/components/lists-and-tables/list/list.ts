@@ -8,11 +8,10 @@ import type { NLDDListItem } from '../list-item/list-item.js';
 // The list reads its rows as they upgrade, so it brings their definition along.
 import '../list-item/list-item.js';
 import { nlddListTranslations } from './list.i18n.js';
-import type { NLDDListTranslations } from './list.i18n.js';
 import '../../status-and-feedback/inline-dialog/inline-dialog.js';
 import '../../content/icon/icon.js';
 import '../../actions/icon-button/icon-button.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { setState } from '../../../utilities/element-state.js';
 import { deepActiveElement } from '../../../utilities/deep-active-element.js';
 import { ListRoving } from './list.roving.js';
@@ -199,7 +198,7 @@ const SHADOW_TAB_STOP = ':is(a[href], button, input, select, textarea, [tabindex
  * @fires input - `type="listbox"`: search value changed; `{ value }`. Toggle `[hidden]` on items to filter.
  */
 @customElement('nldd-list')
-export class NLDDList extends LitElement {
+export class NLDDList extends withTranslations(LitElement, nlddListTranslations) {
 	static override styles = [listStyles];
 
 	/** Visual style of the list. `simple` is a plain vertical strip with
@@ -238,10 +237,6 @@ export class NLDDList extends LitElement {
 	/** A11y semantics. See class docblock. */
 	@property({ reflect: true, converter: reflectNonDefault<ListType>('list') })
 	type: ListType = 'list';
-
-	/** Override one or more translation keys. Unset keys fall back to the Dutch default. */
-	@property({ type: Object })
-	translations: Partial<NLDDListTranslations> = {};
 
 	@state()
 
@@ -1348,11 +1343,6 @@ export class NLDDList extends LitElement {
 		this._currentDropIndex = -1;
 	}
 
-	// — i18n ————————————————————————————————————————————————————————————————
-
-	private _t(key: keyof NLDDListTranslations, vars?: Record<string, string | number>): string {
-		return translate(this.translations, nlddListTranslations, key, vars);
-	}
 
 
 

@@ -17,7 +17,8 @@
  * @attr {number} max - Maximum value (default: Infinity)
  * @attr {number} step - Step size (default: 1)
  * @attr {boolean} required - A value has to be filled in. An empty field is then invalid.
- * @attr {boolean} disabled - Disabled state
+ * @attr {boolean} readonly - Readonly state: the value shows and submits but cannot be changed. The +/- buttons are hidden, and the field keeps its width
+ * @attr {boolean} disabled - Disabled state. The +/- buttons are hidden, and the field keeps its width
  * @attr {object} translations - Translations; unspecified keys fall back to Dutch
  *
  * @fires input - When the value changes (typing, +/- button, or on-commit correction); not for typing that reads as the same number, such as `1.0` after `1`. detail: { value: number | null }, null when the field is empty
@@ -32,11 +33,10 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { numberFieldStyles } from './number-field.styles.js';
 import { numberFieldTemplate } from './number-field.template.js';
 import { nlddNumberFieldTranslations } from './number-field.i18n.js';
-import type { NLDDNumberFieldTranslations } from './number-field.i18n.js';
 import './../../actions/icon-button/icon-button.js';
 import './../../content/icon/icon.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
 
 export type NumberFieldSize = 'sm' | 'md';
@@ -56,7 +56,7 @@ function emptyOrNumber(value: string | null): number | null {
 }
 
 @customElement('nldd-number-field')
-export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
+export class NLDDNumberField extends DescribedBy(FormAssociated(withTranslations(LitElement, nlddNumberFieldTranslations))) {
 
 	static override styles = numberFieldStyles;
 
@@ -120,12 +120,12 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	required = false;
 
+	/** The value shows and submits but cannot be changed; the +/- buttons are hidden. */
+	@property({ type: Boolean, reflect: true })
+	readonly = false;
+
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
-
-	/** Override one or more translation keys. Unspecified keys fall back to Dutch. */
-	@property({ type: Object })
-	translations: Partial<NLDDNumberFieldTranslations> = {};
 
 	/** The value last committed or set from outside: what `change` compares with.
 	 *  Typing already moves `value`, so comparing with that would leave a typed
@@ -174,21 +174,15 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 		if (this.value !== null) this.value = this._clamp(this.value);
 	}
 
-	// — i18n —————————————————————————————————————————————————————————————————
-
-	public _t(key: keyof NLDDNumberFieldTranslations): string {
-		return translate(this.translations, nlddNumberFieldTranslations, key);
-	}
-
 	// — Actions ——————————————————————————————————————————————————————————————
 
 	public _handleDecrease(): void {
-		if (this.disabled) return;
+		if (this.disabled || this.readonly) return;
 		this._commitValue(this.value === null ? this._startValue() : this.value - this.step);
 	}
 
 	public _handleIncrease(): void {
-		if (this.disabled) return;
+		if (this.disabled || this.readonly) return;
 		this._commitValue(this.value === null ? this._startValue() : this.value + this.step);
 	}
 
@@ -205,6 +199,7 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 	public _handleInput(e: Event): void {
+		e.stopPropagation();
 		if (this.disabled) return;
 		const input = e.target as HTMLInputElement;
 		// A number input reads as empty while it holds no number yet ("-", "1e"),
@@ -219,6 +214,7 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 
 	/** Fires on blur or Enter. Clamps the value; an emptied field stays empty. */
 	public _handleChange(e: Event): void {
+		e.stopPropagation();
 		if (this.disabled) return;
 		const input = e.target as HTMLInputElement;
 		// Text that is no number (badInput) reads as '' here, so it commits as empty.

@@ -41,6 +41,7 @@ export const toggleButtonStyles = css`
 
 		${inheritedTextReset}
 		display: inline-block;
+		isolation: isolate;
 		position: relative;
 		-webkit-user-select: none;
 		user-select: none;

@@ -70,11 +70,10 @@ import { codeViewerStyles } from './code-viewer.styles.js';
 import { codeViewerTemplate } from './code-viewer.template.js';
 import { nlddCodeViewerTranslations } from './code-viewer.i18n.js';
 import { diffExtensions, parseUnifiedDiff, wordExtensions, type ParsedDiff } from './code-viewer.diff.js';
-import type { NLDDCodeViewerTranslations } from './code-viewer.i18n.js';
 import { onColorSchemeChange, forceScrollLayerRepaint } from '../../../utilities/color-scheme-repaint.js';
 import '../../actions/icon-button/icon-button.js';
 import '../tooltip/tooltip.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { setState } from '../../../utilities/element-state.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
 import { onAncestorScroll } from '../../../utilities/ancestor-scroll.js';
@@ -113,7 +112,7 @@ function isClipboardAvailable(): boolean {
 export type CodeViewerAppearance = 'box-tinted' | 'box-base' | 'simple';
 
 @customElement('nldd-code-viewer')
-export class NLDDCodeViewer extends NLDDCodeMirrorElement {
+export class NLDDCodeViewer extends withTranslations(NLDDCodeMirrorElement, nlddCodeViewerTranslations) {
 	static override styles = codeViewerStyles;
 
 	/** Visual style. The `box` values are a framed card and name the surface they
@@ -147,10 +146,6 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 	 *  the reserved actions space just like it does for no-copy. */
 	@property({ type: Boolean, reflect: true, attribute: 'copy-unavailable' })
 	_copyUnavailable = false;
-
-	/** Override one or more translation keys. Unspecified keys fall back to Dutch. */
-	@property({ type: Object })
-	translations: Partial<NLDDCodeViewerTranslations> = {};
 
 	@state()
 	_isScrollable = false;
@@ -418,10 +413,6 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 			removed: parsed.removed,
 			removedNoun: noun(parsed.removed),
 		});
-	}
-
-	public _t(key: keyof NLDDCodeViewerTranslations, vars?: Record<string, string | number>): string {
-		return translate(this.translations, nlddCodeViewerTranslations, key, vars);
 	}
 
 	/* Lazy grammar loading is async; surface the in-flight load through

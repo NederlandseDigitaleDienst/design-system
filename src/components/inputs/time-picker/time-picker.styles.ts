@@ -33,6 +33,7 @@ export const timePickerStyles = css`
 
 		${inheritedTextReset}
 		display: inline-block;
+		isolation: isolate;
 		width: var(--_time-picker-width);
 		max-width: 100%;
 		font: var(--_time-picker-list-item-font);

@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
 import { linkRel } from '../../../utilities/link-rel.js';
+import { sanitizeUrl } from '../../../utilities/sanitize-url.js';
 
 // One flat slot: cells and segments line up in source order, and the
 // first/last child IS the row edge (the edge rules in the styles key off
@@ -54,7 +55,7 @@ export const template = (
 	if (href) {
 		return html`<div class=${blockClass}>
 			<a class="list-item__action"
-				href=${href}
+				href=${sanitizeUrl(href, { allowData: typeof download === 'string' }) || nothing}
 				target=${target ?? nothing}
 				rel=${linkRel(rel, target) || nothing}
 				download=${download ?? nothing}

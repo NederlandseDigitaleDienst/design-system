@@ -77,8 +77,7 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { activityIndicatorStyles } from './activity-indicator.styles.js';
 import { activityIndicatorTemplate } from './activity-indicator.template.js';
 import { nlddActivityIndicatorTranslations } from './activity-indicator.i18n.js';
-import type { NLDDActivityIndicatorTranslations } from './activity-indicator.i18n.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 
 /** Delay before the indicator fades in. Brief loading states finish within
  *  this window and the indicator is never shown, which avoids a jarring flash. */
@@ -89,7 +88,7 @@ export type ActivityIndicatorSize =
 export type ActivityIndicatorTiming = 'delay' | 'instant';
 
 @customElement('nldd-activity-indicator')
-export class NLDDActivityIndicator extends LitElement {
+export class NLDDActivityIndicator extends withTranslations(LitElement, nlddActivityIndicatorTranslations) {
 	static override styles = activityIndicatorStyles;
 
 	@property({ reflect: true, converter: reflectNonDefault<ActivityIndicatorSize>('32') })
@@ -121,9 +120,6 @@ export class NLDDActivityIndicator extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	complete = false;
 
-	@property({ type: Object })
-	translations: Partial<NLDDActivityIndicatorTranslations> = {};
-
 	@state()
 	_visible = false;
 
@@ -142,10 +138,6 @@ export class NLDDActivityIndicator extends LitElement {
 		const slot = e.target as HTMLSlotElement;
 		this._hasContent = slot.assignedElements().length > 0;
 	};
-
-	public _t(key: keyof NLDDActivityIndicatorTranslations): string {
-		return translate(this.translations, nlddActivityIndicatorTranslations, key);
-	}
 
 	/** Accessible name announced while loading. */
 	public get _accessibleName(): string {

@@ -1641,4 +1641,19 @@ describe('nldd-list-item – context background', () => {
 		expect(fill).not.toBe('rgba(0, 0, 0, 0)');
 		expect(ring(el, 'p-segment')).toBe(fill);
 	});
+
+	it('strips a javascript: href, and keeps a data: href only with download', async () => {
+		el = await fixture('<nldd-list-item href="javascript:alert(1)"><nldd-text-cell><p>Aanvraag A-1042</p></nldd-text-cell></nldd-list-item>');
+		const href = () => el.shadowRoot!.querySelector('a')?.getAttribute('href') ?? null;
+		expect(href()).toBeNull();
+		el.setAttribute('href', 'data:text/csv,a');
+		await (el as NLDDListItem).updateComplete;
+		expect(href()).toBeNull();
+		el.setAttribute('download', 'f.csv');
+		await (el as NLDDListItem).updateComplete;
+		expect(href()).toBe('data:text/csv,a');
+		el.removeAttribute('download');
+		await (el as NLDDListItem).updateComplete;
+		expect(href()).toBeNull();
+	});
 });

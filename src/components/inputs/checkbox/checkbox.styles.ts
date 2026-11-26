@@ -25,6 +25,7 @@ export const checkboxStyles = css`
 		--_checkbox-is-selected-is-active-icon-color: var(--semantics-controls-is-selected-mark-color);
 
 		display: inline-flex;
+		isolation: isolate;
 		position: relative;
 		width: var(--semantics-controls-xs-min-size);
 		height: var(--semantics-controls-xs-min-size);

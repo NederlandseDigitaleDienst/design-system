@@ -121,7 +121,7 @@ import { FormAssociated, type FormValue, type OwnValidity } from '../../../utili
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { fileFieldStyles } from './file-field.styles.js';
 import { fileFieldTemplate } from './file-field.template.js';
-import { nlddFileFieldTranslations, type NLDDFileFieldTranslations } from './file-field.i18n.js';
+import { nlddFileFieldTranslations } from './file-field.i18n.js';
 import {
 	acceptNames,
 	carriesFiles,
@@ -136,7 +136,7 @@ import {
 } from './file-field.drop.js';
 import { lineFitter, textMeasurer, truncateMiddle, truncateMiddleToFit } from './file-field.truncate.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
 import { fileDragAndDropAvailable, FileDragAndDropAvailabilityController } from '../../../utilities/file-drag-and-drop.js';
 
@@ -158,7 +158,7 @@ const FAMILY_KEYS = {
 } as const;
 
 @customElement('nldd-file-field')
-export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
+export class NLDDFileField extends DescribedBy(FormAssociated(withTranslations(LitElement, nlddFileFieldTranslations))) {
 
 	static override styles = fileFieldStyles;
 
@@ -204,9 +204,6 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
-
-	@property({ type: Object })
-	translations: Partial<NLDDFileFieldTranslations> = {};
 
 	/** @internal A folder is many files, so `directory` takes several too. */
 	get _multiple(): boolean {
@@ -307,11 +304,6 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 
 	@query('.file-field__menu-anchor')
 	private _menuAnchor!: HTMLElement | null;
-
-	/** @internal */
-	public _t(key: keyof NLDDFileFieldTranslations, vars?: Record<string, string | number>): string {
-		return translate(this.translations, nlddFileFieldTranslations, key, vars);
-	}
 
 	/** @internal */
 	public _chooseLabel(): string {

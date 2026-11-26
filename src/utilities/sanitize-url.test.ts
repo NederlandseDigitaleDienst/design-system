@@ -81,4 +81,20 @@ describe('sanitizeUrl', () => {
 	it('blocks javascript: with embedded null byte', () => {
 		expect(sanitizeUrl('java\u0000script:alert(1)')).toBeNull();
 	});
+
+	it('allows data: URLs with allowData (download context)', () => {
+		expect(sanitizeUrl('data:text/csv,a,b,c', { allowData: true })).toBe('data:text/csv,a,b,c');
+	});
+
+	it('allows blob: URLs with allowData (download context)', () => {
+		expect(sanitizeUrl('blob:https://example.com/uuid', { allowData: true })).toBe('blob:https://example.com/uuid');
+	});
+
+	it('still blocks javascript: with allowData', () => {
+		expect(sanitizeUrl('javascript:alert(1)', { allowData: true })).toBeNull();
+	});
+
+	it('still blocks vbscript: with allowData', () => {
+		expect(sanitizeUrl('vbscript:MsgBox("XSS")', { allowData: true })).toBeNull();
+	});
 });

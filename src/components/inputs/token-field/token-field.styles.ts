@@ -24,6 +24,7 @@ export const tokenFieldStyles = css`
 
 		${inheritedTextReset}
 		display: block;
+		isolation: isolate;
 		width: var(--_token-field-width);
 		max-width: 100%;
 		-webkit-tap-highlight-color: transparent;

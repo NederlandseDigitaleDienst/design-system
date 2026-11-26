@@ -25,9 +25,8 @@ import { SlotContent } from '../../../utilities/slot-content.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { breadcrumbsStyles, breadcrumbsItemStyles } from './breadcrumbs.styles.js';
 import { breadcrumbsTemplate, breadcrumbsItemTemplate } from './breadcrumbs.template.js';
-import { nlddBreadcrumbsTranslations, type NLDDBreadcrumbsTranslations } from './breadcrumbs.i18n.js';
-import { translate } from '../../../utilities/translations.js';
-
+import { nlddBreadcrumbsTranslations } from './breadcrumbs.i18n.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 
 // # nldd-breadcrumbs-item
 
@@ -103,21 +102,11 @@ if (!customElements.get('nldd-breadcrumbs-item')) {
 // # nldd-breadcrumbs
 
 @customElement('nldd-breadcrumbs')
-export class NLDDBreadcrumbs extends LitElement {
+export class NLDDBreadcrumbs extends withTranslations(LitElement, nlddBreadcrumbsTranslations) {
 	static override styles = breadcrumbsStyles;
 
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
-
-	@property({ type: Object })
-	translations: Partial<NLDDBreadcrumbsTranslations> = {};
-
-	_t(key: keyof NLDDBreadcrumbsTranslations): string {
-		if (key === 'components.breadcrumbs.accessible-label' && this.accessibleLabel) {
-			return this.accessibleLabel;
-		}
-		return translate(this.translations, nlddBreadcrumbsTranslations, key);
-	}
 
 	override render() {
 		return breadcrumbsTemplate(this);

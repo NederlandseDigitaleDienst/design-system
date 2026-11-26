@@ -751,3 +751,16 @@ describe('nldd-time-picker wordt scrollbaar', () => {
 		expect(getComputedStyle(column(el, 'minutes')).overflowY).toBe('auto');
 	});
 });
+
+
+describe('nldd-time-picker form participation', () => {
+	let form: HTMLFormElement;
+	afterEach(() => { if (form) cleanup(form); });
+
+	it('submits the chosen time on its own name, without an nldd-time-field', async () => {
+		form = await fixture('<form><nldd-time-picker name="t" value="09:30"></nldd-time-picker></form>') as HTMLFormElement;
+		const picker = form.querySelector('nldd-time-picker') as NLDDTimePicker;
+		await waitForUpdate(picker);
+		expect([...new FormData(form).entries()].map(([k, v]) => `${k}=${v}`).join(',')).toBe('t=09:30');
+	});
+});

@@ -672,7 +672,8 @@ describe('nldd-time-field – formulier', () => {
 		`);
 		el = form.querySelector('nldd-time-field')!;
 		await waitForUpdate(el);
-		expect(new FormData(form).get('start')).toBe('09:30');
+		// One entry: the picker inside the field submits nothing of its own.
+		expect([...new FormData(form).entries()]).toEqual([['start', '09:30']]);
 		cleanup(form);
 	});
 

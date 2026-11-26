@@ -1,6 +1,7 @@
 import { html, nothing, TemplateResult } from 'lit';
 import type { NLDDCard } from './card.js';
 import { linkRel } from '../../../utilities/link-rel.js';
+import { sanitizeUrl } from '../../../utilities/sanitize-url.js';
 import { downloadLinkHintKey, markDownloadTarget } from '../../../utilities/link-hint.js';
 
 export function cardTemplate(component: NLDDCard): TemplateResult {
@@ -20,7 +21,7 @@ export function cardTemplate(component: NLDDCard): TemplateResult {
 		>
 			${component.href ? html`
 				<a class="card__action"
-					href=${component.href}
+					href=${sanitizeUrl(component.href, { allowData: typeof component.download === 'string' }) || nothing}
 					target=${component.target || nothing}
 					rel=${linkRel(component.rel, component.target) || nothing}
 					download=${component.download ?? nothing}

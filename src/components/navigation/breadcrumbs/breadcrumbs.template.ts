@@ -3,7 +3,7 @@ import type { NLDDBreadcrumbs, NLDDBreadcrumbsItem } from './breadcrumbs.js';
 import '../../content/icon/icon.js';
 
 export function breadcrumbsTemplate(component: NLDDBreadcrumbs): TemplateResult {
-	const label = component._t('components.breadcrumbs.accessible-label');
+	const label = component.accessibleLabel || component._t('components.breadcrumbs.accessible-label');
 
 	return html`
 		<nav class="breadcrumbs"

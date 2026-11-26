@@ -808,4 +808,22 @@ describe('nldd-segmented-control – width', () => {
 		await waitForUpdate(control);
 		expect(control.getBoundingClientRect().width).toBeLessThan(400);
 	});
+
+	it('leaves the place of width="fit-content" to its parent', async () => {
+		await import('../../lists-and-tables/cells/cell/cell.js');
+		wrapper = await fixture<HTMLElement>(`
+			<nldd-cell horizontal-alignment="right" width="720px">
+				<nldd-segmented-control value="macos" width="fit-content">
+					<nldd-segmented-control-item value="macos" text="macOS"></nldd-segmented-control-item>
+					<nldd-segmented-control-item value="linux" text="Linux"></nldd-segmented-control-item>
+				</nldd-segmented-control>
+			</nldd-cell>
+		`);
+		await waitForUpdate(wrapper);
+		const cell = wrapper;
+		const control = wrapper.querySelector<NLDDSegmentedControl>('nldd-segmented-control')!;
+		await waitForUpdate(control);
+		expect(control.getBoundingClientRect().width).toBeLessThan(400);
+		expect(Math.round(control.getBoundingClientRect().right)).toBe(Math.round(cell.getBoundingClientRect().right));
+	});
 });

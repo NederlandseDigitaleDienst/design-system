@@ -23,7 +23,7 @@ export function sidebarSectionTemplate(component: NLDDSidebarSection): TemplateR
 				<div class="sidebar-section__columns">
 					${!collapsed ? html`
 						<div class="sidebar-section__sidebar">
-							<aside class="sidebar-section__sidebar-box"
+							<aside class="sidebar-section__sidebar-scroller"
 								aria-label=${sidebarLabel}
 							>
 								<slot name="sidebar"></slot>

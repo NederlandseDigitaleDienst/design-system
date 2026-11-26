@@ -1,7 +1,7 @@
 import { css } from 'lit';
 import { wrapUiText } from '../../../assets/styles/text-wrap.js';
 import { scrollFade } from '../../../assets/styles/scroll-fade.js';
-import { inheritedTextReset, surfaceContent } from '../../../assets/styles/shadow-resets.js';
+import { inheritedTextReset, surfaceContent, visuallyHidden } from '../../../assets/styles/shadow-resets.js';
 
 export const menuStyles = css`
 	:host {
@@ -208,15 +208,7 @@ export const menuStyles = css`
 	/* Sibling of .menu so role="status" stays outside menu's required-owned
 	   children (WCAG 4.1.3); visually hidden, kept in the a11y tree. */
 	.menu__live-region {
-		position: absolute;
-		margin: -1px;
-		border: 0;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		padding: 0;
-		white-space: nowrap;
-		clip-path: inset(50%);
+		${visuallyHidden}
 	}
 
 	${scrollFade('.menu__scroller')}
@@ -388,15 +380,7 @@ export const menuItemStyles = css`
 
 	/* Visually hidden: part of the link's accessible name, never shown. */
 	.menu__link-hint {
-		position: absolute;
-		margin: -1px;
-		border: 0;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		padding: 0;
-		white-space: nowrap;
-		clip-path: inset(50%);
+		${visuallyHidden}
 	}
 
 	.menu__item:focus-visible {
