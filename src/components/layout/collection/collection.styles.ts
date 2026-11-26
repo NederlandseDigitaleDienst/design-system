@@ -36,6 +36,7 @@ export const collectionStyles = css`
 		@container layout-container (min-width: ${lgMin}) { --_collection-gap: var(--_collection-lg-gap); }
 
 		display: flex;
+		isolation: isolate;
 		width: 100%;
 		min-width: 0;
 		flex-direction: column;

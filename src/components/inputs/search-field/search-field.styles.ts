@@ -25,6 +25,7 @@ export const searchFieldStyles = css`
 
 		${inheritedTextReset}
 		display: block;
+		isolation: isolate;
 		width: var(--_search-field-width);
 		max-width: 100%;
 		min-width: 0;

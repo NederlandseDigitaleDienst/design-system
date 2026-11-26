@@ -48,6 +48,7 @@ export const datePickerStyles = css`
 
 		${inheritedTextReset}
 		display: block;
+		isolation: isolate;
 		/* Stated, not fit-content: the calendar inside is sized in percentages, so
 		   measuring it from here is circular and resolves to the container. The
 		   width attribute (--_date-picker-width) overrides the intrinsic seven-cell width;

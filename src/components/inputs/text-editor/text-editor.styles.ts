@@ -146,8 +146,6 @@ export const textEditorStyles = css`
 
 		${inheritedTextReset}
 		display: flex;
-		/* Own stacking context so the border ring (--_text-editor-input-field-border-z-index)
-		   stays scoped and fades under a sticky header instead of punching through it. */
 		isolation: isolate;
 		min-height: 0;
 		flex-direction: column;

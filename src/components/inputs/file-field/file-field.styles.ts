@@ -54,6 +54,7 @@ export const fileFieldStyles = css`
 
 		${inheritedTextReset}
 		display: block;
+		isolation: isolate;
 		width: var(--_file-field-width);
 		max-width: 100%;
 		min-width: 0;

@@ -17,6 +17,7 @@ export const accordionStyles = css`
 
 		${inheritedTextReset}
 		display: block;
+		isolation: isolate;
 		width: 100%;
 	}
 

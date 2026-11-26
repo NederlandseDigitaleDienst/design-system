@@ -47,9 +47,6 @@ export const codeViewerStyles = css`
 		display: flex;
 		max-width: 100%;
 		position: relative;
-		/* Own stacking context so the absolutely-positioned actions button
-		   (z-index: var(--_code-viewer-actions-z-index)) stays scoped to the code-viewer
-		   and can't paint over other layers on the page. */
 		isolation: isolate;
 		/* iOS Safari inflates text in wide scrollable blocks (text autosizing);
 		   lock the size so code renders at the authored font-size on mobile. */
