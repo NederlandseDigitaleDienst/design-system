@@ -134,7 +134,7 @@ const NAVIGATION = [
 			['Ontwerprichtlijnen', '/richtlijnen/'],
 			['Toegankelijkheid', '/toegankelijkheid/'],
 			["Thema's", '/themas/'],
-			['Werken met een AI-assistent', '/aan-de-slag/ai-assistent/'],
+			['AI-assistent', '/aan-de-slag/ai-assistent/'],
 			['Linter', '/linter/'],
 			['Breakpoints', '/breakpoints/'],
 			['Vertalingen', '/vertalingen/'],

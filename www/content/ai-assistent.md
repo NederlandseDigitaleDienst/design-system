@@ -1,4 +1,4 @@
-# Werken met een AI-assistent
+# AI-assistent
 
 Een AI-assistent die het designsysteem niet kent, raadt naar tags en attributen of bouwt een component na die er al is. De `nldd-design-system`-plugin geeft hem de kennis die ook op deze site staat: welke componenten er zijn, wat hun attributen, slots en events zijn, en hoe de patronen ze samenstellen.
 
