@@ -418,7 +418,8 @@ shape, corner, tile, compact, minor, pulse, line, dividers, dividerStart,
 dividerEnd, noRibbon, layout, labelAlignment, formLabelAlignment,
 columns, smColumns, mdColumns, lgColumns, columnCount, smColumnCount, mdColumnCount, lgColumnCount,
 panes, iconOnly, responsive, showItemLabels, inspectorAsSheet,
-sidebarAsSheet, primarySidebarAsSheet, inspectorAutoHidden, noLogo, noBlink
+sidebarAsSheet, primarySidebarAsSheet, inspectorAutoHidden, stickyHeader, stickyFooter,
+noLogo, noBlink
 
 [2. Sizing]
 resize, rows, width, minWidth, maxWidth, height, minHeight, maxHeight,
@@ -476,7 +477,7 @@ shortcut, shortcutMac, shortcutWindows, shortcutLinux
 showAccessibleLabel, hideAccessibleLabel
 
 [11. Behavior]
-modeless, movable, stickyHeader, stickyFooter, hasContent, alwaysVisible,
+modeless, movable, hasContent, alwaysVisible,
 showLoadMore, lazyLoad, collapseAnchor, contentPriority, priority, anchor,
 noTab, roving, timing, tooltipTiming, duration, noLightDismiss, noCollapse,
 wrap, singleLine, uppercase, syntax, annotatable, query,

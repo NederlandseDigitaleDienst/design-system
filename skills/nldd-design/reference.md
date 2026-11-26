@@ -1608,11 +1608,11 @@ A calendar for picking a date or a period. The component works on its own (inlin
 | `week-numbers` | `boolean` | Shows ISO week numbers in a column on the left. |
 | `first-day-of-week` | `number` | First day of the week, 0 is Sunday. Default 1 (Monday). |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
+| `name` | `string` | Name for form submission; the picker submits on its own, so it works in a form without an nldd-date-field. A single date submits as ISO, a period as an ISO 8601 interval `start/end`. |
 | `value` | `string` | The chosen date as ISO (yyyy-mm-dd). Only without `range`. |
 | `start` | `string` | Start of the period as ISO. Only with `range`. |
 | `end` | `string` | End of the period as ISO. Only with `range`. |
 | `range` | `boolean` | Pick a period instead of a single date. |
-| `name` | `string` | Name for form submission; the picker submits on its own, so it works in a form without an nldd-date-field. A single date submits as ISO, a period as an ISO 8601 interval `start/end`. |
 | `min` | `string` | Earliest allowed date: ISO, or `today` with an offset (`today-18y`). |
 | `max` | `string` | Latest allowed date: ISO, or `today` with an offset (`today+1y`). |
 | `translations` | `object` | Translations; unspecified keys fall back to Dutch. |
@@ -1798,8 +1798,8 @@ A numeric input field with decrement and increment buttons.
 | `max` | `number` | Maximum value (default: Infinity) |
 | `step` | `number` | Step size (default: 1) |
 | `required` | `boolean` | A value has to be filled in. An empty field is then invalid. |
-| `disabled` | `boolean` | Disabled state |
 | `readonly` | `boolean` | Readonly state: the value shows and submits but cannot be changed, and the +/- buttons are disabled |
+| `disabled` | `boolean` | Disabled state |
 | `translations` | `object` | Translations; unspecified keys fall back to Dutch |
 | `accessible-description` | `string` | A description in words, read after the name, role and state, as `aria-description` would. Extra information, never the name: a button with only an icon still needs its `accessible-label`. Not shown; prefer `accessible-described-by` to text that is on the page. That one wins when it finds an element, as `aria-describedby` wins from `aria-description`. |
 | `accessible-described-by` | `string` | IDs of elements whose text describes this control, separated by spaces, as `aria-describedby` takes them. Looked up in the tree of this element and handed to the control inside, where an `aria-describedby` on the host would not reach. Read after the name, role and state, after the help and error text of an nldd-form-field. Looked up again on each render and when focus comes in, so an element added later counts from then on. |
@@ -2524,8 +2524,8 @@ Two columns, hours and minutes, that slide like a wheel past the selection in th
 | `width` | `string` | Width: `full` fills the container, or pass your own CSS length. |
 | `accessible-label` | `string` | Accessible name of the picker. |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
-| `value` | `string` | The chosen time as `HH:mm` (24-hour), written exactly so: unlike `min` and `max`, it is what the picker reports back. In nldd-time-field the field writes it. |
 | `name` | `string` | Name for form submission; the picker submits on its own, so it works in a form without an nldd-time-field. Submits the chosen time as `HH:mm`. |
+| `value` | `string` | The chosen time as `HH:mm` (24-hour), written exactly so: unlike `min` and `max`, it is what the picker reports back. In nldd-time-field the field writes it. |
 | `min` | `string` | Earliest allowed time as `HH:mm`, read as generously as nldd-time-field reads it (`9:00` too). Also the base that `step` counts from. |
 | `max` | `string` | Latest allowed time as `HH:mm`, read as generously as `min`. |
 | `step` | `number` | Step in minutes (default 1). Decides which minutes are in the column. |
@@ -3206,7 +3206,7 @@ A page layout with optional sticky header and footer. Without sticky-header, the
 
 **Keywords:** pagina.
 
-**Related:** `<nldd-shell>`, `<nldd-window>`.
+**Related:** `<nldd-shell>`, `<nldd-window>`, `<nldd-sheet>`.
 
 **Rules** (`nldd lint`)
 
@@ -3233,10 +3233,10 @@ A page layout with optional sticky header and footer. Without sticky-header, the
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `background` | `'inherit'\|'base'\|'tinted'` | Use a gray background instead of white |
-| `accessible-label` | `string` | Name of the landmark this page is: the region it becomes beside another page, or its main landmark |
-| `landmarks` | `'auto'\|'page'\|'region'` | Whether this page carries the document's landmarks: 'auto' (default) derives it from where the page sits, 'page' keeps banner, main and contentinfo, 'region' drops all three |
 | `sticky-header` | `boolean` | Sticky header |
 | `sticky-footer` | `boolean` | Sticky footer |
+| `accessible-label` | `string` | Name of the landmark this page is: the region it becomes beside another page, or its main landmark |
+| `landmarks` | `'auto'\|'page'\|'region'` | Whether this page carries the document's landmarks: 'auto' (default) derives it from where the page sits, 'page' keeps banner, main and contentinfo, 'region' drops all three |
 
 **Slots**
 

@@ -23,11 +23,11 @@
  * @attr {boolean} week-numbers - Shows ISO week numbers in a column on the left.
  * @attr {number} first-day-of-week - First day of the week, 0 is Sunday. Default 1 (Monday).
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
+ * @attr {string} name - Name for form submission; the picker submits on its own, so it works in a form without an nldd-date-field. A single date submits as ISO, a period as an ISO 8601 interval `start/end`.
  * @attr {string} value - The chosen date as ISO (yyyy-mm-dd). Only without `range`.
  * @attr {string} start - Start of the period as ISO. Only with `range`.
  * @attr {string} end - End of the period as ISO. Only with `range`.
  * @attr {boolean} range - Pick a period instead of a single date.
- * @attr {string} name - Name for form submission; the picker submits on its own, so it works in a form without an nldd-date-field. A single date submits as ISO, a period as an ISO 8601 interval `start/end`.
  * @attr {string} min - Earliest allowed date: ISO, or `today` with an offset (`today-18y`).
  * @attr {string} max - Latest allowed date: ISO, or `today` with an offset (`today+1y`).
  * @attr {object} translations - Translations; unspecified keys fall back to Dutch.
@@ -178,6 +178,11 @@ export class NLDDDatePicker extends DescribedBy(FormAssociated(withTranslations<
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
+	/** Name for form submission. The picker submits on its own, so it works in a
+	 *  form without an nldd-date-field around it. */
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	name = '';
+
 	@property({ type: String })
 	value = '';
 
@@ -189,11 +194,6 @@ export class NLDDDatePicker extends DescribedBy(FormAssociated(withTranslations<
 
 	@property({ type: Boolean, reflect: true })
 	range = false;
-
-	/** Name for form submission. The picker submits on its own, so it works in a
-	 *  form without an nldd-date-field around it. */
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	name = '';
 
 	@property({ type: String })
 	min = '';

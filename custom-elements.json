@@ -15266,6 +15266,17 @@
             },
             {
               "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Name for form submission. The picker submits on its own, so it works in a\nform without an nldd-date-field around it.",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "value",
               "type": {
                 "text": "string"
@@ -15299,17 +15310,6 @@
               },
               "default": "false",
               "attribute": "range",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Name for form submission. The picker submits on its own, so it works in a\nform without an nldd-date-field around it.",
-              "attribute": "name",
               "reflects": true
             },
             {
@@ -15760,6 +15760,15 @@
               "fieldName": "invalid"
             },
             {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Name for form submission; the picker submits on its own, so it works in a form without an nldd-date-field. A single date submits as ISO, a period as an ISO 8601 interval `start/end`.",
+              "fieldName": "name"
+            },
+            {
               "name": "value",
               "type": {
                 "text": "string"
@@ -15794,15 +15803,6 @@
               "default": "false",
               "fieldName": "range",
               "description": "Pick a period instead of a single date."
-            },
-            {
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Name for form submission; the picker submits on its own, so it works in a form without an nldd-date-field. A single date submits as ISO, a period as an ISO 8601 interval `start/end`.",
-              "fieldName": "name"
             },
             {
               "name": "min",
@@ -18467,16 +18467,6 @@
             },
             {
               "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "readonly",
               "type": {
                 "text": "boolean"
@@ -18484,6 +18474,16 @@
               "default": "false",
               "description": "The value shows and submits but cannot be changed; the +/- buttons are disabled.",
               "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
               "reflects": true
             },
             {
@@ -18969,15 +18969,6 @@
               "fieldName": "required"
             },
             {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state"
-            },
-            {
               "name": "readonly",
               "type": {
                 "text": "boolean"
@@ -18985,6 +18976,15 @@
               "default": "false",
               "description": "Readonly state: the value shows and submits but cannot be changed, and the +/- buttons are disabled",
               "fieldName": "readonly"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state"
             },
             {
               "name": "accessible-description",
@@ -34135,15 +34135,6 @@
             },
             {
               "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -34152,6 +34143,15 @@
               "description": "Name for form submission. The picker submits on its own, so it works in a\nform without an nldd-time-field around it.",
               "attribute": "name",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "value"
             },
             {
               "kind": "field",
@@ -34610,15 +34610,6 @@
               "fieldName": "invalid"
             },
             {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "value",
-              "description": "The chosen time as `HH:mm` (24-hour), written exactly so: unlike `min` and `max`, it is what the picker reports back. In nldd-time-field the field writes it."
-            },
-            {
               "name": "name",
               "type": {
                 "text": "string"
@@ -34626,6 +34617,15 @@
               "default": "''",
               "description": "Name for form submission; the picker submits on its own, so it works in a form without an nldd-time-field. Submits the chosen time as `HH:mm`.",
               "fieldName": "name"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "value",
+              "description": "The chosen time as `HH:mm` (24-hour), written exactly so: unlike `min` and `max`, it is what the picker reports back. In nldd-time-field the field writes it."
             },
             {
               "name": "min",
@@ -43159,25 +43159,6 @@
             },
             {
               "kind": "field",
-              "name": "accessibleLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "accessible-label"
-            },
-            {
-              "kind": "field",
-              "name": "landmarks",
-              "type": {
-                "text": "Landmarks"
-              },
-              "default": "'auto'",
-              "attribute": "landmarks",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "stickyHeader",
               "type": {
                 "text": "boolean"
@@ -43194,6 +43175,25 @@
               },
               "default": "false",
               "attribute": "sticky-footer",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "accessibleLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "accessible-label"
+            },
+            {
+              "kind": "field",
+              "name": "landmarks",
+              "type": {
+                "text": "Landmarks"
+              },
+              "default": "'auto'",
+              "attribute": "landmarks",
               "reflects": true
             },
             {
@@ -43219,6 +43219,24 @@
               "description": "Use a gray background instead of white"
             },
             {
+              "name": "sticky-header",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "stickyHeader",
+              "description": "Sticky header"
+            },
+            {
+              "name": "sticky-footer",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "stickyFooter",
+              "description": "Sticky footer"
+            },
+            {
               "name": "accessible-label",
               "type": {
                 "text": "string"
@@ -43238,24 +43256,6 @@
                 "text": "'auto' | 'page' | 'region'"
               },
               "description": "Whether this page carries the document's landmarks: 'auto' (default) derives it from where the page sits, 'page' keeps banner, main and contentinfo, 'region' drops all three"
-            },
-            {
-              "name": "sticky-header",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "stickyHeader",
-              "description": "Sticky header"
-            },
-            {
-              "name": "sticky-footer",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "stickyFooter",
-              "description": "Sticky footer"
             }
           ],
           "superclass": {
@@ -43283,7 +43283,8 @@
           ],
           "related": [
             "nldd-shell",
-            "nldd-window"
+            "nldd-window",
+            "nldd-sheet"
           ],
           "slots": [
             {

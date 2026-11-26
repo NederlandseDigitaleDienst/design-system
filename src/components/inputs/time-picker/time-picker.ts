@@ -20,8 +20,8 @@
  * @attr {string} width - Width: `full` fills the container, or pass your own CSS length.
  * @attr {string} accessible-label - Accessible name of the picker.
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
- * @attr {string} value - The chosen time as `HH:mm` (24-hour), written exactly so: unlike `min` and `max`, it is what the picker reports back. In nldd-time-field the field writes it.
  * @attr {string} name - Name for form submission; the picker submits on its own, so it works in a form without an nldd-time-field. Submits the chosen time as `HH:mm`.
+ * @attr {string} value - The chosen time as `HH:mm` (24-hour), written exactly so: unlike `min` and `max`, it is what the picker reports back. In nldd-time-field the field writes it.
  * @attr {string} min - Earliest allowed time as `HH:mm`, read as generously as nldd-time-field reads it (`9:00` too). Also the base that `step` counts from.
  * @attr {string} max - Latest allowed time as `HH:mm`, read as generously as `min`.
  * @attr {number} step - Step in minutes (default 1). Decides which minutes are in the column.
@@ -143,13 +143,13 @@ export class NLDDTimePicker extends DescribedBy(FormAssociated(withTranslations(
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
-	@property({ type: String })
-	value = '';
-
 	/** Name for form submission. The picker submits on its own, so it works in a
 	 *  form without an nldd-time-field around it. */
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
+
+	@property({ type: String })
+	value = '';
 
 	@property({ type: String })
 	min = '';
@@ -170,7 +170,6 @@ export class NLDDTimePicker extends DescribedBy(FormAssociated(withTranslations(
 	 */
 	@state()
 	private _scrolledTo: { hours: number | null; minutes: number | null } = { hours: null, minutes: null };
-
 
 
 	/** The chosen time as `HH:mm`, empty when there is none. */
