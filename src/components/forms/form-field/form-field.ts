@@ -221,6 +221,8 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 	private _describedOthers = new Set<Element>();
 	/** Tags of children that are not defined yet, waited for once each. */
 	private _pendingTags = new Set<string>();
+	/** The inputs found last time, whose own content the observer leaves alone. */
+	private _inputs: readonly Element[] = [];
 	/** Whether this field gave itself the role of a group, to take it back. */
 	private _grouped = false;
 	/** The aria-description this field wrote on itself as a group. */
@@ -261,12 +263,19 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 		// out, and a list that names another control with `for`.
 		// Only the attributes of its own children count: a slot or a `for` deeper
 		// down, such as in a toolbar of a text editor, is about something else.
+		// What changes inside an input it found is the input's own business, such
+		// as the options an app slots into a combo box on every keystroke, and
+		// what changes in a validation list only touches the description.
 		this._childObserver = new MutationObserver((mutations) => {
 			const ownChild = (m: MutationRecord) => (m.target as Element).parentElement === this;
+			const inInput = (m: MutationRecord) => this._inputs.some(input => input.contains(m.target));
+			const inList = (m: MutationRecord) => Boolean((m.target as Element).closest?.('nldd-validation-list'));
+			const elementsMoved = (m: MutationRecord) => [...m.addedNodes, ...m.removedNodes].some(n => n.nodeType === Node.ELEMENT_NODE);
 			const moved = mutations.some(m => (m.attributeName === 'slot' && ownChild(m))
-				|| [...m.addedNodes, ...m.removedNodes].some(n => n.nodeType === Node.ELEMENT_NODE));
+				|| (elementsMoved(m) && !inInput(m) && !inList(m)));
 			if (moved) this._onSlotChange();
-			else if (mutations.some(m => ownChild(m) && (m.attributeName === 'for' || (m.attributeName === 'hidden' && isHelpText(m.target as Element))))) this._syncDescription();
+			else if (mutations.some(m => (elementsMoved(m) && inList(m))
+				|| (ownChild(m) && (m.attributeName === 'for' || (m.attributeName === 'hidden' && isHelpText(m.target as Element)))))) this._syncDescription();
 		});
 		this._childObserver.observe(this, { childList: true, subtree: true, attributes: true, attributeFilter: ['slot', 'hidden', 'for'] });
 		// Moved in the DOM: `firstUpdated` does not come again.
@@ -375,6 +384,7 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 			Object.assign(help, HELP_TEXT_PROPERTIES);
 		}
 		const inputs = this._findInputs();
+		this._inputs = inputs;
 		const input = inputs[0];
 		// A consumer's own element can be an input too, which no selector can know.
 		setState(this, 'has-input', Boolean(input));

@@ -661,6 +661,21 @@ describe('nldd-form-field – finds a control that arrives late', () => {
 		expect((el.querySelector('nldd-validation-list') as HTMLElement & { control: Element | null }).control).toBe(late);
 	});
 
+	it('leaves what changes inside its input to the input, such as options that arrive', async () => {
+		el = await fixture('<nldd-form-field label="Gemeente"><nldd-combo-box><nldd-menu></nldd-menu></nldd-combo-box></nldd-form-field>');
+		await waitForUpdate(el);
+		const field = el as HTMLElement & { _onSlotChange: () => void };
+		let looked = 0;
+		const original = field._onSlotChange.bind(field);
+		field._onSlotChange = () => { looked += 1; original(); };
+		el.querySelector('nldd-menu')!.insertAdjacentHTML('beforeend', '<nldd-menu-item text="Utrecht"></nldd-menu-item>');
+		await waitForUpdate(el);
+		expect(looked).toBe(0);
+		el.insertAdjacentHTML('beforeend', '<div></div>');
+		await waitForUpdate(el);
+		expect(looked).toBe(1);
+	});
+
 	it('finds an input that appears later inside a wrapper', async () => {
 		el = await fixture('<nldd-form-field label="Postcode"><div></div></nldd-form-field>');
 		await waitForUpdate(el);
