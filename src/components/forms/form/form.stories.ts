@@ -5,6 +5,7 @@ import '../../inputs/password-field/password-field.js';
 import '../form-field/form-field.js';
 import '../form-actions/form-actions.js';
 import '../form-section/form-section.js';
+import '../../content/title/title.js';
 import '../../actions/button/button.js';
 import '../../actions/button-group/button-group.js';
 
@@ -232,10 +233,9 @@ export const Persoonsgegevens = {
 };
 
 /**
- * Groepeer bij elkaar horende velden met `nldd-form-section`. Die rendert een
- * echte `<fieldset>` met `<legend>`, dus een schermlezer noemt de naam van de
- * groep zodra je het eerste veld erin binnenkomt. Een eigen kop met een `div`
- * eromheen doet dat niet.
+ * Deel een langer formulier op in `nldd-form-section`s, elk met een
+ * `nldd-title` in het slot `header`. De sectie zet de afstanden van een
+ * formulier om de kop en de velden.
  */
 export const MetSecties = {
 	render: () => html`
@@ -244,7 +244,12 @@ export const MetSecties = {
 			label-alignment="right"
 			novalidate
 		>
-			<nldd-form-section text="Persoon">
+			<nldd-form-section>
+				<nldd-title
+					slot="header"
+					text="Persoon"
+					heading-level="2"
+				></nldd-title>
 				<nldd-form-field label="Naam">
 					<nldd-text-field
 						name="name"
@@ -253,10 +258,13 @@ export const MetSecties = {
 					></nldd-text-field>
 				</nldd-form-field>
 			</nldd-form-section>
-			<nldd-form-section
-				text="Adres"
-				supporting-text="Waar we de beschikking naartoe sturen."
-			>
+			<nldd-form-section>
+				<nldd-title
+					slot="header"
+					text="Adres"
+					supporting-text="Waar we de beschikking naartoe sturen."
+					heading-level="2"
+				></nldd-title>
 				<nldd-form-field label="Straat en huisnummer">
 					<nldd-text-field
 						name="street-address"

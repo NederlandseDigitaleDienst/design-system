@@ -20,6 +20,7 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-form-field` names and describes its input with the autoloader too.** A field that was defined before its input never wired that input up: no name, no error on screen. See Fixed.
 - **Help text is part of `nldd-form-field` now: `help-text` for plain text, an `nldd-text` in the `help-text` slot for text with a link.** `nldd-form-field-help-text` is gone; `nldd lint --fix` moves it over. See Breaking.
 - **`group` on `nldd-form-field`, for one question with more than one control**, such as a postcode and a house number. The field is then a group named by its label, as a fieldset with a legend, and each control names itself. A field with more than one control and no `group` is now an error in development. See Added and Breaking.
+- **`nldd-form-section` is a part of a form under a heading, no longer a fieldset.** Put an `nldd-title` with a `heading-level` in its new `header` slot; `text` and `supporting-text` are gone, and `nldd lint --fix` moves them there. See Breaking.
 
 ### Breaking
 
@@ -27,10 +28,15 @@ here; consult the commit history if you need that level of detail.
 
 - **A `nldd-form-field` with more than one control has to be a `group`.** It named and described only the first control, and the ones after it went without its label and its help text. Make it a `group` when the controls answer one question, as a radio group with an "Anders" text field does, or give each question a field of its own. The new rule `form-field-max-one-input` reports it in the browser in development, as `error`.
 
+- **`nldd-form-section` renders no `<fieldset>` and `<legend>` any more.** It is a block with a `header` slot and the fields under it, in a shadow root. Its title is a heading now, which a screen reader user can jump to, and no longer a group name read with every field; a question with more than one control is an `nldd-form-field` with `group`. `text` and `supporting-text` are gone: put an `nldd-title` in the `header` slot, with the `heading-level` that fits the page, and anything else beside it. The section keeps the distances: 8 under the header, 16 between the fields and 24 to the sections around it. `nldd lint --fix` turns `text` and `supporting-text` into an `<nldd-title slot="header">` with both (rule `form-section-text-no-effect`, which takes over the id `form-section-needs-name`); add its `heading-level` yourself, as `title-needs-level` asks. The title takes the size of its level, not the font of the old legend.
+- **`dist/css/form-section.css` is gone**, and with it the form section rules in `global.css`. The distance between sections is in `form.css` now. Remove an import of `form-section.css`.
+
 ### Added
 
 - **`group` on `nldd-form-field`.** The field takes the role of a group, named by its label with "optioneel" when it is optional, and describes itself with its validation and help text instead of its first control. Each control names itself with `accessible-label`; the `*-needs-name` lint rules now ask for that inside a group. A radio group or a checkbox group is a group of its own already and needs no `group`: the hint `form-field-group-no-single-group` says so.
 - **`help-text` on `nldd-form-field`, for plain help text below the input.** It supports `**bold**`, as `label` does, and a screen reader reads it as part of the description of the input.
+- **`form-title-goes-in-form-section` points at the `header` slot of `nldd-form-section`**, and `title-needs-level` now also asks for the `heading-level` of a title there.
+- **`nldd lint --fix` can move attributes to a new child element, and give a renamed tag attributes of its own.** The rule options are `child` and `attributes`.
 - **`form-field-validation-no-multiple-controls` is about a group field now**: a validation list without `for` that reads a value reads the first control of the group.
 - **Two lint rules for help text:** `form-field-help-text-needs-text` (`warn`) for something else than an `nldd-text` in the `help-text` slot, and the hint `form-field-help-text-style-no-effect` for a `size`, `color` or `weight` on it, which the field sets.
 - **A screen reader hears what the field shows around the label.** The "Optioneel" badge is now part of the accessible name of the input ("Tussenvoegsel, optioneel"), and `supporting-label` is now part of its description, after what is wrong and before the help text. Both were on screen only. The name comes from the new translation key `components.form-field.optional-accessible-label` (`{label}, optioneel`).

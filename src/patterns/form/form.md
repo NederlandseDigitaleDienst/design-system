@@ -6,7 +6,8 @@ Een formulier verzamelt de gegevens die nodig zijn om een taak uit te voeren of 
 
 ```
 nldd-form                              name, method, label-alignment
-  ├─ nldd-form-section                 text, supporting-text; een groep velden
+  ├─ nldd-form-section                 een deel van het formulier
+  │    ├─ nldd-title                   slot="header", heading-level
   │    └─ nldd-form-field              label, optional
   │         ├─ het invoerveld          nldd-text-field, nldd-dropdown, …
   │         ├─ nldd-validation-list    de eisen aan de waarde
@@ -23,7 +24,7 @@ De volgorde volgt het gedachteproces en niet de database, zie de [ontwerprichtli
 
 **Het veld regelt de koppelingen, jij zet alleen de onderdelen erin.** Een [`nldd-form-field`](/componenten/form-field/) vindt het invoerveld tussen zijn kinderen en koppelt het label, de eisen en de hulptekst eraan. Geen `for` en geen `id`: zet je die zelf, dan ga je ertegen in.
 
-**Een form section is voor de groepsnaam en de gedeelde uitleg.** Een [`nldd-form-section`](/componenten/form-section/) rendert een `fieldset` met een `legend`, en die legend hoort een schermlezer bij elk veld in de groep. Dat is winst zodra dezelfde labels twee keer voorkomen (je eigen naam en die van degene voor wie je aanvraagt) of zodra één zin voor alle velden geldt, zoals hier waarom je die gegevens vraagt.
+**Een form section is een deel van het formulier, onder een kop.** Een [`nldd-form-section`](/componenten/form-section/) zet de velden in het ritme van een formulier en houdt afstand tot wat ervoor en erna komt. De kop is een [`nldd-title`](/componenten/title/) in het slot `header`, met het `heading-level` dat bij de pagina past: zo staat hij in de kopstructuur en springt een schermlezer ernaartoe. Eén vraag met meer dan één invoerveld, zoals een postcode en een huisnummer, is geen sectie maar een [`nldd-form-field`](/componenten/form-field/) met `group`.
 
 **Zet `label-alignment` op het formulier, niet per veld.** Het [`nldd-form`](/componenten/form/) geeft die door aan elk veld en aan de acties, zodat de knoppen onder de velden uitkomen en niet onder de labels. Daarom staan de acties in een [`nldd-form-actions`](/componenten/form-actions/) en niet los onder het formulier.
 
@@ -37,7 +38,7 @@ De volgorde volgt het gedachteproces en niet de database, zie de [ontwerprichtli
 
 **De eisen staan in een validation list.** Een [`nldd-validation-list`](/componenten/validation-list/) toont een eis pas als de waarde er niet aan voldoet, en koppelt de fout aan het veld. Schrijf een item als eis en niet als opdracht, zie de [ontwerprichtlijnen](/handleidingen/richtlijnen/#copywriting): dezelfde regel staat er vooraf als wat het veld wil en achteraf als wat er nog niet klopt, dus hij moet op allebei die momenten kloppen. Tekst die niemand tegenhoudt, zoals "We sturen een bevestigingsmail naar dit adres", is geen eis maar een `help-text` op het veld. Een optioneel veld is niet `required`, en een lege waarde komt door elke eis heen. Een formaateis mag er dus wel onder: een telefoonnummer dat je mag weglaten, moet nog steeds een telefoonnummer zijn als je het invult.
 
-**Importeer de globale stylesheet.** [`nldd-form`](/componenten/form/) en de form section staan in de light DOM, dus hun opmaak zit in `@nldd/design-system/styles` en niet in een shadow root. Laat je die stylesheet weg, dan lijkt het formulier kapot.
+**Importeer de globale stylesheet.** [`nldd-form`](/componenten/form/) staat in de light DOM, dus zijn opmaak, ook de afstand tussen de secties, zit in `@nldd/design-system/styles` en niet in een shadow root. Laat je die stylesheet weg, dan lijkt het formulier kapot.
 
 ## Toegankelijkheid
 

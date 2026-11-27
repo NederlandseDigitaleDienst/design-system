@@ -227,6 +227,37 @@ function unwrapEdits(source, finding, { drop = [], move = {} }) {
 	return [{ from: finding.offset, to: finding.endOffset + 1, text }];
 }
 
+/**
+ * Attributes that moved to a child of their own, such as the title of a form
+ * section that became an nldd-title in its header slot. The child goes first,
+ * with the attributes as they were written, binding and all; on a line of its
+ * own when the content of the element starts on one. An attribute a template
+ * language writes into makes no edit.
+ */
+function childEdits(source, finding, { tag, slot, attributes }) {
+	const { startTag, offset, endOffset, tag: name } = finding;
+	if (!startTag || startTag.selfClosing || endOffset === undefined || !source.startsWith(`<${name}`, offset)) return [];
+	const moved = attributes.map((attribute) => findAttribute(startTag, attribute)).filter(Boolean);
+	if (moved.length === 0 || moved.some((attribute) => attribute.templated)) return [];
+	// Nothing left in the start tag: it closes up, also when it spread over lines.
+	const nameEnd = offset + 1 + name.length;
+	const removals = moved.length === startTag.attributes.length && !/\/[*/]/.test(source.slice(nameEnd, startTag.end))
+		? [{ from: nameEnd, to: startTag.end, text: '' }]
+		: attributes.flatMap((attribute) => removeEdits(source, finding, attribute));
+	if (removals.length === 0 || (removals.length !== moved.length && removals.length !== 1)) return [];
+	const written = moved.map((attribute) => source.slice(attribute.start, attribute.end)).join(' ');
+	const child = `<${tag}${slot ? ` slot="${slot}"` : ''} ${written}></${tag}>`;
+	const at = startTag.end + 1;
+	const lineStart = source.lastIndexOf('\n', offset - 1) + 1;
+	const indent = source.slice(lineStart, offset);
+	const next = /^(\r?\n)([ \t]*)(<\/)?/.exec(source.slice(at));
+	if (/\S/.test(indent) || !next) return [...removals, { from: at, to: at, text: child }];
+	// Before the closing tag of an empty element the next line is one level up.
+	const unit = indent.includes(' ') && !indent.includes('\t') ? '  ' : '\t';
+	const childIndent = next[3] ? indent + unit : next[2];
+	return [...removals, { from: at, to: at, text: `${next[1]}${childIndent}${child}` }];
+}
+
 /** An edit is `{ from, to, text }` in the source. What is not certain makes none. */
 function editsOf(source, finding) {
 	const { fix, offset, tag, mention, startTag } = finding;
@@ -241,6 +272,7 @@ function editsOf(source, finding) {
 		...(fix.tag && !mention ? tagEdits(source, finding, fix.tag, fix.attributes) : []),
 		...(fix.wrap ? wrapEdits(source, finding, fix.wrap) : []),
 		...(fix.unwrap ? unwrapEdits(source, finding, fix.unwrap) : []),
+		...(fix.child ? childEdits(source, finding, fix.child) : []),
 		...(fix.translation ? translationEdits(source, finding, fix.translation) : []),
 		// A token that got another name: the finding spans the old name in a `var()`, and
 		// startsWith checks that the span still holds it.

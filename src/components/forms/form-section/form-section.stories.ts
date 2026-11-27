@@ -3,16 +3,19 @@ import './form-section.js';
 import '../form/form.js';
 import '../form-field/form-field.js';
 import '../form-actions/form-actions.js';
+import '../../content/title/title.js';
+import '../../content/text/text.js';
+import '../../layout/spacer/spacer.js';
 import '../../inputs/text-field/text-field.js';
 import '../../actions/button/button.js';
 import '../../actions/button-group/button-group.js';
 
 /**
- * `nldd-form-section` groepeert bij elkaar horende velden in een formulier,
- * met een kop en een korte toelichting. Gebruik het als een formulier uit
- * duidelijke delen bestaat, zoals persoonsgegevens en een adres. Het rendert
- * een echte `<fieldset>` met `<legend>`, zodat een schermlezer de naam van de
- * groep noemt.
+ * `nldd-form-section` is een deel van een formulier: een kop, met de velden
+ * eronder in het ritme van een formulier. De sectie regelt de afstanden, tussen
+ * de kop en de velden, tussen de velden en tussen de secties. Wat er in de kop
+ * staat bepaal je zelf: meestal een `nldd-title` met een `heading-level` dat bij
+ * de pagina past.
  */
 export default {
 	title: 'Components/Forms/Form Section',
@@ -24,44 +27,55 @@ export default {
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
 	},
-	args: {
-		text: 'Persoonsgegevens',
-		supportingText: 'Vul je gegevens in.',
-	},
-	argTypes: {
-		text: {
-			control: 'text',
-			description: 'Heading-tekst (gerenderd als `<legend>`)',
-		},
-		supportingText: {
-			name: 'supporting-text',
-			control: 'text',
-			description: 'Korte beschrijving onder de heading',
-		},
-	},
 };
 
-// Form-section heeft een form-context nodig (vertical-rhythm regels leven in
-// form.css en zijn gescoped onder nldd-form). Standalone gebruik wordt niet
-// ondersteund.
-const Template = ({ text, supportingText }: Record<string, any>) => html`
-	<nldd-form novalidate>
-		<nldd-form-section
-			text=${text}
-			supporting-text=${supportingText}
-		>
-			<nldd-form-field label="Naam">
-				<nldd-text-field
-					name="name"
-					autocomplete="name"
-				></nldd-text-field>
-			</nldd-form-field>
-		</nldd-form-section>
-	</nldd-form>
-`;
-
 export const Standaard = {
-	render: Template,
+	render: () => html`
+		<nldd-form novalidate>
+			<nldd-form-section>
+				<nldd-title
+					slot="header"
+					text="Persoonsgegevens"
+					heading-level="2"
+				></nldd-title>
+				<nldd-form-field label="Naam">
+					<nldd-text-field
+						name="name"
+						autocomplete="name"
+					></nldd-text-field>
+				</nldd-form-field>
+			</nldd-form-section>
+		</nldd-form>
+	`,
+};
+
+/**
+ * Meer dan een titel in de kop: zet de onderdelen in een eigen element in het
+ * slot, met een `nldd-spacer` waar je de afstand zelf wilt bepalen.
+ */
+export const MetToelichtingInDeKop = {
+	render: () => html`
+		<nldd-form novalidate>
+			<nldd-form-section>
+				<div slot="header">
+					<nldd-title
+						text="Adres"
+						heading-level="2"
+					></nldd-title>
+					<nldd-spacer size="4"></nldd-spacer>
+					<nldd-text color="secondary">
+						<p>Het adres waar je staat ingeschreven.</p>
+					</nldd-text>
+				</div>
+				<nldd-form-field label="Straat en huisnummer">
+					<nldd-text-field
+						name="street-address"
+						autocomplete="street-address"
+					></nldd-text-field>
+				</nldd-form-field>
+			</nldd-form-section>
+		</nldd-form>
+	`,
 };
 
 /**
@@ -74,10 +88,12 @@ export const InEenFormulier = {
 			label-alignment="right"
 			novalidate
 		>
-			<nldd-form-section
-				text="Persoonsgegevens"
-				supporting-text="Vul je naam en contactgegevens in."
-			>
+			<nldd-form-section>
+				<nldd-title
+					slot="header"
+					text="Persoonsgegevens"
+					heading-level="2"
+				></nldd-title>
 				<nldd-form-field label="Naam">
 					<nldd-text-field
 						name="name"
@@ -92,8 +108,12 @@ export const InEenFormulier = {
 					></nldd-text-field>
 				</nldd-form-field>
 			</nldd-form-section>
-
-			<nldd-form-section text="Adres">
+			<nldd-form-section>
+				<nldd-title
+					slot="header"
+					text="Adres"
+					heading-level="2"
+				></nldd-title>
 				<nldd-form-field label="Straat en huisnummer">
 					<nldd-text-field
 						name="street-address"
@@ -113,7 +133,6 @@ export const InEenFormulier = {
 					></nldd-text-field>
 				</nldd-form-field>
 			</nldd-form-section>
-
 			<nldd-form-actions>
 				<nldd-button-group>
 					<nldd-button
@@ -128,10 +147,13 @@ export const InEenFormulier = {
 	parameters: { controls: { disable: true } },
 };
 
-export const ZonderText = {
+/**
+ * Zonder kop is een sectie alleen afstand: de velden staan dan los van wat
+ * ervoor en erna komt.
+ */
+export const ZonderKop = {
 	render: () => html`
 		<nldd-form novalidate>
-			<!-- nldd-lint-disable-next-line form-section-needs-name -- Shows on purpose what a section without text looks like; an app needs text or supporting-text. -->
 			<nldd-form-section>
 				<nldd-form-field label="Naam">
 					<nldd-text-field

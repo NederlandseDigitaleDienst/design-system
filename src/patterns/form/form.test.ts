@@ -25,12 +25,12 @@ describe('patroon: formulier', () => {
 		expect(root.querySelector('[for]')).toBeNull();
 	});
 
-	it('groepeert de velden in een echte fieldset met een groepsnaam', async () => {
+	it('zet de velden die bij elkaar horen onder een kop, en de losse vraag erbuiten', async () => {
 		await mount();
-		const legends = [...root.querySelectorAll('fieldset > legend .form-section__title')].map((title) => title.textContent!.trim());
-		// Eén groep, en alleen waar de legend werk doet: de velden eronder delen
-		// een uitleg. De vraag erboven is één veld en staat los in het formulier.
-		expect(legends).toEqual(['Hoe kunnen we je bereiken?']);
+		const titles = [...root.querySelectorAll('nldd-form-section > nldd-title[slot="header"]')];
+		// Een kop in de sectie, met een niveau, zodat hij in de kopstructuur van de
+		// pagina staat. De vraag erboven is één veld en staat los in het formulier.
+		expect(titles.map((title) => [title.getAttribute('text'), title.getAttribute('heading-level')])).toEqual([['Je contactgegevens', '2']]);
 		const vraag = root.querySelector('nldd-form-field')!;
 		expect(vraag.getAttribute('label')).toBe('Je vraag');
 		expect(vraag.closest('nldd-form-section')).toBeNull();

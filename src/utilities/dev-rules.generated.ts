@@ -304,14 +304,9 @@ export const devRules: DevRule[] = [
 		"context": "nldd-form-field[group]:state(list-reads-first-control)"
 	},
 	{
-		"id": "form-section-needs-name",
-		"message": "nldd-form-section needs `text` or `supporting-text`: without either its fieldset has no accessible name, and a screen reader announces just \"group\" or nothing.",
-		"context": "nldd-form-section",
-		"assert": "[text]:not([text=\"\"]), [supporting-text]:not([supporting-text=\"\"])",
-		"properties": [
-			"text",
-			"supportingText"
-		]
+		"id": "form-section-text-no-effect",
+		"message": "`text` and `supporting-text` on nldd-form-section are gone. Put an nldd-title in its header slot, with the `heading-level` that fits the page.",
+		"context": "nldd-form-section:is([text], [supporting-text])"
 	},
 	{
 		"id": "hero-corner-invalid",

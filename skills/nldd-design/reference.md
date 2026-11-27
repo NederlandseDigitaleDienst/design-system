@@ -1029,7 +1029,7 @@ A title bar with an optional overline, title, and supporting text on the left, a
 
 - `accordion-item-no-heading` (hint): Content with headings of its own is too long to fold in place. Open it in an nldd-sheet from a row.
 - `card-title-needs-level` (hint): Set `heading-level`: the title of a card that is a choice is a heading, directly below the page title or the section heading.
-- `form-title-goes-in-form-section` (hint): Use nldd-form-section with `text`: its legend reaches a screen reader with every field in the group.
+- `form-title-goes-in-form-section` (hint): Put the title in the header slot of an nldd-form-section around the fields it is about: the section puts the distances of a form around it.
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
 - `row-navigation-no-heading` (hint): Use the `text` of an nldd-text-cell: a row is not a heading.
 - `slot-needs-element`: A slot for text takes the element that carries it: a `<p>`, or a heading in the default slot of nldd-title and nldd-title-cell. Put inline markup inside that element, and plain text in the attribute.
@@ -1174,7 +1174,7 @@ Nederlandse Digitale Dienst Form Component Plain custom element (extends HTMLEle
 - `button-submit-needs-form`: Put this button in the form, or give the nldd-form an `id` and point `form` at it. As it stands it submits nothing.
 - `form-action-goes-in-form-actions` (hint): Put the actions in nldd-form-actions, which lines them up with the fields instead of the labels.
 - `form-field-no-own-label-alignment` (hint): Set `label-alignment` on nldd-form, which passes it to every field and to the actions, so the buttons line up with the fields.
-- `form-title-goes-in-form-section` (hint): Use nldd-form-section with `text`: its legend reaches a screen reader with every field in the group.
+- `form-title-goes-in-form-section` (hint): Put the title in the header slot of an nldd-form-section around the fields it is about: the section puts the distances of a form around it.
 - `modal-dialog-no-form` (hint): Do work that needs its context in an nldd-sheet, which keeps the page visible and has room for the fields.
 - `sheet-title-bar-needs-anchor` (hint): Put an nldd-title above the form and point `collapse-anchor` at it: the bar stays quiet until the heading scrolls away.
 
@@ -1274,20 +1274,21 @@ A field around one input: its label, supporting label, optional badge, validatio
 
 ### `<nldd-form-section>`
 
-Nederlandse Digitale Dienst Form Section Component Plain custom element (extends HTMLElement, no Lit). The light-DOM render works around an NVDA + Firefox a11y bug where a shadow-DOM `<fieldset>` + `<legend>` is not reliably announced as the group label for slotted controls. A native fieldset/legend in the light DOM works correctly across all AT/browser combinations. **Differs from shadow components:** - No shadowRoot: all children live in the light DOM (inside the rendered `<fieldset>`). - No Lit: a plain HTMLElement with manual DOM mutation. - **Requires a global stylesheet import**: `dist/css/form-section.css` (or `global.css`). Form-section has no shadow stylesheet. **Accessibility note**: the title renders as a `<legend>`. Semantically that is a **group label**, not a heading. Screen readers announce it when the user enters the fieldset, but users jumping through headings with the H key skip it. Visually it looks like a heading, so use this component for *form grouping*, not as page structure. For real page headings, use a separate heading element above the form. **Supporting-text length**: the supporting text sits as a `<span>` inside the `<legend>` so a screen reader reads it along as the group label. Side effect: on every field entry within the section, the whole legend (title + supporting text) is spoken again. Keep `supporting-text` short (roughly 80 characters or less) and use it to introduce the group ("Vul je adresgegevens in"), not for detailed instructions. For a longer explanation on one specific field, use `help-text` on that field.
+A part of a form: a header, and the fields under it in the rhythm of a form. The section owns the distances: between the header and the fields, between the fields, and, in an nldd-form, between one section and the next. What stands in the header is yours, such as an nldd-title, with a text under it or a button beside it, and so is the space between those. A section is no group. A question that takes more than one control is an nldd-form-field with `group`; a section holds questions, and its title is a heading, which a screen reader user can jump to. Give that nldd-title the `heading-level` that fits the page. Outside a form, use an nldd-container.
 
 **Keywords:** formuliersectie.
 
 **Rules** (`nldd lint`)
 
-- `form-section-needs-name`: nldd-form-section needs `text` or `supporting-text`: without either its fieldset has no accessible name, and a screen reader announces just "group" or nothing.
+- `form-section-text-no-effect`: `text` and `supporting-text` on nldd-form-section are gone. Put an nldd-title in its header slot, with the `heading-level` that fits the page.
+- `title-needs-level` (hint): Set `heading-level`: without it the title renders as a paragraph and is missing from the heading structure.
 
-**Attributes**
+**Slots**
 
-| Attribute | Type | Description |
-| --- | --- | --- |
-| `text` | `string` | Heading text (rendered in the `<legend>`). |
-| `supporting-text` | `string` | Short description under the heading. Keep it to roughly 80 characters or less (see the a11y note). |
+| Slot | Description |
+| --- | --- |
+| `header` | What stands above the fields, such as an nldd-title with a `heading-level`. |
+| _(default)_ | The fields of this part of the form. |
 
 ### `<nldd-validation-item>`
 

@@ -101,6 +101,16 @@ describe('--fix', () => {
 		assert.equal((await fixed(source)).text, source);
 	});
 
+	it('moves the title of a form section into a title in its header slot, on a line of its own', async () => {
+		const { text } = await fixed('<nldd-form>\n\t<nldd-form-section\n\t\ttext="Adres"\n\t\tsupporting-text="Waar woon je?"\n\t>\n\t\t<nldd-form-field label="Straat"></nldd-form-field>\n\t</nldd-form-section>\n</nldd-form>\n');
+		assert.equal(text, '<nldd-form>\n\t<nldd-form-section>\n\t\t<nldd-title slot="header" text="Adres" supporting-text="Waar woon je?"></nldd-title>\n\t\t<nldd-form-field label="Straat"></nldd-form-field>\n\t</nldd-form-section>\n</nldd-form>\n');
+	});
+
+	it('moves a bound title of a form section as it is written, and keeps the other attributes', async () => {
+		const { text } = await fixed('<template><nldd-form-section id="adres" :text="titel"></nldd-form-section></template>', 'a.vue');
+		assert.equal(text, '<template><nldd-form-section id="adres"><nldd-title slot="header" :text="titel"></nldd-title></nldd-form-section></template>');
+	});
+
 	it('leaves a bundle alone when it carries a renamed tag along', async () => {
 		const bundle = `document.querySelector("nldd-app-view");${' '.repeat(1000)}\n`;
 		const root = project({ 'a.html': '<nldd-app-view></nldd-app-view>', 'app.js': bundle });
