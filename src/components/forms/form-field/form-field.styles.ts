@@ -186,8 +186,8 @@ export const formFieldStyles = css`
 
 	/* # Help text */
 
-	/* The nldd-text in the slot takes its look from the attributes the field
-	   sets, and its place from here. */
+	/* The nldd-text in the slot takes its look from the properties the field
+	   sets on it, and its place from here. */
 	::slotted([slot="help-text"]) {
 		margin-block-start: var(--_form-field-description-gap);
 	}

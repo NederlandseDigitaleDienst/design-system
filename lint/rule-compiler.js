@@ -38,7 +38,7 @@ function excepted(className, node, favorable = true) {
 const CSS_PSEUDOS = new Set(['is', 'not', 'has', 'where', 'matches']);
 
 /**
- * Whether a field hands its label to `target`, as _findInput in nldd-form-field does:
+ * Whether a field hands its label to `target`, as _findInputs in nldd-form-field does:
  * the first input in document order, help text in the `help-text` slot left out. The answer is `maybe` when
  * something before it may or may not be an input that renders.
  */
@@ -64,9 +64,9 @@ function fieldLabelCheck(isInput, allowMaybe) {
 		for (let parent = node.parent; parent; parent = parent.parent) {
 			if (parent.name === 'nldd-form-field') {
 				// A group names itself and none of its controls.
-				const group = parent.attrs.get('group');
-				if (group === BOUND) return allowMaybe;
-				if (parent.attrs.has('group') && group !== 'false') return false;
+				// A boolean attribute: `group="false"` is a group too.
+				if (parent.attrs.get('group') === BOUND) return allowMaybe;
+				if (parent.attrs.has('group')) return false;
 				const label = parent.attrs.get('label');
 				const unknownLabel = label === BOUND || parent.spread;
 				if (!unknownLabel && !label) return false;

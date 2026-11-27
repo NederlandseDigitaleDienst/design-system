@@ -388,6 +388,8 @@ describe('found in review', () => {
 		const field = (attributes) => `<html><body><nldd-form-field label="a"${attributes}><nldd-number-field></nldd-number-field></nldd-form-field></body></html>`;
 		assert.ok(!(await rulesIn(field(''), 'a.html')).includes('number-field-needs-name'));
 		assert.ok((await rulesIn(field(' group'), 'a.html')).includes('number-field-needs-name'));
+		// A boolean attribute: written out as "false" it is still there.
+		assert.ok((await rulesIn(field(' group="false"'), 'a.html')).includes('number-field-needs-name'));
 	});
 
 	it('skips help text when looking for the input, as the field does', async () => {

@@ -390,6 +390,47 @@ describe('nldd-form-field description wiring', () => {
 		await waitForUpdate(el);
 		expect(describedBy(anders)).toEqual([]);
 	});
+
+	it('takes the description back from a control a list with `for` no longer names', async () => {
+		el = await fixture(`
+			<nldd-form-field label="Rol" group>
+				<input id="eerste" aria-label="Rol">
+				<input id="anders" aria-label="Andere rol" invalid value="a">
+				<nldd-validation-list for="anders">
+					<nldd-validation-item match="@">Een apenstaartje</nldd-validation-item>
+				</nldd-validation-list>
+			</nldd-form-field>
+		`);
+		await waitForUpdate(el);
+		const anders = el.querySelector('#anders')!;
+		expect(describedBy(anders)).toHaveLength(1);
+		el.querySelector('nldd-validation-list')!.remove();
+		await waitForUpdate(el);
+		expect(describedBy(anders)).toEqual([]);
+	});
+
+	it('leaves the description another field gave an input that moved there', async () => {
+		el = await fixture(`
+			<div>
+				<nldd-form-field id="van" label="Van">
+					<input>
+					<nldd-text slot="help-text"><p>Hulp van</p></nldd-text>
+				</nldd-form-field>
+				<nldd-form-field id="naar" label="Naar">
+					<nldd-text slot="help-text"><p>Hulp naar</p></nldd-text>
+				</nldd-form-field>
+			</div>
+		`);
+		const [from, to] = el.querySelectorAll('nldd-form-field') as unknown as HTMLElement[];
+		await waitForUpdate(from);
+		await waitForUpdate(to);
+		const input = el.querySelector('input')!;
+		to.prepend(input);
+		await waitForUpdate(from);
+		await waitForUpdate(to);
+		expect(describedBy(input)).toEqual([to.querySelector('nldd-text')]);
+		expect(input.getAttribute('aria-label')).toBe('Naar');
+	});
 });
 
 
@@ -506,7 +547,22 @@ describe('nldd-form-field – group', () => {
 		await waitForUpdate(el);
 		const control = el.querySelector('nldd-text-field') as HTMLElement & { describedByTexts: readonly string[] };
 		expect(control.describedByTexts).toEqual([]);
-		expect((internalsOf(el) as ElementInternals & { ariaDescription: string | null }).ariaDescription).toBe('Zoals op je paspoort');
+		expect(el.getAttribute('aria-description')).toBe('Zoals op je paspoort');
+	});
+
+	it('hands the description over between itself and its first control when group turns off and on', async () => {
+		el = await fixture(MARKUP);
+		await waitForUpdate(el);
+		const field = el as HTMLElement & { group: boolean };
+		const control = el.querySelector('nldd-text-field') as HTMLElement & { describedByTexts: readonly string[] };
+		field.group = false;
+		await waitForUpdate(el);
+		expect(el.hasAttribute('aria-description')).toBe(false);
+		expect(control.describedByTexts).toEqual(['Zoals op je paspoort']);
+		field.group = true;
+		await waitForUpdate(el);
+		expect(control.describedByTexts).toEqual([]);
+		expect(el.getAttribute('aria-description')).toBe('Zoals op je paspoort');
 	});
 
 	it('hands the name back to the first control when it stops being a group', async () => {

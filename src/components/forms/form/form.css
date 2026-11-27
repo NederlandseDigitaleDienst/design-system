@@ -36,11 +36,12 @@ nldd-form nldd-form-actions {
 }
 
 /* A section stands further from what is around it than a field does. A margin
-   for the same reason as the actions above; after the rhythm, so that its
-   margin-bottom on the same side gives way to this one. The :has() guard keeps
-   it off the last visible child, as the rhythm does. */
+   for the same reason as the actions above, and more specific than the rhythm,
+   so its own margin-bottom wins. Only after something visible: the hidden
+   CSRF input a server puts first in a form takes no part. The :has() guard
+   keeps it off the last visible child, as the rhythm does. */
 
-nldd-form > form > nldd-form-section:not(:first-child) {
+nldd-form > form > *:not([hidden]):not([type='hidden']) ~ nldd-form-section {
 	margin-top: var(--semantics-forms-sections-gap);
 }
 

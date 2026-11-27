@@ -55,6 +55,7 @@ describe('nldd-form-section', () => {
 		try {
 			el = await fixture(`
 				<nldd-form novalidate>
+					<input type="hidden" name="csrf">
 					<nldd-form-section>
 						<nldd-title slot="header" text="Adres" heading-level="2"></nldd-title>
 						<input name="a">
@@ -74,6 +75,8 @@ describe('nldd-form-section', () => {
 			// The hidden input has no box, so it adds no gap of its own.
 			expect(top('[name="b"]') - bottom('[name="a"]')).toBe(16);
 			expect(second.getBoundingClientRect().top - first.getBoundingClientRect().bottom).toBe(24);
+			// A hidden input first, as a server puts its CSRF token, adds no distance on top.
+			expect(first.getBoundingClientRect().top - el.querySelector('form')!.getBoundingClientRect().top).toBe(0);
 		} finally {
 			style.remove();
 			unloadTokens();

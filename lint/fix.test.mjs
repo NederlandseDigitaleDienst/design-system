@@ -111,6 +111,11 @@ describe('--fix', () => {
 		assert.equal(text, '<template><nldd-form-section id="adres"><nldd-title slot="header" :text="titel"></nldd-title></nldd-form-section></template>');
 	});
 
+	it('moves no title of a form section when one of its attributes cannot leave the tag', async () => {
+		const source = 'export const A = () => <nldd-form-section id="adres" /* titel */ text="Adres" supporting-text="Waar woon je?"></nldd-form-section>;\n';
+		assert.equal((await fixed(source, 'a.tsx')).text, source);
+	});
+
 	it('leaves a bundle alone when it carries a renamed tag along', async () => {
 		const bundle = `document.querySelector("nldd-app-view");${' '.repeat(1000)}\n`;
 		const root = project({ 'a.html': '<nldd-app-view></nldd-app-view>', 'app.js': bundle });

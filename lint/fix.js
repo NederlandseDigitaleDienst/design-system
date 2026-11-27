@@ -244,7 +244,9 @@ function childEdits(source, finding, { tag, slot, attributes }) {
 	const removals = moved.length === startTag.attributes.length && !/\/[*/]/.test(source.slice(nameEnd, startTag.end))
 		? [{ from: nameEnd, to: startTag.end, text: '' }]
 		: attributes.flatMap((attribute) => removeEdits(source, finding, attribute));
-	if (removals.length === 0 || (removals.length !== moved.length && removals.length !== 1)) return [];
+	const collapsed = removals.length === 1 && moved.length === startTag.attributes.length && removals[0].from === nameEnd;
+	// An attribute that cannot go would end up both on the element and on the child.
+	if (!collapsed && removals.length !== moved.length) return [];
 	const written = moved.map((attribute) => source.slice(attribute.start, attribute.end)).join(' ');
 	const child = `<${tag}${slot ? ` slot="${slot}"` : ''} ${written}></${tag}>`;
 	const at = startTag.end + 1;
