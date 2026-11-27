@@ -113,6 +113,7 @@ export const MetHref = {
 							slot="header"
 							text="Contactformulier"
 							heading-level="2"
+							size="display-4"
 						></nldd-title>
 						<nldd-form-field label="Naam">
 							<nldd-text-field

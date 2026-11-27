@@ -249,6 +249,7 @@ export const MetSecties = {
 					slot="header"
 					text="Persoon"
 					heading-level="2"
+					size="display-4"
 				></nldd-title>
 				<nldd-form-field label="Naam">
 					<nldd-text-field
@@ -264,6 +265,7 @@ export const MetSecties = {
 					text="Adres"
 					supporting-text="Waar we de beschikking naartoe sturen."
 					heading-level="2"
+					size="display-4"
 				></nldd-title>
 				<nldd-form-field label="Straat en huisnummer">
 					<nldd-text-field

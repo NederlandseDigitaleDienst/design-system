@@ -43,6 +43,7 @@ nldd-form                              name, method, label-alignment
       text="Je contactgegevens"
       supporting-text="We gebruiken je gegevens alleen om je vraag te beantwoorden."
       heading-level="2"
+      size="display-4"
     ></nldd-title>
 
     <nldd-form-field

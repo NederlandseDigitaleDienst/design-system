@@ -37,6 +37,7 @@ export const Standaard = {
 					slot="header"
 					text="Persoonsgegevens"
 					heading-level="2"
+					size="display-4"
 				></nldd-title>
 				<nldd-form-field label="Naam">
 					<nldd-text-field
@@ -61,6 +62,7 @@ export const MetToelichtingInDeKop = {
 					<nldd-title
 						text="Adres"
 						heading-level="2"
+						size="display-4"
 					></nldd-title>
 					<nldd-spacer size="4"></nldd-spacer>
 					<nldd-text color="secondary">
@@ -93,6 +95,7 @@ export const InEenFormulier = {
 					slot="header"
 					text="Persoonsgegevens"
 					heading-level="2"
+					size="display-4"
 				></nldd-title>
 				<nldd-form-field label="Naam">
 					<nldd-text-field
@@ -113,6 +116,7 @@ export const InEenFormulier = {
 					slot="header"
 					text="Adres"
 					heading-level="2"
+					size="display-4"
 				></nldd-title>
 				<nldd-form-field label="Straat en huisnummer">
 					<nldd-text-field
