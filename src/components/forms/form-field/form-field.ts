@@ -305,6 +305,9 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 		for (const el of Array.from(this.querySelectorAll(':not(:defined)'))) {
 			const tag = el.localName;
 			if (this._pendingTags.has(tag)) continue;
+			// Once per tag for as long as the field lives: a field that leaves and
+			// comes back while the tag is still undefined keeps the first wait,
+			// which still looks when the tag arrives.
 			this._pendingTags.add(tag);
 			// A tag that is never defined, such as one of a framework, leaves the
 			// promise waiting for good: it holds on to nothing more than a weak
@@ -431,7 +434,7 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 		const name = this.group ? this._accessibleName() : '';
 		internals.role = name ? 'group' : null;
 		internals.ariaLabel = name || null;
-		if (!this.group) this._describe(this, [], []);
+		if (!name) this._describe(this, [], []);
 		this._grouped = this.group;
 	}
 
@@ -584,8 +587,9 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 	 * supporting label and `help-text` after the elements.
 	 */
 	private _syncDescription() {
-		// What the field describes: itself as a group, or else its input.
-		const input = this.group ? this : this._input;
+		// What the field describes: itself as a group, or else its input. A group
+		// without a name has no role to carry a description, so nothing.
+		const input = this.group ? (this._accessibleName() ? this : null) : this._input;
 
 		const children = Array.from(this.children);
 		const tag = (el: Element) => el.tagName.toLowerCase();

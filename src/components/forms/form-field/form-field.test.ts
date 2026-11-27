@@ -590,9 +590,10 @@ describe('nldd-form-field – group', () => {
 	});
 
 	it('takes no role without a label, as an unnamed group says nothing', async () => {
-		el = await fixture('<nldd-form-field group><nldd-text-field accessible-label="Postcode"></nldd-text-field><nldd-text-field accessible-label="Huisnummer"></nldd-text-field></nldd-form-field>');
+		el = await fixture('<nldd-form-field group help-text="Zoals op je paspoort"><nldd-text-field accessible-label="Postcode"></nldd-text-field><nldd-text-field accessible-label="Huisnummer"></nldd-text-field></nldd-form-field>');
 		await waitForUpdate(el);
 		expect(groupOf(el)).toEqual({ role: null, name: null });
+		expect(el.hasAttribute('aria-description')).toBe(false);
 		(el as HTMLElement & { label: string }).label = 'Adres';
 		await waitForUpdate(el);
 		expect(groupOf(el)).toEqual({ role: 'group', name: 'Adres' });
