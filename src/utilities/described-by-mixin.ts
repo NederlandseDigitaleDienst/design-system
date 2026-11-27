@@ -179,6 +179,8 @@ export function DescribedBy<T extends Constructor<LitElement>>(
 			while (elements.length > texts.length) elements.pop()?.remove();
 			texts.forEach((text, i) => {
 				let el = elements[i];
+				// Made again when it left the shadow root, which a component that
+				// clears its root or renders a new one does.
 				if (!el || el.getRootNode() !== this.shadowRoot) {
 					el = document.createElement('span');
 					el.hidden = true;

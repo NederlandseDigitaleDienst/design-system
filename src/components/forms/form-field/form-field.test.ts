@@ -391,6 +391,30 @@ describe('nldd-form-field description wiring', () => {
 		expect(describedBy(anders)).toEqual([]);
 	});
 
+	it('keeps describing the control a list with `for` names while the field turns into a group and back', async () => {
+		el = await fixture(`
+			<nldd-form-field label="Rol">
+				<input id="eerste">
+				<input id="anders" aria-label="Andere rol" invalid value="a">
+				<nldd-validation-list for="anders">
+					<nldd-validation-item id="anders-item" match="@">Een apenstaartje</nldd-validation-item>
+				</nldd-validation-list>
+			</nldd-form-field>
+		`);
+		await waitForUpdate(el);
+		const anders = el.querySelector('#anders')!;
+		const item = el.querySelector('#anders-item')!;
+		const field = el as HTMLElement & { group: boolean };
+		field.group = true;
+		await waitForUpdate(el);
+		expect(describedBy(anders)).toEqual([item]);
+		expect(describedBy(el)).toEqual([]);
+		field.group = false;
+		await waitForUpdate(el);
+		expect(describedBy(anders)).toEqual([item]);
+		expect(describedBy(el.querySelector('#eerste')!)).toEqual([]);
+	});
+
 	it('takes the description back from a control a list with `for` no longer names', async () => {
 		el = await fixture(`
 			<nldd-form-field label="Rol" group>
