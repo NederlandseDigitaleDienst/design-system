@@ -385,7 +385,7 @@ describe('found in review', () => {
 	});
 
 	it('skips help text when looking for the input, as the field does', async () => {
-		const page = '<html><body><nldd-form-field label="a"><nldd-form-field-help-text><input></nldd-form-field-help-text><nldd-number-field></nldd-number-field></nldd-form-field></body></html>';
+		const page = '<html><body><nldd-form-field label="a"><nldd-text slot="help-text"><p><input></p></nldd-text><nldd-number-field></nldd-number-field></nldd-form-field></body></html>';
 		assert.deepEqual(await rulesIn(page, 'a.html'), []);
 	});
 

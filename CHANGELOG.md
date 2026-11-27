@@ -12,10 +12,16 @@ here; consult the commit history if you need that level of detail.
 ### Highlights
 
 - **`nldd-form-field` names and describes its input with the autoloader too.** A field that was defined before its input never wired that input up: no name, no error on screen. See Fixed.
+- **Help text is part of `nldd-form-field` now: `help-text` for plain text, an `nldd-text` in the `help-text` slot for text with a link.** `nldd-form-field-help-text` is gone; `nldd lint --fix` moves it over. See Breaking.
+
+### Breaking
+
+- **`nldd-form-field-help-text` is gone.** Put plain help text in `help-text` on the field, and help text with a link in an `nldd-text` with `slot="help-text"`, which the field gives the size, color and weight of help text. `nldd lint --fix` turns `<nldd-form-field-help-text>` into `<nldd-text slot="help-text">` (rule `form-field-help-text-renamed`), and then wraps its text in a `<p>` as `nldd-text` asks. A stylesheet or script that names the old tag is listed, not renamed: `nldd-text` alone would match every text on the page.
 
 ### Added
 
-- **`help-text` on `nldd-form-field`, for plain help text below the input.** It supports `**bold**`, as `label` does, and a screen reader reads it as part of the description of the input. For help text with a link, keep using `nldd-form-field-help-text`.
+- **`help-text` on `nldd-form-field`, for plain help text below the input.** It supports `**bold**`, as `label` does, and a screen reader reads it as part of the description of the input.
+- **Two lint rules for help text:** `form-field-help-text-needs-text` (`warn`) for something else than an `nldd-text` in the `help-text` slot, and the hint `form-field-help-text-style-no-effect` for a `size`, `color` or `weight` on it, which the field sets.
 - **A screen reader hears what the field shows around the label.** The "Optioneel" badge is now part of the accessible name of the input ("Tussenvoegsel, optioneel"), and `supporting-label` is now part of its description, after what is wrong and before the help text. Both were on screen only. The name comes from the new translation key `components.form-field.optional-accessible-label` (`{label}, optioneel`).
 
 ### Changed

@@ -1,15 +1,15 @@
 /**
- * Nederlandse Digitale Dienst Form Field Components (Lit + TypeScript)
+ * Nederlandse Digitale Dienst Form Field Component (Lit + TypeScript)
  *
  * A field around one input: its label, supporting label, optional badge,
  * validation and help text. It finds the input among its children, hands it
  * the label as its accessible name and gives it an id, so you write no `for`
  * or `id` yourself. An input that is defined later, as the autoloader does,
- * or that appears later inside a wrapper, is found when it arrives. The input is the first one it finds, leaving out what sits
- * in an nldd-toolbar inside the field: a toolbar works on the field, such as
- * the formatting bar above an nldd-text-editor, and is never the field itself.
- * A native `for` cannot cross a shadow boundary, so a click on the label
- * focuses the input from script.
+ * or that appears later inside a wrapper, is found when it arrives. The input
+ * is the first one it finds, leaving out what sits in an nldd-toolbar inside
+ * the field: a toolbar works on the field, such as the formatting bar above an
+ * nldd-text-editor, and is never the field itself. A native `for` cannot cross
+ * a shadow boundary, so a click on the label focuses the input from script.
  *
  * Mark the optional fields with `optional`, not the required ones; the design
  * guidelines say why. Put the requirements on a value in an
@@ -19,9 +19,17 @@
  * the list in the input's accessible description, before the help text. A list
  * with a `for` of its own describes the control it names instead.
  *
+ * Plain help text goes in `help-text`. Help text with more in it, such as a
+ * link, goes in an nldd-text in the `help-text` slot. The field gives that
+ * nldd-text its size, color and weight, so every help text looks the same.
+ *
  * The accessible name is the label, followed by "optioneel" when the field is
- * `optional`. The accessible description is what is wrong first, then the
- * supporting label, then the help text.
+ * `optional`. The accessible description is what is wrong first, then the help
+ * text in the slot, then the supporting label and `help-text`. Those last two
+ * are text in the field itself, and a control that carries its own role, such
+ * as a radio group or a native input, can only take text as
+ * `aria-description`: a browser reads that only while nothing else describes
+ * the control, so not while an error shows.
  *
  * @element nldd-form-field
  * @keywords veld, label
@@ -29,20 +37,12 @@
  * @attr {'top'|'right'|'left'} label-alignment - 'top' (default) | 'right' | 'left'. A value of its own wins over the one of a wrapping nldd-form.
  * @attr {string} label - Field label text. Omit for no-label layout. Supports **bold** markdown syntax, for the word to type in a confirmation; the accessible name of the control takes the text without the markers.
  * @attr {string} supporting-label - Short supporting text below the label. Same typography as optional badge. Supports **bold** markdown syntax. Read as part of the accessible description of the input.
- * @attr {string} help-text - Help text below the input, as plain text. Supports **bold** markdown syntax. Read as part of the accessible description of the input, after the validation and the supporting label. For a link in the help text, use nldd-form-field-help-text.
+ * @attr {string} help-text - Help text below the input, as plain text. Supports **bold** markdown syntax. Read as part of the accessible description of the input, after the validation and the supporting label. Help text with a link goes in the `help-text` slot, which takes its place.
  * @attr {boolean} optional - Shows an optional badge next to the label, and adds it to the accessible name of the input. Its text is the translation key `components.form-field.optional-label` ("Optioneel"); the name is `components.form-field.optional-accessible-label` ("{label}, optioneel").
  * @attr {object} translations - Override translation keys, such as the text of the optional badge; unset keys fall back to Dutch
  *
- * @slot - The slotted input (e.g. nldd-text-field), its nldd-validation-list and its nldd-form-field-help-text.
- *
- * ─────────────────────────────────────────────────────────────────────────
- *
- * @element nldd-form-field-help-text
- *
- * @slot - Help text content. Inline elements in it look as they do in nldd-text: `<strong>` and `<b>` take the bold weight from the scale, `<em>` and `<i>` are italic, `<a>` is an underlined link, `<code>` sits on a tinted surface in the monospace font and `<mark>` is highlighted. Only direct children get that styling: an element inside another (a `<code>` in an `<a>`) is left as it is.
- * @accepts a, strong, b, em, i, code, mark
- *
- * ─────────────────────────────────────────────────────────────────────────
+ * @slot - The slotted input (e.g. nldd-text-field) and its nldd-validation-list.
+ * @slot help-text - Help text with more than plain text in it, such as a link: an nldd-text. The field sets its `size`, `color` and `weight`. Takes the place of `help-text`.
  *
  * @example
  * <nldd-form-field label="Password">
@@ -51,9 +51,9 @@
  *     <nldd-validation-item id="password-required" required>This field is required.</nldd-validation-item>
  *     <nldd-validation-item id="password-length" minlength="8">Must be at least 8 characters.</nldd-validation-item>
  *   </nldd-validation-list>
- *   <nldd-form-field-help-text>
- *     We only use this to sign you in. <a href="/help">Learn more</a>.
- *   </nldd-form-field-help-text>
+ *   <nldd-text slot="help-text">
+ *     <p>We only use this to sign you in. <a href="/help">Learn more</a>.</p>
+ *   </nldd-text>
  * </nldd-form-field>
  */
 import { LitElement } from 'lit';
@@ -62,22 +62,27 @@ import { customElement } from '../../../utilities/custom-element.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
 import { stripBold } from '../../../utilities/render-marked.js';
 import { applyDescribedBy, type DescribedElement } from '../../../utilities/described-by-mixin.js';
-import {
-	formFieldStyles,
-	formFieldHelpTextStyles,
-} from './form-field.styles.js';
-import {
-	formFieldTemplate,
-	formFieldHelpTextTemplate,
-} from './form-field.template.js';
+import { formFieldStyles } from './form-field.styles.js';
+import { formFieldTemplate } from './form-field.template.js';
 import { setState, styleValueState } from '../../../utilities/element-state.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddFormFieldTranslations } from './form-field.i18n.js';
 
 export type LabelAlignment = 'top' | 'left' | 'right';
 
-// Exclude helper elements so _findInput() never returns them instead of the actual input
-const HELPER_TAGS = ['nldd-form-field-help-text'];
+/** Help text in the `help-text` slot, which is never the input. */
+const isHelpText = (el: Element): boolean => el.getAttribute('slot') === 'help-text';
+
+/**
+ * What the field sets on an nldd-text in its `help-text` slot. One look for
+ * every help text: the size and weight of body text a step down, in the color
+ * of the text around it.
+ *
+ * Properties and not attributes: nldd-text writes no attribute for a default
+ * value, so an attribute set to one is taken away again. A property set before
+ * the nldd-text is defined is picked up by Lit when it upgrades.
+ */
+const HELP_TEXT_PROPERTIES = { size: 'sm', color: 'content', weight: 'regular' } as const;
 
 /**
  * Whether this element is the input a field is about.
@@ -161,12 +166,12 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 
 	/**
 	 * Short supporting text shown below the label. Same typography as the
-	 * optional badge. Use nldd-form-field-help-text for longer descriptive text.
+	 * optional badge. Use `help-text` for longer descriptive text.
 	 */
 	@property({ type: String, attribute: 'supporting-label' })
 	supportingLabel = '';
 
-	/** Plain help text below the input. For text with a link, use nldd-form-field-help-text. */
+	/** Plain help text below the input. Help text with a link goes in the `help-text` slot. */
 	@property({ type: String, attribute: 'help-text' })
 	helpText = '';
 
@@ -221,10 +226,15 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 		super.connectedCallback();
 		// The whole subtree: an input that appears later inside a wrapper (a `v-if`
 		// in a `div`) is as much the field's input as a direct child.
+		// And help text that is hidden or shown: a hidden element that is referenced
+		// is still read out.
 		this._childObserver = new MutationObserver((mutations) => {
-			if (mutations.some(m => [...m.addedNodes, ...m.removedNodes].some(n => n.nodeType === Node.ELEMENT_NODE))) this._onSlotChange();
+			const moved = mutations.some(m => m.attributeName === 'slot'
+				|| [...m.addedNodes, ...m.removedNodes].some(n => n.nodeType === Node.ELEMENT_NODE));
+			if (moved) this._onSlotChange();
+			else if (mutations.some(m => m.attributeName === 'hidden' && isHelpText(m.target as Element))) this._syncDescription();
 		});
-		this._childObserver.observe(this, { childList: true, subtree: true });
+		this._childObserver.observe(this, { childList: true, subtree: true, attributes: true, attributeFilter: ['slot', 'hidden'] });
 		// Moved in the DOM: `firstUpdated` does not come again, and the observer
 		// on the validation lists only starts from here.
 		if (this.hasUpdated) this._onSlotChange();
@@ -305,6 +315,10 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 
 	private _onSlotChange() {
 		this._awaitUndefined();
+		for (const help of this._helpTexts()) {
+			if (help.localName !== 'nldd-text') continue;
+			Object.assign(help, HELP_TEXT_PROPERTIES);
+		}
 		const input = this._findInput();
 		// A consumer's own element can be an input too, which no selector can know.
 		setState(this, 'has-input', Boolean(input));
@@ -413,7 +427,7 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 		const readsValue = lists.some(list => !list.getAttribute('for') && Array.from(list.children)
 			.some(item => item.hasAttribute('match') || item.hasAttribute('minlength') || item.hasAttribute('maxlength')));
 		const controls = Array.from(this.children)
-			.filter(el => !HELPER_TAGS.includes(el.tagName.toLowerCase()) && isFormInput(el));
+			.filter(el => !isHelpText(el) && isFormInput(el));
 		setState(this, 'list-reads-first-control', readsValue && controls.length > 1);
 	}
 
@@ -437,7 +451,7 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 	 */
 	private _findInput(): Element | undefined {
 		const children = Array.from(this.children)
-			.filter(el => !HELPER_TAGS.includes(el.tagName.toLowerCase()) && !isToolbar(el));
+			.filter(el => !isHelpText(el) && !isToolbar(el));
 		for (const child of children) {
 			if (isFormInput(child)) return child;
 			const nested = Array.from(child.querySelectorAll('*')).find(el => isFormInput(el) && !inToolbar(el, child));
@@ -470,11 +484,15 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 	 * radio group carries its own error; handing that to the group read it out
 	 * on the wrong control and left the field that was wrong without it (#415).
 	 *
-	 * The supporting label and the help text sit in this shadow root, where no
-	 * reference from the control can reach them, so they go over as text.
+	 * The supporting label and `help-text` sit in this shadow root, where no
+	 * reference from the control can reach them, so they go over as text. Help
+	 * text in the slot is in the light DOM and goes over as an element, which
+	 * every control can point at: a host that carries its own role, such as a
+	 * radio group, says text only as `aria-description`, and a browser drops
+	 * that as soon as there is an `aria-describedby`.
 	 *
-	 * What is wrong first: it is why you are here. Then the supporting label,
-	 * which sits closest to the label, and then the help text.
+	 * What is wrong first: it is why you are here. Then the help text, with the
+	 * supporting label and `help-text` after the elements.
 	 */
 	private _syncDescription() {
 		const input = this._input;
@@ -505,11 +523,16 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 		for (const control of this._describedOthers) this._describe(control, byControl.get(control) ?? []);
 
 		if (!input) return;
-		const texts = [stripBold(this.supportingLabel), stripBold(this.helpText)].map(text => text.trim()).filter(Boolean);
-		this._describe(input, [
-			...(byControl.get(input) ?? []),
-			...children.filter(el => tag(el) === 'nldd-form-field-help-text'),
-		], texts);
+		// Help text in the slot takes the place of `help-text`, also while it is hidden.
+		const slotted = this._helpTexts();
+		const help = slotted.filter(el => !(el as HTMLElement).hidden);
+		const texts = [stripBold(this.supportingLabel), slotted.length ? '' : stripBold(this.helpText)].map(text => text.trim()).filter(Boolean);
+		this._describe(input, [...(byControl.get(input) ?? []), ...help], texts);
+	}
+
+	/** The elements in the `help-text` slot. */
+	private _helpTexts(): Element[] {
+		return Array.from(this.children).filter(isHelpText);
 	}
 
 	/**
@@ -543,30 +566,8 @@ function sameItems<T>(a: readonly T[] | undefined, b: readonly T[]): boolean {
 }
 
 
-/* ============================================================
-   nldd-form-field-help-text
-   ============================================================ */
-
-@customElement('nldd-form-field-help-text')
-export class NLDDFormFieldHelpText extends LitElement {
-	static override styles = formFieldHelpTextStyles;
-
-	override connectedCallback() {
-		super.connectedCallback();
-		// Assign to the 'help' slot automatically so consumers don't need to set slot="help" manually.
-		// Note: this will overwrite any explicit slot attribute set by the consumer.
-		this.slot = 'help';
-	}
-
-	override render() {
-		return formFieldHelpTextTemplate(this);
-	}
-}
-
-
 declare global {
 	interface HTMLElementTagNameMap {
 		'nldd-form-field': NLDDFormField;
-		'nldd-form-field-help-text': NLDDFormFieldHelpText;
 	}
 }

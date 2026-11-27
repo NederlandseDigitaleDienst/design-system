@@ -4,6 +4,7 @@ import '../validation-list/validation-list.js';
 import '../form/form.js';
 import '../form-actions/form-actions.js';
 import '../../inputs/text-field/text-field.js';
+import '../../content/text/text.js';
 import '../../actions/button/button.js';
 import '../../actions/button-group/button-group.js';
 
@@ -43,7 +44,7 @@ export default {
 		helpText: {
 			name: 'help-text',
 			control: 'text',
-			description: 'Hulptekst onder de invoer, als platte tekst. Voor een hulptekst met een link is er `nldd-form-field-help-text`.',
+			description: 'Hulptekst onder de invoer, als platte tekst. Een hulptekst met een link zet je in een `nldd-text` in het slot `help-text`.',
 		},
 		optional: {
 			control: 'boolean',
@@ -88,14 +89,16 @@ export const MetHulptekst = () => html`
 `;
 
 /**
- * Staat er een link in de hulptekst, gebruik dan `nldd-form-field-help-text`.
+ * Staat er een link in de hulptekst, zet die dan in een `nldd-text` in het slot
+ * `help-text`. Het veld geeft die tekst de grootte, kleur en dikte van een
+ * hulptekst.
  */
 export const MetHulptekstEnLink = () => html`
 	<nldd-form-field label="E-mailadres">
-		<nldd-form-field-help-text>
-			Wij delen uw e-mailadres nooit. <a href="/privacy">Privacybeleid</a>.
-		</nldd-form-field-help-text>
 		<nldd-text-field type="email"></nldd-text-field>
+		<nldd-text slot="help-text">
+			<p>Wij delen uw e-mailadres nooit. <a href="/privacy">Privacybeleid</a>.</p>
+		</nldd-text>
 	</nldd-form-field>
 `;
 
@@ -133,9 +136,9 @@ export const MeerdereFouten = () => html`
 			<nldd-validation-item id="wachtwoord-verplicht" required>Een wachtwoord is verplicht</nldd-validation-item>
 			<nldd-validation-item id="wachtwoord-lengte" minlength="8">Minimaal 8 tekens</nldd-validation-item>
 		</nldd-validation-list>
-		<nldd-form-field-help-text>
-			We gebruiken dit alleen om je aan te melden. <a href="/help">Hoe we je wachtwoord bewaren</a>.
-		</nldd-form-field-help-text>
+		<nldd-text slot="help-text">
+			<p>We gebruiken dit alleen om je aan te melden. <a href="/help">Hoe we je wachtwoord bewaren</a>.</p>
+		</nldd-text>
 	</nldd-form-field>
 `;
 

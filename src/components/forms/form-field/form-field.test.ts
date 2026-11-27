@@ -30,6 +30,7 @@ import '../../inputs/switch/switch.js';
 import '../../content/tag/tag.js';
 import '../../actions/button/button.js';
 import '../validation-list/validation-list.js';
+import '../../content/text/text.js';
 
 /** The elements a control points at as its description, in order. */
 function describedBy(el: Element): readonly Element[] {
@@ -123,10 +124,10 @@ describe('nldd-form-field', () => {
 		expect(el.shadowRoot!.querySelector('label.form-field__label')).not.toBeNull();
 	});
 
-	it('includes the help text among the elements that describe the input', async () => {
+	it('includes help text in the slot among the elements that describe the input', async () => {
 		el = await fixture(`
 			<nldd-form-field label="Email">
-				<nldd-form-field-help-text id="help-static">Format: DD-MM-YYYY</nldd-form-field-help-text>
+				<nldd-text slot="help-text" id="help-static"><p>Format: DD-MM-YYYY</p></nldd-text>
 				<input>
 			</nldd-form-field>
 		`);
@@ -135,24 +136,28 @@ describe('nldd-form-field', () => {
 		expect(describedBy(input)).toContain(el.querySelector('#help-static'));
 	});
 
-	it('hides help text via the hidden attribute', async () => {
-		// The host is display: contents, which outranks the UA [hidden] rule;
-		// without the :host([hidden]) restatement this stays visible.
+	it('leaves hidden help text out of the description, and takes it back when it shows', async () => {
+		// A hidden element that is referenced is still read out.
 		el = await fixture(`
 			<nldd-form-field label="Periode">
-				<nldd-form-field-help-text hidden>De periode van de opdracht is 1 jan t/m 1 feb</nldd-form-field-help-text>
+				<nldd-text slot="help-text" hidden><p>De periode van de opdracht is 1 jan t/m 1 feb</p></nldd-text>
 				<input>
 			</nldd-form-field>
 		`);
 		await waitForUpdate(el);
-		const help = el.querySelector('nldd-form-field-help-text')!;
+		const help = el.querySelector('nldd-text')!;
+		const input = el.querySelector('input')!;
 		expect(getComputedStyle(help).display).toBe('none');
+		expect(describedBy(input)).toEqual([]);
+		help.hidden = false;
+		await waitForUpdate(el);
+		expect(describedBy(input)).toEqual([help]);
 	});
 
 	it('lists the validation list before the help text', async () => {
 		el = await fixture(`
 			<nldd-form-field label="Email">
-				<nldd-form-field-help-text id="help-1">Format hint</nldd-form-field-help-text>
+				<nldd-text slot="help-text" id="help-1"><p>Format hint</p></nldd-text>
 				<input invalid value="a">
 				<nldd-validation-list id="rules-1">
 					<nldd-validation-item id="rule-at" match="@">Een apenstaartje</nldd-validation-item>
@@ -162,7 +167,7 @@ describe('nldd-form-field', () => {
 		await waitForUpdate(el);
 		const input = el.querySelector('input')!;
 		const order = describedBy(input);
-		// Wat er mis is staat voorop: dat is waarom je hier bent.
+		// What is wrong comes first: that is why you are here.
 		expect(order.indexOf(el.querySelector('#rule-at')!)).toBe(0);
 		expect(order.indexOf(el.querySelector('#help-1')!)).toBe(1);
 	});
@@ -348,10 +353,10 @@ describe('nldd-form-field description wiring', () => {
 		expect(describedBy(el.querySelector('#ctrl')!)).toEqual([el.querySelector('#rule-at-2')]);
 	});
 
-	it('does not treat nldd-form-field-help-text as the control', async () => {
+	it('does not treat help text as the control', async () => {
 		el = await fixture(`
 			<nldd-form-field label="Email">
-				<nldd-form-field-help-text>Help.</nldd-form-field-help-text>
+				<nldd-text slot="help-text"><p>Help.</p></nldd-text>
 				<input id="ctrl-2" invalid value="a">
 				<nldd-validation-list id="rules-4">
 					<nldd-validation-item id="rule-at-3" match="@">Een apenstaartje</nldd-validation-item>
@@ -520,38 +525,62 @@ describe('nldd-form-field – finds a control that arrives late', () => {
 
 
 /* ============================================================
-   nldd-form-field-help-text
+   nldd-form-field help text in the slot
    ============================================================ */
 
-describe('nldd-form-field-help-text', () => {
+describe('nldd-form-field – help text in the slot', () => {
 	let el: HTMLElement;
 
 	afterEach(() => {
 		if (el) cleanup(el);
 	});
 
-	it('renders slotted content', async () => {
-		el = await fixture('<nldd-form-field-help-text>Some help text.</nldd-form-field-help-text>');
+	it('gives the nldd-text its size, color and weight, over values of its own', async () => {
+		el = await fixture(`
+			<nldd-form-field label="E-mailadres">
+				<nldd-text-field></nldd-text-field>
+				<nldd-text slot="help-text" size="lg" color="accent"><p>Zie het <a href="/privacy">privacybeleid</a>.</p></nldd-text>
+			</nldd-form-field>
+		`);
 		await waitForUpdate(el);
-		expect(el.textContent).toContain('Some help text.');
+		const help = el.querySelector('nldd-text') as HTMLElement & { size: string; color: string; weight: string };
+		expect([help.size, help.color, help.weight]).toEqual(['sm', 'content', 'regular']);
 	});
 
-	it('renders slotted links', async () => {
-		el = await fixture('<nldd-form-field-help-text>Read <a href="/help">more</a>.</nldd-form-field-help-text>');
+	it('styles help text that arrives later', async () => {
+		el = await fixture('<nldd-form-field label="E-mailadres"><nldd-text-field></nldd-text-field></nldd-form-field>');
 		await waitForUpdate(el);
-		expect(el.querySelector('a')).not.toBeNull();
+		el.insertAdjacentHTML('beforeend', '<nldd-text slot="help-text"><p>Later</p></nldd-text>');
+		await waitForUpdate(el);
+		expect((el.querySelector('nldd-text') as HTMLElement & { size: string }).size).toBe('sm');
 	});
 
-	it('styles inline elements as nldd-text does', async () => {
+	it('takes the place of help-text, on screen and in the description', async () => {
+		el = await fixture(`
+			<nldd-form-field label="E-mailadres" help-text="Platte tekst">
+				<input>
+				<nldd-text slot="help-text"><p>Met een <a href="/privacy">link</a></p></nldd-text>
+			</nldd-form-field>
+		`);
+		await waitForUpdate(el);
+		const slot = el.shadowRoot!.querySelector<HTMLSlotElement>('slot[name="help-text"]')!;
+		expect(slot.assignedElements()).toEqual([el.querySelector('nldd-text')]);
+		const input = el.querySelector('input')!;
+		expect(describedBy(input)).toEqual([el.querySelector('nldd-text')]);
+		expect(input.hasAttribute('aria-description')).toBe(false);
+	});
+
+	it('styles a link in it as a link', async () => {
 		const unloadTokens = loadTokens();
 		onTestFinished(unloadTokens);
-		el = await fixture(
-			'<nldd-form-field-help-text>Use <code>role</code>, <strong>never</strong> <em>this</em>.</nldd-form-field-help-text>',
-		);
+		el = await fixture(`
+			<nldd-form-field label="E-mailadres">
+				<input>
+				<nldd-text slot="help-text"><p>Zie het <a href="/privacy">privacybeleid</a>.</p></nldd-text>
+			</nldd-form-field>
+		`);
 		await waitForUpdate(el);
-		expect(getComputedStyle(el.querySelector('code')!).fontFamily).not.toBe(getComputedStyle(el).fontFamily);
-		expect(getComputedStyle(el.querySelector('code')!).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
-		expect(getComputedStyle(el.querySelector('em')!).fontStyle).toBe('italic');
+		expect(getComputedStyle(el.querySelector('a')!).textDecorationLine).toBe('underline');
 	});
 });
 
@@ -882,7 +911,7 @@ describe('nldd-form-field – finds the control', () => {
 	it('leaves a helper element alone as the first child', async () => {
 		el = await fixture(`
 			<nldd-form-field label="Veldnaam">
-				<nldd-form-field-help-text>Uitleg</nldd-form-field-help-text>
+				<nldd-text slot="help-text"><p>Uitleg</p></nldd-text>
 				<nldd-text-field></nldd-text-field>
 			</nldd-form-field>
 		`);
@@ -917,7 +946,7 @@ describe('nldd-form-field – a toolbar in the field is never the field', () => 
 					</nldd-toolbar>
 					<nldd-text-editor></nldd-text-editor>
 				</div>
-				<nldd-form-field-help-text>Waar gaat het over?</nldd-form-field-help-text>
+				<nldd-text slot="help-text"><p>Waar gaat het over?</p></nldd-text>
 			</nldd-form-field>`);
 		await waitForUpdate(el);
 		const editor = el.querySelector('nldd-text-editor') as HTMLElement;

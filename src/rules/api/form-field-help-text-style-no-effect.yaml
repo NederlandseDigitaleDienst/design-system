@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-form-field > nldd-text[slot="help-text"]:is([size], [color], [weight])'
+message: 'nldd-form-field sets `size`, `color` and `weight` on its help text, so a value of your own does nothing.'
+see: componenten/form-field
+examples:
+  passed: ['<nldd-form-field label="E-mailadres"><nldd-text-field></nldd-text-field><nldd-text slot="help-text"><p>Zie het <a href="/privacy">privacybeleid</a>.</p></nldd-text></nldd-form-field>']
+  failed: ['<nldd-form-field label="E-mailadres"><nldd-text-field></nldd-text-field><nldd-text slot="help-text" size="lg"><p>Zie het <a href="/privacy">privacybeleid</a>.</p></nldd-text></nldd-form-field>']

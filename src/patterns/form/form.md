@@ -10,7 +10,7 @@ nldd-form                              name, method, label-alignment
   │    └─ nldd-form-field              label, optional
   │         ├─ het invoerveld          nldd-text-field, nldd-dropdown, …
   │         ├─ nldd-validation-list    de eisen aan de waarde
-  │         └─ nldd-form-field-help-text  uitleg die niets tegenhoudt
+  │         └─ help-text               uitleg die niets tegenhoudt
   └─ nldd-form-actions
        └─ nldd-button-group            de primaire actie, type="submit"
 ```
@@ -35,7 +35,7 @@ De volgorde volgt het gedachteproces en niet de database, zie de [ontwerprichtli
 
 **Markeer wat optioneel is, niet wat verplicht is.** `optional` op het veld toont zelf het label "Optioneel". Waarom dat zo is, staat in de [ontwerprichtlijnen](/handleidingen/richtlijnen/#invoer-en-formulieren).
 
-**De eisen staan in een validation list.** Een [`nldd-validation-list`](/componenten/validation-list/) toont een eis pas als de waarde er niet aan voldoet, en koppelt de fout aan het veld. Schrijf een item als eis en niet als opdracht, zie de [ontwerprichtlijnen](/handleidingen/richtlijnen/#copywriting): dezelfde regel staat er vooraf als wat het veld wil en achteraf als wat er nog niet klopt, dus hij moet op allebei die momenten kloppen. Tekst die niemand tegenhoudt, zoals "We sturen een bevestigingsmail naar dit adres", is geen eis maar een `nldd-form-field-help-text`. Een optioneel veld is niet `required`, en een lege waarde komt door elke eis heen. Een formaateis mag er dus wel onder: een telefoonnummer dat je mag weglaten, moet nog steeds een telefoonnummer zijn als je het invult.
+**De eisen staan in een validation list.** Een [`nldd-validation-list`](/componenten/validation-list/) toont een eis pas als de waarde er niet aan voldoet, en koppelt de fout aan het veld. Schrijf een item als eis en niet als opdracht, zie de [ontwerprichtlijnen](/handleidingen/richtlijnen/#copywriting): dezelfde regel staat er vooraf als wat het veld wil en achteraf als wat er nog niet klopt, dus hij moet op allebei die momenten kloppen. Tekst die niemand tegenhoudt, zoals "We sturen een bevestigingsmail naar dit adres", is geen eis maar een `help-text` op het veld. Een optioneel veld is niet `required`, en een lege waarde komt door elke eis heen. Een formaateis mag er dus wel onder: een telefoonnummer dat je mag weglaten, moet nog steeds een telefoonnummer zijn als je het invult.
 
 **Importeer de globale stylesheet.** [`nldd-form`](/componenten/form/) en de form section staan in de light DOM, dus hun opmaak zit in `@nldd/design-system/styles` en niet in een shadow root. Laat je die stylesheet weg, dan lijkt het formulier kapot.
 

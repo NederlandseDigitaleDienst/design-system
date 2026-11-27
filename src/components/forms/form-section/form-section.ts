@@ -28,7 +28,7 @@ import { PlainElement } from '../../../utilities/custom-element.js';
  * is spoken again. Keep `supporting-text` short (roughly 80 characters or less)
  * and use it to introduce the group ("Vul je adresgegevens in"), not for
  * detailed instructions. For a longer explanation on one specific field, use
- * `nldd-form-field-help-text` on that field.
+ * `help-text` on that field.
  *
  * @element nldd-form-section
  * @keywords formuliersectie

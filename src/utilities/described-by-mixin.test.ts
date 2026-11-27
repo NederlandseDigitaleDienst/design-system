@@ -83,9 +83,8 @@ describe('accessible-described-by and accessible-description', () => {
 	it('reads the form field first, then the app, then the popover on interest', async () => {
 		root = await fixture<HTMLElement>(`
 			<div>
-				<nldd-form-field label="Naam">
+				<nldd-form-field label="Naam" help-text="Zoals in je paspoort">
 					<nldd-text-field accessible-described-by="extra"></nldd-text-field>
-					<nldd-form-field-help-text>Zoals in je paspoort</nldd-form-field-help-text>
 				</nldd-form-field>
 				<p id="extra">Wordt gedeeld met team Beleid</p>
 				<nldd-toggle-button text="2" accessible-description="Jij reageerde ook">

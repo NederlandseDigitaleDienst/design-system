@@ -2,7 +2,6 @@
 import { html, nothing, TemplateResult } from 'lit';
 import { renderBold } from '../../../utilities/render-marked.js';
 import type { NLDDFormField } from './form-field.js';
-import type { NLDDFormFieldHelpText } from './form-field.js';
 
 /* ============================================================
    nldd-form-field
@@ -38,25 +37,14 @@ export function formFieldTemplate(component: NLDDFormField): TemplateResult {
 			${headerEl}
 			<div class="form-field__main">
 				<slot></slot>
-				${component.helpText ? html`
-					<p class="form-field__help-text">
-						${renderBold(component.helpText)}
-					</p>
-				` : nothing}
-				<slot name="help"></slot>
+				<slot name="help-text">
+					${component.helpText ? html`
+						<p class="form-field__help-text">
+							${renderBold(component.helpText)}
+						</p>
+					` : nothing}
+				</slot>
 			</div>
 		</div>
-	`;
-}
-
-/* ============================================================
-   nldd-form-field-help-text
-   ============================================================ */
-
-export function formFieldHelpTextTemplate(_component: NLDDFormFieldHelpText): TemplateResult {
-	return html`
-		<p class="form-field__help-text">
-			<slot></slot>
-		</p>
 	`;
 }

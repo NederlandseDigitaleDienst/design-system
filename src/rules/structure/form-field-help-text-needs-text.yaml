@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-form-field > [slot="help-text"]:not(nldd-text)'
+message: 'The `help-text` slot of nldd-form-field takes an nldd-text: the field gives it the look of help text, and it styles a link in it.'
+see: componenten/form-field
+examples:
+  passed: ['<nldd-form-field label="E-mailadres"><nldd-text-field></nldd-text-field><nldd-text slot="help-text"><p>Zie het <a href="/privacy">privacybeleid</a>.</p></nldd-text></nldd-form-field>']
+  failed: ['<nldd-form-field label="E-mailadres"><nldd-text-field></nldd-text-field><p slot="help-text">Zie het <a href="/privacy">privacybeleid</a>.</p></nldd-form-field>']

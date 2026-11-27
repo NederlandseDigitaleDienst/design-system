@@ -1,7 +1,7 @@
 import { css, unsafeCSS } from 'lit';
 import { wrapBodyText, wrapUiText } from '../../../assets/styles/text-wrap.js';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
-import { slottedReset, inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
 
 const mdMin = unsafeCSS(queryBreakpoints.mdMin);
 
@@ -186,7 +186,13 @@ export const formFieldStyles = css`
 
 	/* # Help text */
 
-	/* Snug and not tight, as nldd-form-field-help-text: help text can run to a
+	/* The nldd-text in the slot takes its look from the attributes the field
+	   sets, and its place from here. */
+	::slotted([slot="help-text"]) {
+		margin-block-start: var(--_form-field-description-gap);
+	}
+
+	/* Snug and not tight, as the nldd-text in the slot: help text can run to a
 	   paragraph, and body text takes a line height of 1.5. */
 	.form-field__help-text {
 		margin: var(--_form-field-description-gap) 0 0;
@@ -197,111 +203,4 @@ export const formFieldStyles = css`
 	}
 
 
-`;
-
-export const formFieldHelpTextStyles = css`
-
-
-	/* # Host */
-
-	:host {
-		--_form-field-help-text-code-padding: var(--primitives-space-2) var(--primitives-space-4);
-		--_form-field-help-text-code-corner-radius: var(--semantics-controls-xs-corner-radius);
-		--_form-field-help-text-code-border-width: var(--semantics-surfaces-highlight-border-width);
-		--_form-field-help-text-code-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
-		--_form-field-help-text-code-background-color: var(--semantics-surfaces-tinted-background-color);
-		--_form-field-help-text-code-font-family: var(--primitives-font-family-monospace);
-		--_form-field-help-text-code-font-size: var(--semantics-code-inline-font-size);
-		--_form-field-help-text-mark-padding: var(--primitives-space-1) var(--primitives-space-2);
-		--_form-field-help-text-mark-corner-radius: var(--semantics-controls-xs-corner-radius);
-		--_form-field-help-text-mark-background-color: var(--semantics-content-mark-background-color);
-		--_form-field-help-text-mark-color: var(--semantics-content-mark-color);
-		${inheritedTextReset}
-		display: contents;
-	}
-
-	/* display: contents outranks the UA [hidden] rule, so restate it here or
-	   consumers cannot hide the help text (e.g. behind a period toggle). */
-	:host([hidden]) {
-		display: none;
-	}
-
-
-	/* # Help text */
-
-	.form-field__help-text {
-		margin: var(--primitives-space-4) 0 0;
-		--context-content-color: var(--semantics-content-color);
-		color: var(--semantics-content-color);
-		font: var(--primitives-font-body-sm-regular-snug);
-		${wrapBodyText}
-	}
-
-
-	/* # Links */
-
-	::slotted(a) {
-		${slottedReset}
-		${inheritedTextReset}
-		border-radius: var(--primitives-corner-radius-xxs) !important;
-		--context-content-color: var(--context-link-color) !important;
-		color: var(--context-link-color) !important;
-		text-decoration: underline !important;
-		text-underline-offset: var(--primitives-space-2) !important;
-	}
-
-	@media (hover: hover) {
-		::slotted(a:hover) {
-			--context-content-color: var(--context-link-is-hovered-color) !important;
-			color: var(--context-link-is-hovered-color) !important;
-		}
-	}
-
-	::slotted(a:active) {
-		--context-content-color: var(--context-link-is-active-color) !important;
-		color: var(--context-link-is-active-color) !important;
-	}
-
-	::slotted(a:focus-visible) {
-		outline: var(--semantics-focus-ring-outline) !important;
-		outline-offset: var(--semantics-focus-ring-outline-offset) !important;
-		box-shadow: var(--semantics-focus-ring-box-shadow) !important;
-	}
-
-	::slotted(a:focus:not(:focus-visible)) {
-		outline: none !important;
-	}
-
-
-	/* # Inline elements */
-
-	::slotted(:is(strong, b, em, i, code, mark)) {
-		${slottedReset}
-		${inheritedTextReset}
-	}
-
-	::slotted(:is(strong, b)) {
-		font-weight: var(--primitives-font-weight-body-bold) !important;
-	}
-
-	::slotted(:is(em, i)) {
-		font-style: italic !important;
-	}
-
-	::slotted(code) {
-		border-radius: var(--_form-field-help-text-code-corner-radius) !important;
-		box-shadow: inset 0 0 0 var(--_form-field-help-text-code-border-width) var(--_form-field-help-text-code-border-color) !important;
-		background-color: var(--_form-field-help-text-code-background-color) !important;
-		padding: var(--_form-field-help-text-code-padding) !important;
-		font-family: var(--_form-field-help-text-code-font-family) !important;
-		font-size: var(--_form-field-help-text-code-font-size) !important;
-	}
-
-	::slotted(mark) {
-		border-radius: var(--_form-field-help-text-mark-corner-radius) !important;
-		background-color: var(--_form-field-help-text-mark-background-color) !important;
-		padding: var(--_form-field-help-text-mark-padding) !important;
-		--context-content-color: var(--_form-field-help-text-mark-color) !important;
-		color: var(--_form-field-help-text-mark-color) !important;
-	}
 `;

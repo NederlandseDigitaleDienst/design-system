@@ -39,13 +39,13 @@ const CSS_PSEUDOS = new Set(['is', 'not', 'has', 'where', 'matches']);
 
 /**
  * Whether a field hands its label to `target`, as _findInput in nldd-form-field does:
- * the first input in document order, helper text left out. The answer is `maybe` when
+ * the first input in document order, help text in the `help-text` slot left out. The answer is `maybe` when
  * something before it may or may not be an input that renders.
  */
 function findsInput(node, target, isInput, uncertain = false) {
 	let maybe = uncertain;
 	for (const child of node.children) {
-		if (child.name === 'nldd-form-field-help-text') continue;
+		if (child.attrs.get('slot') === 'help-text') continue;
 		const unsure = maybe || child.conditional || child.repeated;
 		if (child === target) return maybe ? 'maybe' : 'yes';
 		if (isInput(child)) {

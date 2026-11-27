@@ -228,7 +228,10 @@ export const MetFor = () => html`
  */
 export const NaastHelpTekst = () => html`
 	<nldd-form>
-		<nldd-form-field label="E-mailadres">
+		<nldd-form-field
+			label="E-mailadres"
+			help-text="We sturen een bevestigingsmail naar dit adres."
+		>
 			<nldd-text-field
 				type="email"
 				name="email"
@@ -237,7 +240,6 @@ export const NaastHelpTekst = () => html`
 			<nldd-validation-list>
 				<nldd-validation-item id="email-at" match="@">Een apenstaartje</nldd-validation-item>
 			</nldd-validation-list>
-			<nldd-form-field-help-text>We sturen een bevestigingsmail naar dit adres.</nldd-form-field-help-text>
 		</nldd-form-field>
 		<nldd-form-actions>
 			<nldd-button-group>

@@ -40,7 +40,6 @@ export const loaders: Record<string, () => Promise<unknown>> = {
 	'nldd-form': () => import('../components/forms/form/form.js'),
 	'nldd-form-actions': () => import('../components/forms/form-actions/form-actions.js'),
 	'nldd-form-field': () => import('../components/forms/form-field/form-field.js'),
-	'nldd-form-field-help-text': () => import('../components/forms/form-field/form-field.js'),
 	'nldd-form-section': () => import('../components/forms/form-section/form-section.js'),
 	'nldd-full-bleed-section': () => import('../components/layout/page-sections/full-bleed-section/full-bleed-section.js'),
 	'nldd-hero': () => import('../components/layout/page-sections/hero/hero.js'),
