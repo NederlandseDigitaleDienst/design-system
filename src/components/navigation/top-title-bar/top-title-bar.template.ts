@@ -16,7 +16,7 @@ const HEADING_TAGS: Record<number, ReturnType<typeof unsafeStatic>> = {
 };
 
 export function topTitleBarTemplate(component: NLDDTopTitleBar) {
-	const showBack = !!component.backText;
+	const showBack = !!component._backText;
 	const headingTag = HEADING_TAGS[component.headingLevel] ?? HEADING_TAGS[1];
 
 	return html`
@@ -28,7 +28,7 @@ export function topTitleBarTemplate(component: NLDDTopTitleBar) {
 							<nldd-button
 								appearance="accent-transparent"
 								start-icon="chevron-left"
-								text=${component.backText}
+								text=${component._backText}
 								href=${component.backHref || nothing}
 								single-line
 								@click=${component._handleBack}
@@ -38,8 +38,8 @@ export function topTitleBarTemplate(component: NLDDTopTitleBar) {
 							<nldd-icon-button
 								appearance="accent-transparent"
 								icon="chevron-left"
-								text=${component.backText}
-								accessible-label=${component.backText || nothing}
+								text=${component._backText}
+								accessible-label=${component._backText || nothing}
 								href=${component.backHref || nothing}
 								@click=${component._handleBack}
 							></nldd-icon-button>

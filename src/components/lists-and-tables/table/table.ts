@@ -82,13 +82,12 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { tableStyles, tableRowStyles } from './table.styles.js';
 import { tableTemplate, tableRowTemplate } from './table.template.js';
 import { nlddTableTranslations } from './table.i18n.js';
-import type { NLDDTableTranslations } from './table.i18n.js';
 import { breakpointPx, rootFontSize } from '../../../assets/styles/breakpoints.js';
 import '../../status-and-feedback/inline-dialog/inline-dialog.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { setState } from '../../../utilities/element-state.js';
 import { afterParse } from '../../../utilities/after-parse.js';
-import { LayoutPass } from '../../../utilities/layout-pass.js';
+import { LayoutPass, sharedResizeObserver, type SharedResizeObserver } from '../../../utilities/layout-pass.js';
 
 export type TableBackground = 'base' | 'tinted';
 
@@ -118,17 +117,17 @@ function measureTables(tables: Map<NLDDTable, number>): void {
  * The width comes from the entry, so it is the exact width the cells'
  * `@container` queries see.
  */
-let sizeObserver: ResizeObserver | null = null;
-function observeSize(sizer: Element): void {
-	sizeObserver ??= new ResizeObserver((entries) => {
-		const tables = new Map<NLDDTable, number>();
-		for (const entry of entries) {
-			const table = (entry.target.getRootNode() as ShadowRoot).host as NLDDTable;
-			tables.set(table, entry.contentRect.width);
+let sizeObserver: SharedResizeObserver<NLDDTable> | null = null;
+function observeSize(sizer: Element, table: NLDDTable): void {
+	sizeObserver ??= sharedResizeObserver<NLDDTable>((tables, entriesOf) => {
+		const widths = new Map<NLDDTable, number>();
+		for (const t of tables) {
+			const entry = entriesOf(t)[0];
+			if (entry) widths.set(t, entry.contentRect.width);
 		}
-		measureTables(tables);
+		measureTables(widths);
 	});
-	sizeObserver.observe(sizer);
+	sizeObserver.observe(sizer, table);
 }
 
 /** Rows that came or went can make a table wider than its box without
@@ -142,7 +141,7 @@ const scrollPass = new LayoutPass<NLDDTable>((tables) => {
 // # nldd-table
 
 @customElement('nldd-table')
-export class NLDDTable extends LitElement {
+export class NLDDTable extends withTranslations(LitElement, nlddTableTranslations) {
 	static override styles = tableStyles;
 
 	@property({ reflect: true, converter: reflectNonDefault<TableBackground>('base') })
@@ -174,18 +173,11 @@ export class NLDDTable extends LitElement {
 	@property({ reflect: true, attribute: 'accessible-label', converter: reflectNonDefault<string>('') })
 	accessibleLabel = '';
 
-	@property({ type: Object })
-	translations: Partial<NLDDTableTranslations> = {};
-
 	private _rowsObserver?: MutationObserver;
 	/** @internal Last observed content-box width, to resolve the active track list. */
 	_width = 0;
 	/** An empty-state update waits for the parse; see _scheduleEmpty. */
 	private _emptyPending = false;
-
-	public _t(key: keyof NLDDTableTranslations): string {
-		return translate(this.translations, nlddTableTranslations, key);
-	}
 
 	override connectedCallback(): void {
 		super.connectedCallback();
@@ -202,7 +194,7 @@ export class NLDDTable extends LitElement {
 		// The same observer keeps the scroll affordance (focusable when the box
 		// overflows) in sync. It is shared by every table, see measureTables.
 		// It watches the sizer in the shadow root, so from the first render on.
-		if (this._sizer) observeSize(this._sizer);
+		if (this._sizer) observeSize(this._sizer, this);
 		if (this.hasUpdated) this._watchRows();
 	}
 
@@ -212,14 +204,14 @@ export class NLDDTable extends LitElement {
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
-		if (this._sizer) sizeObserver?.unobserve(this._sizer);
+		if (this._sizer) sizeObserver?.unobserve(this._sizer, this);
 		scrollPass.cancel(this);
 		this._rowsObserver?.disconnect();
 		this._rowsObserver = undefined;
 	}
 
 	override firstUpdated(): void {
-		observeSize(this._sizer!);
+		observeSize(this._sizer!, this);
 		// Recompute the empty state when body rows are slotted, added/removed, or
 		// toggled [hidden] (consumer-driven filtering) — mirrors nldd-list.
 		const slot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot:not([name])');

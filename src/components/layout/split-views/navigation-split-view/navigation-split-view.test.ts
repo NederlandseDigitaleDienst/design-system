@@ -239,6 +239,39 @@ describe('nldd-navigation-split-view – panes slotted straight in', () => {
 		expect(el._showPrimarySidebar).toBe(true);
 	});
 
+	it('stacked, reads empty off the page in view when a pane holds steps', async () => {
+		el = await fixture<NLDDNavigationSplitView>(`
+			<nldd-navigation-split-view>
+				<div slot="primary-sidebar"></div>
+				<div slot="main" hidden></div>
+				<div slot="main" empty></div>
+			</nldd-navigation-split-view>
+		`);
+		await setWidth(el, 320);
+		expect(el._showMain).toBe(false);
+
+		el.querySelectorAll('[slot="main"]')[0].removeAttribute('hidden');
+		el.querySelectorAll('[slot="main"]')[1].setAttribute('hidden', '');
+		await setWidth(el, 320);
+		expect(el._showMain).toBe(true);
+	});
+
+	it('keeps the back button of a step, while the pane before it is in view', async () => {
+		await import('../../page/page.js');
+		el = await fixture<NLDDNavigationSplitView>(`
+			<nldd-navigation-split-view>
+				<div slot="primary-sidebar"></div>
+				<nldd-page slot="main" id="start" hidden></nldd-page>
+				<nldd-page slot="main" id="step" parent="start">
+					<div slot="header" id="probe"></div>
+				</nldd-page>
+			</nldd-navigation-split-view>
+		`);
+		await setWidth(el, 1600);
+		const probe = el.querySelector('#probe')!;
+		expect(getComputedStyle(probe).getPropertyValue('--context-back-button-display').trim()).toBe('flex');
+	});
+
 	it('hides the back buttons of main and the secondary sidebar while the pane before them is in view', async () => {
 		el = await fixture<NLDDNavigationSplitView>(`
 			<nldd-navigation-split-view>

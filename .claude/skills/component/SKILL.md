@@ -412,17 +412,18 @@ Per component: pak alleen de keys die je gebruikt en zet ze in deze volgorde. De
 ```
 [1. Visueel dominant]
 variant, appearance, destructive, color, customColor, iconColor,
-background, mainBackground, scheme, level, status, size, smSize, mdSize,
+background, mainBackground, scheme, level, status, spinButtons, size, smSize, mdSize,
 lgSize, smCustomSize, mdCustomSize, lgCustomSize, weight, lineHeight,
 shape, corner, tile, compact, minor, pulse, line, dividers, dividerStart,
 dividerEnd, noRibbon, layout, labelAlignment, formLabelAlignment,
 columns, smColumns, mdColumns, lgColumns, columnCount, smColumnCount, mdColumnCount, lgColumnCount,
 panes, iconOnly, responsive, showItemLabels, inspectorAsSheet,
-sidebarAsSheet, primarySidebarAsSheet, inspectorAutoHidden, noLogo, noBlink
+sidebarAsSheet, primarySidebarAsSheet, inspectorAutoHidden, stickyHeader, stickyFooter,
+noLogo, noBlink
 
 [2. Sizing]
 resize, rows, width, minWidth, maxWidth, height, minHeight, maxHeight,
-fullWidth, smFullHeight, grow, fluid, soloFluid, shrinkable, mainWidth,
+aspectRatio, mediaHeight, mediaAspectRatio, fullWidth, smFullHeight, grow, fluid, soloFluid, shrinkable, mainWidth,
 overlapSize, itemMinWidth, itemMaxWidth, containerSize
 
 [3. Space]
@@ -443,7 +444,7 @@ supportingLabel, optional, placeholder, number, details, hint, headingLevel,
 icon, startIcon, endIcon, selectedIcon, containerColor,
 initials, src, srcset, sizes, alt, image, imageSrcset, avatarSrc,
 avatarSrcset, avatarAlt, mediaSrc, mediaSrcset, mediaSizes, mediaAlt,
-mediaAspectRatio, mediaHeight, aspectRatio, objectFit, objectPosition,
+objectFit, objectPosition,
 lqip, decoding, fetchPriority, caption, credit,
 quote, attribution, cite, definition, source, sourceHref, keys, macKeys,
 windowsKeys, linuxKeys, language, diff, hyphens,
@@ -462,7 +463,7 @@ primarySidebarAccessibleLabel, decorative, role, landmarks, list,
 rowHeader, currentType
 
 [8. Elements]
-showSearchButton, searchButton, hideSpinButtons, noPicker, noFilter,
+showSearchButton, searchButton, noPicker, noFilter,
 noCopy, lineNumbers, weekNumbers, histogram, hasDragHandle, reorderHandle,
 noArrow, arrowLength, noBackdrop, mdTitleBar, dismissible, dismissable,
 tokenControl, hideLgText, maxItems
@@ -476,12 +477,12 @@ shortcut, shortcutMac, shortcutWindows, shortcutLinux
 showAccessibleLabel, hideAccessibleLabel
 
 [11. Behavior]
-modeless, movable, stickyHeader, stickyFooter, hasContent, alwaysVisible,
+modeless, movable, hasContent, alwaysVisible,
 showLoadMore, lazyLoad, collapseAnchor, contentPriority, priority, anchor,
 noTab, roving, timing, tooltipTiming, duration, noLightDismiss, noCollapse,
 wrap, singleLine, uppercase, syntax, annotatable, query,
 queryMarkMode, aliases, filterFn, firstDayOfWeek, hrefPattern,
-textEditorFor, textEditorCommand, sidebarSectionOnly
+textEditorFor, textEditorCommand, sidebarSectionOnly, parent
 
 [12. States]
 selected, checked, indeterminate, expanded, collapsed, open, active,

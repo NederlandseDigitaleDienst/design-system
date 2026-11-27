@@ -1,7 +1,10 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import type { NLDDStepBar, NLDDStepBarItem } from './step-bar.js';
 import './step-bar.js';
+import { loadTokens } from '../../../test-tokens.js';
+import { wrapUiText } from '../../../assets/styles/text-wrap.js';
+import { wrapOf, wrapOfSets } from '../../../assets/styles/text-wrap.fixtures.js';
 
 const THREE_STEPS = `
 	<nldd-step-bar>
@@ -275,5 +278,70 @@ describe('nldd-step-bar – compact view', () => {
 		await vi.waitFor(() => expect(isCompact(stepBar)).toBe(false));
 		stepBar.append(Object.assign(document.createElement('nldd-step-bar-item'), { text: 'Stap 6' }));
 		await vi.waitFor(() => expect(isCompact(stepBar)).toBe(true));
+	});
+});
+
+describe('nldd-step-bar – breaking long words', () => {
+	let el: HTMLElement;
+	let removeTokens: () => void;
+
+	beforeEach(() => { removeTokens = loadTokens(); });
+	afterEach(() => { cleanup(el); removeTokens(); });
+
+	const WORD = 'Arbeidsongeschiktheidsverzekering';
+
+	/** How far a text node on screen under `root` runs past `box`, in px. */
+	const overflowOf = (root: Node, box: DOMRect): number => {
+		let worst = 0;
+		const walk = (node: Node) => {
+			for (const child of [...node.childNodes, ...((node as Element).shadowRoot?.childNodes ?? [])]) {
+				if (child.nodeType === Node.TEXT_NODE && child.textContent!.trim()) {
+					const range = document.createRange();
+					range.selectNodeContents(child);
+					const rect = range.getBoundingClientRect();
+					if (rect.width > 1) worst = Math.max(worst, rect.right - box.right);
+				} else if (child.nodeType === Node.ELEMENT_NODE && getComputedStyle(child as Element).clipPath === 'none') {
+					// A clip-path is the visually hidden recipe: that text is not on screen.
+					walk(child);
+				}
+			}
+		};
+		walk(root);
+		return worst;
+	};
+
+	it('keeps the title and the count of the folded bar inside 240px', async () => {
+		el = await fixture(`
+			<div style="width: 240px">
+				<nldd-step-bar>
+					<nldd-step-bar-item text="Gegevens"></nldd-step-bar-item>
+					<nldd-step-bar-item text="${WORD}" status="current"></nldd-step-bar-item>
+					<nldd-step-bar-item text="Bevestigen"></nldd-step-bar-item>
+				</nldd-step-bar>
+			</div>`);
+		const bar = el.querySelector('nldd-step-bar')!;
+		await vi.waitFor(() => expect(getComputedStyle(bar.shadowRoot!.querySelector('.step-bar__compact-text')!).display).not.toBe('none'));
+		expect(overflowOf(bar.shadowRoot!.querySelector('.step-bar__compact-text')!, el.getBoundingClientRect())).toBeLessThanOrEqual(1);
+		expect(wrapOf(bar.shadowRoot!.querySelector('.step-bar__compact-title')!)).toEqual(wrapOfSets(wrapUiText));
+	});
+
+	it('keeps each title of the wide bar inside its step', async () => {
+		el = await fixture(`
+			<div style="width: 700px">
+				<nldd-step-bar>
+					<nldd-step-bar-item text="Gegevens"></nldd-step-bar-item>
+					<nldd-step-bar-item text="${WORD}" status="current"></nldd-step-bar-item>
+					<nldd-step-bar-item text="Omgevingsvergunning"></nldd-step-bar-item>
+					<nldd-step-bar-item text="Controle"></nldd-step-bar-item>
+					<nldd-step-bar-item text="Bevestigen"></nldd-step-bar-item>
+				</nldd-step-bar>
+			</div>`);
+		const bar = el.querySelector('nldd-step-bar')!;
+		await waitForUpdate(bar as HTMLElement);
+		for (const item of bar.querySelectorAll('nldd-step-bar-item')) {
+			const title = item.shadowRoot!.querySelector('.step-bar__item-title')!;
+			expect(wrapOf(title)).toEqual(wrapOfSets(wrapUiText));
+			expect(overflowOf(title, item.getBoundingClientRect())).toBeLessThanOrEqual(1);
+		}
 	});
 });

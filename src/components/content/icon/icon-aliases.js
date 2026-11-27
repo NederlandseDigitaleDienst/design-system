@@ -75,6 +75,9 @@ export const aliases = {
 	// business-suitcase
 	'work': 'business-suitcase',
 
+	// business-suitcase-light
+	'work-light': 'business-suitcase-light',
+
 	// calendar-event
 	'calendar': 'calendar-event',
 	'event': 'calendar-event',
@@ -285,6 +288,9 @@ export const aliases = {
 	// file-badge-plus
 	'new-document': 'file-badge-plus',
 
+	// file-csv
+	'csv-document': 'file-csv',
+
 	// file-gif
 	'gif-document': 'file-gif',
 
@@ -381,9 +387,6 @@ export const aliases = {
 	// gear
 	'global-settings': 'gear',
 	'settings': 'gear',
-
-	// globe
-	'languages': 'globe',
 
 	// hand-thumbs-up
 	'like': 'hand-thumbs-up',
@@ -844,6 +847,9 @@ export const aliases = {
 
 	// person-circle-badge-plus
 	'new-account': 'person-circle-badge-plus',
+
+	// wi-fi
+	'wifi': 'wi-fi',
 
 	// wheat
 	'harvest': 'wheat',

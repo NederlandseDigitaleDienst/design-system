@@ -1,6 +1,7 @@
 import { css } from 'lit';
+import { wrapUiText } from '../../../assets/styles/text-wrap.js';
 import { scrollFade } from '../../../assets/styles/scroll-fade.js';
-import { inheritedTextReset, surfaceContent } from '../../../assets/styles/shadow-resets.js';
+import { inheritedTextReset, surfaceContent, visuallyHidden } from '../../../assets/styles/shadow-resets.js';
 
 export const menuStyles = css`
 	:host {
@@ -179,6 +180,24 @@ export const menuStyles = css`
 		box-shadow: var(--semantics-focus-ring-box-shadow);
 	}
 
+	.menu__back-button-icon {
+		display: flex;
+		margin-inline-end: var(--primitives-space-6);
+		width: var(--primitives-space-20);
+		height: var(--primitives-space-20);
+		flex-shrink: 0;
+	}
+
+	.menu__back-button-text {
+		min-width: 0;
+		/* No context: the text reads the color the button sets. */
+		color: var(--context-content-color);
+		font: var(--primitives-font-body-md-regular-tight);
+		${wrapUiText}
+		text-wrap: pretty;
+		flex: 1 1 0;
+	}
+
 	.menu__back-button-divider {
 		margin: var(--primitives-space-4) 0;
 		background-color: var(--semantics-dividers-color);
@@ -189,15 +208,7 @@ export const menuStyles = css`
 	/* Sibling of .menu so role="status" stays outside menu's required-owned
 	   children (WCAG 4.1.3); visually hidden, kept in the a11y tree. */
 	.menu__live-region {
-		position: absolute;
-		margin: -1px;
-		border: 0;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		padding: 0;
-		white-space: nowrap;
-		clip-path: inset(50%);
+		${visuallyHidden}
 	}
 
 	${scrollFade('.menu__scroller')}
@@ -328,10 +339,10 @@ export const menuItemStyles = css`
 
 	.menu__item-text {
 		min-width: 0;
-		/* No context: the text is the context the item sets. */
+		/* No context: the text reads the color the item sets. */
 		color: var(--context-content-color);
 		font: var(--primitives-font-body-md-regular-tight);
-		overflow-wrap: anywhere;
+		${wrapUiText}
 		text-wrap: pretty;
 		flex: 1 1 0;
 	}
@@ -344,7 +355,7 @@ export const menuItemStyles = css`
 		color: var(--context-content-secondary-color);
 		font: var(--primitives-font-body-md-regular-tight);
 		text-align: end;
-		overflow-wrap: anywhere;
+		${wrapUiText}
 		text-wrap: pretty;
 		flex: 0 1 auto;
 	}
@@ -369,15 +380,7 @@ export const menuItemStyles = css`
 
 	/* Visually hidden: part of the link's accessible name, never shown. */
 	.menu__link-hint {
-		position: absolute;
-		margin: -1px;
-		border: 0;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		padding: 0;
-		white-space: nowrap;
-		clip-path: inset(50%);
+		${visuallyHidden}
 	}
 
 	.menu__item:focus-visible {

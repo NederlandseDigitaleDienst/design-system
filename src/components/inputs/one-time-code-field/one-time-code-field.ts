@@ -29,6 +29,8 @@
  * @keywords otp, pin, verification code, eenmalige code, verificatiecode
  * @related nldd-password-field
  *
+ * @attr {number} length - How many characters the code has (default: 6).
+ * @attr {string} format - The shape of a code that is printed in groups, such as '###-###' or '#### ####': each `#` is a box, anything else a separator you see but a screen reader does not hear. The number of `#` is then the length, so `format` wins over `length`. The value never holds a separator: '123-234' is submitted as '123234'. Leave it out for a code without groups, as most codes from a text message are.
  * @attr {'sm'|'md'|'lg'} size - 'sm' | 'md' (default) | 'lg'. 'lg' has boxes 56px tall with larger characters, for a page where the code is the only thing to do, such as signing in. Where the boxes do not fit the width, the field steps down a size, to md and then sm: a code never wraps onto a second line. Where not even sm fits, the field shows the code in a text field of its own size.
  * @attr {boolean} centered - Puts the boxes in the middle of the row, as on a sign-in page where the code is the only field. The field keeps the full width of the row, so it still sees when the boxes no longer fit and steps down a size; centering it from outside, with the alignment of its parent, would shrink it to its boxes and take that away.
  * @attr {string} accessible-label - Accessible label forwarded to the inner input. Set automatically by nldd-form-field.
@@ -38,8 +40,6 @@
  * @attr {string} input-id - Sets the id on the native input. Set automatically by nldd-form-field.
  * @attr {string} value - The code
  * @attr {'numeric'|'alphanumeric'} type - What the code holds: 'numeric' (default, digits only, raises the number keyboard) | 'alphanumeric' (letters and digits)
- * @attr {number} length - How many characters the code has (default: 6).
- * @attr {string} format - The shape of a code that is printed in groups, such as '###-###' or '#### ####': each `#` is a box, anything else a separator you see but a screen reader does not hear. The number of `#` is then the length, so `format` wins over `length`. The value never holds a separator: '123-234' is submitted as '123234'. Leave it out for a code without groups, as most codes from a text message are.
  * @attr {boolean} required - Required state. A code that is not complete counts as invalid too.
  * @attr {boolean} readonly - Readonly state
  * @attr {boolean} disabled - Disabled state
@@ -171,6 +171,12 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 	 *  would submit the form. See utilities/implicit-submission.ts. */
 	static blocksImplicitSubmission = true;
 
+	@property({ reflect: true, converter: reflectNonDefault<number>(DEFAULT_LENGTH) })
+	length = DEFAULT_LENGTH;
+
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	format = '';
+
 	@property({ reflect: true, converter: reflectNonDefault<OneTimeCodeSize>('md') })
 	size: OneTimeCodeSize = 'md';
 
@@ -198,12 +204,6 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 
 	@property({ reflect: true, converter: reflectNonDefault<OneTimeCodeType>('numeric') })
 	type: OneTimeCodeType = 'numeric';
-
-	@property({ reflect: true, converter: reflectNonDefault<number>(DEFAULT_LENGTH) })
-	length = DEFAULT_LENGTH;
-
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	format = '';
 
 	@property({ type: Boolean, reflect: true })
 	required = false;
@@ -479,10 +479,7 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 			case 'deleteSoftLineBackward':
 			case 'deleteHardLineBackward': {
 				e.preventDefault();
-				const box = this.activeBox < 0 ? this._box : this.activeBox;
-				const target = this.charAt(box) ? box : box - 1;
-				if (target < 0) return;
-				this._setChars(this._chars.map((char, index) => (index === target ? '' : char)), target);
+				this._deleteBackward();
 				return;
 			}
 			case 'deleteContentForward': {
@@ -493,6 +490,14 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 			default:
 				// Composition, dictation and the like change the input itself: read it back in _handleInput.
 		}
+	}
+
+	/** Empties the box the caret is in, or the one before it when it is already empty. */
+	private _deleteBackward(): void {
+		const box = this.activeBox < 0 ? this._box : this.activeBox;
+		const target = this.charAt(box) ? box : box - 1;
+		if (target < 0) return;
+		this._setChars(this._chars.map((char, index) => (index === target ? '' : char)), target);
 	}
 
 	/**
@@ -552,6 +557,19 @@ export class NLDDOneTimeCodeField extends DescribedBy(FormAssociated(LitElement)
 	public _handleKeydown(e: KeyboardEvent): void {
 		submitOnEnter(this, e);
 		if (this._asField || e.altKey || e.ctrlKey || e.metaKey) return;
+		// With nothing before the caret in the input there is nothing to delete,
+		// so Safari sends no beforeinput, and Backspace in an empty box did nothing.
+		// A filled first box with the caret before it empties too: the box is the
+		// unit, as everywhere else. A selection and a composition stay with the input.
+		const { selectionStart, selectionEnd } = this._input;
+		if (
+			e.key === 'Backspace' && !e.isComposing && !this.readonly && !this.disabled
+			&& selectionStart === selectionEnd && !this._input.value.slice(0, selectionStart ?? 0)
+		) {
+			e.preventDefault();
+			this._deleteBackward();
+			return;
+		}
 		const moves: Record<string, () => number> = {
 			ArrowLeft: () => this._box - 1,
 			ArrowRight: () => Math.min(this._box + 1, this._nextBox),

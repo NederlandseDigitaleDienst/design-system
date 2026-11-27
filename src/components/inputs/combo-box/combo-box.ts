@@ -79,21 +79,20 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { comboBoxStyles } from './combo-box.styles.js';
 import { comboBoxTemplate } from './combo-box.template.js';
 import { nlddComboBoxTranslations } from './combo-box.i18n.js';
-import type { NLDDComboBoxTranslations } from './combo-box.i18n.js';
 import type { NLDDMenu, NLDDMenuItem } from '../../actions/menu/menu.js';
 import '../../actions/menu/menu.js';
 import '../../actions/icon-button/icon-button.js';
 import '../../content/icon/icon.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { setState } from '../../../utilities/element-state.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
 
 export type ComboBoxSize = 'sm' | 'md';
 
 @customElement('nldd-combo-box')
-export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
+export class NLDDComboBox extends DescribedBy(FormAssociated(withTranslations(LitElement, nlddComboBoxTranslations))) {
 
 	static override styles = comboBoxStyles;
 
@@ -195,9 +194,6 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-	@property({ type: Object })
-	translations: Partial<NLDDComboBoxTranslations> = {};
-
 	@state()
 	_isOpen = false;
 
@@ -224,12 +220,6 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 	@query('.combo-box__input')
 	_input!: HTMLInputElement;
 
-	// — i18n ——————————————————————————————————————————————————————————————————
-
-
-	public _t(key: keyof NLDDComboBoxTranslations): string {
-		return translate(this.translations, nlddComboBoxTranslations, key);
-	}
 
 	// — Lifecycle ————————————————————————————————————————————————————————————
 

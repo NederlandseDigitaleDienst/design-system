@@ -305,6 +305,6 @@ Doe dit als een bewuste ronde aan het eind. Het is meteen je laatste sweep op re
 12. Je eigen workarounds langslopen: welke zijn overbodig geworden.
 13. De commentronde.
 14. Het laatste stylesheet weghalen, de token- en klassencheck mee. De baseline is leeg, en elke onderdrukking van een regel uit `pure` wijst naar een open issue.
-15. Voorstellen de action `upgrade` in de repository te zetten, of de repository aan te melden in `fleet.json` van het designsysteem, zodat de app na de migratie bij elke release een pull request krijgt in plaats van weer achter te lopen. Het team kiest of er een agent meedoet; zie [Upgraden](https://design.digitaledienst.overheid.nl/upgraden/).
+15. Voorstellen de action `upgrade` in de repository te zetten, of de repository aan te melden in `fleet.json` van het designsysteem, zodat de app na de migratie bij elke release een pull request krijgt in plaats van weer achter te lopen. Het team kiest of er een agent meedoet; zie [Upgraden](https://design.digitaledienst.overheid.nl/handleidingen/upgraden/).
 
 Reken erop dat de verhouding rauwe markup je schatting bepaalt. In dit geval stonden 292 rauwe `<button>` tegenover 61 `<Button>`: het herimplementeren van de primitive converteerde een vijfde, de rest was handwerk op de aanroepplek. Tel allebei voordat je iets belooft.

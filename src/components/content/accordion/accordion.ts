@@ -20,7 +20,7 @@
  *
  * @element nldd-accordion
  * @keywords disclosure, uitklappen, inklappen
- * @related nldd-list
+ * @related nldd-list, nldd-admonition, nldd-rich-text
  *
  * @attr {boolean} exclusive - Only one item is open at a time
  *

@@ -14,12 +14,17 @@
 import { readFileSync } from 'node:fs';
 import { dirname, relative, resolve } from 'node:path';
 import { storybookId } from '../../scripts/lib/skill-patterns.js';
-import { rulesAboutTag, rulesOfPattern } from '../../lint/rule-index.js';
+import { parse as parseYaml, stringify as stringifyYaml } from 'yaml';
+import { rulesAboutTag, rulesOfPattern, tagsOf } from '../../lint/rule-index.js';
+import { runsInBrowser } from '../../lint/rule-compiler.js';
+import { OPT_IN_GROUPS } from '../../lint/rule-data.js';
+import { WCAG, compareCriteria } from '../../lint/wcag.js';
+import { WCAG_NL, WCAG_NL_URL } from './wcag.js';
 import { loadData } from '../../lint/linter.js';
 import { collectComponents, collectPatterns, parseStoryFile, repoRoot } from './sources.js';
-import { codeViewer, escapeHtml, renderMarkdown } from './markdown.js';
+import { codeViewer, escapeHtml, headingId, renderMarkdown } from './markdown.js';
 import { controlFor } from './attribute-values.js';
-import { sortByCanon } from '../../scripts/check-control-order.js';
+import { readCanon, sortByCanon } from '../../scripts/check-control-order.js';
 import { MARKDOWN_INSERTS } from './skills.js';
 import { DEFAULT_THEME, themesByHue } from '../../scripts/lib/themes.js';
 
@@ -28,21 +33,25 @@ const SITE_NAME = 'NLDD Designsysteem';
 /**
  * The pages that are prose: where they live on the site and their source.
  * `stories` is the file the examples on the page come from; with `examples`
- * every story of that file follows the text, under that heading.
+ * every story of that file follows the text, under that heading. With `rules`
+ * the lint rules follow it: all of them by group, or with 'wcag' those that
+ * name a success criterion, by criterion. With `fills` the one example on the
+ * page fills a sidebar section of its own, with the text before it as the
+ * header: a gallery and its filters.
  */
 const PACKAGE_VERSION = JSON.parse(readFileSync(resolve(repoRoot, 'package.json'), 'utf8')).version;
 
 const PROSE = [
-	{ path: '/aan-de-slag/', file: 'www/content/aan-de-slag.md', description: 'Installeer het pakket en zet je eerste component neer.' },
-	{ path: '/aan-de-slag/ai-assistent/', file: 'www/content/ai-assistent.md', description: 'Skills voor Claude Code en Cursor.' },
-	{ path: '/richtlijnen/', file: 'src/docs/design-guidelines.md', description: 'De ontwerpkeuzes van het systeem en de redenen erachter.' },
-	{ path: '/themas/', file: 'src/docs/themes.md', stories: 'src/docs/themes.stories.ts', examples: 'Elk thema op een pagina vol componenten', description: 'De accentkleur van je dienst, in licht en donker.' },
-	{ path: '/iconen/', file: 'src/docs/icons.md', stories: 'src/components/content/icon/icon-gallery.stories.ts', description: 'Alle iconen, met hun aliassen.' },
-	{ path: '/linter/', file: 'www/content/linter.md', rules: true, description: 'Controleer je code met nldd lint, en lees elke regel.' },
-	{ path: '/upgraden/', file: 'www/content/upgraden.md', description: 'Breng je project naar een nieuwe versie, met een pull request bij elke release.' },
-	{ path: '/breakpoints/', file: 'src/docs/breakpoints.md', description: 'Bij welke breedtes de layout verandert.' },
-	{ path: '/vertalingen/', file: 'src/docs/translations.md', description: 'Een interface in een andere taal dan Nederlands.' },
-	{ path: '/toegankelijkheid/', file: 'docs/ACCESSIBILITY.md', description: 'Wat het systeem voor toegankelijkheid regelt, en wat jij nog doet.' },
+	{ path: '/handleidingen/aan-de-slag/', file: 'www/content/aan-de-slag.md', description: 'Installeer het pakket en zet je eerste component neer.' },
+	{ path: '/handleidingen/ai-assistent/', file: 'www/content/ai-assistent.md', description: 'Skills voor Claude Code en Cursor.' },
+	{ path: '/handleidingen/richtlijnen/', file: 'src/docs/design-guidelines.md', description: 'De ontwerpkeuzes van het systeem en de redenen erachter.' },
+	{ path: '/handleidingen/themas/', file: 'src/docs/themes.md', stories: 'src/docs/themes.stories.ts', examples: 'Elk thema op een pagina vol componenten', description: 'De accentkleur van je dienst, in licht en donker.' },
+	{ path: '/iconen/', file: 'src/docs/icons.md', stories: 'src/components/content/icon/icon-gallery.stories.ts', fills: true, description: 'Alle iconen, met hun aliassen.' },
+	{ path: '/handleidingen/linter/', file: 'www/content/linter.md', description: 'Controleer je code met nldd lint, en wat hij vindt.' },
+	{ path: '/handleidingen/upgraden/', file: 'www/content/upgraden.md', description: 'Breng je project naar een nieuwe versie, met een pull request bij elke release.' },
+	{ path: '/handleidingen/breakpoints/', file: 'src/docs/breakpoints.md', description: 'Bij welke breedtes de layout verandert.' },
+	{ path: '/handleidingen/vertalingen/', file: 'src/docs/translations.md', description: 'Een interface in een andere taal dan Nederlands.' },
+	{ path: '/handleidingen/toegankelijkheid/', file: 'docs/ACCESSIBILITY.md', rules: 'wcag', description: 'Wat het systeem voor toegankelijkheid regelt, en wat jij nog doet.' },
 ];
 
 /**
@@ -117,21 +126,22 @@ const NAVIGATION = [
 			['Componenten', '/componenten/', 'blocks-9'],
 			['Patronen', '/patronen/', 'tree-structure'],
 			['Iconen', '/iconen/', 'triangle-square-circle'],
+			['Lintregels', '/lintregels/', 'checkbox-list'],
 		],
 	],
 	[
 		'Handleidingen',
 		'Handleidingen',
 		[
-			['Aan de slag', '/aan-de-slag/'],
-			['Ontwerprichtlijnen', '/richtlijnen/'],
-			['Toegankelijkheid', '/toegankelijkheid/'],
-			["Thema's", '/themas/'],
-			['Werken met een AI-assistent', '/aan-de-slag/ai-assistent/'],
-			['Linter', '/linter/'],
-			['Upgraden', '/upgraden/'],
-			['Breakpoints', '/breakpoints/'],
-			['Vertalingen', '/vertalingen/'],
+			['Aan de slag', '/handleidingen/aan-de-slag/'],
+			['Ontwerprichtlijnen', '/handleidingen/richtlijnen/'],
+			['Toegankelijkheid', '/handleidingen/toegankelijkheid/'],
+			["Thema's", '/handleidingen/themas/'],
+			['AI-assistent', '/handleidingen/ai-assistent/'],
+			['Linter', '/handleidingen/linter/'],
+			['Upgraden', '/handleidingen/upgraden/'],
+			['Breakpoints', '/handleidingen/breakpoints/'],
+			['Vertalingen', '/handleidingen/vertalingen/'],
 		],
 	],
 ];
@@ -148,6 +158,19 @@ const DOCS = 'Documentatie';
 /** The sections on a page of their own, with nothing chosen yet. */
 const DOCS_PATH = '/documentatie/';
 
+/** Where the guides were before they moved under /handleidingen/. */
+const MOVED = {
+	'/aan-de-slag/': '/handleidingen/aan-de-slag/',
+	'/aan-de-slag/ai-assistent/': '/handleidingen/ai-assistent/',
+	'/richtlijnen/': '/handleidingen/richtlijnen/',
+	'/themas/': '/handleidingen/themas/',
+	'/linter/': '/handleidingen/linter/',
+	'/breakpoints/': '/handleidingen/breakpoints/',
+	'/vertalingen/': '/handleidingen/vertalingen/',
+	'/toegankelijkheid/': '/handleidingen/toegankelijkheid/',
+	'/handleidingen/': DOCS_PATH,
+};
+
 /** The section a page belongs to: the one whose path is the longest start of it. */
 function currentSection(path) {
 	const paths = NAVIGATION.flatMap(([, , items]) => items.map(([, href]) => href));
@@ -159,7 +182,7 @@ function primaryNavigation(path) {
 	return NAVIGATION.map(
 		([group, label, items]) => `${
 			group
-				? `<nldd-title size="display-5">
+				? `<nldd-title size="display-4">
 					<h3>${escapeHtml(group)}</h3>
 				</nldd-title>
 				<nldd-spacer size="8"></nldd-spacer>
@@ -210,8 +233,10 @@ const aboutLinks = `<nldd-container
  * section once it scrolls away, the content below it, and a footer if any.
  */
 function pane({ slot, id, title, back, landmarks = false, body, footer = '' }) {
+	// A page that is a step below another in main keeps its way back on a wide
+	// screen too, where the split view hides the back of a page beside its list.
 	const backAttributes = back
-		? `\n\t\t\t\tback-text="${escapeHtml(back.text)}"${back.href ? `\n\t\t\t\tback-href="${back.href}"` : ''}`
+		? `\n\t\t\t\tback-text="${escapeHtml(back.text)}"${back.href ? `\n\t\t\t\tback-href="${back.href}"` : ''}${back.always ? '\n\t\t\t\tdata-site-back-always' : ''}`
 		: '';
 	return `<nldd-page
 			slot="${slot}"
@@ -285,7 +310,7 @@ function themePicker({ compact = false } = {}) {
 								<nldd-top-title-bar
 									slot="header"
 									text="Weergave"
-									dismiss-text="Sluit"
+									dismiss-text="Klaar"
 								></nldd-top-title-bar>
 								<nldd-container padding="16">
 									<nldd-title
@@ -346,9 +371,9 @@ function themePicker({ compact = false } = {}) {
 
 /**
  * The main toolbar, around the panes: back to the landing page and the name
- * of the site at the start, the theme at the end. The way back shows once both
- * sidebars are on the screen; until then it is in the title bar of the
- * sections, as on a phone (main.ts switches between the two). Up to md the
+ * of the site at the start, the theme at the end. The way back shows where
+ * both sidebars fit beside main; below that width it is in the title bar of
+ * the sections, as on a phone (main.ts switches between the two). Up to md the
  * theme is an icon button, so the name has room.
  */
 function toolbar({ compact = false } = {}) {
@@ -415,15 +440,15 @@ function toolbar({ compact = false } = {}) {
  * @param {{ title: string, path: string, nav: string, empty: string, opensFirst?: boolean }} [input.secondary] - the pages of the section
  * @param {string} [input.empty] - what main says to pick when there is neither content nor a section
  */
-function layout({ title, description, path, main, secondary, empty }) {
+function layout({ title, description, path, main, secondary, empty, back }) {
 	const mainPane = main
 		? pane({
 				slot: 'main',
 				id: 'pagina-titel',
 				title,
-				// Main goes back to the list it was chosen from. Without one, back
-				// goes to the sections.
-				back: secondary ? { text: secondary.title, href: secondary.path } : { text: DOCS, href: DOCS_PATH },
+				// Main goes back to the list it was chosen from, or to the page it
+				// hangs under. Without either, back goes to the sections.
+				back: back ?? (secondary ? { text: secondary.title, href: secondary.path } : { text: DOCS, href: DOCS_PATH }),
 				landmarks: true,
 				body: main,
 			})
@@ -476,14 +501,14 @@ ${head({ title: secondary && secondary.title !== title ? `${title} · ${secondar
 }
 
 /** The frame one live example stands on. */
-function stage(storyFile, story, { primary = false, bare = false, controls } = {}) {
+function stage(storyFile, story, { primary = false, unwrap = false, controls } = {}) {
 	const attributes = [
 		`file="${storyFile.file}"`,
 		`story="${story.exportName}"`,
 		`story-id="${story.id}"`,
 		`name="${escapeHtml(story.name)}"`,
 		primary ? 'primary' : '',
-		bare ? 'bare' : '',
+		unwrap ? 'unwrap' : '',
 	].filter(Boolean);
 	// The controls of an example are the attributes of its element, so they are
 	// handed to the stage as data rather than written per story.
@@ -504,6 +529,9 @@ function controlsOf(component) {
 		attributes: sortByCanon(element.attributes ?? [], (a) => a.name, element.tagName.replace(/^nldd-/, ''))
 			.map((a) => controlFor(file, a, known[a.name]?.values))
 			.filter(Boolean),
+		// The content of a slot comes from the story, so the client places it
+		// among the attributes by the same canon.
+		canon: readCanon(),
 	};
 }
 
@@ -521,12 +549,12 @@ function absoluteLinks(markdown, file) {
 	});
 }
 
-function renderProse(markdown, storyFile) {
+function renderProse(markdown, storyFile, { unwrap = false } = {}) {
 	const example = storyFile
 		? (name) => {
 				const story = storyFile.stories.find((s) => s.exportName === name);
 				if (!story) throw new Error(`Geen story ${name} in ${storyFile.file}`);
-				return stage(storyFile, story, { bare: storyFile.file.endsWith('icon-gallery.stories.ts') });
+				return stage(storyFile, story, { unwrap });
 			}
 		: undefined;
 	return renderMarkdown(markdown, { href: identity, example });
@@ -555,9 +583,7 @@ function prosePage({ title, rendered, extra = [] }) {
 	if (headings.length < 2 || headings.length > 24) {
 		return `		<nldd-simple-section grow>
 			${pageTitle(title)}
-			<nldd-container>
 ${body}
-			</nldd-container>
 		</nldd-simple-section>`;
 	}
 	return `		<nldd-sidebar-section
@@ -586,7 +612,7 @@ ${body}
 			>
 				<nldd-title
 					sidebar-section-only="expanded"
-					size="display-5"
+					size="display-4"
 				>
 					<h2>Op deze pagina</h2>
 				</nldd-title>
@@ -611,9 +637,7 @@ ${body}
 						.join('\n\t\t\t\t\t')}
 				</nldd-list>
 			</nldd-container>
-			<nldd-container>
 ${body}
-			</nldd-container>
 		</nldd-sidebar-section>`;
 }
 
@@ -703,13 +727,15 @@ function elementApi(element) {
  * With `search`, a field above the groups shortens the list as you type; each
  * row carries what it can be found by: its name, its slug (the tag) and its
  * group. When nothing is left, a message takes the height of the pane.
+ * With `idle`, the groups only show while you search, and `idle` (another
+ * list) stands in their place until then.
  */
-function siblingNav(groups, current, hrefOf, { label, search } = {}) {
+function siblingNav(groups, current, hrefOf, { label, search, idle } = {}) {
 	const lists = groups.map(
 		([group, items]) => `<nldd-container${search ? ' data-site-filter-group' : ''}>
 					${
 						group
-							? `<nldd-title size="display-5">
+							? `<nldd-title size="display-4">
 						<h3>${escapeHtml(group)}</h3>
 					</nldd-title>
 					<nldd-spacer size="8"></nldd-spacer>
@@ -750,7 +776,7 @@ function siblingNav(groups, current, hrefOf, { label, search } = {}) {
 					data-site-filter-related
 					hidden
 				>
-					<nldd-title size="display-5">
+					<nldd-title size="display-4">
 						<h3>Gerelateerd</h3>
 					</nldd-title>
 					<nldd-spacer size="8"></nldd-spacer>
@@ -762,7 +788,7 @@ function siblingNav(groups, current, hrefOf, { label, search } = {}) {
 					></nldd-list>
 				</nldd-container>`
 		: '';
-	const groupList = `<nldd-container gap="24">
+	const groupList = `<nldd-container gap="24"${idle ? '\n\t\t\t\tdata-site-filter-results\n\t\t\t\thidden' : ''}>
 				${[...lists, related].filter(Boolean).join('\n\t\t\t\t')}
 			</nldd-container>`;
 	if (!search) return groupList;
@@ -771,13 +797,33 @@ function siblingNav(groups, current, hrefOf, { label, search } = {}) {
 					placeholder="${escapeHtml(search.placeholder)}"
 					shortcut="/"
 				></nldd-search-field>
-				<nldd-spacer size="24"></nldd-spacer>
+				<nldd-spacer size="24"></nldd-spacer>${idle ? `\n\t\t\t\t<nldd-container data-site-filter-idle>\n\t\t\t\t${idle}\n\t\t\t\t</nldd-container>` : ''}
 				${groupList}
 				<nldd-inline-dialog
 					data-site-filter-empty
 					hidden
 					text="${escapeHtml(search.none)}"
 				></nldd-inline-dialog>`;
+}
+
+/**
+ * A page whose example fills the section: the text is the header, and the
+ * example puts its filters in the sidebar and its results in the main. It is
+ * the section itself, so nothing stands between the page and the filters.
+ */
+function filledSection({ title, rendered }) {
+	const blocks = rendered.blocks;
+	const at = blocks.findIndex((block) => block.includes('<site-stage'));
+	return `		<nldd-sidebar-section
+			sidebar-label="Filters"
+			translations='{"components.sidebar-section.sheet-dismiss-action": "Klaar"}'
+			grow
+		>
+			${pageTitle(title)}
+			<nldd-spacer slot="header" size="16"></nldd-spacer>
+${inSlot(stack(blocks.slice(0, at), 12), 'header')}
+			${blocks[at]}
+		</nldd-sidebar-section>`;
 }
 
 /**
@@ -791,9 +837,7 @@ function docBody({ title, intro = [], tabs = '', blocks }) {
 		intro.some((block) => block?.trim())
 			? `
 			<nldd-spacer slot="header" size="16"></nldd-spacer>
-			<nldd-container slot="header">
-${stack(intro, 12)}
-			</nldd-container>`
+${inSlot(stack(intro, 12), 'header')}`
 			: '',
 		tabs
 			? `
@@ -803,10 +847,27 @@ ${stack(intro, 12)}
 	].join('');
 	return `		<nldd-simple-section grow>
 			${title}${header}
-			<nldd-container>
 ${stack(blocks, 32)}
-			</nldd-container>
 		</nldd-simple-section>`;
+}
+
+const VOID_ELEMENTS = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr']);
+
+/**
+ * Puts every outermost element of `html` in `slot`. A section takes its header
+ * from children of its own, so a container around them would only add a level.
+ */
+function inSlot(html, slot) {
+	let depth = 0;
+	return html.replace(/<(\/?)([a-zA-Z][\w-]*)([^>]*?)(\/?)>/g, (tag, close, name, attributes, selfClosing) => {
+		if (close) {
+			depth--;
+			return tag;
+		}
+		const outermost = depth === 0;
+		if (!selfClosing && !VOID_ELEMENTS.has(name.toLowerCase())) depth++;
+		return outermost ? `<${name} slot="${slot}"${attributes}${selfClosing}>` : tag;
+	});
 }
 
 /** A block that ends in a heading: what comes next belongs to it. */
@@ -857,7 +918,7 @@ function patternPages(pattern, lintRules) {
 	const tabs = [
 		{ path: base, text: 'Patroon', title: pattern.name, body: rest },
 		...(rules.length
-			? [{ path: `${base}lintregels/`, text: 'Lintregels', title: `${pattern.name}, lintregels`, body: [rulesSection(rules, { link: false })] }]
+			? [{ path: `${base}lintregels/`, text: 'Lintregels', title: `${pattern.name}, lintregels`, body: [rulesSection(rules)] }]
 			: []),
 	];
 	return tabs.map((tab) => ({
@@ -881,8 +942,7 @@ function relatedSection(component, byTag) {
 	const tags = [...new Set(component.elements.flatMap((element) => element.related ?? []))];
 	const related = [...new Set(tags.map((tag) => byTag.get(tag)))].filter((other) => other && other !== component);
 	if (!related.length) return '';
-	return `<nldd-container>
-					<nldd-title size="display-4">
+	return `<nldd-title size="display-4">
 						<h2>Gerelateerd</h2>
 					</nldd-title>
 					<nldd-spacer size="12"></nldd-spacer>
@@ -906,8 +966,7 @@ function relatedSection(component, byTag) {
 						</nldd-list-item>`,
 							)
 							.join('\n\t\t\t\t\t\t')}
-					</nldd-list>
-				</nldd-container>`;
+					</nldd-list>`;
 }
 
 /**
@@ -940,13 +999,22 @@ function componentPages(component, lintRules, byTag) {
 		// The example on the usage tab is the component itself, so it needs no heading.
 		const heading = options.primary
 			? ''
-			: `<nldd-title size="display-4">
+			: `<nldd-title
+						id="${story.id.split('--')[1]}"
+						size="display-4"
+					>
 						<h2>${escapeHtml(story.name)}</h2>
 					</nldd-title>`;
-		return `<nldd-container id="${story.id.split('--')[1]}">
-					${stack([heading, text, stage(component, story, options)], 12)}
-				</nldd-container>`;
+		return stack([heading, text, stage(component, story, options)], 12);
 	};
+	// With three examples or more, the tab starts with the way to each of them:
+	// the names in a row that wraps, so the list stays as short as it can.
+	const contents = (stories) =>
+		stories.length < 3
+			? ''
+			: `<nldd-link-group accessible-label="Voorbeelden">
+					${stories.map((story) => `<nldd-link href="#${story.id.split('--')[1]}" text="${escapeHtml(story.name)}"></nldd-link>`).join('\n\t\t\t\t\t')}
+				</nldd-link-group>`;
 	// The first story, with the controls, is where you try the component; the
 	// others each show one case of it, on a tab of their own.
 	const [first, ...others] = visible;
@@ -962,7 +1030,7 @@ function componentPages(component, lintRules, byTag) {
 			path: `${base}voorbeelden/`,
 			text: 'Voorbeelden',
 			title: `${component.name}, voorbeelden`,
-			body: others.map((story) => example(story)),
+			body: [contents(others), ...others.map((story) => example(story))],
 			shown: others.length > 0,
 		},
 		{ path: `${base}api/`, text: 'API', title: `${component.name}, API`, body: api, shown: api.length > 0 },
@@ -1020,25 +1088,55 @@ function changelogPage(entry) {
 
 /** How each level of the linter reads on a rule, strictest first. */
 const SEVERITIES = {
-	error: { label: 'Fout', color: 'critical' },
-	warn: { label: 'Waarschuwing', color: 'warning' },
-	hint: { label: 'Hint', color: 'neutral' },
+	error: { label: 'Fout', color: 'critical', effect: 'Kan CI laten falen.' },
+	warn: { label: 'Waarschuwing', color: 'warning', effect: 'Kan CI laten falen.' },
+	hint: { label: 'Hint', color: 'neutral', effect: 'Laat CI nooit falen.' },
 };
 
 /** Where the reason behind a rule is written down: its pattern, its guideline or the component that explains it. */
 function seePath(see) {
 	const [kind, slug] = (see ?? '').split('/');
 	if (kind === 'patronen') return `/patronen/${slug}/`;
-	if (kind === 'ontwerprichtlijnen') return `/richtlijnen/#${slug}`;
+	if (kind === 'ontwerprichtlijnen') return `/handleidingen/richtlijnen/#${slug}`;
 	if (kind === 'componenten') return `/componenten/${slug}/`;
 	return undefined;
 }
 
+const rulePath = (rule) => `/lintregels/${rule.id}/`;
+
+/** A page that only sends the reader on, for an address that moved. */
+const redirect = (to) => `<!doctype html>
+<html lang="nl">
+<head>
+	<meta charset="utf-8">
+	<meta name="robots" content="noindex">
+	<meta http-equiv="refresh" content="0; url=${to}">
+	<script>location.replace(${JSON.stringify(to)} + location.hash);</script>
+	<title>Verhuisd</title>
+</head>
+<body><p>Deze pagina staat nu op <a href="${to}">${to}</a>.</p></body>
+</html>
+`;
+
+const countRules = (rules) => `${rules.length} ${rules.length === 1 ? 'regel' : 'regels'}`;
+
+/** The rules of one group, in main beside the list of groups. */
+function ruleGroupPage(group) {
+	return docBody({
+		title: pageTitle(group.name, { overline: 'Lintregels' }).replace('<h1>', '<h1 lang="en">'),
+		blocks: [
+			`<nldd-text text="${escapeHtml(`${group.question} ${countRules(group.rules)}.`)}"></nldd-text>`,
+			ruleList(group.rules, { label: `Regels in ${group.name}` }),
+		],
+	});
+}
+
 /**
- * Lint rules as rows: the id, what is wrong, and the level. A row links to the
- * page with the reason when there is one and the list is not on that page.
+ * Lint rules as rows: the id, what is wrong, and the level. A row opens the
+ * page of the rule. The id and the message are English, as the linter prints
+ * them, and say so with `lang`.
  */
-function ruleList(rules, { label, link = true } = {}) {
+function ruleList(rules, { label } = {}) {
 	const order = Object.keys(SEVERITIES);
 	const sorted = [...rules].sort(
 		(a, b) => order.indexOf(a.severity) - order.indexOf(b.severity) || a.id.localeCompare(b.id),
@@ -1046,21 +1144,23 @@ function ruleList(rules, { label, link = true } = {}) {
 	const bold = (message) => escapeHtml(message.replace(/\*\*/g, '').replace(/`([^`]+)`/g, '**$1**'));
 	const rows = sorted.map((rule) => {
 		const severity = SEVERITIES[rule.severity] ?? SEVERITIES.warn;
-		const href = link ? seePath(rule.see) : undefined;
 		const tag = `<nldd-tag
+			lang="nl"
 			size="sm"
 			color="${severity.color}"
 			text="${severity.label}"
 		></nldd-tag>`;
 		// On a narrow screen the level stands with the name, as in the list
 		// pattern: beside the text it would leave the text half the row.
-		return `<nldd-list-item${href ? ` href="${href}"` : ''}>
+		return `<nldd-list-item href="${rulePath(rule)}">
 	<nldd-text-cell
+		lang="en"
 		hide-below="md"
 		text="${rule.id}"
 		supporting-text="${bold(rule.message)}"
 	></nldd-text-cell>
 	<nldd-text-cell
+		lang="en"
 		hide-above="sm"
 		supporting-text="${bold(rule.message)}"
 	>
@@ -1075,17 +1175,13 @@ function ruleList(rules, { label, link = true } = {}) {
 	></nldd-spacer-cell>
 	<nldd-cell hide-below="md">
 		${tag}
-	</nldd-cell>${
-		href
-			? `
+	</nldd-cell>
 	<nldd-spacer-cell size="8"></nldd-spacer-cell>
 	<nldd-icon-cell
 		size="20"
 		color="secondary"
 		icon="chevron-right"
-	></nldd-icon-cell>`
-			: ''
-	}
+	></nldd-icon-cell>
 </nldd-list-item>`;
 	});
 	return `<nldd-list
@@ -1100,24 +1196,23 @@ ${rows.join('\n')}
  * The section "Regels" of a pattern or a component: the lint rules that point
  * at the pattern with `see`, or that name the component.
  */
-function rulesSection(rules, { link = true } = {}) {
+function rulesSection(rules) {
 	if (!rules.length) return '';
 	return `
-<nldd-container id="regels">
-	<nldd-title
+<nldd-title
+		id="regels"
 		size="display-4"
 		supporting-text="Wat nldd lint hier controleert. Een hint laat niets falen."
 	>
 		<h2>Lintregels</h2>
 	</nldd-title>
 	<nldd-spacer size="12"></nldd-spacer>
-	${ruleList(rules, { label: 'Lintregels', link })}
+	${ruleList(rules, { label: 'Lintregels' })}
 	<nldd-spacer size="12"></nldd-spacer>
 	<nldd-link
-		href="/linter/"
+		href="/handleidingen/linter/"
 		text="Over de linter"
-	></nldd-link>
-</nldd-container>`;
+	></nldd-link>`;
 }
 
 /** The question each group of rules answers, in the order the linter asks them. */
@@ -1131,20 +1226,24 @@ const RULE_GROUPS = [
 ];
 
 /**
- * Every rule of the linter, for the page about the linter: a row per group,
- * and the rules of a group in a sheet. Six folds of up to a hundred rows pushed
- * the rest of the page away, and closing one left the reader somewhere else.
+ * Many rules under one heading: a row per group, and the rules of a group in a
+ * sheet. Folds of up to a hundred rows pushed the rest of the page away, and
+ * closing one left the reader somewhere else.
+ *
+ * @param {object} options
+ * @param {string} options.id - the anchor of the section, and the prefix of every sheet
+ * @param {{ key: string, title: string, about: string, rules: object[] }[]} options.groups
  */
-function allRules(rules) {
-	const groups = RULE_GROUPS.map(([group, question]) => [group, question, rules.filter((rule) => rule.group === group)])
-		.filter(([, , inGroup]) => inGroup.length);
-	const rows = groups.map(([group, question, inGroup]) => `<nldd-list-item
+function ruleSheets({ id, heading, supporting, label, groups }) {
+	const shown = groups.filter((group) => group.rules.length);
+	const about = (group) => escapeHtml(`${group.about} ${countRules(group.rules)}.`);
+	const rows = shown.map((group) => `<nldd-list-item
 		button
-		data-site-sheet="regels-${group}"
+		data-site-sheet="${id}-${group.key}"
 	>
 		<nldd-text-cell
-			text="${group}"
-			supporting-text="${escapeHtml(question)} ${inGroup.length} regels."
+			text="${escapeHtml(group.title)}"
+			supporting-text="${about(group)}"
 		></nldd-text-cell>
 		<nldd-spacer-cell size="12"></nldd-spacer-cell>
 		<nldd-icon-cell
@@ -1153,63 +1252,251 @@ function allRules(rules) {
 			icon="chevron-right"
 		></nldd-icon-cell>
 	</nldd-list-item>`).join('\n');
-	const sheets = groups.map(([group, question, inGroup]) => `<nldd-sheet
-	id="regels-${group}"
+	const sheets = shown.map((group) => `<nldd-sheet
+	id="${id}-${group.key}"
 	placement="right"
 	width="640px"
 >
 	<nldd-page sticky-header>
 		<nldd-top-title-bar
 			slot="header"
-			text="${group}"
+			text="${escapeHtml(group.title)}"
 			dismiss-text="Sluit"
-			collapse-anchor="regels-${group}-titel"
+			collapse-anchor="${id}-${group.key}-titel"
 		></nldd-top-title-bar>
 		<nldd-simple-section>
 			<nldd-title
-				id="regels-${group}-titel"
+				id="${id}-${group.key}-titel"
 				slot="header"
 				size="display-2"
-				text="${group}"
-				supporting-text="${escapeHtml(question)} ${inGroup.length} regels."
+				text="${escapeHtml(group.title)}"
+				supporting-text="${about(group)}"
 				heading-level="1"
 			></nldd-title>
-			${ruleList(inGroup, { label: `Regels in de groep ${group}` })}
+			${ruleList(group.rules, { label: `Regels bij ${group.title}` })}
 		</nldd-simple-section>
 	</nldd-page>
 </nldd-sheet>`).join('\n');
 	const html = `
-<nldd-container id="alle-regels">
-	<nldd-title
+<nldd-title
+		id="${id}"
 		size="display-4"
-		supporting-text="${rules.length} regels in zes groepen. De linter loopt ze in deze volgorde af."
+		supporting-text="${escapeHtml(supporting)}"
 	>
-		<h2>Alle regels</h2>
+		<h2>${escapeHtml(heading)}</h2>
 	</nldd-title>
 	<nldd-spacer size="12"></nldd-spacer>
 	<nldd-list
 		appearance="box-tinted"
-		accessible-label="Groepen van regels"
+		accessible-label="${escapeHtml(label)}"
 	>
 	${rows}
 	</nldd-list>
-</nldd-container>
 ${sheets}`;
-	return { html, headings: [{ id: 'alle-regels', text: 'Alle regels' }] };
+	return { html, headings: [{ id, text: heading }] };
 }
 
 /**
- * @param {{ base: string }} options
- * @returns {{ pages: Record<string, string>, counts: Record<string, number> }}
- *   every page by its output path relative to the site root
+ * The rules that name a success criterion, by criterion, for the page about
+ * accessibility. They come from every group: a link text is a rule of `copy`
+ * and a control in a control one of `structure`. The rules of `a11y` that name
+ * no criterion follow in a group of their own, so none of them goes missing.
  */
+function rulesByCriterion(rules) {
+	const criteria = [...new Set(rules.flatMap((rule) => rule.wcag ?? []))].sort(compareCriteria);
+	const withCriterion = rules.filter((rule) => rule.wcag);
+	return ruleSheets({
+		id: 'lintregels-per-succescriterium',
+		heading: 'Lintregels per succescriterium',
+		supporting: `${withCriterion.length} regels uit alle groepen noemen het succescriterium van WCAG 2.2 dat ze bewaken.`,
+		label: 'Succescriteria met lintregels',
+		groups: [
+			...criteria.map((criterion) => ({
+				key: criterion.replaceAll('.', '-'),
+				title: `${criterion} ${WCAG_NL[criterion].name}`,
+				about: `Niveau ${WCAG[criterion].level}.`,
+				rules: rules.filter((rule) => rule.wcag?.includes(criterion)),
+			})),
+			{
+				key: 'goede-praktijk',
+				title: 'Zonder succescriterium',
+				about: 'Regels uit de groep a11y die verder gaan dan WCAG vraagt.',
+				rules: rules.filter((rule) => rule.group === 'a11y' && !rule.wcag),
+			},
+		],
+	});
+}
+
+/** Who sees to a success criterion, as the accessibility page names it, and the color of its tag. */
+const RESPONSIBLE = { Systeem: 'success', Samen: 'accent', Jij: 'neutral' };
+
+/** The four principles of WCAG, by the first digit of their success criteria. */
+const PRINCIPLES = { 1: 'Waarneembaar', 2: 'Bedienbaar', 3: 'Begrijpelijk', 4: 'Robuust' };
+
+/**
+ * The supporting text of a row from a table cell in Markdown. Code becomes
+ * bold, as the cell draws it from its attribute; a cell with a link takes a
+ * paragraph of its own, with the link as a component.
+ */
+function supportingText(markdown) {
+	const plain = (text) => escapeHtml(text.replace(/`([^`]+)`/g, '$1'));
+	if (!/\]\(/.test(markdown)) return { attribute: escapeHtml(markdown.replace(/`([^`]+)`/g, '**$1**')) };
+	const parts = markdown.split(/\[([^\]]+)\]\(([^)]+)\)/);
+	const inline = parts.map((part, index) =>
+		index % 3 === 0
+			? plain(part)
+			: index % 3 === 1
+				? `<nldd-link href="${escapeHtml(parts[index + 1])}" text="${plain(part)}"></nldd-link>`
+				: '',
+	);
+	return { slot: `\n\t\t<p slot="supporting-text">${inline.join('')}</p>\n\t` };
+}
+
+/**
+ * The tables "who does what" of the accessibility page, as lists: a row per
+ * success criterion, with who sees to it as a tag. In the repository the page
+ * keeps its tables, which GitHub draws; here three columns leave a phone no
+ * room for the text.
+ */
+function criteriaLists(markdown) {
+	const table = /^\| Succescriterium \| Wie \| Wat \|\n\|[-| ]+\|\n((?:\|.*\|\n)+)/gm;
+	return markdown.replace(table, (_, body) => {
+		const rows = body
+			.trim()
+			.split('\n')
+			.map((line) => {
+				const [criterion, who, what] = line.slice(1, -1).split(' | ').map((cell) => cell.trim());
+				if (!(who in RESPONSIBLE)) throw new Error(`Onbekende waarde "${who}" in de kolom Wie bij ${criterion}.`);
+				const text = supportingText(what);
+				const supporting = text.attribute ? `\n\t\tsupporting-text="${text.attribute}"` : '';
+				const tag = `<nldd-tag
+			size="sm"
+			color="${RESPONSIBLE[who]}"
+			text="${who}"
+		></nldd-tag>`;
+				// On a narrow screen the tag stands with the name, as in a list of rules.
+				return `<nldd-list-item>
+	<nldd-text-cell
+		hide-below="md"
+		text="${escapeHtml(criterion)}"${supporting}
+	>${text.slot ?? ''}</nldd-text-cell>
+	<nldd-text-cell
+		hide-above="sm"${supporting}
+	>
+		<p>
+			${escapeHtml(criterion)}
+			${tag}
+		</p>${text.slot ?? ''}</nldd-text-cell>
+	<nldd-spacer-cell
+		size="12"
+		hide-below="md"
+	></nldd-spacer-cell>
+	<nldd-cell hide-below="md">
+		${tag}
+	</nldd-cell>
+</nldd-list-item>`;
+			});
+		// On one line: Markdown only takes a block for HTML when its first line is a whole tag.
+		return `<nldd-list appearance="box-tinted" accessible-label="Succescriteria van het principe ${PRINCIPLES[body.trim()[2]]}">
+${rows.join('\n')}
+</nldd-list>\n`;
+	});
+}
+
+/** Where a rule runs, in a sentence or two. */
+function whereRuleRuns(rule) {
+	if (rule.runtime) return 'Alleen in de browser, tijdens het ontwikkelen. Hij leest iets wat pas op de draaiende pagina bestaat.';
+	const source = 'In broncode en in gebouwde HTML.';
+	if (OPT_IN_GROUPS.includes(rule.group)) return `${source} Alleen als je project de groep <code>${rule.group}</code> aanzet.`;
+	return runsInBrowser(rule) ? `${source} Tijdens het ontwikkelen ook in de browser.` : source;
+}
+
+/** The selectors of a rule as it is written in src/rules/, without its message and examples. */
+function ruleDefinition(rule) {
+	const source = parseYaml(read(`src/rules/${rule.group}/${rule.id}.yaml`));
+	const kept = Object.fromEntries(
+		['context', 'assert', 'report', 'count', 'ref'].filter((key) => key in source).map((key) => [key, source[key]]),
+	);
+	return stringifyYaml(kept, { lineWidth: 0 });
+}
+
+/**
+ * The page of one rule: what it says, how heavy it weighs, where it runs, the
+ * success criteria it guards, markup that passes and markup that fails, and
+ * the rule itself. It is what `nldd explain` prints, with the links a terminal
+ * cannot follow.
+ *
+ * @param {object} rule
+ * @param {{ byTag: Map<string, object>, patternNames: Map<string, string> }} names
+ */
+function rulePage(rule, { byTag, patternNames }) {
+	const severity = SEVERITIES[rule.severity] ?? SEVERITIES.warn;
+	const question = RULE_GROUPS.find(([group]) => group === rule.group)?.[1] ?? '';
+	const [seeKind, seeSlug] = (rule.see ?? '').split('/');
+	const seeText =
+		seeKind === 'patronen'
+			? `Patroon ${patternNames.get(seeSlug) ?? seeSlug}`
+			: seeKind === 'ontwerprichtlijnen'
+				? `Ontwerprichtlijnen, ${seeSlug.replaceAll('-', ' ')}`
+				: `<code>nldd-${seeSlug}</code>`;
+	const components = tagsOf(rule)
+		.filter((tag) => byTag.has(tag))
+		.map((tag) => `<a href="/componenten/${byTag.get(tag).slug}/"><code>${tag}</code></a>`);
+	const criteria = (rule.wcag ?? []).map(
+		(criterion) =>
+			`<a href="${WCAG_NL_URL}#${WCAG_NL[criterion].anchor}" rel="noopener">${criterion} ${escapeHtml(WCAG_NL[criterion].name)}</a> (niveau ${WCAG[criterion].level})`,
+	);
+	const facts = [
+		['Niveau', `${severity.label}. ${severity.effect}`],
+		['Groep', `<code>${rule.group}</code>. ${escapeHtml(question)}`],
+		['Draait', whereRuleRuns(rule)],
+		criteria.length ? ['WCAG 2.2', criteria.join('<br>')] : undefined,
+		rule.fix ? ['Herstel', '<code>nldd lint --fix</code> lost dit op.'] : undefined,
+		components.length ? [components.length === 1 ? 'Component' : 'Componenten', components.join(', ')] : undefined,
+		rule.see ? ['Waarom', `<a href="${seePath(rule.see)}">${seeText}</a>`] : undefined,
+		rule.aliases?.length ? ['Heette eerder', rule.aliases.map(inlineCode).join(', ')] : undefined,
+	].filter(Boolean);
+	const heading = (text, about = '') =>
+		`<nldd-rich-text>\n<h2 id="${headingId(text)}">${text}</h2>${about ? `\n<p>${about}</p>` : ''}\n</nldd-rich-text>`;
+	const examples = (text, markup, about) =>
+		markup?.length ? [stack([heading(text, about), ...markup.map((example) => codeViewer(example, 'html', { wrap: true }))], 12)] : [];
+	return docBody({
+		title: pageTitle(rule.id, { overline: 'Lintregel' }),
+		intro: [`<nldd-rich-text>\n<p lang="en">${describe(rule.message)}</p>\n</nldd-rich-text>`],
+		blocks: [
+			`<nldd-rich-text data-site-api>
+<dl>
+${facts.map(([name, text]) => `<dt>${name}</dt>\n<dd>${text}</dd>`).join('\n')}
+</dl>
+</nldd-rich-text>`,
+			...examples('Goed', rule.examples?.passed),
+			...examples('Fout', rule.examples?.failed),
+			...examples('Onzeker', rule.examples?.cantTell, 'Hier ziet de linter niet genoeg, en dan meldt hij niets.'),
+			stack(
+				[
+					heading(
+						'De regel',
+						'Een regel is een selector. <code>context</code> kiest de elementen, <code>assert</code> zegt wat ze moeten zijn en <code>report</code> wat ze niet mogen zijn.',
+					),
+					codeViewer(ruleDefinition(rule), 'yaml', { wrap: true }),
+					`<nldd-link
+	href="${REPOSITORY}/blob/main/src/rules/${rule.group}/${rule.id}.yaml"
+	text="Bekijk de regel op GitHub"
+></nldd-link>`,
+				],
+				12,
+			),
+		],
+	});
+}
+
 export function buildPages({ base = '/' } = {}) {
 	const components = collectComponents();
 	const patterns = collectPatterns();
 	const lintRules = loadData().rules;
 	const pages = {};
-	const page = (path, title, description, main, secondary) => {
-		pages[`${path.slice(1)}index.html`] = withBase(layout({ title, description, path, main, secondary }), base);
+	const page = (path, title, description, main, secondary, back) => {
+		pages[`${path.slice(1)}index.html`] = withBase(layout({ title, description, path, main, secondary, back }), base);
 	};
 
 	pages[`${DOCS_PATH.slice(1)}index.html`] = withBase(
@@ -1245,7 +1532,7 @@ export function buildPages({ base = '/' } = {}) {
 		);
 	}
 
-	for (const { path, file, title, description, stories: storiesPath, examples, rules } of PROSE) {
+	for (const { path, file, title, description, stories: storiesPath, examples, rules, fills } of PROSE) {
 		// A page written for the site can insert what is kept in one place, such
 		// as the list of skills. A file that is shown as it is in the repository
 		// has links relative to itself.
@@ -1260,8 +1547,8 @@ export function buildPages({ base = '/' } = {}) {
 			: absoluteLinks(read(file), file);
 		const storyFile = storiesPath ? parseStoryFile(resolve(repoRoot, storiesPath)) : undefined;
 		stories += storyFile?.stories.length ?? 0;
-		const rendered = renderProse(source, storyFile);
-		const ruleIndex = rules ? allRules(lintRules) : undefined;
+		const rendered = renderProse(rules === 'wcag' ? criteriaLists(source) : source, storyFile, { unwrap: fills });
+		const ruleIndex = rules === 'wcag' ? rulesByCriterion(lintRules) : undefined;
 		if (ruleIndex) rendered.headings.push(...ruleIndex.headings);
 		const extra = ruleIndex
 			? [ruleIndex.html]
@@ -1270,7 +1557,7 @@ export function buildPages({ base = '/' } = {}) {
 					`<nldd-rich-text><h2 id="voorbeelden">${escapeHtml(examples)}</h2></nldd-rich-text>`,
 					...storyFile.stories.map(
 						(story) =>
-							`<nldd-container id="${story.id.split('--')[1]}">\n${stack([`<nldd-title size="display-5"><h3>${escapeHtml(story.name)}</h3></nldd-title>`, stage(storyFile, story)], 12)}\n</nldd-container>`,
+							stack([`<nldd-title id="${story.id.split('--')[1]}" size="display-5"><h3>${escapeHtml(story.name)}</h3></nldd-title>`, stage(storyFile, story)], 12),
 					),
 				]
 			: [];
@@ -1279,11 +1566,56 @@ export function buildPages({ base = '/' } = {}) {
 			path,
 			title ?? rendered.title,
 			description,
-			prosePage({ title: title ?? rendered.title, rendered, extra }),
+			fills ? filledSection({ title: title ?? rendered.title, rendered }) : prosePage({ title: title ?? rendered.title, rendered, extra }),
 		);
 	}
 
 	const byTag = new Map(components.flatMap((c) => c.elements.map((element) => [element.tagName, c])));
+	// The rules are a section of their own: the groups as its list, in the order
+	// the linter asks them, the rules of a group in main, and a rule opens in
+	// main with the way back to its group.
+	const patternNames = new Map(patterns.map((pattern) => [pattern.slug, pattern.name]));
+	const ruleGroups = RULE_GROUPS.map(([group, question]) => ({
+		name: group,
+		slug: group,
+		question,
+		rules: lintRules.filter((rule) => rule.group === group),
+	})).filter((group) => group.rules.length);
+	// A search finds a rule in any group, by its id and the words of its message.
+	const ruleItems = new Map(lintRules.map((rule) => [rule, { name: rule.id, slug: rule.id, keywords: [rule.message.replace(/[`*]/g, '')] }]));
+	const ruleNav = (current, currentRule) => ({
+		title: 'Lintregels',
+		path: '/lintregels/',
+		empty: 'Kies een groep',
+		opensFirst: true,
+		nav: siblingNav(
+			ruleGroups.map((group) => [group.name, group.rules.map((rule) => ruleItems.get(rule))]),
+			currentRule && ruleItems.get(currentRule),
+			(item) => `/lintregels/${item.slug}/`,
+			{
+				search: { placeholder: 'Regel zoeken', none: 'Geen regel gevonden' },
+				idle: siblingNav([['', ruleGroups]], current, (group) => `/lintregels/${group.slug}/`, { label: 'Groepen van regels' }),
+			},
+		),
+	});
+	page('/lintregels/', 'Lintregels', `De ${lintRules.length} regels van nldd lint, in zes groepen.`, undefined, ruleNav());
+	for (const group of ruleGroups) {
+		page(`/lintregels/${group.slug}/`, group.name, `${group.question} ${countRules(group.rules)}.`, ruleGroupPage(group), ruleNav(group));
+		for (const rule of group.rules) {
+			page(
+				rulePath(rule),
+				rule.id,
+				rule.message.replace(/`/g, ''),
+				rulePage(rule, { byTag, patternNames }),
+				ruleNav(group, rule),
+				{ text: group.name, href: `/lintregels/${group.slug}/`, always: true },
+			);
+			// A rule had its page under the linter, and links to it are out there.
+			pages[`linter/${rule.id}/index.html`] = redirect(`${base === '/' ? '' : base.replace(/\/$/, '')}${rulePath(rule)}`);
+		}
+	}
+	const prefix = base === '/' ? '' : base.replace(/\/$/, '');
+	for (const [from, to] of Object.entries(MOVED)) pages[`${from.slice(1)}index.html`] = redirect(`${prefix}${to}`);
 	// What the search shows under its matches: the pages they name in @related.
 	for (const component of components) {
 		const tags = component.elements.flatMap((element) => element.related ?? []);

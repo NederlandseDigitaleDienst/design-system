@@ -2,6 +2,8 @@ import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
 import './blockquote.js';
+import { wrapBodyText, wrapDisplayText } from '../../../assets/styles/text-wrap.js';
+import { wrapOf, wrapOfSets } from '../../../assets/styles/text-wrap.fixtures.js';
 
 describe('nldd-blockquote', () => {
 	let el: HTMLElement;
@@ -139,5 +141,37 @@ describe('nldd-blockquote – custom-size', () => {
 		await blockquote('lg-custom-size="huge"');
 		expect(el.hasAttribute('data-lg-custom-size')).toBe(false);
 		expect(el.matches(':state(invalid-custom-size)')).toBe(true);
+	});
+});
+
+describe('nldd-blockquote – breaking long words', () => {
+	const WORD = 'Arbeidsongeschiktheidsverzekering';
+	let el: HTMLElement;
+	let removeTokens: () => void;
+
+	beforeEach(() => { removeTokens = loadTokens(); });
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		removeTokens();
+	});
+
+	it.each(['md', 'lg'])('keeps a long word in the quote and the attribution inside 220px, size %s', async (size) => {
+		el = await fixture(`<div style="width: 220px"><nldd-blockquote size="${size}"><p>Over de ${WORD} kregen we veel vragen.</p><p slot="attribution">Team Uitvoering, ${WORD}</p></nldd-blockquote></div>`);
+		await waitForUpdate(el.querySelector('nldd-blockquote')!);
+		const right = el.getBoundingClientRect().right;
+		for (const p of el.querySelectorAll('p')) {
+			const range = document.createRange();
+			range.selectNodeContents(p);
+			expect(range.getBoundingClientRect().right - right, p.slot || 'quote').toBeLessThanOrEqual(1);
+		}
+	});
+
+	it('gives the quote wrapDisplayText and the attribution wrapBodyText', async () => {
+		el = await fixture('<nldd-blockquote><p>Tekst</p><p slot="attribution">Team Uitvoering</p></nldd-blockquote>');
+		await waitForUpdate(el);
+		const root = el.shadowRoot!;
+		expect(wrapOf(root.querySelector('.blockquote__quote')!)).toEqual(wrapOfSets(wrapDisplayText));
+		expect(wrapOf(root.querySelector('.blockquote__attribution')!)).toEqual(wrapOfSets(wrapBodyText));
 	});
 });

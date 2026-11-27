@@ -59,6 +59,9 @@ export default {
 			description: 'Display-breedte, nooit breder dan de parent. `full` vult de parent, een getal is pixels en zet ook de img-hint, een andere CSS-lengte zet alleen de breedte.',
 			table: { defaultValue: { summary: 'full' } },
 		},
+		height: {
+			description: 'Hoogte in pixels als hint voor de `img`, geen getoonde hoogte. Met een `width` in pixels houdt de browser ruimte vrij in die verhouding; bij elke andere breedte doet hij niets, gebruik dan `aspect-ratio`.',
+		},
 		src: {
 			control: 'text',
 			description: 'Image URL',

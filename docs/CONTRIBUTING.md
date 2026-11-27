@@ -14,7 +14,7 @@ Voor kwetsbaarheden geldt een andere route. Die staan in [`SECURITY.md`](./SECUR
 
 ### Issues uit upgrades
 
-De agent die apps naar een nieuwe versie brengt (de vloot, zie de [pagina over upgraden](https://design.digitaledienst.overheid.nl/upgraden/)) meldt wat het designsysteem niet kan. Zo'n issue heeft het label `uit-upgrade` en noemt geen app; in de tijdlijn staan de pull requests die erop wachten.
+De agent die apps naar een nieuwe versie brengt (de vloot, zie de [pagina over upgraden](https://design.digitaledienst.overheid.nl/handleidingen/upgraden/)) meldt wat het designsysteem niet kan. Zo'n issue heeft het label `uit-upgrade` en noemt geen app; in de tijdlijn staan de pull requests die erop wachten.
 
 Met het label `blocking` houdt het een upgrade tegen: die pull requests staan op concept tot een release het oplost. Zo'n issue gaat voor. Sluit het als opgelost met de commit die het oplost, dan zet de eerste run na de release de pull requests weer op klaar. Sluit je het als niet gepland, dan blokkeert het niet meer, en kiest elk team zelf hoe het verder gaat.
 
@@ -32,7 +32,7 @@ Code mag later. Draait het patroon eenmaal, dan moet elke `nldd-*`-tag in de doc
 
 ## Lokaal draaien
 
-Je hebt Node 20.19 of hoger nodig.
+Je hebt de Node uit `.nvmrc` nodig (`nvm use`): daarop draaien CI en de release. De linter zelf vraagt Node 20.19 of hoger, en CI test hem ook daarop.
 
 ```bash
 npm ci

@@ -20,6 +20,7 @@
  * @attr {string} width - Width: `full` fills the container, or pass your own CSS length.
  * @attr {string} accessible-label - Accessible name of the picker.
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
+ * @attr {string} name - Name for form submission; the picker submits on its own, so it works in a form without an nldd-time-field. Submits the chosen time as `HH:mm`.
  * @attr {string} value - The chosen time as `HH:mm` (24-hour), written exactly so: unlike `min` and `max`, it is what the picker reports back. In nldd-time-field the field writes it.
  * @attr {string} min - Earliest allowed time as `HH:mm`, read as generously as nldd-time-field reads it (`9:00` too). Also the base that `step` counts from.
  * @attr {string} max - Latest allowed time as `HH:mm`, read as generously as `min`.
@@ -36,10 +37,11 @@ import { customElement } from '../../../utilities/custom-element.js';
 import { cssTimeToMs } from '../../../utilities/css-time.js';
 import { timePickerStyles } from './time-picker.styles.js';
 import { timePickerTemplate } from './time-picker.template.js';
-import { nlddTimePickerTranslations, type NLDDTimePickerTranslations } from './time-picker.i18n.js';
+import { nlddTimePickerTranslations } from './time-picker.i18n.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
+import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
 import { fromMinutes, resolveRules, toMinutes, type TimeRules } from '../time-field/time-field.times.js';
 import { LayoutPass } from '../../../utilities/layout-pass.js';
@@ -109,13 +111,16 @@ function goLive(picker: NLDDTimePicker): void {
 }
 
 @customElement('nldd-time-picker')
-export class NLDDTimePicker extends DescribedBy(LitElement) {
+export class NLDDTimePicker extends DescribedBy(FormAssociated(withTranslations(LitElement, nlddTimePickerTranslations))) {
 
 	static override styles = timePickerStyles;
 
 	/** Says this is the control an nldd-form-field is about, so the field can
 	 *  find it, name it and move focus into it. See nldd-form-field. */
 	static isFormInput = true;
+
+	/** What a reset restores and what bfcache saves. */
+	static formProperties = ['value'];
 
 	@property({ reflect: true, converter: reflectNonDefault<number>(7) })
 	rows = 7;
@@ -138,6 +143,11 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
+	/** Name for form submission. The picker submits on its own, so it works in a
+	 *  form without an nldd-time-field around it. */
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	name = '';
+
 	@property({ type: String })
 	value = '';
 
@@ -150,9 +160,6 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 	@property({ type: Number })
 	step = 1;
 
-	@property({ type: Object })
-	translations: Partial<NLDDTimePickerTranslations> = {};
-
 	/**
 	 * Where scrolling has landed, per column, for as long as it is not recorded.
 	 * Kept apart from `value`, which only records once scrolling comes to rest.
@@ -163,9 +170,9 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 	@state()
 	private _scrolledTo: { hours: number | null; minutes: number | null } = { hours: null, minutes: null };
 
-
-	public _t(key: keyof NLDDTimePickerTranslations): string {
-		return translate(this.translations, nlddTimePickerTranslations, key);
+	/** The chosen time as `HH:mm`, empty when there is none. */
+	override formValue(): FormValue {
+		return this.value;
 	}
 
 	public get _label(): string {

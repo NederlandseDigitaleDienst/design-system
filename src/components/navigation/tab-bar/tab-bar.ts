@@ -51,6 +51,7 @@
 import { LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
+import { sharedResizeObserver, type SharedResizeObserver } from '../../../utilities/layout-pass.js';
 import { setState } from '../../../utilities/element-state.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { tabBarStyles, tabBarItemStyles } from './tab-bar.styles.js';
@@ -251,31 +252,37 @@ function updateOverflows(bars: NLDDTabBar[]): void {
  * also grows in height with everything that is added to it, and while a page
  * loads that is every frame, for every bar in it.
  */
-const barsOf = new Map<Element, Set<NLDDTabBar>>();
 const lastWidth = new WeakMap<Element, number>();
-let sizeObserver: ResizeObserver | null = null;
+let sizeObserver: SharedResizeObserver<NLDDTabBar> | null = null;
 
 function observeSize(target: Element, bar: NLDDTabBar): void {
-	sizeObserver ??= new ResizeObserver(entries => {
-		for (const entry of entries) {
-			const width = entry.contentRect.width;
-			if (lastWidth.get(entry.target) === width) continue;
-			lastWidth.set(entry.target, width);
-			barsOf.get(entry.target)?.forEach(bar => bar._scheduleOverflow());
+	sizeObserver ??= sharedResizeObserver<NLDDTabBar>((bars, entriesOf) => {
+		// Which targets actually changed width, deduped once per batch: a shared
+		// parent that two bars watch is weighed a single time here.
+		const changed = new Set<Element>();
+		const seen = new Set<Element>();
+		for (const bar of bars) {
+			for (const entry of entriesOf(bar)) {
+				if (seen.has(entry.target)) continue;
+				seen.add(entry.target);
+				const width = entry.contentRect.width;
+				if (lastWidth.get(entry.target) === width) continue;
+				lastWidth.set(entry.target, width);
+				changed.add(entry.target);
+			}
+		}
+		// Every bar watching a target whose width changed reschedules.
+		for (const bar of bars) {
+			if (entriesOf(bar).some(entry => changed.has(entry.target))) bar._scheduleOverflow();
 		}
 	});
-	const bars = barsOf.get(target) ?? new Set<NLDDTabBar>();
-	barsOf.set(target, bars);
-	bars.add(bar);
-	sizeObserver.observe(target);
+	sizeObserver.observe(target, bar);
 }
 
 function unobserveSize(target: Element, bar: NLDDTabBar): void {
-	const bars = barsOf.get(target);
-	if (!bars?.delete(bar) || bars.size) return;
-	barsOf.delete(target);
+	// Cleared so a later observe of the same target starts fresh and reports once.
 	lastWidth.delete(target);
-	sizeObserver?.unobserve(target);
+	sizeObserver?.unobserve(target, bar);
 }
 
 @customElement('nldd-tab-bar')

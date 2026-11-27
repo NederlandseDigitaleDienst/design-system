@@ -43,7 +43,7 @@
  * @attr {string} text - Title of the bar, rendered as the heading in the title group. One line, cut off with an ellipsis when it does not fit; see above for a title that can run long.
  * @attr {string} supporting-text - Text under the title.
  * @attr {1|2|3|4|5|6} heading-level - Heading level of the title: 1–6 (default: 1). Lower it where the bar is not the top of the page, such as a pane beside content that already has its h1.
- * @attr {string} back-text - Text of the back button and its accessible name. Empty hides the back button (and the divider).
+ * @attr {string} back-text - Text of the back button and its accessible name. Empty hides the back button (and the divider), except in the header of an nldd-page with `parent`: the bar then takes the title of that parent page.
  * @attr {string} back-href - URL for the back button; renders a link and suppresses the `back` event.
  * @attr {string} dismiss-text - Text of the dismiss button. Empty hides that button.
  * @attr {string} collapse-anchor - Id of the element whose top edge triggers the compact state on scroll. Without it the state is static (see above).
@@ -81,8 +81,16 @@ const anchorObserver = sharedResizeObserver<NLDDTopTitleBar>(checkAnchors);
 
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
+/**
+ * What nldd-page reads from a bar in its header: the height the bar takes once
+ * compact. Shared as a type, so renaming it breaks the page's type check.
+ */
+export interface CompactingBar {
+	readonly _compactHeight: number | undefined;
+}
+
 @customElement('nldd-top-title-bar')
-export class NLDDTopTitleBar extends LitElement {
+export class NLDDTopTitleBar extends LitElement implements CompactingBar {
 	static override styles = topTitleBarStyles;
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
@@ -106,8 +114,32 @@ export class NLDDTopTitleBar extends LitElement {
 	@property({ type: String, attribute: 'collapse-anchor' })
 	collapseAnchor = '';
 
+	/**
+	 * @internal The height the bar takes once compact, also while it is not:
+	 * nldd-page reserves it in its scroll padding. Undefined without
+	 * `collapse-anchor`, when the bar keeps one state.
+	 */
+	get _compactHeight(): number | undefined {
+		if (!this.collapseAnchor) return undefined;
+		const group = this.shadowRoot?.querySelector('.top-title-bar__title-group');
+		if (!group) return undefined;
+		const style = getComputedStyle(group);
+		return parseFloat(style.marginTop) + parseFloat(style.minHeight);
+	}
+
 	@state()
 	_hasToolbarItems = false;
+
+	/** @internal The title of the page this bar's page goes back to, set by an
+	 *  nldd-page with `parent`. A `back-text` of the consumer wins. */
+	@state()
+	_parentPageText = '';
+
+	/** @internal The text the back button shows: `back-text`, or else the
+	 *  title of the parent page. */
+	get _backText(): string {
+		return this.backText || this._parentPageText;
+	}
 
 	private _pageElement: Element | null = null;
 

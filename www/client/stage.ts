@@ -43,6 +43,7 @@ interface AttributeControl {
 interface ControlsData {
 	tag: string;
 	attributes: AttributeControl[];
+	canon?: string[];
 }
 
 type Args = Record<string, unknown>;
@@ -82,6 +83,31 @@ const SHOWN_WHOLE = { options: 4, characters: 16 };
 
 /** The width of a field in the controls, and below which width of the list the descriptions fold away. */
 const FIELD_WIDTH = 'min(240px, 50%)';
+/** A number is short, whether a counter or a value with its buttons at the end. */
+const NUMBER_WIDTH = '144px';
+/**
+ * The numbers you count up one at a time, which get their buttons on either
+ * side. Any other number is a measure or a value you type, such as a height in
+ * pixels or a duration, with the buttons at the end. By attribute, or by tag
+ * and attribute where the same name is a value elsewhere (`max` on a badge).
+ */
+const COUNTERS = new Set([
+	'max-items',
+	'rows',
+	'panes',
+	'heading-level',
+	'order',
+	'sm-order',
+	'md-order',
+	'lg-order',
+	'current',
+	'total',
+	'number',
+	'priority',
+	'first-day-of-week',
+	'nldd-one-time-code-field length',
+	'nldd-avatar-group max',
+]);
 const NARROW_CONTROLS = 560;
 
 /** Puts a value chosen elsewhere into a control of the list. */
@@ -115,6 +141,7 @@ function isChoice(control: AttributeControl, argType?: ArgType): boolean {
 let infoCount = 0;
 
 const kebab = (name: string) => name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+const camel = (name: string) => name.replace(/-([a-z0-9])/g, (_, c: string) => c.toUpperCase());
 
 function element<K extends keyof HTMLElementTagNameMap>(
 	tag: K,
@@ -268,9 +295,13 @@ export class SiteStage extends HTMLElement {
 		}
 		this.args = { ...this.story.args };
 
-		if (this.hasAttribute('bare')) {
-			this.replaceChildren();
-			this.draw(this);
+		// The example fills the section the page made for it, as children of that
+		// section: the stage steps aside, so a slot attribute on what the story
+		// renders reaches the section.
+		if (this.hasAttribute('unwrap')) {
+			const holder = document.createElement('div');
+			this.draw(holder);
+			this.replaceWith(...holder.childNodes);
 			return;
 		}
 		if (this.story.framed) this.buildFrame(file, name);
@@ -478,7 +509,7 @@ export class SiteStage extends HTMLElement {
 				);
 			}
 			this.resetButton = nldd('button', { text: 'Herstel', hidden: true });
-			this.resetItem = nldd('menu-item', { text: 'Herstel', hidden: true });
+			this.resetItem = nldd('menu-item', { icon: 'undo', text: 'Herstel', hidden: true });
 			this.resetButton.addEventListener('click', () => this.reset());
 			this.resetItem.addEventListener('select', () => this.reset());
 			toolbar.append(this.toolItem(this.resetButton, this.resetItem, 0, 'end'));
@@ -499,6 +530,7 @@ export class SiteStage extends HTMLElement {
 
 		const mat = this.mat;
 		this.canvas.dataset.surface = 'base';
+		this.canvas.style.paddingTop = this.story?.parameters.stage?.paddingTop ?? '';
 		if (this.frame) {
 			mat.classList.add('site-stage__mat--frame');
 			mat.append(this.frame);
@@ -656,7 +688,15 @@ export class SiteStage extends HTMLElement {
 		// after the name, so the name and the control stay side by side.
 		const infos: { label: HTMLElement; button: HTMLElement; text: HTMLElement }[] = [];
 		const popovers: HTMLElement[] = [];
-		const row = (name: string, input: HTMLElement, description: string) => {
+		// The content of a slot stands where the canon puts its name among the
+		// attributes (a quote before its cite), not after all of them.
+		const canon = this.controls?.canon ?? [];
+		const rankOf = (name: string) => {
+			const at = canon.findIndex((entry) => entry.toLowerCase() === camel(name).toLowerCase());
+			return at < 0 ? Infinity : at;
+		};
+		const rows: { name: string; item: HTMLElement; content: boolean }[] = [];
+		const row = (name: string, input: HTMLElement, description: string, content = false) => {
 			const title = element('p', '', `${name} `);
 			const label = nldd('text-cell', {}, [title]);
 			if (description) {
@@ -686,9 +726,9 @@ export class SiteStage extends HTMLElement {
 				infos.push({ label, button, text });
 			}
 			input.setAttribute('accessible-label', name);
-			const fits = ['nldd-switch', 'nldd-segmented-control'].includes(input.localName);
+			const fits = ['nldd-switch', 'nldd-segmented-control', 'nldd-number-field'].includes(input.localName);
 			const cell = nldd('cell', { 'horizontal-alignment': 'right', 'vertical-alignment': 'top', ...(fits ? {} : { width: FIELD_WIDTH }) }, [input]);
-			list.append(nldd('list-item', {}, [label, nldd('spacer-cell', { size: '12' }), cell]));
+			rows.push({ name, item: nldd('list-item', {}, [label, nldd('spacer-cell', { size: '12' }), cell]), content });
 		};
 
 		for (const attribute of attributes) {
@@ -744,8 +784,15 @@ export class SiteStage extends HTMLElement {
 			}, argType);
 			const input = build();
 			this.contentInputs.set(key, { input, build });
-			row(name, input, control.description);
+			row(name, input, control.description, true);
 		}
+		const ordered = rows.filter((r) => !r.content);
+		for (const r of rows.filter((r) => r.content)) {
+			const rank = rankOf(r.name);
+			const before = ordered.findIndex((o) => !o.content && rankOf(o.name) > rank);
+			ordered.splice(before < 0 ? ordered.length : before, 0, r);
+		}
+		list.append(...ordered.map((r) => r.item));
 		this.resets.push({
 			atStart: () =>
 				this.quick.every((entry) => this.atStart(entry)) &&
@@ -758,6 +805,7 @@ export class SiteStage extends HTMLElement {
 		this.append(nldd('spacer', { size: '12' }), list, ...popovers);
 		this.observe(new ResizeObserver(() => {
 			const narrow = list.offsetWidth < NARROW_CONTROLS;
+			list.toggleAttribute('data-narrow', narrow);
 			// Out of the cell rather than hidden: the cell's own style on a slotted
 			// paragraph outranks the hidden attribute.
 			for (const { label, button, text } of infos) {
@@ -1082,12 +1130,14 @@ export class SiteStage extends HTMLElement {
 			// whose mapping gives this value, the way the story expects it back.
 			const label = Object.entries(argType?.mapping ?? {}).find(([, value]) => value === start)?.[0];
 			const selected = label ?? (text === fallback && !own ? '' : text);
-			// Segments show the selection already, so they go without the mark.
-			const segments = own ? values.map((value): [string, string] => [value, value]) : options;
+			// Segments show the selection already, so they go without the mark. The
+			// default keeps its empty value, so choosing it leaves the attribute out;
+			// only a "not set" without a name of its own stays a dropdown.
+			const segments = own ? values.map((value): [string, string] => [value, value]) : options.map(([name, value]): [string, string] => [value === '' && fallback ? fallback : name, value]);
 			const fits =
 				segments.length <= SHOWN_WHOLE.options &&
 				segments.reduce((sum, [name]) => sum + name.length, 0) <= SHOWN_WHOLE.characters &&
-				segments.every(([, value]) => value !== '');
+				segments.every(([name, value]) => value !== '' || (!!fallback && name === fallback));
 			if (fits) return this.choice(control.name, segments, selected, change, { size: 'md' });
 			const select = element('select', '');
 			for (const [name, value] of options) select.append(new Option(name, value));
@@ -1096,7 +1146,8 @@ export class SiteStage extends HTMLElement {
 			return nldd('dropdown', {}, [select]);
 		}
 		if (control.kind === 'number') {
-			const input = nldd('number-field', text === '' ? {} : { value: text });
+			const counter = COUNTERS.has(control.name) || COUNTERS.has(`${this.controls?.tag} ${control.name}`);
+			const input = nldd('number-field', { ...(counter ? { 'spin-buttons': 'split' } : {}), width: NUMBER_WIDTH, ...(text === '' ? {} : { value: text }) });
 			input.addEventListener('input', (event) => {
 				const { value } = (event as CustomEvent<{ value: number | null }>).detail;
 				change(value === null ? '' : String(value));
@@ -1104,14 +1155,16 @@ export class SiteStage extends HTMLElement {
 			return input;
 		}
 		// The manifest writes a missing default as the word.
+		// The default is marked as in a dropdown; the value stays the bare word.
+		const label = (value: string) => (value === control.default ? `${value} (standaard)` : value);
 		const placeholder: Record<string, string> =
-			control.default && control.default !== 'undefined' ? { placeholder: control.default } : {};
+			control.default && control.default !== 'undefined' ? { placeholder: label(control.default) } : {};
 		if (values) {
-			const input = nldd('combo-box', { value: text, text, 'allow-custom': true, ...placeholder }, [
+			const input = nldd('combo-box', { value: text, text: label(text), 'allow-custom': true, ...placeholder }, [
 				nldd(
 					'menu',
 					{},
-					values.map((value) => nldd('menu-item', { text: value, value })),
+					values.map((value) => nldd('menu-item', { text: label(value), value })),
 				),
 			]);
 			for (const type of ['input', 'change']) {

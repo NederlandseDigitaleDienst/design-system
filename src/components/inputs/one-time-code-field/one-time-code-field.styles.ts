@@ -28,6 +28,7 @@ export const oneTimeCodeFieldStyles = css`
 
 		${inheritedTextReset}
 		display: block;
+		isolation: isolate;
 		max-width: 100%;
 		-webkit-tap-highlight-color: transparent;
 		pointer-events: none;

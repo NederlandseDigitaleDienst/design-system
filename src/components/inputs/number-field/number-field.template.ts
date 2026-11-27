@@ -3,30 +3,44 @@ import type { NLDDNumberField } from './number-field.js';
 import './../../actions/icon-button/icon-button.js';
 
 export function numberFieldTemplate(component: NLDDNumberField): TemplateResult {
-	const { value } = component;
+	const { value, spinButtons } = component;
 	const empty = value === null;
 	const canDecrease = value === null || value > component.min;
 	const canIncrease = value === null || value < component.max;
 	const iconButtonSize = component.size === 'sm' ? 'xs' : 'sm';
+	const decrement = html`
+		<div class="number-field__decrement-button">
+			<nldd-icon-button
+				appearance="neutral-tinted"
+				size=${iconButtonSize}
+				icon="minus"
+				text=${component._t('components.number-field.decrement-action')}
+				tooltip-timing="never"
+				?disabled=${component.disabled || component.readonly || !canDecrease}
+				@click=${component._handleDecrease}
+			></nldd-icon-button>
+		</div>
+	`;
+	const increment = html`
+		<div class="number-field__increment-button">
+			<nldd-icon-button
+				appearance="neutral-tinted"
+				size=${iconButtonSize}
+				icon="plus"
+				text=${component._t('components.number-field.increment-action')}
+				tooltip-timing="never"
+				?disabled=${component.disabled || component.readonly || !canIncrease}
+				@click=${component._handleIncrease}
+			></nldd-icon-button>
+		</div>
+	`;
 
 	return html`
 		<div class="number-field"
 			role="group"
 			aria-label=${component._t('components.number-field.to-adjust-value-action')}
 		>
-			${!component.hideSpinButtons ? html`
-				<div class="number-field__decrement-button">
-					<nldd-icon-button
-						appearance="neutral-tinted"
-						size=${iconButtonSize}
-						icon="minus"
-						text=${component._t('components.number-field.decrement-action')}
-						tooltip-timing="never"
-						?disabled=${component.disabled || !canDecrease}
-						@click=${component._handleDecrease}
-					></nldd-icon-button>
-				</div>
-			` : nothing}
+			${spinButtons === 'split' ? decrement : nothing}
 			<input class="number-field__input"
 				type="number"
 				inputmode=${Number.isInteger(component.step) ? 'numeric' : 'decimal'}
@@ -36,23 +50,18 @@ export function numberFieldTemplate(component: NLDDNumberField): TemplateResult 
 				max=${Number.isFinite(component.max) ? component.max : nothing}
 				step=${component.step}
 				?disabled=${component.disabled}
+				?readonly=${component.readonly}
 				?required=${component.required}
 				name=${component.name || nothing}
 				@keydown=${component._handleKeydown}
 				@input=${component._handleInput}
 				@change=${component._handleChange}
 			>
-			${!component.hideSpinButtons ? html`
-				<div class="number-field__increment-button">
-					<nldd-icon-button
-						appearance="neutral-tinted"
-						size=${iconButtonSize}
-						icon="plus"
-						text=${component._t('components.number-field.increment-action')}
-						tooltip-timing="never"
-						?disabled=${component.disabled || !canIncrease}
-						@click=${component._handleIncrease}
-					></nldd-icon-button>
+			${spinButtons === 'split' ? increment : nothing}
+			${spinButtons !== 'split' && spinButtons !== 'none' ? html`
+				<div class="number-field__spin-buttons">
+					${decrement}
+					${increment}
 				</div>
 			` : nothing}
 		</div>

@@ -65,6 +65,8 @@ nldd-title > :is(h1, h2, h3, h4, h5, h6, p) code {
 	padding: var(--_title-code-padding);
 	font-family: var(--_title-code-font-family);
 	font-size: var(--_title-code-font-size);
+	/* wrapCodeText in text-wrap.ts; title.test.ts keeps the two equal. */
+	overflow-wrap: anywhere;
 }
 
 nldd-title > :is(h1, h2, h3, h4, h5, h6, p) q {

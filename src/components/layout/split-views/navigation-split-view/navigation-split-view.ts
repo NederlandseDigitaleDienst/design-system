@@ -138,7 +138,7 @@ export class NLDDNavigationSplitView extends LitElement {
 	}
 
 	_paneHasContent(slot: string): boolean {
-		const pane = this.querySelector(`:scope > [slot="${slot}"]`);
+		const pane = this.querySelector(`:scope > [slot="${slot}"]:not([hidden])`);
 		return !!pane && !pane.hasAttribute('empty');
 	}
 
@@ -182,7 +182,7 @@ export class NLDDNavigationSplitView extends LitElement {
 		for (const pane of this.children) {
 			this._paneObserver!.observe(pane, {
 				attributes: true,
-				attributeFilter: ['empty', 'slot'],
+				attributeFilter: ['empty', 'slot', 'hidden'],
 			});
 		}
 	}

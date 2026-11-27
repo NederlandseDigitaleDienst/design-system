@@ -27,7 +27,7 @@ import { NLDDButton, NLDDCheckbox, NLDDSwitch } from '@nldd/design-system';
 
 ```html
 <!-- Gebruik in HTML -->
-<nldd-button appearance="accent-filled" text="Opslaan"></nldd-button>
+<nldd-button appearance="primary" text="Opslaan"></nldd-button>
 <nldd-checkbox-field label="Akkoord met voorwaarden"></nldd-checkbox-field>
 <nldd-switch-field label="Meldingen inschakelen"></nldd-switch-field>
 ```
@@ -283,7 +283,7 @@ De soevereine overheidscloud. Alle frontends staan in [fundament-oss/fundament](
 
 ## Elke release een pull request
 
-Na elke release stuurt het designsysteem deze repositories een pull request: de nieuwe versie, de fixes die zeker zijn en een lijst van wat er nog te doen is. Een team meldt zich zelf aan, nadat een eigenaar van de organisatie de app [NLDD Designsysteem](https://github.com/apps/nldd-designsysteem) op de repository heeft gezet: met [het formulier](https://github.com/NederlandseDigitaleDienst/design-system/issues/new?template=fleet.yml), of met een pull request die een regel toevoegt aan [`fleet.json`](./fleet.json). Hoe dat gaat en wat elk veld betekent, staat op [Upgraden](https://design.digitaledienst.overheid.nl/upgraden/).
+Na elke release stuurt het designsysteem deze repositories een pull request: de nieuwe versie, de fixes die zeker zijn en een lijst van wat er nog te doen is. Een team meldt zich zelf aan, nadat een eigenaar van de organisatie de app [NLDD Designsysteem](https://github.com/apps/nldd-designsysteem) op de repository heeft gezet: met [het formulier](https://github.com/NederlandseDigitaleDienst/design-system/issues/new?template=fleet.yml), of met een pull request die een regel toevoegt aan [`fleet.json`](./fleet.json). Hoe dat gaat en wat elk veld betekent, staat op [Upgraden](https://design.digitaledienst.overheid.nl/handleidingen/upgraden/).
 
 <!-- fleet:start -->
 | Repository | Agent | Beelden |

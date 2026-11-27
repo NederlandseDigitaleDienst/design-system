@@ -972,7 +972,7 @@
 	/* ## Disclosures */
 
 	--semantics-disclosures-inset: var(--primitives-space-12);
-	--semantics-disclosures-title-bar-min-height: var(--semantics-controls-md-min-size);
+	--semantics-disclosures-title-bar-min-height: var(--semantics-controls-lg-min-size);
 	--semantics-disclosures-title-bar-padding-block: var(--primitives-space-10);
 	--semantics-disclosures-title-bar-gap: var(--primitives-space-8);
 	--semantics-disclosures-title-bar-font: var(--primitives-font-body-md-medium-tight);
@@ -1736,6 +1736,10 @@
 	--semantics-list-items-is-highlighted-is-hovered-background-color: light-dark(var(--primitives-color-accent-800), var(--primitives-color-accent-700));
 	--semantics-list-items-is-highlighted-is-active-background-color: light-dark(var(--primitives-color-accent-850), var(--primitives-color-accent-750));
 	--semantics-list-items-is-highlighted-content-color: var(--primitives-color-accent-0);
+
+	/* ## Cells */
+
+	--semantics-cells-min-width: var(--primitives-area-160);
 
 	/* ## Menu bar items */
 

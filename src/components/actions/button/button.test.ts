@@ -6,6 +6,8 @@ import type { NLDDButton } from './button.js';
 import './button.js';
 import '../button-group/button-group.js';
 import '../../../assets/styles/variables.css';
+import { wrapUiText } from '../../../assets/styles/text-wrap.js';
+import { wrapOf, wrapOfSets } from '../../../assets/styles/text-wrap.fixtures.js';
 import '../menu/menu.js';
 import '../../forms/form/form.js';
 import '../../layout/popover/popover.js';
@@ -1141,5 +1143,66 @@ describe('nldd-button – popovertarget positions its overlay', () => {
 		const { trigger, menu } = await setup();
 		trigger.remove();
 		expect(menu.anchorElement).toBeNull();
+	});
+});
+
+describe('nldd-button – breaking long words', () => {
+	let el: HTMLElement;
+
+	afterEach(() => cleanup(el));
+
+	const cases = [
+		'<nldd-button text="Omgevingsvergunning aanvragen"></nldd-button>',
+		'<nldd-button size="sm" text="Arbeidsongeschiktheidsverzekering" supporting-text="Omgevingsvergunning"></nldd-button>',
+		'<nldd-button width="full" text="Arbeidsongeschiktheidsverzekering"></nldd-button>',
+	];
+
+	it.each(cases)('keeps the text inside a button of 120px: %s', async (html) => {
+		el = await fixture(`<div style="width: 120px">${html}</div>`);
+		const button = el.querySelector('nldd-button') as NLDDButton;
+		await button.updateComplete;
+		const box = button.shadowRoot!.querySelector('.button')!;
+		expect(box.scrollWidth).toBeLessThanOrEqual(Math.ceil(box.getBoundingClientRect().width));
+	});
+
+	it('breaks with wrapUiText', async () => {
+		el = await fixture('<div><nldd-button text="Vraag aan"></nldd-button></div>');
+		const button = el.querySelector('nldd-button') as NLDDButton;
+		await button.updateComplete;
+		expect(wrapOf(button.shadowRoot!.querySelector('.button__text')!)).toEqual(wrapOfSets(wrapUiText));
+	});
+
+	it('keeps the ellipsis of single-line', async () => {
+		el = await fixture('<div style="width: 120px"><nldd-button single-line text="Arbeidsongeschiktheidsverzekering"></nldd-button></div>');
+		const button = el.querySelector('nldd-button') as NLDDButton;
+		await button.updateComplete;
+		const text = button.shadowRoot!.querySelector('.button__text')!;
+		expect(getComputedStyle(text).textOverflow).toBe('ellipsis');
+		expect(getComputedStyle(text).whiteSpace).toBe('nowrap');
+	});
+
+	it('strips a javascript: href', async () => {
+		el = await fixture('<nldd-button href="javascript:alert(1)" text="x"></nldd-button>');
+		const a = (el as NLDDButton).shadowRoot!.querySelector('a');
+		expect(a?.getAttribute('href')).toBeNull();
+	});
+
+	it('keeps a blob: href on a download link', async () => {
+		el = await fixture('<nldd-button href="blob:https://example.com/u" download="f.csv" text="x"></nldd-button>');
+		const a = (el as NLDDButton).shadowRoot!.querySelector('a');
+		expect(a?.getAttribute('href')).toBe('blob:https://example.com/u');
+	});
+
+	it('keeps a data: href with a bare download, which names no file', async () => {
+		el = await fixture('<nldd-button href="data:text/csv,a" download text="x"></nldd-button>');
+		const a = (el as NLDDButton).shadowRoot!.querySelector('a');
+		expect(a?.getAttribute('href')).toBe('data:text/csv,a');
+	});
+
+	it('strips a blob: href again once download is removed', async () => {
+		el = await fixture('<nldd-button href="blob:https://example.com/u" download="f.csv" text="x"></nldd-button>');
+		el.removeAttribute('download');
+		await (el as NLDDButton).updateComplete;
+		expect((el as NLDDButton).shadowRoot!.querySelector('a')?.getAttribute('href')).toBeNull();
 	});
 });

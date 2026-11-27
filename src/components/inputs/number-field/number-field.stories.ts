@@ -18,6 +18,10 @@ export default {
 		},
 	},
 	argTypes: {
+		spinButtons: {
+			name: 'spin-buttons',
+			description: 'Waar de min- en plusknop staan: samen aan het eind (end), aan weerszijden van de waarde (split), of niet (none)',
+		},
 		size: {
 			control: 'select',
 			options: ['sm', 'md'],
@@ -42,12 +46,6 @@ export default {
 			name: 'accessible-described-by',
 			control: false,
 			description: "Id's van elementen elders op de pagina die dit element beschrijven, zoals `aria-describedby`, maar doorgegeven aan de control binnenin. Gaat voor `accessible-description`.",
-		},
-		hideSpinButtons: {
-			name: 'hide-spin-buttons',
-			control: 'boolean',
-			description: 'Verbergt de plus- en minknoppen',
-			table: { defaultValue: { summary: false } },
 		},
 		invalid: {
 			control: 'boolean',
@@ -90,12 +88,12 @@ export default {
 		},
 	},
 	args: {
+		spinButtons: 'end',
 		size: 'md',
 		width: '',
 		accessibleLabel: '',
 		accessibleDescription: '',
 		accessibleDescribedBy: '',
-		hideSpinButtons: false,
 		invalid: false,
 		name: '',
 		value: 1,
@@ -107,13 +105,13 @@ export default {
 	},
 };
 
-const Template = ({ size, width, accessibleLabel, accessibleDescription, hideSpinButtons, invalid, name, value, min, max, step, required, disabled }: Record<string, any>) => html`
+const Template = ({ spinButtons, size, width, accessibleLabel, accessibleDescription, invalid, name, value, min, max, step, required, disabled }: Record<string, any>) => html`
 	<nldd-number-field
+		spin-buttons=${spinButtons || nothing}
 		size=${size}
 		width=${width || nothing}
 		accessible-label=${accessibleLabel || nothing}
 		accessible-description=${accessibleDescription || nothing}
-		?hide-spin-buttons=${hideSpinButtons}
 		?invalid=${invalid}
 		name=${name}
 		value=${value ?? nothing}
@@ -128,6 +126,33 @@ const Template = ({ size, width, accessibleLabel, accessibleDescription, hideSpi
 export const Standaard = {
 	render: Template,
 	args: {},
+};
+
+export const SpinButtons = {
+	name: 'Spin-buttons',
+	render: () => html`
+	<nldd-container width="320px">
+		<nldd-number-field
+			accessible-label="Aantal"
+			value="5"
+			width="full"
+		></nldd-number-field>
+		<nldd-spacer size="16"></nldd-spacer>
+		<nldd-number-field
+			accessible-label="Aantal"
+			value="5"
+			spin-buttons="split"
+		></nldd-number-field>
+		<nldd-spacer size="16"></nldd-spacer>
+		<nldd-number-field
+			accessible-label="Aantal"
+			value="5"
+			width="full"
+			spin-buttons="none"
+		></nldd-number-field>
+	</nldd-container>
+`,
+	parameters: { controls: { disable: true } },
 };
 
 export const AlleToestanden = {
@@ -170,14 +195,14 @@ export const AlleToestanden = {
 			value="5"
 			min="0"
 			max="10"
-			hide-spin-buttons
+			spin-buttons="none"
 		></nldd-number-field>
 		<nldd-spacer size="16"></nldd-spacer>
 		<nldd-number-field
 			value="5"
 			min="0"
 			max="10"
-			hide-spin-buttons
+			spin-buttons="none"
 			disabled
 		></nldd-number-field>
 		<nldd-spacer size="16"></nldd-spacer>
@@ -186,7 +211,7 @@ export const AlleToestanden = {
 			min="0"
 			max="10"
 			size="sm"
-			hide-spin-buttons
+			spin-buttons="none"
 		></nldd-number-field>
 		<nldd-spacer size="16"></nldd-spacer>
 		<nldd-number-field
@@ -200,7 +225,7 @@ export const AlleToestanden = {
 			value="5"
 			min="0"
 			max="10"
-			hide-spin-buttons
+			spin-buttons="none"
 			width="240px"
 		></nldd-number-field>
 		<nldd-spacer size="16"></nldd-spacer>
@@ -218,7 +243,7 @@ export const AlleToestanden = {
 				value="5"
 				min="0"
 				max="10"
-				hide-spin-buttons
+				spin-buttons="none"
 				width="full"
 			></nldd-number-field>
 		</nldd-container>

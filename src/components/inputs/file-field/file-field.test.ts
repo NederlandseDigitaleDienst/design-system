@@ -3,6 +3,8 @@ import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
 import type { NLDDFileField } from './file-field.js';
 import './file-field.js';
+import { wrapCodeText, wrapUiText } from '../../../assets/styles/text-wrap.js';
+import { wrapOf, wrapOfSets } from '../../../assets/styles/text-wrap.fixtures.js';
 import axe from 'axe-core';
 import { userEvent } from 'vitest/browser';
 
@@ -272,6 +274,9 @@ describe('nldd-file-field', () => {
 		choose(el, new File(['x'], 'foto.JPEG', { type: 'image/jpeg' }));
 		await waitForUpdate(el);
 		expect(el.shadowRoot!.querySelector('.file-field__file-icon')!.getAttribute('icon')).toBe('file-jpg');
+		choose(el, new File(['a,b'], 'export.csv', { type: 'text/csv' }));
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('.file-field__file-icon')!.getAttribute('icon')).toBe('file-csv');
 		choose(el, txt('notities.xyz'));
 		await waitForUpdate(el);
 		expect(el.shadowRoot!.querySelector('.file-field__file-icon')!.getAttribute('icon')).toBe('file');
@@ -759,5 +764,23 @@ describe('nldd-file-field – required and disabled', () => {
 		window.removeEventListener('error', onError);
 		expect(errors).toEqual([]);
 		expect(form.checkValidity()).toBe(true);
+	});
+});
+
+describe('nldd-file-field – breaking long words', () => {
+	let el: NLDDFileField;
+
+	afterEach(() => cleanup(el));
+
+	it('gives the instruction wrapUiText and a wrapped name wrapCodeText', async () => {
+		el = await fixture<NLDDFileField>('<nldd-file-field></nldd-file-field>');
+		await waitForUpdate(el);
+		const root = el.shadowRoot!;
+		expect(wrapOf(root.querySelector('.file-field__text')!)).toEqual(wrapOfSets(wrapUiText));
+		const name = document.createElement('span');
+		name.className = 'file-field__name is-wrapped';
+		root.append(name);
+		expect(wrapOf(name)).toEqual(wrapOfSets(wrapCodeText));
+		name.remove();
 	});
 });

@@ -1,4 +1,5 @@
 import { css, unsafeCSS } from 'lit';
+import { wrapBodyText, wrapUiText } from '../../../assets/styles/text-wrap.js';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 import { slottedReset, inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
 
@@ -113,7 +114,12 @@ export const formFieldStyles = css`
 		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--primitives-font-body-md-regular-flat);
+		${wrapUiText}
 		text-wrap: pretty;
+	}
+
+	.form-field__label-text {
+		min-width: 0;
 	}
 
 	:host([label-alignment="left"]) .form-field__label,
@@ -157,6 +163,7 @@ export const formFieldStyles = css`
 		--context-content-color: var(--semantics-content-secondary-color);
 		color: var(--semantics-content-secondary-color);
 		font: var(--primitives-font-body-xs-regular-tight);
+		${wrapUiText}
 		text-wrap: pretty;
 	}
 
@@ -214,6 +221,7 @@ export const formFieldHelpTextStyles = css`
 		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--primitives-font-body-sm-regular-tight);
+		${wrapBodyText}
 	}
 
 

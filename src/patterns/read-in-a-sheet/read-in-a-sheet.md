@@ -6,7 +6,7 @@ Een rij in een lijst opent een sheet met de uitleg die erbij hoort. De pagina bl
 
 Een accordion klapt de inhoud uit op de plek zelf. Dat werkt voor een kort antwoord: de pagina schuift een paar regels op en je ziet nog waar je was. Bij een lange tekst duwt hij alles eronder uit beeld, en wie dichtklapt, staat ergens anders dan waar hij begon. Een sheet legt de inhoud over de pagina heen in plaats van erin, dus de pagina zelf verschuift nooit.
 
-Kies de accordion voor korte, aanvullende inhoud. Kies deze sheet zodra de inhoud langer is dan een scherm, koppen nodig heeft, of iets vraagt om te doen. Moet er iets ingevuld worden, dan is het [bewerken in een sheet](/patronen/edit-in-a-sheet/). Zie ook de [ontwerprichtlijnen](/richtlijnen/) over in- en uitklappen.
+Kies de accordion voor korte, aanvullende inhoud. Kies deze sheet zodra de inhoud langer is dan een scherm, koppen nodig heeft, of iets vraagt om te doen. Moet er iets ingevuld worden, dan is het [bewerken in een sheet](/patronen/edit-in-a-sheet/). Zie ook de [ontwerprichtlijnen](/handleidingen/richtlijnen/) over in- en uitklappen.
 
 ## Compositie
 

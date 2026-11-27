@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit';
 import './title.js';
-import '../../actions/button/button.js';
+import '../../actions/icon-button/icon-button.js';
 import '../../layout/spacer/spacer.js';
 import '../../layout/container/container.js';
 
@@ -17,7 +17,7 @@ import '../../layout/container/container.js';
  *   overline="Overline"
  *   heading-level="1"
  * >
- *   <nldd-button slot="end" text="Actie"></nldd-button>
+ *   <nldd-icon-button slot="end" appearance="neutral-base" size="sm" icon="information" text="Informatie"></nldd-icon-button>
  * </nldd-title>
  * ```
  */
@@ -99,12 +99,13 @@ export const Standaard = ({ size, smCustomSize, mdCustomSize, lgCustomSize, text
 		overline=${overline || nothing}
 		heading-level=${headingLevel ?? nothing}
 	>
-		<nldd-button
+		<nldd-icon-button
 			slot="end"
-			appearance="secondary"
+			appearance="neutral-base"
 			size="sm"
-			text="Bewerken"
-		></nldd-button>
+			icon="information"
+			text="Informatie"
+		></nldd-icon-button>
 	</nldd-title>
 `;
 
@@ -148,11 +149,13 @@ export const MetActie = {
 		text="Aanvraag A-1042"
 		heading-level="1"
 	>
-		<nldd-button
+		<nldd-icon-button
 			slot="end"
+			appearance="neutral-base"
 			size="sm"
-			text="Bewerken"
-		></nldd-button>
+			icon="information"
+			text="Informatie"
+		></nldd-icon-button>
 	</nldd-title>
 `,
 	parameters: { controls: { disable: true } },

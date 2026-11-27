@@ -17,7 +17,7 @@ nldd-form                              name, method, label-alignment
 
 <!-- voorbeeld: Standaard -->
 
-De volgorde volgt het gedachteproces en niet de database, zie de [ontwerprichtlijnen](/richtlijnen/#invoer-en-formulieren).
+De volgorde volgt het gedachteproces en niet de database, zie de [ontwerprichtlijnen](/handleidingen/richtlijnen/#invoer-en-formulieren).
 
 ## Waarom zo
 
@@ -27,15 +27,15 @@ De volgorde volgt het gedachteproces en niet de database, zie de [ontwerprichtli
 
 **Zet `label-alignment` op het formulier, niet per veld.** Het [`nldd-form`](/componenten/form/) geeft die door aan elk veld en aan de acties, zodat de knoppen onder de velden uitkomen en niet onder de labels. Daarom staan de acties in een [`nldd-form-actions`](/componenten/form-actions/) en niet los onder het formulier.
 
-**Eén primaire actie, zonder "Annuleer" ernaast.** Een uitweg pal naast de knop die verstuurt kost bij een misklik alles wat er is ingevuld. Heeft het formulier een uitweg nodig, zet die dan op afstand, bijvoorbeeld in de titelbalk. Zie de [ontwerprichtlijnen](/richtlijnen/#invoer-en-formulieren).
+**Eén primaire actie, zonder "Annuleer" ernaast.** Een uitweg pal naast de knop die verstuurt kost bij een misklik alles wat er is ingevuld. Heeft het formulier een uitweg nodig, zet die dan op afstand, bijvoorbeeld in de titelbalk. Zie de [ontwerprichtlijnen](/handleidingen/richtlijnen/#invoer-en-formulieren).
 
 **Zet de actie in een button group, ook als het er één is.** De [`nldd-button-group`](/componenten/button-group/) kijkt naar de eigen breedte: een rij, en bij 480px of smaller gestapeld over de volle breedte. Dat scheelt je een `width="full"` die je in een breder formulier weer niet wilt, en komt er later een tweede knop bij, dan hoeft er niets te veranderen.
 
 **De knop hoort in het formulier.** Binnen `nldd-form` verstuurt `type="submit"` het formulier zelf, met de validatie en de foutafhandeling die daarbij horen. Moet de knop er toch buiten staan, bijvoorbeeld in een sticky footer, geef het [`nldd-form`](/componenten/form/) dan een `id` en de knop een `form` die daarnaar wijst. Zonder een van die twee is het een knop zonder formulier, en die doet niets.
 
-**Markeer wat optioneel is, niet wat verplicht is.** `optional` op het veld toont zelf het label "Optioneel". Waarom dat zo is, staat in de [ontwerprichtlijnen](/richtlijnen/#invoer-en-formulieren).
+**Markeer wat optioneel is, niet wat verplicht is.** `optional` op het veld toont zelf het label "Optioneel". Waarom dat zo is, staat in de [ontwerprichtlijnen](/handleidingen/richtlijnen/#invoer-en-formulieren).
 
-**De eisen staan in een validation list.** Een [`nldd-validation-list`](/componenten/validation-list/) toont een eis pas als de waarde er niet aan voldoet, en koppelt de fout aan het veld. Schrijf een item als eis en niet als opdracht, zie de [ontwerprichtlijnen](/richtlijnen/#copywriting): dezelfde regel staat er vooraf als wat het veld wil en achteraf als wat er nog niet klopt, dus hij moet op allebei die momenten kloppen. Tekst die niemand tegenhoudt, zoals "We sturen een bevestigingsmail naar dit adres", is geen eis maar een `nldd-form-field-help-text`. Een optioneel veld is niet `required`, en een lege waarde komt door elke eis heen. Een formaateis mag er dus wel onder: een telefoonnummer dat je mag weglaten, moet nog steeds een telefoonnummer zijn als je het invult.
+**De eisen staan in een validation list.** Een [`nldd-validation-list`](/componenten/validation-list/) toont een eis pas als de waarde er niet aan voldoet, en koppelt de fout aan het veld. Schrijf een item als eis en niet als opdracht, zie de [ontwerprichtlijnen](/handleidingen/richtlijnen/#copywriting): dezelfde regel staat er vooraf als wat het veld wil en achteraf als wat er nog niet klopt, dus hij moet op allebei die momenten kloppen. Tekst die niemand tegenhoudt, zoals "We sturen een bevestigingsmail naar dit adres", is geen eis maar een `nldd-form-field-help-text`. Een optioneel veld is niet `required`, en een lege waarde komt door elke eis heen. Een formaateis mag er dus wel onder: een telefoonnummer dat je mag weglaten, moet nog steeds een telefoonnummer zijn als je het invult.
 
 **Importeer de globale stylesheet.** [`nldd-form`](/componenten/form/) en de form section staan in de light DOM, dus hun opmaak zit in `@nldd/design-system/styles` en niet in een shadow root. Laat je die stylesheet weg, dan lijkt het formulier kapot.
 

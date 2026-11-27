@@ -21,13 +21,12 @@ import { customElement } from '../../../utilities/custom-element.js';
 import { paginationStyles } from './pagination.styles.js';
 import { paginationTemplate } from './pagination.template.js';
 import { nlddPaginationTranslations } from './pagination.i18n.js';
-import type { NLDDPaginationTranslations } from './pagination.i18n.js';
 import { isPointerMode } from '../../../utilities/input-modality.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 
 @customElement('nldd-pagination')
-export class NLDDPagination extends LitElement {
+export class NLDDPagination extends withTranslations(LitElement, nlddPaginationTranslations) {
 	static override styles = paginationStyles;
 
 	/** Centers the pagination in the container (host fills the row, items group in the middle). */
@@ -45,13 +44,6 @@ export class NLDDPagination extends LitElement {
 
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
-
-	@property({ type: Object })
-	translations: Partial<NLDDPaginationTranslations> = {};
-
-	_t(key: keyof NLDDPaginationTranslations, params?: Record<string, string | number>): string {
-		return translate(this.translations, nlddPaginationTranslations, key, params);
-	}
 
 	_getVisiblePages(): (number | 'ellipsis')[] {
 		if (this.total <= 7) {

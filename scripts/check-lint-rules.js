@@ -91,7 +91,10 @@ function checkFix({ id, context, fix, removed = [] }) {
 	}
 	for (const [from, to] of Object.entries(fix?.flag ?? {})) {
 		if (!removed.includes(from)) problems.push(`${id}: the fix turns ${from} into a flag, and ${from} is not in removed.`);
-		if (!allAttributes.has(to)) problems.push(`${id}: the fix turns ${from} into ${to}, which no component has.`);
+		// The new attribute, or the new attribute with the value it takes: `spin-buttons="none"`.
+		const [, name, value] = /^([a-z0-9-]+)(?:="([^"]*)")?$/.exec(to) ?? [];
+		if (!name || !allAttributes.has(name)) problems.push(`${id}: the fix turns ${from} into ${to}, which no component has.`);
+		else if (value !== undefined && !existsAsValue(name, value)) problems.push(`${id}: the fix sets ${name} to ${value}, which no component has.`);
 	}
 	for (const [from, key] of Object.entries(fix?.translation ?? {})) {
 		if (!removed.includes(from)) problems.push(`${id}: the fix moves ${from} into translations, and ${from} is not in removed.`);

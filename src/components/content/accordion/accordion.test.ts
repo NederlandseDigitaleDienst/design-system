@@ -5,6 +5,8 @@ import type { NLDDAccordion } from './accordion.js';
 import type { NLDDAccordionItem } from './accordion-item.js';
 import './accordion.js';
 import './accordion-item.js';
+import { wrapUiText } from '../../../assets/styles/text-wrap.js';
+import { wrapOf, wrapOfSets } from '../../../assets/styles/text-wrap.fixtures.js';
 
 const items = (count: number, open: number[] = []) => Array.from({ length: count }, (_, index) => `
 	<nldd-accordion-item text="Vraag ${index + 1}"${open.includes(index) ? ' open' : ''}><p>Antwoord</p></nldd-accordion-item>
@@ -135,10 +137,10 @@ describe('nldd-accordion', () => {
 		el = await fixture(`<nldd-accordion>${items(1)}</nldd-accordion>`);
 		const bar = summary(all()[0]);
 		const style = getComputedStyle(bar);
-		expect(bar.getBoundingClientRect().height).toBeCloseTo(Math.max(44, parseFloat(style.lineHeight) + 2 * parseFloat(style.paddingTop)), 0);
+		expect(bar.getBoundingClientRect().height).toBeCloseTo(Math.max(56, parseFloat(style.lineHeight) + 2 * parseFloat(style.paddingTop)), 0);
 	});
 
-	it('centers a title of one line, and grows a title that wraps by its lines only', async () => {
+	it('centers a title of one line, grows a title that wraps by its lines only, and centers the icon beside it', async () => {
 		el = await fixture(`<nldd-accordion style="width: 220px">
 			<nldd-accordion-item text="Vraag"></nldd-accordion-item>
 			<nldd-accordion-item text="Welke stukken horen bij de aanvraag voor dakisolatie?"></nldd-accordion-item>
@@ -153,6 +155,20 @@ describe('nldd-accordion', () => {
 		const lines = Math.round((height - 2 * padding) / line);
 		expect(lines).toBeGreaterThanOrEqual(2);
 		expect(height).toBeCloseTo(lines * line + 2 * padding, 0);
-		expect(part(long, 'disclosure-icon').top - part(long, 'title').top).toBeCloseTo((line - part(long, 'disclosure-icon').height) / 2, 0);
+		expect(middle(part(long, 'disclosure-icon'))).toBeCloseTo(middle(part(long, 'title')), 0);
+		expect(middle(part(short, 'disclosure-icon'))).toBeCloseTo(middle(summary(short).getBoundingClientRect()), 0);
+	});
+});
+
+describe('nldd-accordion-item – breaking long words', () => {
+	let el: HTMLElement;
+
+	afterEach(() => cleanup(el));
+
+	it('gives the title wrapUiText', async () => {
+		el = await fixture('<nldd-accordion><nldd-accordion-item text="Vraag"><p>Antwoord</p></nldd-accordion-item></nldd-accordion>');
+		const item = el.querySelector('nldd-accordion-item')!;
+		await item.updateComplete;
+		expect(wrapOf(item.shadowRoot!.querySelector('.accordion-item__title')!)).toEqual(wrapOfSets(wrapUiText));
 	});
 });

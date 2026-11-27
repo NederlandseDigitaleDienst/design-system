@@ -8,6 +8,7 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { GROUPS } from '../../lint/rule-data.js';
 import { compileForBrowser } from '../../lint/rule-compiler.js';
+import { WCAG } from '../../lint/wcag.js';
 import { basename, join, dirname } from 'node:path';
 import Ajv from 'ajv';
 import { parse as parseSelector, stringify } from 'css-what';
@@ -23,7 +24,7 @@ const SITE = 'https://design.digitaledienst.overheid.nl';
 export function seeUrl(see) {
 	if (!see) return undefined;
 	const [kind, slug] = see.split('/');
-	if (kind === 'ontwerprichtlijnen') return `${SITE}/richtlijnen/#${slug}`;
+	if (kind === 'ontwerprichtlijnen') return `${SITE}/handleidingen/richtlijnen/#${slug}`;
 	if (kind === 'patronen') return `${SITE}/patronen/${slug}/`;
 	if (kind === 'componenten') return `${SITE}/componenten/${slug}/`;
 	return undefined;
@@ -163,6 +164,8 @@ export function loadRules(rulesDir, schema) {
 			const problems = validate.errors.map((error) => `${error.instancePath} ${error.message}`);
 			throw new Error(`${file}: ${problems.join('; ')}`);
 		}
+		const unknown = (rule.wcag ?? []).filter((criterion) => !(criterion in WCAG));
+		if (unknown.length) throw new Error(`${file}: ${unknown.join(', ')} is no WCAG 2.2 success criterion at level A or AA.`);
 		return { id, group, ...rule };
 	});
 	return rules.sort((a, b) => a.id.localeCompare(b.id));

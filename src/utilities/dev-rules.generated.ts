@@ -64,6 +64,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-avatar:is([href]:not([href=\"\"]), [button]):is([size=\"16\"], [size=\"20\"])"
 	},
 	{
+		"id": "avatar-type-renamed",
+		"message": "The `type` attribute is now `variant`. Rename it here and on every other nldd-avatar.",
+		"context": "nldd-avatar[type]"
+	},
+	{
 		"id": "badge-color-renamed",
 		"message": "`color=\"inherit\"` is now `color=\"content\"`, and the old value does nothing. Rename it here and on every other nldd-badge.",
 		"context": "nldd-badge[color=\"inherit\"]"
@@ -597,7 +602,7 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "menu-bar-needs-name",
-		"message": "No `accessible-label` set. A page with more than one nav landmark needs a unique label on each (WCAG 1.3.1).",
+		"message": "No `accessible-label` set. A page with more than one nav landmark needs a unique label on each, so they can be told apart.",
 		"context": "nldd-menu-bar:state(unnamed)"
 	},
 	{
@@ -678,6 +683,11 @@ export const devRules: DevRule[] = [
 			"of": "[slot=\"actions\"]",
 			"max": 2
 		}
+	},
+	{
+		"id": "number-field-hide-spin-buttons-renamed",
+		"message": "`hide-spin-buttons` is now `spin-buttons=\"none\"`, and the attribute does nothing. Replace it here and on every other nldd-number-field.",
+		"context": "nldd-number-field[hide-spin-buttons]"
 	},
 	{
 		"id": "number-field-needs-name",
@@ -761,6 +771,11 @@ export const devRules: DevRule[] = [
 		"properties": [
 			"accessibleLabel"
 		]
+	},
+	{
+		"id": "popover-no-steps",
+		"message": "A step with `parent` sits in an nldd-popover, which hides its title bar and so its back button. Put the steps in an nldd-sheet.",
+		"context": "nldd-popover nldd-page[parent]:not([parent=\"\"])"
 	},
 	{
 		"id": "popover-width-invalid",
@@ -874,6 +889,11 @@ export const devRules: DevRule[] = [
 		"id": "sheet-needs-name",
 		"message": "No `accessible-label` and no nldd-top-title-bar with text inside. Screen readers will announce this dialog with a generic name. Give the title bar a text, or set `accessible-label`.",
 		"context": "nldd-sheet:state(unnamed)"
+	},
+	{
+		"id": "sheet-no-nested",
+		"message": "An nldd-sheet opens over another nldd-sheet. Show the next step in the same sheet, as an nldd-page with `parent`.",
+		"context": "nldd-sheet nldd-sheet"
 	},
 	{
 		"id": "shell-tag-renamed",
@@ -1336,6 +1356,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-admonition[variant]:not([variant=\"accent\"], [variant=\"critical\"], [variant=\"neutral\"], [variant=\"success\"], [variant=\"warning\"])"
 	},
 	{
+		"id": "invalid-value-avatar-variant",
+		"message": "`variant` on nldd-avatar takes: organization, person.",
+		"context": "nldd-avatar[variant]:not([variant=\"organization\"], [variant=\"person\"])"
+	},
+	{
 		"id": "invalid-value-avatar-color",
 		"message": "`color` on nldd-avatar takes: content, neutral.",
 		"context": "nldd-avatar[color]:not([color=\"content\"], [color=\"neutral\"])"
@@ -1349,11 +1374,6 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-avatar-tooltip-timing",
 		"message": "`tooltip-timing` on nldd-avatar takes: delay, instant, never.",
 		"context": "nldd-avatar[tooltip-timing]:not([tooltip-timing=\"delay\"], [tooltip-timing=\"instant\"], [tooltip-timing=\"never\"])"
-	},
-	{
-		"id": "invalid-value-avatar-type",
-		"message": "`type` on nldd-avatar takes: organization, person.",
-		"context": "nldd-avatar[type]:not([type=\"organization\"], [type=\"person\"])"
 	},
 	{
 		"id": "invalid-value-badge-color",
@@ -2124,6 +2144,11 @@ export const devRules: DevRule[] = [
 		"id": "invalid-value-notification-variant",
 		"message": "`variant` on nldd-notification takes: accent, critical, neutral, success, warning.",
 		"context": "nldd-notification[variant]:not([variant=\"accent\"], [variant=\"critical\"], [variant=\"neutral\"], [variant=\"success\"], [variant=\"warning\"])"
+	},
+	{
+		"id": "invalid-value-number-field-spin-buttons",
+		"message": "`spin-buttons` on nldd-number-field takes: end, none, split.",
+		"context": "nldd-number-field[spin-buttons]:not([spin-buttons=\"end\"], [spin-buttons=\"none\"], [spin-buttons=\"split\"])"
 	},
 	{
 		"id": "invalid-value-number-field-size",

@@ -21,22 +21,10 @@ export default {
 			file: 'src/components/inputs/slider/slider.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
-		// The canvas spacing below is not part of the example, so keep it out
-		// of the code a reader copies.
-		docs: { source: { excludeDecorators: true } },
+		// Room above the track for the value tooltip, which would otherwise fall
+		// off the top of the canvas.
+		stage: { paddingTop: '56px' },
 	},
-	// Room above the track for the value tooltip, which would otherwise fall
-	// off the top of the canvas.
-	decorators: [
-		(story: () => unknown) => html`
-			<nldd-container
-				padding-top="40"
-				max-width="480px"
-			>
-				${story()}
-			</nldd-container>
-		`,
-	],
 	args: {
 		size: 'md',
 		startIcon: '',
@@ -255,7 +243,7 @@ export const MetHistogramEnVelden = {
 							min="0"
 							max="2000"
 							step="50"
-							hide-spin-buttons
+							spin-buttons="none"
 							@change=${(event: Event) => fromField(event, false)}
 						></nldd-number-field>
 					</nldd-form-field>
@@ -265,7 +253,7 @@ export const MetHistogramEnVelden = {
 							min="0"
 							max="2000"
 							step="50"
-							hide-spin-buttons
+							spin-buttons="none"
 							@change=${(event: Event) => fromField(event, true)}
 						></nldd-number-field>
 					</nldd-form-field>

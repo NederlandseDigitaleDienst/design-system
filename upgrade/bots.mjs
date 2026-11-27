@@ -35,7 +35,7 @@ export function dependabotWithout(source, YAML) {
 		const ignore = update.get('ignore');
 		if (YAML.isSeq(ignore) && ignore.items.some((entry) => YAML.isMap(entry) && covers(entry.get('dependency-name')))) continue;
 		const entry = document.createNode({ 'dependency-name': PACKAGE });
-		entry.commentBefore = ' Comes as a pull request from the design system, with the fixes: https://design.digitaledienst.overheid.nl/upgraden/';
+		entry.commentBefore = ' Comes as a pull request from the design system, with the fixes: https://design.digitaledienst.overheid.nl/handleidingen/upgraden/';
 		if (YAML.isSeq(ignore)) ignore.items.push(entry);
 		else update.set('ignore', document.createNode([entry]));
 		changed = true;
@@ -47,7 +47,7 @@ export function dependabotWithout(source, YAML) {
 export function renovateWithout(config) {
 	const rules = Array.isArray(config.packageRules) ? config.packageRules : [];
 	if (rules.some((rule) => rule.enabled === false && (rule.matchPackageNames ?? []).some(covers))) return undefined;
-	return { ...config, packageRules: [...rules, { description: 'Comes as a pull request from the design system, with the fixes: https://design.digitaledienst.overheid.nl/upgraden/', matchPackageNames: [PACKAGE], enabled: false }] };
+	return { ...config, packageRules: [...rules, { description: 'Comes as a pull request from the design system, with the fixes: https://design.digitaledienst.overheid.nl/handleidingen/upgraden/', matchPackageNames: [PACKAGE], enabled: false }] };
 }
 
 const indentOf = (source) => /^\{\s*\n([ \t]+)"/.exec(source)?.[1] ?? '\t';

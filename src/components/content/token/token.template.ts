@@ -33,7 +33,7 @@ export function tokenTemplate(component: NLDDToken): TemplateResult {
 						tooltip-timing="never"
 						popup-type=${component._popupType}
 						?no-tab=${component.roving}
-						?expanded=${component.expanded}
+						?expanded=${component._expanded}
 						?disabled=${component.disabled}
 						@pointerdown=${component._handleMenuButtonPointerdown}
 						@click=${component._handleMenuClick}

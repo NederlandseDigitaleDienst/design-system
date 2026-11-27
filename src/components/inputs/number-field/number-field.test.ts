@@ -1,7 +1,8 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate, deepActiveElement } from '../../../test-utils.js';
 import type { NLDDNumberField } from './number-field.js';
 import './number-field.js';
+import { loadTokens } from '../../../test-tokens.js';
 
 describe('nldd-number-field', () => {
 	let el: HTMLElement;
@@ -406,44 +407,11 @@ describe('nldd-number-field – typing & clamping on commit', () => {
 });
 
 
-describe('nldd-number-field – hide-spin-buttons', () => {
+describe('nldd-number-field – form and focus', () => {
 	let el: HTMLElement;
 
 	afterEach(() => {
 		if (el) cleanup(el);
-	});
-
-	it('reflecteert hide-spin-buttons attribuut', async () => {
-		el = await fixture('<nldd-number-field hide-spin-buttons accessible-label="Aantal"></nldd-number-field>');
-		await waitForUpdate(el);
-		expect(el.hasAttribute('hide-spin-buttons')).toBe(true);
-	});
-
-	it('declareert padding-inline regel voor hide-spin-buttons in styles', async () => {
-		// CSS variables are not loaded in the test environment, so numeric computed
-		// style values are unreliable. Check through cssRules that the padding rule
-		// exists, so the input gets the same inset as other input fields instead of
-		// the flex default of 0.
-		el = await fixture('<nldd-number-field hide-spin-buttons></nldd-number-field>');
-		await waitForUpdate(el);
-		const sheets = (el.shadowRoot as ShadowRoot).adoptedStyleSheets;
-		const cssText = Array.from(sheets)
-			.flatMap(s => Array.from(s.cssRules))
-			.map(r => r.cssText)
-			.join('\n');
-		expect(cssText).toContain('[hide-spin-buttons]');
-		expect(cssText).toMatch(/padding-inline:\s*var\(--_number-field-inline-padding\)/);
-		expect(cssText).toMatch(/--_number-field-inline-padding:\s*calc/);
-	});
-
-	it('default (zonder hide-spin-buttons) toont spin-buttons', async () => {
-		el = await fixture('<nldd-number-field accessible-label="Aantal"></nldd-number-field>');
-		await waitForUpdate(el);
-		expect(el.hasAttribute('hide-spin-buttons')).toBe(false);
-		const decrement = el.shadowRoot!.querySelector('.number-field__decrement-button');
-		const increment = el.shadowRoot!.querySelector('.number-field__increment-button');
-		expect(decrement).not.toBeNull();
-		expect(increment).not.toBeNull();
 	});
 
 	it('participates in FormData via form-associated API', async () => {
@@ -471,18 +439,6 @@ describe('nldd-number-field – hide-spin-buttons', () => {
 		el.focus();
 		const input = el.shadowRoot!.querySelector('input');
 		expect(deepActiveElement()).toBe(input);
-	});
-
-	it('geeft de input met hide-spin-buttons z\'n eigen minimumbreedte', async () => {
-		// Die stond er al, maar verloor van een regel die er ná kwam met dezelfde
-		// specificiteit en die altijd matchte, omdat een lege width naar de DOM
-		// reflecteerde. De basisregels staan nu op de kale selector, dus deze wint.
-		// De token zelf komt uit de globale stylesheet, die hier niet geladen is,
-		// dus die zetten we op het element. Het gaat om welke regel wint.
-		el = await fixture('<nldd-number-field hide-spin-buttons accessible-label="Aantal" style="--primitives-space-80: 80px"></nldd-number-field>');
-		await waitForUpdate(el);
-		const input = el.shadowRoot!.querySelector('input')!;
-		expect(getComputedStyle(input).minWidth).toBe('80px');
 	});
 });
 
@@ -544,5 +500,123 @@ describe('nldd-number-field – empty', () => {
 		form.reset();
 		await waitForUpdate(field);
 		expect(field.value).toBe(null);
+	});
+});
+
+describe('nldd-number-field – spin-buttons', () => {
+	let el: HTMLElement;
+	let removeTokens: () => void;
+
+	beforeEach(() => {
+		removeTokens = loadTokens();
+	});
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		removeTokens();
+	});
+
+	const partsOf = async (attrs: string) => {
+		el = await fixture(`<nldd-number-field accessible-label="Aantal" value="5" width="240px" ${attrs}></nldd-number-field>`);
+		await waitForUpdate(el);
+		const root = el.shadowRoot!;
+		const box = (selector: string) => root.querySelector(selector)?.getBoundingClientRect() ?? null;
+		const input = root.querySelector('input')!;
+		return { field: box('.number-field')!, input, inputBox: input.getBoundingClientRect(), decrement: box('.number-field__decrement-button nldd-icon-button'), increment: box('.number-field__increment-button nldd-icon-button') };
+	};
+
+	it('puts both buttons at the end by default, and the value at the start', async () => {
+		const { field, input, inputBox, decrement, increment } = await partsOf('');
+		expect(el.getAttribute('spin-buttons')).toBeNull();
+		expect(decrement!.left).toBeGreaterThan(inputBox.left);
+		expect(increment!.left).toBeGreaterThan(decrement!.right);
+		expect(field.right - increment!.right).toBeLessThan(8);
+		expect(getComputedStyle(input).textAlign).toBe('start');
+	});
+
+	it('falls back to the buttons at the end for a value it does not know', async () => {
+		const { field, inputBox, decrement, increment } = await partsOf('spin-buttons="foo"');
+		expect(decrement!.left).toBeGreaterThan(inputBox.left);
+		expect(increment!.left).toBeGreaterThan(decrement!.right);
+		expect(field.right - increment!.right).toBeLessThan(8);
+	});
+
+	it('keeps the order input, decrement, increment for the keyboard', async () => {
+		await partsOf('');
+		const order = [...el.shadowRoot!.querySelectorAll('input, nldd-icon-button')].map((node) => node.getAttribute('icon') ?? 'input');
+		expect(order).toEqual(['input', 'minus', 'plus']);
+	});
+
+	it('puts the buttons on either side of a centered value with spin-buttons="split"', async () => {
+		const { field, input, inputBox, decrement, increment } = await partsOf('spin-buttons="split"');
+		expect(decrement!.right).toBeLessThanOrEqual(inputBox.left);
+		expect(increment!.left).toBeGreaterThanOrEqual(inputBox.right);
+		expect(decrement!.left - field.left).toBe(field.right - increment!.right);
+		expect(getComputedStyle(input).textAlign).toBe('center');
+	});
+
+	it('leaves the buttons out with spin-buttons="none", the input keeping a width of its own', async () => {
+		el = await fixture('<nldd-number-field spin-buttons="none" accessible-label="Aantal"></nldd-number-field>');
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('nldd-icon-button')).toBeNull();
+		const input = el.shadowRoot!.querySelector('input')!;
+		expect(getComputedStyle(input).minWidth).toBe('80px');
+		expect(getComputedStyle(input).textAlign).toBe('start');
+	});
+
+	it('starts the value where a text field starts its text', async () => {
+		const end = getComputedStyle((await partsOf('')).input).paddingLeft;
+		cleanup(el);
+		const none = getComputedStyle((await partsOf('spin-buttons="none"')).input).paddingLeft;
+		expect(end).toBe(none);
+		expect(parseFloat(end)).toBeGreaterThan(6);
+	});
+
+	it('readonly: the input is read-only, the spin buttons are disabled, and stepping does nothing', async () => {
+		el = await fixture('<nldd-number-field value="5" readonly></nldd-number-field>');
+		const nf = el as NLDDNumberField;
+		const input = nf.shadowRoot!.querySelector('input')!;
+		expect(input.readOnly).toBe(true);
+		expect([...nf.shadowRoot!.querySelectorAll('nldd-icon-button')].every((b) => b.hasAttribute('disabled'))).toBe(true);
+		nf._handleIncrease();
+		await waitForUpdate(el);
+		expect(nf.value).toBe(5);
+	});
+
+	it('fires only its own input event, with the value, not the native one of the inner input', async () => {
+		el = await fixture('<nldd-number-field></nldd-number-field>');
+		const details: unknown[] = [];
+		el.addEventListener('input', (event) => details.push((event as CustomEvent).detail));
+		const input = el.shadowRoot!.querySelector('input')!;
+		input.value = '5';
+		input.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true }));
+		input.value = '';
+		input.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true }));
+		expect(details).toEqual([{ value: 5 }, { value: null }]);
+	});
+
+	it('readonly and disabled hide the spin buttons and keep the width of the field', async () => {
+		const removeTokens = loadTokens();
+		el = await fixture('<nldd-number-field value="5"></nldd-number-field>');
+		const nf = el as NLDDNumberField;
+		const width = nf.getBoundingClientRect().width;
+		const buttons = () => [...nf.shadowRoot!.querySelectorAll('.number-field__decrement-button, .number-field__increment-button')];
+		for (const state of ['readonly', 'disabled'] as const) {
+			nf[state] = true;
+			await nf.updateComplete;
+			expect(buttons().every((b) => getComputedStyle(b).visibility === 'hidden')).toBe(true);
+			expect(nf.getBoundingClientRect().width).toBe(width);
+			nf[state] = false;
+			await nf.updateComplete;
+		}
+		nf.readonly = true;
+		await nf.updateComplete;
+		const field = getComputedStyle(nf.shadowRoot!.querySelector('.number-field')!);
+		const probe = document.createElement('div');
+		probe.style.backgroundColor = 'var(--semantics-input-fields-is-read-only-background-color)';
+		document.body.append(probe);
+		expect(field.backgroundColor).toBe(getComputedStyle(probe).backgroundColor);
+		probe.remove();
+		removeTokens();
 	});
 });

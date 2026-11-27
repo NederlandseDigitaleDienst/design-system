@@ -596,3 +596,38 @@ describe('nldd-toggle-button-group type="radio", selected from outside', () => {
 		expect(buttons.map((button) => button.getAttribute('tabindex'))).toEqual(['0', '-1']);
 	});
 });
+
+
+/* ============================================================
+   Required (at least one)
+   ============================================================ */
+
+describe('nldd-toggle-button-group required', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it('checkbox mode: required asks for at least one, not every box', async () => {
+		el = await fixture(`
+			<form>
+				<nldd-toggle-button-group type="checkbox" name="k" required>
+					<nldd-toggle-button value="a" text="A"></nldd-toggle-button>
+					<nldd-toggle-button value="b" text="B"></nldd-toggle-button>
+				</nldd-toggle-button-group>
+			</form>
+		`);
+		const form = el as HTMLFormElement;
+		const group = form.querySelector('nldd-toggle-button-group') as NLDDToggleButtonGroup;
+		await waitForUpdate(group);
+		// Nothing selected: the group is required, so the form is invalid.
+		expect(form.checkValidity()).toBe(false);
+		// One selected: a single choice satisfies the whole group.
+		const b = form.querySelector('nldd-toggle-button[value="b"]') as NLDDToggleButton;
+		b.selected = true;
+		await waitForUpdate(group);
+		await b.updateComplete;
+		expect(form.checkValidity()).toBe(true);
+	});
+});

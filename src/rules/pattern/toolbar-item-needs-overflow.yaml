@@ -2,6 +2,7 @@ severity: warn
 context: 'nldd-toolbar-item'
 assert: ':has(> [slot=overflow])'
 message: 'Give this item an alternative in `slot="overflow"`: on a narrow screen it moves to the overflow menu, and without one it is gone.'
+wcag: ['1.4.10']
 see: patronen/toolbar-with-actions
 examples:
   passed: ['<nldd-toolbar-item><nldd-button text="Bewaar"></nldd-button><nldd-menu-item slot="overflow" text="Bewaar"></nldd-menu-item></nldd-toolbar-item>']

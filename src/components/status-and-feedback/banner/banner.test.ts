@@ -3,6 +3,8 @@ import { fixture, cleanup, waitForUpdate, installUniversalReset } from '../../..
 import { loadTokens } from '../../../test-tokens.js';
 import type { NLDDBanner } from './banner.js';
 import './banner.js';
+import { wrapBodyText, wrapUiText } from '../../../assets/styles/text-wrap.js';
+import { wrapOf, wrapOfSets } from '../../../assets/styles/text-wrap.fixtures.js';
 
 let removeTokens: () => void;
 beforeAll(() => { removeTokens = loadTokens(); });
@@ -248,5 +250,33 @@ describe('nldd-banner onder een universele reset', () => {
 		const icon = banner.shadowRoot!.querySelector('.banner__variant-icon')!;
 		const offset = icon.getBoundingClientRect().left - banner.getBoundingClientRect().left;
 		expect(offset).toBe(12);
+	});
+});
+
+describe('nldd-banner – breaking long words', () => {
+	const WORD = 'Arbeidsongeschiktheidsverzekering';
+	let el: HTMLElement;
+
+	afterEach(() => cleanup(el));
+
+	it('keeps a long text and supporting text inside 160px', async () => {
+		el = await fixture(`<div style="width: 160px"><nldd-banner dismissible text="${WORD}" supporting-text="${WORD}aanvraag"></nldd-banner></div>`);
+		const banner = el.querySelector('nldd-banner')!;
+		await waitForUpdate(banner);
+		await new Promise((r) => requestAnimationFrame(r));
+		const right = el.getBoundingClientRect().right;
+		for (const selector of ['.banner__text', '.banner__supporting-text']) {
+			const range = document.createRange();
+			range.selectNodeContents(banner.shadowRoot!.querySelector(selector)!);
+			expect(range.getBoundingClientRect().right - right, selector).toBeLessThanOrEqual(1);
+		}
+	});
+
+	it('gives the text wrapUiText and the supporting text wrapBodyText', async () => {
+		el = await fixture(`<nldd-banner text="Aanvraag A-1042" supporting-text="Dakisolatie"></nldd-banner>`);
+		await waitForUpdate(el);
+		const root = el.shadowRoot!;
+		expect(wrapOf(root.querySelector('.banner__text')!)).toEqual(wrapOfSets(wrapUiText));
+		expect(wrapOf(root.querySelector('.banner__supporting-text')!)).toEqual(wrapOfSets(wrapBodyText));
 	});
 });

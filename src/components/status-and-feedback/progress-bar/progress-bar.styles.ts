@@ -1,5 +1,6 @@
 import { css } from 'lit';
 import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { wrapUiText } from '../../../assets/styles/text-wrap.js';
 
 export const progressBarStyles = css`
 	:host {
@@ -80,13 +81,15 @@ export const progressBarStyles = css`
 		display: flex;
 		gap: var(--_progress-bar-caption-gap);
 		justify-content: space-between;
-		align-items: baseline;
+		align-items: flex-end;
 		--context-content-color: var(--_progress-bar-text-color);
 		color: var(--_progress-bar-text-color);
 	}
 
 	.progress-bar__text {
+		min-width: 0;
 		font: var(--_progress-bar-text-font);
+		${wrapUiText}
 		text-wrap: pretty;
 	}
 
@@ -96,6 +99,8 @@ export const progressBarStyles = css`
 		font: var(--_progress-bar-supporting-text-font);
 		font-variant-numeric: tabular-nums;
 		text-align: right;
+		white-space: nowrap;
+		flex-shrink: 0;
 	}
 
 

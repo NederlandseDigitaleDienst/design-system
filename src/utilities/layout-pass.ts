@@ -54,6 +54,8 @@ export class LayoutPass<T> {
 /** One ResizeObserver for every host of a component. */
 export interface SharedResizeObserver<T extends object> {
 	observe(target: Element, host: T): void;
+	/** Stops watching one target for this host. */
+	unobserve(target: Element, host: T): void;
 	/** Stops watching every target of this host. */
 	unobserveAll(host: T): void;
 }
@@ -65,7 +67,9 @@ export interface SharedResizeObserver<T extends object> {
  *   also for a host that joins a target another host already observes: the
  *   hosts that were there get that report too.
  */
-export function sharedResizeObserver<T extends object>(onResize: (hosts: T[]) => void): SharedResizeObserver<T> {
+export function sharedResizeObserver<T extends object>(
+	onResize: (hosts: T[], entriesOf: (host: T) => ResizeObserverEntry[]) => void,
+): SharedResizeObserver<T> {
 	// A target can belong to more hosts, such as one anchor for two bars.
 	const hostsOf = new WeakMap<Element, Set<T>>();
 	// Weak, so this map keeps no host alive. hostsOf does, for as long as one
@@ -76,10 +80,22 @@ export function sharedResizeObserver<T extends object>(onResize: (hosts: T[]) =>
 		observe(target, host) {
 			observer ??= new ResizeObserver((entries) => {
 				const hosts = new Set<T>();
-				for (const entry of entries) hostsOf.get(entry.target)?.forEach((of) => hosts.add(of));
+				// The entries of this batch, grouped by host, so a host that reads a
+				// changed size (a width, a border box) gets its own. A host with more
+				// than one target, such as a toolbar watching itself and each item,
+				// gets all of them.
+				const entriesByHost = new Map<T, ResizeObserverEntry[]>();
+				for (const entry of entries) {
+					hostsOf.get(entry.target)?.forEach((of) => {
+						hosts.add(of);
+						const list = entriesByHost.get(of) ?? [];
+						list.push(entry);
+						entriesByHost.set(of, list);
+					});
+				}
 				// A host that left the page in the same tick is not reported.
 				const live = [...hosts].filter((of) => !(of instanceof Node) || of.isConnected);
-				if (live.length) onResize(live);
+				if (live.length) onResize(live, (host) => entriesByHost.get(host) ?? []);
 			});
 			const hosts = hostsOf.get(target) ?? new Set<T>();
 			hostsOf.set(target, hosts);
@@ -92,6 +108,17 @@ export function sharedResizeObserver<T extends object>(onResize: (hosts: T[]) =>
 			// would wait for the next resize.
 			if (joins) observer.unobserve(target);
 			observer.observe(target);
+		},
+		unobserve(target, host) {
+			const hosts = hostsOf.get(target);
+			hosts?.delete(host);
+			if (!hosts?.size) {
+				observer?.unobserve(target);
+				hostsOf.delete(target);
+			}
+			const targets = targetsOf.get(host);
+			targets?.delete(target);
+			if (targets && !targets.size) targetsOf.delete(host);
 		},
 		unobserveAll(host) {
 			for (const target of targetsOf.get(host) ?? []) {

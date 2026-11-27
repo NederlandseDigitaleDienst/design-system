@@ -23,7 +23,7 @@ export function formFieldTemplate(component: NLDDFormField): TemplateResult {
 				<label class="form-field__label"
 					@click=${(e: Event) => component._focusInput(e)}
 				>
-					<span>${renderBold(component.label)}</span>
+					<span class="form-field__label-text">${renderBold(component.label)}</span>
 					${component.optional ? renderOptional(component._t('components.form-field.optional-label')) : nothing}
 				</label>
 			` : nothing}

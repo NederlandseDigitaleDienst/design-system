@@ -1,5 +1,5 @@
 import { css } from 'lit';
-import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { inheritedTextReset, visuallyHidden } from '../../../assets/styles/shadow-resets.js';
 
 export const textEditorStyles = css`
 
@@ -146,6 +146,7 @@ export const textEditorStyles = css`
 
 		${inheritedTextReset}
 		display: flex;
+		isolation: isolate;
 		min-height: 0;
 		flex-direction: column;
 		flex-grow: 1;
@@ -672,12 +673,7 @@ export const textEditorStyles = css`
 	}
 
 	.cm-md-task-box-label {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		clip-path: inset(50%);
-		white-space: nowrap;
+		${visuallyHidden}
 	}
 
 	/* The opening line of a code block is its head: the language on the left,
@@ -727,12 +723,7 @@ export const textEditorStyles = css`
 	}
 
 	.cm-md-code-copy-status {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		clip-path: inset(50%);
-		white-space: nowrap;
+		${visuallyHidden}
 	}
 
 	.cm-md-code-language {
@@ -895,12 +886,7 @@ export const textEditorStyles = css`
 	}
 
 	:host .cm-nldd-typeahead-status {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		clip-path: inset(50%);
-		white-space: nowrap;
+		${visuallyHidden}
 	}
 
 	:host .cm-tooltip.cm-nldd-typeahead-empty {
@@ -1103,7 +1089,8 @@ export const textEditorStyles = css`
 		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_text-editor-link-badge-is-active-highlight-border-color);
 	}
 
-	.cm-link-badge nldd-icon {
+	.cm-link-badge__icon {
+		display: flex;
 		flex: none;
 		width: calc(0.65 * var(--_text-editor-link-badge-size));
 		height: calc(0.65 * var(--_text-editor-link-badge-size));

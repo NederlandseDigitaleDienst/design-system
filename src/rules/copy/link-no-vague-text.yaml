@@ -1,6 +1,7 @@
 severity: hint
 context: ':is(nldd-link, nldd-button)[href]:is([text="Klik hier" i], [text="Hier" i], [text="Deze link" i], [text="Lees meer" i], [text="Meer info" i], [text="Meer informatie" i], [text="Meer" i])'
 message: 'Make the destination or the subject the link text, such as "Lees meer over dakisolatie".'
+wcag: ['2.4.4']
 see: ontwerprichtlijnen/copywriting
 examples:
   passed: ['<nldd-link href="/isolatie" text="Lees meer over dakisolatie"></nldd-link>']

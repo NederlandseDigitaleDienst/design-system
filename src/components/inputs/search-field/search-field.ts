@@ -39,14 +39,13 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { searchFieldStyles } from './search-field.styles.js';
 import { searchFieldTemplate } from './search-field.template.js';
 import { nlddSearchFieldTranslations } from './search-field.i18n.js';
-import type { NLDDSearchFieldTranslations } from './search-field.i18n.js';
 import './../../actions/icon-button/icon-button.js';
 import './../../actions/button/button.js';
 import './../../content/icon/icon.js';
 import { DescribedBy, applyDescribedBy } from '../../../utilities/described-by-mixin.js';
 import { ShortcutAvailabilityController, shortcutsAvailable } from '../../../utilities/shortcut.js';
 import '../../content/keyboard-shortcut/keyboard-shortcut.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
 
 export type SearchFieldSize = 'sm' | 'md';
@@ -55,7 +54,7 @@ export type SearchFieldSize = 'sm' | 'md';
 export type SearchButtonAppearance = '' | 'secondary' | 'primary';
 
 @customElement('nldd-search-field')
-export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
+export class NLDDSearchField extends DescribedBy(FormAssociated(withTranslations(LitElement, nlddSearchFieldTranslations))) {
 
 	static override styles = searchFieldStyles;
 
@@ -153,10 +152,6 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-	/** Override one or more translation keys. Unset keys fall back to Dutch. */
-	@property({ type: Object })
-	translations: Partial<NLDDSearchFieldTranslations> = {};
-
 	override updated(changed: PropertyValues): void {
 		// Runs after the DescribedBy controller, so the shortcut hint is added to
 		// the help and error texts of an nldd-form-field instead of replacing them.
@@ -176,11 +171,6 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
 		return this.value;
 	}
 
-	// — i18n ——————————————————————————————————————————————————————————————————
-
-	public _t(key: keyof NLDDSearchFieldTranslations): string {
-		return translate(this.translations, nlddSearchFieldTranslations, key);
-	}
 
 	// — Handlers ————————————————————————————————————————————————————————————
 

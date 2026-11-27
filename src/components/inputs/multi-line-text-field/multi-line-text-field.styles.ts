@@ -25,6 +25,7 @@ export const multiLineTextFieldStyles = css`
 
 		${inheritedTextReset}
 		display: block;
+		isolation: isolate;
 		width: var(--_multi-line-text-field-width);
 		max-width: 100%;
 		-webkit-tap-highlight-color: transparent;

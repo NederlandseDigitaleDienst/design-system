@@ -1,4 +1,5 @@
 import { css } from 'lit';
+import { visuallyHidden } from '../../../assets/styles/shadow-resets.js';
 
 export const listItemSegmentStyles = css`
 	:host {
@@ -176,14 +177,6 @@ export const listItemSegmentStyles = css`
 	}
 
 	.list-item-segment__link-hint {
-		position: absolute;
-		margin: -1px;
-		border: 0;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		padding: 0;
-		white-space: nowrap;
-		clip-path: inset(50%);
+		${visuallyHidden}
 	}
 `;

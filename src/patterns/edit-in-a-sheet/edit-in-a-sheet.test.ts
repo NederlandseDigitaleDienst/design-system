@@ -80,3 +80,56 @@ describe('patroon: bewerken in een sheet', () => {
 		expect(page.querySelectorAll('nldd-list-item').length).toBeGreaterThan(1);
 	});
 });
+
+describe('patroon: bewerken in een sheet, een stap verder', () => {
+	let root: HTMLElement;
+
+	afterEach(() => {
+		root?.remove();
+	});
+
+	type Stap = HTMLElement & { hidden: boolean };
+	const toon = (sheet: Element, id: string) => {
+		sheet.querySelectorAll<Stap>('nldd-page').forEach((pagina) => { pagina.hidden = pagina.id !== id; });
+	};
+
+	const mount = async () => {
+		const { default: step } = await import('./edit-in-a-sheet.step.html?raw');
+		root = document.createElement('div');
+		root.innerHTML = step;
+		document.body.append(root);
+		const sheet = root.querySelector('nldd-sheet')!;
+		sheet.open = true;
+		await waitForUpdate(sheet);
+		return sheet;
+	};
+
+	it('houdt beide stappen in één sheet, met alleen de eerste in beeld', async () => {
+		const sheet = await mount();
+		expect(root.querySelectorAll('nldd-sheet')).toHaveLength(1);
+		expect(sheet.querySelector<Stap>('#aanvraag')!.hidden).toBe(false);
+		expect(sheet.querySelector<Stap>('#team')!.hidden).toBe(true);
+	});
+
+	it('geeft de stap een terugknop met de titel van de aanvraag', async () => {
+		const sheet = await mount();
+		const team = sheet.querySelector<Stap>('#team')!;
+		toon(sheet, 'team');
+		await waitForUpdate(team);
+		const bar = team.querySelector('nldd-top-title-bar') as HTMLElement & { updateComplete: Promise<boolean> };
+		await bar.updateComplete;
+		expect(bar.shadowRoot!.querySelector('.top-title-bar__text-back-button nldd-button')!.getAttribute('text')).toBe('Aanvraag A-1042 bewerken');
+		await waitForUpdate(sheet);
+		expect(sheet.shadowRoot!.querySelector('dialog')!.getAttribute('aria-label')).toBe('Team kiezen');
+	});
+
+	it('bewaart wat in de eerste stap is ingevuld', async () => {
+		const sheet = await mount();
+		const titel = sheet.querySelector('nldd-text-field') as HTMLElement & { value: string };
+		titel.value = 'Dakisolatie en ventilatie';
+		toon(sheet, 'team');
+		toon(sheet, 'aanvraag');
+		expect(sheet.querySelector<Stap>('#aanvraag')!.hidden).toBe(false);
+		expect(titel.value).toBe('Dakisolatie en ventilatie');
+	});
+});

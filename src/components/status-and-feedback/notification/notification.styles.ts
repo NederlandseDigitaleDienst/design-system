@@ -1,5 +1,6 @@
 import { css, unsafeCSS } from 'lit';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
+import { wrapBodyText, wrapUiText } from '../../../assets/styles/text-wrap.js';
 
 const smMax = unsafeCSS(queryBreakpoints.smMax);
 
@@ -130,7 +131,7 @@ export const notificationStyles = css`
 
 	.notification__text {
 		margin: 0;
-		overflow-wrap: break-word;
+		${wrapUiText}
 		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
 		font: var(--_notification-text-font);
@@ -139,7 +140,7 @@ export const notificationStyles = css`
 
 	.notification__supporting-text {
 		margin: 0;
-		overflow-wrap: break-word;
+		${wrapBodyText}
 		--context-content-color: var(--_notification-supporting-text-color);
 		color: var(--_notification-supporting-text-color);
 		font: var(--_notification-supporting-text-font);

@@ -1,5 +1,6 @@
 import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { waitForUpdate } from '../../test-utils.js';
+import { loadTokens } from '../../test-tokens.js';
 import markup from './content-page.html?raw';
 import short from './content-page.short.html?raw';
 import { Standaard } from './content-page.stories.js';
@@ -91,9 +92,12 @@ describe('patroon: contentpagina', () => {
 
 	describe('de inhoudsopgave als sheet, op smal', () => {
 		let story: HTMLElement;
+		let removeTokens: () => void;
 		type Zijbalk = HTMLElement & { collapsed: boolean; updateComplete: Promise<boolean> };
 
+		// The jump to the last heading needs the real height of the page.
 		beforeEach(async () => {
+			removeTokens = loadTokens();
 			root.remove();
 			story = document.createElement('div');
 			story.style.width = '600px';
@@ -106,6 +110,7 @@ describe('patroon: contentpagina', () => {
 
 		afterEach(() => {
 			story.remove();
+			removeTokens();
 		});
 
 		it('toont de knop onder de titel alleen zolang er een sheet is', () => {

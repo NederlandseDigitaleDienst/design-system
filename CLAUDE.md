@@ -132,7 +132,7 @@ Zolang de major 0 is, is minor het signaal voor een brekende wijziging en is elk
 
 **De leesbare inhoud schrijf je met de hand.** Dat is bewust: `nldd-avatar - nieuw component voor een persoon of organisatie` zegt een consument veel meer dan `refactor(avatar): rename css var`. Commit-titels schrijf je voor reviewers, changelog-entries voor consumers. Het gegenereerde deel is daarom expres niet meer dan het versiekopje; de `### Highlights` / `### Added`-secties eronder zijn handwerk.
 
-Laat daarom de regel `"preset": "conventionalcommits"` in `.releaserc.json` staan. Haal je die weg, dan valt de release-notes-generator terug op zijn eigen default en gaat hij de notes alsnog in `### Features` / `### Bug Fixes` opdelen, wat je juist niet wilt.
+Dat regelt de release-notes-generator in `.releaserc.json`. `presetConfig.types` noemt alleen een verborgen type `none`, zodat geen enkele commit een sectie als `### Features` of `### Bug Fixes` krijgt. `parserOpts` laat de generator geen breaking change herkennen, zodat ook `### ⚠ BREAKING CHANGES` wegblijft: `NO-RELEASE-NOTES` is een waarde die geen echte commit bevat, geen trefwoord om zelf te typen. Blijft alleen het kopje over. `scripts/release-notes.test.mjs` controleert het. De versie bepaalt de commit-analyzer met zijn eigen `parserOpts`, dus een `!` geeft nog steeds een minor. Haal je een van de twee weg, dan komen de commits weer in de changelog. Tot semantic-release 26 leek het kopje vanzelf te gaan, maar dat kwam doordat een te oude `conventional-changelog-writer` de commits stilletjes liet vallen.
 
 Wil je toch handmatig iets toevoegen (bijv. iets dat semantic-release niet uit de commits haalt):
 
@@ -145,13 +145,15 @@ Wil je toch handmatig iets toevoegen (bijv. iets dat semantic-release niet uit d
 
 Een icoon is een bestand in `src/components/content/icon/icons/`; de bestandsnaam is de icoonnaam. Staat er iets **tussen haakjes** in de naam, dan is dat een alias: haal het uit de bestandsnaam en zet het in `icon-aliases.js` (`'brand': 'seal-star'`). Een icoon staat op een canvas van 96×96, regular en light allebei (`ICON-STYLE-GUIDE.md`). Optimaliseer nieuwe bestanden naar de huisstijl met `npm run optimize:icons -- <bestand.svg> …` (svgo, instellingen in `scripts/svgo.config.mjs`). Een export op 24×24 of 32×32 zet het script eerst naar 96 en rondt pas daarna af; een andere viewBox weigert het. Verder: geen `width`/`height`, `fill="currentColor"` in plaats van een vaste kleur, geen `fill-rule`, pad afgerond op één decimaal, tabs, elk pad op een eigen regel. Draai het één keer, op de export uit Figma: een tweede ronde rondt opnieuw af en verschuift het icoon.
 
+Elk icoon staat in precies één categorie van `icon-categories.ts`, in de volgorde van de Figma-bibliotheek; daarop filtert de icon-gallery, en `icon-categories.test.ts` faalt op een icoon zonder categorie.
+
 Nieuwe en hertekende iconen krijgen een "Nieuw"- of "Bijgewerkt"-label in de icon-gallery. Die twee lijsten staan in `icon-gallery-status.ts` en worden bij elke batch **vervangen**, afgeleid uit de git-historie; dat bestand legt in zijn kop precies vast hoe je ze afleidt en welke valkuil er zit (`--follow` niet gebruiken).
 
 Draai daarna `npm run build:icons` (registry) en `npm run generate:skill-docs` (de icoon- en aliaslijst in `skills/nldd-design/reference.md`), en zet een nieuw icoon in de changelog onder `### Highlights`.
 
 ## Ontwerprichtlijnen
 
-De ontwerprichtlijnen staan in `src/docs/design-guidelines.md` (op de website `/richtlijnen/`): dat is de enige bron. Wijzig je ze, draai dan `npm run generate:skill-principles` (of `npm run generate:skill-docs`) en commit het resultaat. `skills/nldd-design/design-guidelines.md` is een gegenereerde kopie die met de plugin meereist en in sync moet blijven; er is geen aparte ontwerprichtlijnen-skill meer. Houd de tekst em-dash-vrij (komma's, punten of haakjes).
+De ontwerprichtlijnen staan in `src/docs/design-guidelines.md` (op de website `/handleidingen/richtlijnen/`): dat is de enige bron. Wijzig je ze, draai dan `npm run generate:skill-principles` (of `npm run generate:skill-docs`) en commit het resultaat. `skills/nldd-design/design-guidelines.md` is een gegenereerde kopie die met de plugin meereist en in sync moet blijven; er is geen aparte ontwerprichtlijnen-skill meer. Houd de tekst em-dash-vrij (komma's, punten of haakjes).
 
 Een ontwerpregel staat daarmee op één plek. Een skill of een patroon mag hem hoogstens in één zin noemen met een link naar de sectie, en schrijft hem niet opnieuw uit. Doe je dat wel, dan lopen de twee versies uiteen: de sticky-headerregel stond een tijd strenger in `nldd-design-build` dan in de richtlijn zelf, en niemand zag dat.
 
@@ -167,10 +169,11 @@ De landingspagina (`www/index.html`, met `www/main.ts` en `www/styles.css`) is m
 |--------|------|
 | `/componenten/<naam>/` | `<naam>.stories.ts` voor de voorbeelden, `custom-elements.json` voor de API-tabel |
 | `/patronen/<slug>/` | `src/patterns/<slug>/`, met de lintregels die naar het patroon wijzen eronder |
-| `/richtlijnen/`, `/themas/`, `/iconen/`, `/vertalingen/`, `/breakpoints/` | `src/docs/*.md` |
-| `/toegankelijkheid/` | `docs/ACCESSIBILITY.md` |
+| `/handleidingen/richtlijnen/`, `/handleidingen/themas/`, `/iconen/`, `/handleidingen/vertalingen/`, `/handleidingen/breakpoints/` | `src/docs/*.md` |
+| `/handleidingen/toegankelijkheid/` | `docs/ACCESSIBILITY.md`, met eronder de lintregels per succescriterium |
+| `/lintregels/`, `/lintregels/<regel>/` | `src/rules/<groep>/<regel>.yaml`, een pagina per regel |
 | `/changelog/`, `/changelog/<versie>/` | `CHANGELOG.md`, een pagina per versie |
-| `/aan-de-slag/` | `www/content/*.md` |
+| `/handleidingen/aan-de-slag/` | `www/content/*.md` |
 
 Een component heeft dus een pagina omdat het een stories-bestand heeft; niemand schrijft een componentpagina. De landingspagina heeft een balk met alleen het logo en de naam: ze leidt zelf, per sectie, naar de onderdelen. Elke pagina erachter is een applicatie, zoals het patroon Applicatie: een werkbalk boven een `nldd-navigation-split-view`. In de werkbalk staan een terugknop naar de landingspagina, de naam van de site en de themaknop. De eerste zijbalk heeft de secties (`NAVIGATION` in `site.js`) en onderaan de links over de site (`ABOUT`), de tweede de pagina's van een sectie die ze heeft (componenten, patronen, versies), en main de pagina zelf. Een overzicht als `/componenten/` laat main leeg, zodat een telefoon op de lijst opent. `/documentatie/` heeft alleen de secties en een lege main; daar gaat de terugknop van een pagina zonder eigen lijst heen. Wat op een smal scherm wegvalt, bereik je met de terugknop in de titelbalk. Er zijn geen breadcrumbs. Elke pagina is een eigen HTML-bestand, maar een klik herlaadt niet: `www/client/navigate.ts` haalt de volgende pagina op en vervangt alleen de panes die verschillen, zodat de zijbalken blijven staan. De themaknop opent een popover met het thema en de kleurmodus, zoals op de landingspagina: de keuze geldt voor elke pagina en elk voorbeeld, zodat je een component in de kleur van je eigen organisatie ziet.
 
@@ -274,6 +277,8 @@ Eén regel, één bestand in `src/rules/<groep>/`, ook als hij over meer compone
 `pure` is de enige groep die een project zelf aanzet, met `--pure` of met een niveau in `.nldd-lint.json` (`"rules": { "pure": "error" }`). Zijn regels gaan over de eigen opmaak van een app (een `class`, `style`, kale HTML, een stylesheet), niet over het gebruik van een component, en zonder die keuze vuren ze nooit. Ze draaien daarom ook niet in de browser. Een stylesheet leest de linter als een `<style>`-element, zodat één regel een CSS-bestand, een `<style>`-blok in Vue en een `<style>` in HTML vangt. `:written(class)` matcht een attribuut dat er staat, ook met een gebonden waarde; `[class]` vraagt een waarde die we kunnen lezen. De regels waarmee `pure` begon zijn `error`, want niemand had de groep toen aan; een regel die er later bij komt, komt als `warn`, zoals elke nieuwe regel.
 
 Een naam begint met waar hij over gaat: de tag zonder `nldd-`, of een begrip uit `CONCEPTS` in `scripts/check-lint-rules.js`. Daarna één van vier vormen: `-needs-` (iets ontbreekt), `-no-` (mag niet), `-max-` (te veel), `-goes-` (verkeerde plek). In `api` eindigt hij op `-renamed`, `-invalid`, `-no-effect` of `-not-found`. `lint:rules` bewaakt dit. Een regel hoort bij een patroon door er met `see: patronen/<slug>` naar te wijzen; hij verschijnt dan vanzelf op die pagina. Een patroon is daarmee recept plus regels, en de `.md` hoeft niet mee te veranderen.
+
+Bewaakt een regel een succescriterium van WCAG 2.2 (niveau A of AA), dan noemt hij het met `wcag: ['2.4.4']`, in welke groep hij ook staat. Alleen waar het verband direct is: een regel uit `a11y` die goede praktijk is en geen criterium, krijgt er geen. De toegankelijkheidspagina zet de regels daarmee per criterium onder elkaar, en `nldd explain` noemt het. De namen van de criteria staan in `lint/wcag.js` (Engels, voor de CLI) en `www/build/wcag.js` (de koppen van de geautoriseerde Nederlandse vertaling, letterlijk).
 
 `message` zegt wat hier fout is, in het Engels, zoals een compilerfout. Het waarom staat op de pagina waar `see` naar wijst en wordt niet overgeschreven.
 

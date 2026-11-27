@@ -2,7 +2,7 @@
  * Copies the canonical design-guidelines doc into the nldd skill as
  * design-guidelines.md.
  *
- * src/docs/design-guidelines.md, the page the website shows at /richtlijnen/,
+ * src/docs/design-guidelines.md, the page the website shows at /handleidingen/richtlijnen/,
  * is the single source of truth. This script wraps it in a bundled reference
  * doc inside the nldd consumer skill, so a consumer who builds with
  * @nldd/design-system gets the design principles alongside reference.md and

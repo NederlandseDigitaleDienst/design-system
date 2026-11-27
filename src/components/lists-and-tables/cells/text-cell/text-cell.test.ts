@@ -463,9 +463,9 @@ describe('nldd-text-cell fit-content in een krappe rij', () => {
 		cleanup(el);
 	});
 
-	// Even a word longer than the row does not run out of it: the text has
-	// overflow-wrap: anywhere, dus hij breekt desnoods midden in het woord.
-	it('loopt ook met een lang woord niet buiten de rij', async () => {
+	// A word longer than the row stays whole: the floor is the longest word.
+	// With min-width="0" the cell shrinks into the row and the word breaks.
+	it('keeps a long word whole, and breaks it with min-width="0"', async () => {
 		const el = await fixture(`
 			<div style="display: flex; width: 60px;">
 				<nldd-text-cell width="fit-content" text="Informatiebeveiliging"></nldd-text-cell>
@@ -473,6 +473,9 @@ describe('nldd-text-cell fit-content in een krappe rij', () => {
 		`);
 		await waitForUpdate(el);
 		const cel = el.querySelector('nldd-text-cell')!;
+		expect(Math.round(cel.getBoundingClientRect().width)).toBeGreaterThan(60);
+		cel.setAttribute('min-width', '0');
+		await waitForUpdate(cel);
 		expect(Math.round(cel.getBoundingClientRect().width)).toBeLessThanOrEqual(60);
 		cleanup(el);
 	});

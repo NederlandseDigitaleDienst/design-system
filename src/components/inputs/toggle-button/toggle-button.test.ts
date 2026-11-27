@@ -320,6 +320,16 @@ describe('nldd-toggle-button – interaction (checkbox)', () => {
 		expect(detail?.selected).toBe(true);
 		expect(detail?.value).toBe('check');
 	});
+
+	it('required on its own asks for this button to be selected', async () => {
+		const form = await fixture<HTMLFormElement>('<form><nldd-toggle-button type="checkbox" name="vet" value="ja" text="Vet" required></nldd-toggle-button></form>');
+		el = form.querySelector<NLDDToggleButton>('nldd-toggle-button')!;
+		await el.updateComplete;
+		expect(form.checkValidity()).toBe(false);
+		el.selected = true;
+		await el.updateComplete;
+		expect(form.checkValidity()).toBe(true);
+	});
 });
 
 

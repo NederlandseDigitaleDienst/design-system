@@ -138,7 +138,7 @@ import '@nldd/design-system/themes/geel.css';   // of '@nldd/design-system/theme
 <html lang="nl" data-nldd-theme="geel">
 ```
 
-Een thema geldt voor de hele website. Een attribuut zonder geladen thema doet niets. Kleur zelf niets na om bij het thema te passen: elke rol kiest binnen zijn contrasteis de stap die het dichtst bij de themakleur ligt, en bij geel, rood, robijnrood en oranje wijkt het designsysteem bewust uit naar bijna zwart of grijs. Waarom, en hoe elk thema eruitziet, staat op de [pagina Thema's](https://design.digitaledienst.overheid.nl/themas/).
+Een thema geldt voor de hele website. Een attribuut zonder geladen thema doet niets. Kleur zelf niets na om bij het thema te passen: elke rol kiest binnen zijn contrasteis de stap die het dichtst bij de themakleur ligt, en bij geel, rood, robijnrood en oranje wijkt het designsysteem bewust uit naar bijna zwart of grijs. Waarom, en hoe elk thema eruitziet, staat op de [pagina Thema's](https://design.digitaledienst.overheid.nl/handleidingen/themas/).
 
 ## CSS-variabelen
 
@@ -249,7 +249,7 @@ Draai `npx @nldd/design-system lint` voordat je klaar bent: hij vindt onbekende 
 
 Draait je applicatie al op dit designsysteem en moet de versie omhoog, gebruik dan [`nldd-design-upgrade`](../nldd-design-upgrade/SKILL.md). Kort waarom het een eigen skill is: dit project brengt alles uit als patch, ook een breaking change, dus het versienummer zegt niet of een sprong veilig is. De changelog wel.
 
-Bouw je een nieuwe app in een GitHub-repository, stel dan voor de action `upgrade` erin te zetten: dan komt er bij elke release een pull request met de nieuwe versie, de fixes die zeker zijn en een lijst van wat er nog te doen is. Of meld de repository aan, dan stuurt het designsysteem die pull request zelf na elke release. Zet niets ongevraagd neer, want het team kiest of er een agent meedoet en met welk token. Beide staan op [Upgraden](https://design.digitaledienst.overheid.nl/upgraden/).
+Bouw je een nieuwe app in een GitHub-repository, stel dan voor de action `upgrade` erin te zetten: dan komt er bij elke release een pull request met de nieuwe versie, de fixes die zeker zijn en een lijst van wat er nog te doen is. Of meld de repository aan, dan stuurt het designsysteem die pull request zelf na elke release. Zet niets ongevraagd neer, want het team kiest of er een agent meedoet en met welk token. Beide staan op [Upgraden](https://design.digitaledienst.overheid.nl/handleidingen/upgraden/).
 
 ## Bron van waarheid
 

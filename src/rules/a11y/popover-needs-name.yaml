@@ -2,6 +2,7 @@ severity: error
 context: 'nldd-popover:not([slot="interest"])'
 assert: '[accessible-label]'
 message: 'nldd-popover needs `accessible-label`, or a screen reader announces it without a name.'
+wcag: ['4.1.2']
 examples:
   passed:
     - '<nldd-popover accessible-label="Filters"></nldd-popover>'

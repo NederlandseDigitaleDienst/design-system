@@ -26,17 +26,16 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { stepperStyles } from './stepper.styles.js';
 import { stepperTemplate } from './stepper.template.js';
 import { nlddStepperTranslations } from './stepper.i18n.js';
-import type { NLDDStepperTranslations } from './stepper.i18n.js';
 import './../../actions/icon-button/icon-button.js';
 import './../../content/icon/icon.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
-import { translate } from '../../../utilities/translations.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
 
 export type StepperSize = 'xs' | 'sm' | 'md';
 
 @customElement('nldd-stepper')
-export class NLDDStepper extends DescribedBy(FormAssociated(LitElement)) {
+export class NLDDStepper extends DescribedBy(FormAssociated(withTranslations(LitElement, nlddStepperTranslations))) {
 
 	static override styles = stepperStyles;
 
@@ -89,10 +88,6 @@ export class NLDDStepper extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-	/** Override one or more translation keys. Unspecified keys fall back to Dutch. */
-	@property({ type: Object })
-	translations: Partial<NLDDStepperTranslations> = {};
-
 	override formValue(): FormValue {
 		return String(this.value);
 	}
@@ -103,11 +98,6 @@ export class NLDDStepper extends DescribedBy(FormAssociated(LitElement)) {
 		if (!isNaN(parsed)) this.value = Math.max(this.min, Math.min(this.max, parsed));
 	}
 
-	// — i18n —————————————————————————————————————————————————————————————————
-
-	public _t(key: keyof NLDDStepperTranslations): string {
-		return translate(this.translations, nlddStepperTranslations, key);
-	}
 
 	// — Actions ——————————————————————————————————————————————————————————————
 

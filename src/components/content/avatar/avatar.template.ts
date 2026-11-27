@@ -1,6 +1,7 @@
 import { html, nothing, TemplateResult } from 'lit';
 import type { NLDDAvatar } from './avatar.js';
 import { linkRel } from '../../../utilities/link-rel.js';
+import { sanitizeUrl } from '../../../utilities/sanitize-url.js';
 import { linkHintKey } from '../../../utilities/link-hint.js';
 import '../tooltip/tooltip.js';
 
@@ -49,7 +50,7 @@ export function avatarTemplate(component: NLDDAvatar): TemplateResult {
 	const shape = component.href
 		? html`
 			<a class="avatar avatar--interactive"
-				href=${component.href}
+				href=${sanitizeUrl(component.href) || nothing}
 				target=${component.target || nothing}
 				rel=${linkRel(component.rel, component.target) || nothing}
 				aria-label=${controlLabel}

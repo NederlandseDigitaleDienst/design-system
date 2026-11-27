@@ -1,6 +1,7 @@
 import { css, unsafeCSS, type CSSResult } from 'lit';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
-import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { inheritedTextReset, visuallyHidden } from '../../../assets/styles/shadow-resets.js';
+import { wrapUiText } from '../../../assets/styles/text-wrap.js';
 
 const smMax = unsafeCSS(queryBreakpoints.smMax);
 
@@ -14,12 +15,7 @@ const compactBelow = (host: string, width: CSSResult) => css`
 	${unsafeCSS(host)} .step-bar__items {
 		/* Stays in the DOM for assistive tech. Standard visually-hidden recipe. */
 		@container (max-width: ${width}) {
-			position: absolute;
-			width: 1px;
-			height: 1px;
-			overflow: hidden;
-			clip-path: inset(50%);
-			white-space: nowrap;
+			${visuallyHidden}
 		}
 	}
 
@@ -99,6 +95,8 @@ export const stepBarStyles = css`
 	}
 
 	.step-bar__compact-title {
+		min-width: 0;
+		${wrapUiText}
 		text-wrap: pretty;
 	}
 
@@ -243,9 +241,9 @@ export const stepBarItemStyles = css`
 	.step-bar__item-title {
 		--context-content-color: var(--_step-bar-title-color);
 		color: var(--_step-bar-title-color);
+		max-width: 100%;
 		font: var(--primitives-font-body-sm-regular-flat);
-		overflow-wrap: anywhere;
-		hyphens: auto;
+		${wrapUiText}
 		text-wrap: balance;
 	}
 
@@ -256,12 +254,7 @@ export const stepBarItemStyles = css`
 
 	/* Standard visually-hidden recipe. */
 	.step-bar__item-status {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		clip-path: inset(50%);
-		white-space: nowrap;
+		${visuallyHidden}
 	}
 
 	.step-bar__item-control {

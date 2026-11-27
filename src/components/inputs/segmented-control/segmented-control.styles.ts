@@ -62,11 +62,10 @@ export const segmentedControlStyles = css`
 		display: grid;
 	}
 
-	/* A flex column or grid stretches an auto-width child to its full width,
-	   as nldd-form-field does, so fit-content holds on to its own width. */
+	/* A width of its own, not auto: a stretching parent (nldd-form-field) then
+	   leaves it at its content width, and the parent's alignment still places it. */
 	:host([width="fit-content"]) {
-		align-self: flex-start;
-		justify-self: start;
+		--_segmented-control-width: fit-content;
 		grid-auto-columns: auto;
 	}
 

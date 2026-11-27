@@ -88,7 +88,7 @@ export function rewriteLink(target, { patterns, tags }) {
 	if (target.startsWith('?path=')) throw new Error(`Storybook-link: ${target}. Link naar de pagina op de website.`);
 	if (!target.startsWith('/')) return target;
 	const [path, anchor = ''] = target.split(/(?=#)/);
-	if (path === '/richtlijnen/') return `../../nldd-design/design-guidelines.md${anchor}`;
+	if (path === '/handleidingen/richtlijnen/') return `../../nldd-design/design-guidelines.md${anchor}`;
 	const pattern = path.match(/^\/patronen\/([a-z0-9-]+)\/$/);
 	if (pattern) {
 		if (!patterns.has(pattern[1])) throw new Error(`Geen patroon voor ${target}`);

@@ -85,18 +85,27 @@ describe('nldd-sidebar-section', () => {
 	it('not collapsed (lg): the sidebar is a sticky box and the sheet holds no slot', async () => {
 		await make();
 		await setWidth(1200);
-		const box = el.shadowRoot!.querySelector<HTMLSlotElement>('.sidebar-section__sidebar-box > slot[name="sidebar"]');
+		const box = el.shadowRoot!.querySelector<HTMLSlotElement>('.sidebar-section__sidebar > aside > slot[name="sidebar"]');
 		expect(box).not.toBeNull();
 		expect(box!.assignedElements().length).toBe(1);
 		expect(el.shadowRoot!.querySelector('.sidebar-section__sheet slot[name="sidebar"]')).toBeNull();
 		expect(el.hasAttribute('collapsed')).toBe(false);
 	});
 
+	it('the aside in the box scrolls, so the scroll fade masks the content and not the edge', async () => {
+		await make();
+		await setWidth(1200);
+		const box = el.shadowRoot!.querySelector('.sidebar-section__sidebar')!;
+		const aside = box.querySelector('aside')!;
+		expect(getComputedStyle(aside).overflowY).toBe('auto');
+		expect(getComputedStyle(box).overflowY).toBe('visible');
+	});
+
 	it('the box takes the surface of the section around it, edged by a divider line', async () => {
 		const unloadTokens = loadTokens();
 		await make('background="tinted"');
 		await setWidth(1200, false);
-		const box = el.shadowRoot!.querySelector('.sidebar-section__sidebar-box')!;
+		const box = el.shadowRoot!.querySelector('.sidebar-section__sidebar')!;
 		const tinted = getComputedStyle(el).backgroundColor;
 		expect(getComputedStyle(box).backgroundColor).toBe(tinted);
 		el.background = 'base';
@@ -123,7 +132,7 @@ describe('nldd-sidebar-section', () => {
 		`);
 		await waitForUpdate(el);
 		await setWidth(1200);
-		const box = el.shadowRoot!.querySelector('.sidebar-section__sidebar-box') as HTMLElement;
+		const box = el.shadowRoot!.querySelector('.sidebar-section__sidebar') as HTMLElement;
 		const styles = getComputedStyle(box);
 		expect(styles.top).toBe('134px');
 		expect(styles.bottom).toBe('44px');
@@ -144,7 +153,7 @@ describe('nldd-sidebar-section', () => {
 		`);
 		await waitForUpdate(el);
 		await setWidth(1200);
-		const box = el.shadowRoot!.querySelector('.sidebar-section__sidebar-box') as HTMLElement;
+		const box = el.shadowRoot!.querySelector('.sidebar-section__sidebar') as HTMLElement;
 		const styles = getComputedStyle(box);
 		expect(styles.top).toBe('74px');
 		expect(Math.round(parseFloat(styles.maxHeight))).toBe(700 - 74 - 24);
@@ -153,7 +162,7 @@ describe('nldd-sidebar-section', () => {
 	it('collapsed (sm/md): the sidebar moves into the sheet and reflects [collapsed]', async () => {
 		await make();
 		await setWidth(500);
-		expect(el.shadowRoot!.querySelector('.sidebar-section__sidebar-box')).toBeNull();
+		expect(el.shadowRoot!.querySelector('.sidebar-section__sidebar')).toBeNull();
 		expect(el.hasAttribute('collapsed')).toBe(true);
 		const sheetSlot = el.shadowRoot!.querySelector<HTMLSlotElement>('.sidebar-section__sheet slot[name="sidebar"]');
 		expect(sheetSlot!.assignedElements().length).toBe(1);
@@ -201,7 +210,7 @@ describe('nldd-sidebar-section', () => {
 		await make('no-collapse');
 		await setWidth(500, false);
 		expect(el.collapsed).toBe(false);
-		expect(el.shadowRoot!.querySelector('.sidebar-section__sidebar-box')).not.toBeNull();
+		expect(el.shadowRoot!.querySelector('.sidebar-section__sidebar')).not.toBeNull();
 		expect(el.shadowRoot!.querySelector('nldd-top-title-bar')).toBeNull();
 	});
 
@@ -212,7 +221,7 @@ describe('nldd-sidebar-section', () => {
 		el.noCollapse = true;
 		for (let i = 0; i < 20 && el.collapsed !== false; i++) await raf();
 		expect(el.collapsed).toBe(false);
-		expect(el.shadowRoot!.querySelector('.sidebar-section__sidebar-box')).not.toBeNull();
+		expect(el.shadowRoot!.querySelector('.sidebar-section__sidebar')).not.toBeNull();
 	});
 
 	it('show() opens the sheet when collapsed', async () => {

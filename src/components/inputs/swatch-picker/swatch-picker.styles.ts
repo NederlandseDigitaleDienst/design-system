@@ -13,6 +13,7 @@ export const swatchPickerStyles = css`
 
 		box-sizing: border-box;
 		display: block;
+		isolation: isolate;
 	}
 
 	:host([size="xs"]),

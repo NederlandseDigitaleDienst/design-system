@@ -1,5 +1,5 @@
 import { css } from 'lit';
-import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { inheritedTextReset, visuallyHidden } from '../../../assets/styles/shadow-resets.js';
 
 export const documentTabBarStyles = css`
 	:host {
@@ -230,15 +230,7 @@ export const documentTabBarStyles = css`
 
 	.document-tab-bar__polite-announcer,
 	.document-tab-bar__assertive-announcer {
-		position: absolute;
-		margin: -1px;
-		border: 0;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		padding: 0;
-		white-space: nowrap;
-		clip-path: inset(50%);
+		${visuallyHidden}
 	}
 
 `;

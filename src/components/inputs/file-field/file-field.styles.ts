@@ -1,5 +1,6 @@
 import { css } from 'lit';
-import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
+import { inheritedTextReset, visuallyHidden } from '../../../assets/styles/shadow-resets.js';
+import { wrapCodeText, wrapUiText } from '../../../assets/styles/text-wrap.js';
 
 export const fileFieldStyles = css`
 	:host {
@@ -53,6 +54,7 @@ export const fileFieldStyles = css`
 
 		${inheritedTextReset}
 		display: block;
+		isolation: isolate;
 		width: var(--_file-field-width);
 		max-width: 100%;
 		min-width: 0;
@@ -242,7 +244,7 @@ export const fileFieldStyles = css`
 	.file-field__text {
 		padding-block: var(--primitives-space-8);
 		white-space: normal;
-		overflow-wrap: anywhere;
+		${wrapUiText}
 		text-wrap: balance;
 	}
 
@@ -431,7 +433,7 @@ export const fileFieldStyles = css`
 	:is(.file-field__name, .file-field__folder).is-wrapped {
 		display: block;
 		white-space: normal;
-		overflow-wrap: anywhere;
+		${wrapCodeText}
 		text-wrap: balance;
 	}
 
@@ -453,12 +455,7 @@ export const fileFieldStyles = css`
 
 	.file-field__full-name,
 	.file-field__status {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		clip-path: inset(50%);
-		white-space: nowrap;
-		overflow: hidden;
+		${visuallyHidden}
 	}
 
 	.file-field__name-start {

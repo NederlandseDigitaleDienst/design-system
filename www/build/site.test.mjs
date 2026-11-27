@@ -6,6 +6,8 @@ import { buildPages } from './site.js';
 import { collectComponents, repoRoot, storyName } from './sources.js';
 import { controlFor } from './attribute-values.js';
 import { headingId, renderMarkdown } from './markdown.js';
+import { WCAG } from '../../lint/wcag.js';
+import { WCAG_NL } from './wcag.js';
 
 function storyFiles(dir, found = []) {
 	for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -63,14 +65,14 @@ test('the landing page is the one written by hand, with the head every page has'
 });
 
 test('every page behind the landing page is an application: a toolbar around a split view, without the bar of the landing page', () => {
-	for (const path of ['componenten/button/index.html', 'patronen/form/index.html', 'richtlijnen/index.html']) {
+	for (const path of ['componenten/button/index.html', 'patronen/form/index.html', 'handleidingen/richtlijnen/index.html']) {
 		assert.match(pages[path], /<nldd-bar-split-view>[^]*<nldd-navigation-split-view slot="main">/, path);
 		assert.match(pages[path], /data-site-home\s*>\s*<nldd-icon-button\s+icon="chevron-left"\s+text="Home"\s+href="\/"/, path);
 		assert.match(pages[path], /text="Documentatie"\s+heading-level="2"\s+back-text="Home"\s+back-href="\/"/, path);
 		assert.match(pages[path], /<nldd-toolbar-title\s+slot="start"\s+text="NLDD Designsysteem"\s+min-width="0"/, path);
 		assert.match(pages[path], /<nldd-page[^]*?slot="footer"[^]*?<nldd-link-group accessible-label="Over deze site" size="sm">/, path);
 		assert.doesNotMatch(pages[path], /nldd-top-navigation-bar|nldd-page-footer|nldd-breadcrumbs/, path);
-		for (const href of ['/componenten/', '/patronen/', '/themas/', '/toegankelijkheid/', '/changelog/']) {
+		for (const href of ['/componenten/', '/patronen/', '/handleidingen/themas/', '/handleidingen/toegankelijkheid/', '/changelog/']) {
 			assert.ok(pages[path].includes(`href="${href}"`), `${path} mist ${href}`);
 		}
 	}
@@ -176,6 +178,82 @@ test('a pattern has a tab with the lint rules that point at it', () => {
 	assert.match(pattern, /href="\/patronen\/form\/"\s+text="Patroon"\s+current/);
 	assert.doesNotMatch(pattern, /id="regels"/);
 	assert.match(rules, /text="Lintregels"\s+current[^]*id="regels"[^]*<h2>Lintregels<\/h2>[^]*text="form-actions-needs-button-group"/);
+});
+
+test('a rule has a page of its own, which every list of rules links to', () => {
+	const rule = pages['lintregels/link-needs-href/index.html'];
+	assert.match(rule, /<h1>link-needs-href<\/h1>/);
+	// Back to its group, also beside the list of groups.
+	assert.match(rule, /back-text="structure"\s+back-href="\/lintregels\/structure\/"\s+data-site-back-always/);
+	// The message is English on a Dutch page.
+	assert.match(rule, /<p lang="en">Give it an <code>href<\/code>/);
+	assert.match(rule, /WCAG22-nl\/#keyboard"[^>]*>2\.1\.1 Toetsenbord<\/a> \(niveau A\)/);
+	assert.match(rule, /<h2 id="goed">Goed<\/h2>[^]*<h2 id="fout">Fout<\/h2>[^]*<h2 id="onzeker">Onzeker<\/h2>[^]*<h2 id="de-regel">De regel<\/h2>/);
+	assert.match(rule, /blob\/main\/src\/rules\/structure\/link-needs-href\.yaml/);
+	assert.match(pages['componenten/link/lintregels/index.html'], /<nldd-list-item href="\/lintregels\/link-needs-href\/">/);
+	// A rule only the running page can tell has no markup to show.
+	assert.doesNotMatch(pages['lintregels/sheet-needs-name/index.html'], /<h2 id="goed">/);
+});
+
+test('the examples tab starts with a link to each example, which has its anchor on its title', () => {
+	const page = pages['componenten/button/voorbeelden/index.html'];
+	assert.match(page, /<nldd-link-group accessible-label="Voorbeelden">\s*<nldd-link href="#horizontale-uitlijning"/);
+	assert.match(page, /<nldd-title\s+id="horizontale-uitlijning"/);
+	// No container stands between the section and what is in it.
+	assert.doesNotMatch(page.slice(page.lastIndexOf('<nldd-simple-section grow>')), /<nldd-container/);
+});
+
+test('the icon gallery fills the section of its page, with the text as its header', () => {
+	const page = pages['iconen/index.html'];
+	assert.match(page, /<\/nldd-top-title-bar>\s*<nldd-sidebar-section\s+sidebar-label="Filters"/);
+	assert.match(page, /<nldd-rich-text slot="header">[^]*<\/nldd-rich-text>\s*<site-stage [^>]*unwrap/);
+});
+
+test('the lint rules are a section of their own, with the groups as its list', () => {
+	const groups = pages['lintregels/index.html'];
+	assert.match(groups, /accessible-label="Groepen van regels"[^]*href="\/lintregels\/api\/"[^]*href="\/lintregels\/pure\/"/);
+	assert.match(groups, /data-site-opens-first/);
+	const group = pages['lintregels/structure/index.html'];
+	assert.match(group, /href="\/lintregels\/structure\/"\s+current/);
+	assert.match(group, /<nldd-list-item href="\/lintregels\/link-needs-href\/">/);
+	// The rule keeps its group chosen in the list.
+	assert.match(pages['lintregels/link-needs-href/index.html'], /href="\/lintregels\/structure\/"\s+current/);
+	// The old address sends the reader on.
+	assert.match(pages['linter/link-needs-href/index.html'], /http-equiv="refresh" content="0; url=\/lintregels\/link-needs-href\/"/);
+	// A guide that moved under /handleidingen/ sends the reader on, to the same heading.
+	assert.match(pages['richtlijnen/index.html'], /location\.replace\("\/handleidingen\/richtlijnen\/" \+ location\.hash\)/);
+	assert.match(pages['aan-de-slag/ai-assistent/index.html'], /url=\/handleidingen\/ai-assistent\/"/);
+	// The guide about the linter ends with the way to every rule.
+	assert.match(pages['handleidingen/linter/index.html'], /href="\/lintregels\/"/);
+});
+
+test('every success criterion the linter knows has its Dutch name and an anchor of its own', () => {
+	assert.deepEqual(Object.keys(WCAG_NL), Object.keys(WCAG));
+	const anchors = Object.values(WCAG_NL).map((criterion) => criterion.anchor);
+	assert.equal(new Set(anchors).size, anchors.length);
+});
+
+test('the accessibility page lists the rules by success criterion, from every group', () => {
+	const page = pages['handleidingen/toegankelijkheid/index.html'];
+	assert.match(page, /<h2>Lintregels per succescriterium<\/h2>/);
+	// A rule of `copy` under the criterion it guards.
+	const sheet = page.slice(page.indexOf('<nldd-sheet\n\tid="lintregels-per-succescriterium-2-4-4"'));
+	assert.match(sheet, /text="2\.4\.4 Linkdoel \(in context\)"[^]*?href="\/lintregels\/link-no-vague-text\/"/);
+	// The rules of `a11y` without a criterion are still there.
+	assert.match(page, /id="lintregels-per-succescriterium-goede-praktijk"[^]*href="\/lintregels\/list-needs-name\/"/);
+});
+
+test('the accessibility page shows who does what as a list per principle, with a tag per criterion', () => {
+	const page = pages['handleidingen/toegankelijkheid/index.html'];
+	for (const principle of ['Waarneembaar', 'Bedienbaar', 'Begrijpelijk', 'Robuust']) {
+		assert.match(page, new RegExp(`accessible-label="Succescriteria van het principe ${principle}"`));
+	}
+	assert.match(page, /text="2\.4\.2 Paginatitel \(A\)"\s+supporting-text="[^"]*\*\*&lt;title&gt;\*\*/);
+	assert.match(page, /color="success"\s+text="Systeem"/);
+	// A cell with a link keeps it, as a component in a paragraph of its own.
+	assert.match(page, /<p slot="supporting-text">[^<]*<nldd-link href="#bekende-afwijkingen" text="Bekende afwijkingen"><\/nldd-link>/);
+	// The table of ATAG stays a table.
+	assert.equal(page.match(/<table/g).length, 1);
 });
 
 test('a page under a deploy base links within that base', () => {
@@ -287,7 +365,7 @@ test('the skills the site names are the skills the plugin ships', async () => {
 });
 
 test('the getting-started pages show how to install the skills', () => {
-	for (const path of ['aan-de-slag/index.html', 'aan-de-slag/ai-assistent/index.html']) {
+	for (const path of ['handleidingen/aan-de-slag/index.html', 'handleidingen/ai-assistent/index.html']) {
 		assert.match(pages[path], /\/plugin install nldd-design-system@nldd/, path);
 		assert.match(pages[path], /nldd-design-migrate/, path);
 	}
