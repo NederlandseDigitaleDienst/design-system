@@ -171,6 +171,7 @@ export const enUS: Record<TranslationKey, string> = {
 	'components.file-field.required-error-text': 'A file is required',
 	'components.file-field.accepted-types-text': 'Accepted: {types}',
 	'components.form-field.optional-label': 'Optional',
+	'components.form-field.optional-accessible-label': '{label}, optional',
 	'components.slider.start-value-label': 'Minimum',
 	'components.slider.end-value-label': 'Maximum',
 	'components.swatch-picker-item.lintblauw-text': 'Ribbon blue',

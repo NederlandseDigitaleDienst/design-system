@@ -9,6 +9,26 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **`nldd-form-field` names and describes its input with the autoloader too.** A field that was defined before its input never wired that input up: no name, no error on screen. See Fixed.
+
+### Added
+
+- **`help-text` on `nldd-form-field`, for plain help text below the input.** It supports `**bold**`, as `label` does, and a screen reader reads it as part of the description of the input. For help text with a link, keep using `nldd-form-field-help-text`.
+- **A screen reader hears what the field shows around the label.** The "Optioneel" badge is now part of the accessible name of the input ("Tussenvoegsel, optioneel"), and `supporting-label` is now part of its description, after what is wrong and before the help text. Both were on screen only. The name comes from the new translation key `components.form-field.optional-accessible-label` (`{label}, optioneel`).
+
+### Changed
+
+- **Help text in `nldd-form-field` has a line height of 1.5** (`snug`) instead of 1.25, as body text that can run to a paragraph should.
+
+### Fixed
+
+- **`nldd-form-field` finds an input that is defined after the field, as with the autoloader (#512).** It looked once, found an element that was not an input yet, and never looked again. The label did not reach the input as its name, and the `nldd-validation-list` got no control, so an error with `invalid` and `unmet` did not show.
+- **`nldd-form-field` finds an input that appears later inside a wrapper**, such as a `v-if` in a `div`. It only watched its direct children.
+- **A `nldd-validation-list` with `for` describes the control it names (#415).** It described the first input of the field, so the error of an "Anders" text field beside a radio group was read out on the radio group, and the text field had none.
+- **`nldd-search-field` keeps the `accessible-description` of the app while it shows its keyboard shortcut.** The shortcut replaced it.
+
 ## [0.29.3](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.29.2...v0.29.3) (2026-11-26)
 
 ### Highlights

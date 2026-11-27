@@ -38,6 +38,11 @@ export function formFieldTemplate(component: NLDDFormField): TemplateResult {
 			${headerEl}
 			<div class="form-field__main">
 				<slot></slot>
+				${component.helpText ? html`
+					<p class="form-field__help-text">
+						${renderBold(component.helpText)}
+					</p>
+				` : nothing}
 				<slot name="help"></slot>
 			</div>
 		</div>

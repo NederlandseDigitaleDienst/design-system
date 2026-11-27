@@ -440,7 +440,7 @@ above, below, only, hideAbove, hideBelow, hideOn
 
 [5. Main content]
 text, shortText, supportingText, shortSupportingText, overline, label,
-supportingLabel, optional, placeholder, number, details, hint, headingLevel,
+supportingLabel, helpText, optional, placeholder, number, details, hint, headingLevel,
 icon, startIcon, endIcon, selectedIcon, containerColor,
 initials, src, srcset, sizes, alt, image, imageSrcset, avatarSrc,
 avatarSrcset, avatarAlt, mediaSrc, mediaSrcset, mediaSizes, mediaAlt,

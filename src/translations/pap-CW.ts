@@ -176,6 +176,7 @@ export const papCW: Record<TranslationKey, string> = {
 	'components.file-field.required-error-text': 'Un archivo ta obligatorio',
 	'components.file-field.accepted-types-text': 'Permití: {types}',
 	'components.form-field.optional-label': 'Opshonal',
+	'components.form-field.optional-accessible-label': '{label}, opshonal',
 	'components.number-field.decrement-action': 'Baha',
 	'components.number-field.increment-action': 'Subi',
 	'components.number-field.to-adjust-value-action': 'Ahustá balor',

@@ -648,6 +648,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -1443,6 +1456,19 @@
               },
               "default": "[]",
               "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -9072,7 +9098,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A field around one input: its label, supporting label, optional badge, validation and help text. It finds the input among its children, hands it the label as its accessible name and gives it an id, so you write no `for` or `id` yourself. The input is the first one it finds, leaving out what sits in an nldd-toolbar inside the field: a toolbar works on the field, such as the formatting bar above an nldd-text-editor, and is never the field itself. A native `for` cannot cross a shadow boundary, so a click on the label focuses the input from script. Mark the optional fields with `optional`, not the required ones; the design guidelines say why. Put the requirements on a value in an nldd-validation-list inside the same field. What only your server knows, such as a password found in a breach, the app names in `unmet` on the input itself: see nldd-validation-list. The field hands the list its input and puts the list in the input's accessible description, before the help text.",
+          "description": "A field around one input: its label, supporting label, optional badge, validation and help text. It finds the input among its children, hands it the label as its accessible name and gives it an id, so you write no `for` or `id` yourself. An input that is defined later, as the autoloader does, or that appears later inside a wrapper, is found when it arrives. The input is the first one it finds, leaving out what sits in an nldd-toolbar inside the field: a toolbar works on the field, such as the formatting bar above an nldd-text-editor, and is never the field itself. A native `for` cannot cross a shadow boundary, so a click on the label focuses the input from script. Mark the optional fields with `optional`, not the required ones; the design guidelines say why. Put the requirements on a value in an nldd-validation-list inside the same field. What only your server knows, such as a password found in a breach, the app names in `unmet` on the input itself: see nldd-validation-list. The field hands the list its input and puts the list in the input's accessible description, before the help text. A list with a `for` of its own describes the control it names instead. The accessible name is the label, followed by \"optioneel\" when the field is `optional`. The accessible description is what is wrong first, then the supporting label, then the help text.",
           "name": "NLDDFormField",
           "members": [
             {
@@ -9105,6 +9131,16 @@
               "default": "''",
               "description": "Short supporting text shown below the label. Same typography as the\noptional badge. Use nldd-form-field-help-text for longer descriptive text.",
               "attribute": "supporting-label"
+            },
+            {
+              "kind": "field",
+              "name": "helpText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Plain help text below the input. For text with a link, use nldd-form-field-help-text.",
+              "attribute": "help-text"
             },
             {
               "kind": "field",
@@ -9158,8 +9194,17 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Short supporting text below the label. Same typography as optional badge. Supports **bold** markdown syntax.",
+              "description": "Short supporting text below the label. Same typography as optional badge. Supports **bold** markdown syntax. Read as part of the accessible description of the input.",
               "fieldName": "supportingLabel"
+            },
+            {
+              "name": "help-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Help text below the input, as plain text. Supports **bold** markdown syntax. Read as part of the accessible description of the input, after the validation and the supporting label. For a link in the help text, use nldd-form-field-help-text.",
+              "fieldName": "helpText"
             },
             {
               "name": "optional",
@@ -9167,7 +9212,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Shows an optional badge next to the label. Its text is the translation key `components.form-field.optional-label` (\"Optioneel\").",
+              "description": "Shows an optional badge next to the label, and adds it to the accessible name of the input. Its text is the translation key `components.form-field.optional-label` (\"Optioneel\"); the name is `components.form-field.optional-accessible-label` (\"{label}, optioneel\").",
               "fieldName": "optional"
             },
             {
@@ -11024,6 +11069,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -11861,6 +11919,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -12414,6 +12485,19 @@
               },
               "default": "[]",
               "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -13509,6 +13593,19 @@
               },
               "default": "[]",
               "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -14628,6 +14725,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -15400,6 +15510,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -16053,6 +16176,19 @@
               },
               "default": "[]",
               "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -16959,6 +17095,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -17701,6 +17850,19 @@
               },
               "default": "[]",
               "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -18576,6 +18738,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -19384,6 +19559,19 @@
               },
               "default": "[]",
               "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -20204,6 +20392,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -20935,6 +21136,19 @@
               },
               "default": "[]",
               "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -21775,6 +21989,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -22471,6 +22698,20 @@
             },
             {
               "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "The shortcut hint, read after the help and error texts of an\nnldd-form-field and after the description the app gives.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "formValue",
               "return": {
                 "type": {
@@ -22517,6 +22758,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -22554,20 +22808,6 @@
                 }
               },
               "description": "The element the description belongs to. Override where it differs.\n\nPublic rather than protected because TypeScript refuses to emit a\ndeclaration for an anonymous class with protected members, and a mixin\nreturns exactly that. Same reason `formValue()` is public in\nFormAssociated.",
-              "inheritedFrom": {
-                "name": "DescribedBy",
-                "module": "src/utilities/described-by-mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "ownDescriptions",
-              "return": {
-                "type": {
-                  "text": "readonly Element[]"
-                }
-              },
-              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -24243,6 +24483,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -24959,6 +25212,19 @@
               },
               "default": "[]",
               "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -26372,6 +26638,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -26987,6 +27266,19 @@
               },
               "default": "[]",
               "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -31032,6 +31324,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -32311,6 +32616,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -33491,6 +33809,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -34252,6 +34583,19 @@
               },
               "default": "[]",
               "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -35360,6 +35704,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -36201,6 +36558,19 @@
               },
               "default": "[]",
               "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -49698,6 +50068,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -55718,6 +56101,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -55761,12 +56157,47 @@
             },
             {
               "kind": "field",
+              "name": "_fieldTextElements",
+              "type": {
+                "text": "HTMLElement[]"
+              },
+              "default": "[]",
+              "description": "The hidden elements that carry `describedByTexts`. Public for the same\nreason as `describedTarget()`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_appliedDescription",
               "type": {
                 "text": "string | null"
               },
               "default": "null",
               "description": "The aria-description this element wrote on itself, so it only takes\nback its own.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_fieldDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "onSelf",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "The texts nldd-form-field hands over, as hidden elements in this shadow\nroot for the control to point at. Public for the same reason as\n`describedTarget()`.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -55788,7 +56219,7 @@
                   }
                 }
               ],
-              "description": "What the app gives as the description: the elements that\n`accessible-described-by` names, or else the text of\n`accessible-description`. Public for the same reason as\n`describedTarget()`.",
+              "description": "What the app gives as the description: the elements that\n`accessible-described-by` names, or else the text of\n`accessible-description`. Public for the same reason as\n`describedTarget()`.\n\nA control that is this element cannot point into its own shadow root,\nso it says the texts of nldd-form-field here too, before its own.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -56682,6 +57113,15 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this."
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -56713,12 +57153,39 @@
             },
             {
               "kind": "field",
+              "name": "_fieldTextElements",
+              "type": {
+                "text": "HTMLElement[]"
+              },
+              "default": "[]",
+              "description": "The hidden elements that carry `describedByTexts`. Public for the same\nreason as `describedTarget()`."
+            },
+            {
+              "kind": "field",
               "name": "_appliedDescription",
               "type": {
                 "text": "string | null"
               },
               "default": "null",
               "description": "The aria-description this element wrote on itself, so it only takes\nback its own."
+            },
+            {
+              "kind": "method",
+              "name": "_fieldDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "onSelf",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "The texts nldd-form-field hands over, as hidden elements in this shadow\nroot for the control to point at. Public for the same reason as\n`describedTarget()`."
             },
             {
               "kind": "method",
@@ -56736,7 +57203,7 @@
                   }
                 }
               ],
-              "description": "What the app gives as the description: the elements that\n`accessible-described-by` names, or else the text of\n`accessible-description`. Public for the same reason as\n`describedTarget()`."
+              "description": "What the app gives as the description: the elements that\n`accessible-described-by` names, or else the text of\n`accessible-description`. Public for the same reason as\n`describedTarget()`.\n\nA control that is this element cannot point into its own shadow root,\nso it says the texts of nldd-form-field here too, before its own."
             },
             {
               "kind": "method",

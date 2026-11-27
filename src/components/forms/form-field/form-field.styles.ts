@@ -184,6 +184,19 @@ export const formFieldStyles = css`
 	}
 
 
+	/* # Help text */
+
+	/* Snug and not tight, as nldd-form-field-help-text: help text can run to a
+	   paragraph, and body text takes a line height of 1.5. */
+	.form-field__help-text {
+		margin: var(--_form-field-description-gap) 0 0;
+		--context-content-color: var(--semantics-content-color);
+		color: var(--semantics-content-color);
+		font: var(--primitives-font-body-sm-regular-snug);
+		${wrapBodyText}
+	}
+
+
 `;
 
 export const formFieldHelpTextStyles = css`
@@ -220,7 +233,7 @@ export const formFieldHelpTextStyles = css`
 		margin: var(--primitives-space-4) 0 0;
 		--context-content-color: var(--semantics-content-color);
 		color: var(--semantics-content-color);
-		font: var(--primitives-font-body-sm-regular-tight);
+		font: var(--primitives-font-body-sm-regular-snug);
 		${wrapBodyText}
 	}
 

@@ -20,6 +20,7 @@ export default {
 		labelAlignment: 'top',
 		label: 'Label',
 		supportingLabel: '',
+		helpText: '',
 		optional: false,
 	},
 	argTypes: {
@@ -37,7 +38,12 @@ export default {
 		supportingLabel: {
 			name: 'supporting-label',
 			control: 'text',
-			description: 'Korte ondersteunende tekst onder het label. Voor een langere uitleg is er `nldd-form-field-help-text`.',
+			description: 'Korte ondersteunende tekst onder het label. Een schermlezer leest hem voor als beschrijving van de invoer.',
+		},
+		helpText: {
+			name: 'help-text',
+			control: 'text',
+			description: 'Hulptekst onder de invoer, als platte tekst. Voor een hulptekst met een link is er `nldd-form-field-help-text`.',
 		},
 		optional: {
 			control: 'boolean',
@@ -47,11 +53,12 @@ export default {
 	},
 };
 
-const Template = ({ labelAlignment, label, supportingLabel, optional }: Record<string, any>) => html`
+const Template = ({ labelAlignment, label, supportingLabel, helpText, optional }: Record<string, any>) => html`
 	<nldd-form-field
 		label-alignment=${labelAlignment}
 		label=${label}
 		supporting-label=${supportingLabel}
+		help-text=${helpText}
 		?optional=${optional}
 	>
 		<nldd-text-field></nldd-text-field>
@@ -72,6 +79,18 @@ export const MetSupportingLabel = () => html`
 `;
 
 export const MetHulptekst = () => html`
+	<nldd-form-field
+		label="Gebruikersnaam"
+		help-text="Dit is de naam die anderen zien. Je kunt hem later nog wijzigen."
+	>
+		<nldd-text-field></nldd-text-field>
+	</nldd-form-field>
+`;
+
+/**
+ * Staat er een link in de hulptekst, gebruik dan `nldd-form-field-help-text`.
+ */
+export const MetHulptekstEnLink = () => html`
 	<nldd-form-field label="E-mailadres">
 		<nldd-form-field-help-text>
 			Wij delen uw e-mailadres nooit. <a href="/privacy">Privacybeleid</a>.
