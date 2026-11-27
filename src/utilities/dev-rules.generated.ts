@@ -277,6 +277,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-form-field-help-text"
 	},
 	{
+		"id": "form-field-max-one-input",
+		"message": "nldd-form-field holds more than one control, and names and describes only the first. Make it a `group` when the controls answer one question, or give each question a field of its own.",
+		"context": "nldd-form-field:not([group]):state(multiple-inputs)"
+	},
+	{
 		"id": "form-field-needs-input",
 		"message": "nldd-form-field holds no form input, so the label cannot name anything or move focus into it.",
 		"context": "nldd-form-field[label]:not([label=\"\"]):has(> :not([slot=\"help-text\"]))",
@@ -295,8 +300,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "form-field-validation-no-multiple-controls",
-		"message": "More than one control, and the validation list has rules that read a value: it reads the first one. Set `for` on the list if it should read another.",
-		"context": "nldd-form-field:state(list-reads-first-control)"
+		"message": "A validation list without `for` in a group field has rules that read a value: it reads the first control. Set `for` on the list to the control it is about.",
+		"context": "nldd-form-field[group]:state(list-reads-first-control)"
 	},
 	{
 		"id": "form-section-needs-name",

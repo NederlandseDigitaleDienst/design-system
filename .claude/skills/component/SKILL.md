@@ -452,7 +452,7 @@ logoTitle, logoSubtitle, logoSupportingText1, logoSupportingText2, logoHref,
 websiteTitle, websiteHref, sidebarLabel, backText, backHref, dismissText
 
 [6. Key behavior]
-control, button, checkbox, radio, navigation, embedded, expandable,
+control, group, button, checkbox, radio, navigation, embedded, expandable,
 disclosure, popupType, haspopup, popovertarget, interestfor, controls,
 selectable, reorderable, exclusive, collapsible
 

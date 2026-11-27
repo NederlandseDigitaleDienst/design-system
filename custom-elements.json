@@ -9098,7 +9098,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A field around one input: its label, supporting label, optional badge, validation and help text. It finds the input among its children, hands it the label as its accessible name and gives it an id, so you write no `for` or `id` yourself. An input that is defined later, as the autoloader does, or that appears later inside a wrapper, is found when it arrives. The input is the first one it finds, leaving out what sits in an nldd-toolbar inside the field: a toolbar works on the field, such as the formatting bar above an nldd-text-editor, and is never the field itself. A native `for` cannot cross a shadow boundary, so a click on the label focuses the input from script. Mark the optional fields with `optional`, not the required ones; the design guidelines say why. Put the requirements on a value in an nldd-validation-list inside the same field. What only your server knows, such as a password found in a breach, the app names in `unmet` on the input itself: see nldd-validation-list. The field hands the list its input and puts the list in the input's accessible description, before the help text. A list with a `for` of its own describes the control it names instead. Plain help text goes in `help-text`. Help text with more in it, such as a link, goes in an nldd-text in the `help-text` slot. The field gives that nldd-text its size, color and weight, so every help text looks the same. The accessible name is the label, followed by \"optioneel\" when the field is `optional`. The accessible description is what is wrong first, then the help text in the slot, then the supporting label and `help-text`. Those last two are text in the field itself, and a control that carries its own role, such as a radio group or a native input, can only take text as `aria-description`: a browser reads that only while nothing else describes the control, so not while an error shows.",
+          "description": "A field around one input: its label, supporting label, optional badge, validation and help text. It finds the input among its children, hands it the label as its accessible name and gives it an id, so you write no `for` or `id` yourself. An input that is defined later, as the autoloader does, or that appears later inside a wrapper, is found when it arrives. The input is the first one it finds, leaving out what sits in an nldd-toolbar inside the field: a toolbar works on the field, such as the formatting bar above an nldd-text-editor, and is never the field itself. A native `for` cannot cross a shadow boundary, so a click on the label focuses the input from script. Mark the optional fields with `optional`, not the required ones; the design guidelines say why. Put the requirements on a value in an nldd-validation-list inside the same field. What only your server knows, such as a password found in a breach, the app names in `unmet` on the input itself: see nldd-validation-list. The field hands the list its input and puts the list in the input's accessible description, before the help text. A list with a `for` of its own describes the control it names instead. Plain help text goes in `help-text`. Help text with more in it, such as a link, goes in an nldd-text in the `help-text` slot. The field gives that nldd-text its size, color and weight, so every help text looks the same. A field is about one control. A question that takes more than one, such as a date in three fields or a radio group with an \"Anders\" text field, is a `group`: the field is then the group, named by its label, and describes itself rather than its first control. More than one question are more fields. The accessible name is the label, followed by \"optioneel\" when the field is `optional`. The accessible description is what is wrong first, then the help text in the slot, then the supporting label and `help-text`. Those last two are text in the field itself, and a control that carries its own role, such as a radio group or a native input, can only take text as `aria-description`: a browser reads that only while nothing else describes the control, so not while an error shows.",
           "name": "NLDDFormField",
           "members": [
             {
@@ -9151,6 +9151,17 @@
               "default": "false",
               "description": "When true an \"Optional\" badge is shown next to the label.\nRequired fields are intentionally left unmarked per design spec.\n\nNote: nldd-form-field does not auto-propagate `required` or `aria-required`\nto the slotted input. If the field is required, set `required` directly\non the slotted input element so screen readers announce it correctly.",
               "attribute": "optional"
+            },
+            {
+              "kind": "field",
+              "name": "group",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the field a group around more than one control, named by the label.\n\nThrough its own role and not a `<fieldset>`: a legend in a shadow root\ndoes not name the controls in its slot for NVDA in Firefox, which is why\nnldd-form-section rendered its fieldset in the light DOM. A role and a\nname on the host are the same thing to assistive software, and reach.",
+              "attribute": "group",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -9214,6 +9225,15 @@
               "default": "false",
               "description": "Shows an optional badge next to the label, and adds it to the accessible name of the input. Its text is the translation key `components.form-field.optional-label` (\"Optioneel\"); the name is `components.form-field.optional-accessible-label` (\"{label}, optioneel\").",
               "fieldName": "optional"
+            },
+            {
+              "name": "group",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "One question answered with more than one control, such as a postcode and a house number. The field is then a group named by the label, as a fieldset with a legend is, and each control names itself. A radio group or a checkbox group is a group of its own already and needs no `group`.",
+              "fieldName": "group"
             },
             {
               "name": "translations",

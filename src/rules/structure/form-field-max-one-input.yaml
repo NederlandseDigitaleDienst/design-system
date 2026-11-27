@@ -1,0 +1,5 @@
+severity: error
+runtime: true
+context: 'nldd-form-field:not([group]):state(multiple-inputs)'
+message: 'nldd-form-field holds more than one control, and names and describes only the first. Make it a `group` when the controls answer one question, or give each question a field of its own.'
+see: componenten/form-field

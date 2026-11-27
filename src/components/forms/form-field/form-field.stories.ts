@@ -4,6 +4,9 @@ import '../validation-list/validation-list.js';
 import '../form/form.js';
 import '../form-actions/form-actions.js';
 import '../../inputs/text-field/text-field.js';
+import '../../inputs/radio-button-group/radio-button-group.js';
+import '../../inputs/radio-button-field/radio-button-field.js';
+import '../../layout/container/container.js';
 import '../../content/text/text.js';
 import '../../actions/button/button.js';
 import '../../actions/button-group/button-group.js';
@@ -139,6 +142,50 @@ export const MeerdereFouten = () => html`
 		<nldd-text slot="help-text">
 			<p>We gebruiken dit alleen om je aan te melden. <a href="/help">Hoe we je wachtwoord bewaren</a>.</p>
 		</nldd-text>
+	</nldd-form-field>
+`;
+
+/**
+ * Eén vraag met meer dan één invoerveld is een `group`. Het veld is dan zelf
+ * de groep, met het label als naam, zoals een fieldset met een legend. Elk
+ * invoerveld noemt zichzelf met `accessible-label`. Een keuzegroep met een
+ * "Anders"-veld erbij is ook zo'n vraag.
+ */
+export const MetGroup = () => html`
+	<nldd-form-field
+		label="Adres"
+		group
+		help-text="Het adres waar je staat ingeschreven."
+	>
+		<nldd-container
+			layout="row"
+			gap="8"
+		>
+			<nldd-text-field accessible-label="Postcode"></nldd-text-field>
+			<nldd-text-field accessible-label="Huisnummer"></nldd-text-field>
+		</nldd-container>
+	</nldd-form-field>
+`;
+
+/**
+ * Een keuzegroep is zelf al een groep. Zonder `group` geeft het veld zijn label
+ * aan de keuzegroep. Met een "Anders"-veld erbij zijn het twee controls voor
+ * één vraag, en dan is het veld een `group`: dan noemt elk control zichzelf, de
+ * keuzegroep ook.
+ */
+export const KeuzegroepMetAnders = () => html`
+	<nldd-form-field
+		label="Rol"
+		group
+	>
+		<nldd-radio-button-group
+			accessible-label="Kies je rol"
+			name="rol"
+		>
+			<nldd-radio-button-field value="consultant" label="Consultant"></nldd-radio-button-field>
+			<nldd-radio-button-field value="anders" label="Anders" checked></nldd-radio-button-field>
+		</nldd-radio-button-group>
+		<nldd-text-field accessible-label="Andere rol"></nldd-text-field>
 	</nldd-form-field>
 `;
 

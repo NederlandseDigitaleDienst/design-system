@@ -1,4 +1,4 @@
 severity: warn
 runtime: true
-context: 'nldd-form-field:state(list-reads-first-control)'
-message: 'More than one control, and the validation list has rules that read a value: it reads the first one. Set `for` on the list if it should read another.'
+context: 'nldd-form-field[group]:state(list-reads-first-control)'
+message: 'A validation list without `for` in a group field has rules that read a value: it reads the first control. Set `for` on the list to the control it is about.'

@@ -1232,14 +1232,16 @@ A layout wrapper for the action buttons at the bottom of a form (typically a sub
 
 ### `<nldd-form-field>`
 
-A field around one input: its label, supporting label, optional badge, validation and help text. It finds the input among its children, hands it the label as its accessible name and gives it an id, so you write no `for` or `id` yourself. An input that is defined later, as the autoloader does, or that appears later inside a wrapper, is found when it arrives. The input is the first one it finds, leaving out what sits in an nldd-toolbar inside the field: a toolbar works on the field, such as the formatting bar above an nldd-text-editor, and is never the field itself. A native `for` cannot cross a shadow boundary, so a click on the label focuses the input from script. Mark the optional fields with `optional`, not the required ones; the design guidelines say why. Put the requirements on a value in an nldd-validation-list inside the same field. What only your server knows, such as a password found in a breach, the app names in `unmet` on the input itself: see nldd-validation-list. The field hands the list its input and puts the list in the input's accessible description, before the help text. A list with a `for` of its own describes the control it names instead. Plain help text goes in `help-text`. Help text with more in it, such as a link, goes in an nldd-text in the `help-text` slot. The field gives that nldd-text its size, color and weight, so every help text looks the same. The accessible name is the label, followed by "optioneel" when the field is `optional`. The accessible description is what is wrong first, then the help text in the slot, then the supporting label and `help-text`. Those last two are text in the field itself, and a control that carries its own role, such as a radio group or a native input, can only take text as `aria-description`: a browser reads that only while nothing else describes the control, so not while an error shows.
+A field around one input: its label, supporting label, optional badge, validation and help text. It finds the input among its children, hands it the label as its accessible name and gives it an id, so you write no `for` or `id` yourself. An input that is defined later, as the autoloader does, or that appears later inside a wrapper, is found when it arrives. The input is the first one it finds, leaving out what sits in an nldd-toolbar inside the field: a toolbar works on the field, such as the formatting bar above an nldd-text-editor, and is never the field itself. A native `for` cannot cross a shadow boundary, so a click on the label focuses the input from script. Mark the optional fields with `optional`, not the required ones; the design guidelines say why. Put the requirements on a value in an nldd-validation-list inside the same field. What only your server knows, such as a password found in a breach, the app names in `unmet` on the input itself: see nldd-validation-list. The field hands the list its input and puts the list in the input's accessible description, before the help text. A list with a `for` of its own describes the control it names instead. Plain help text goes in `help-text`. Help text with more in it, such as a link, goes in an nldd-text in the `help-text` slot. The field gives that nldd-text its size, color and weight, so every help text looks the same. A field is about one control. A question that takes more than one, such as a date in three fields or a radio group with an "Anders" text field, is a `group`: the field is then the group, named by its label, and describes itself rather than its first control. More than one question are more fields. The accessible name is the label, followed by "optioneel" when the field is `optional`. The accessible description is what is wrong first, then the help text in the slot, then the supporting label and `help-text`. Those last two are text in the field itself, and a control that carries its own role, such as a radio group or a native input, can only take text as `aria-description`: a browser reads that only while nothing else describes the control, so not while an error shows.
 
 **Keywords:** veld, label.
 
 **Rules** (`nldd lint`)
 
+- `form-field-group-no-single-group` (hint): This control is a group of its own already. Without `group`, the field names it; with `group` around it, a screen reader hears a group in a group.
 - `form-field-help-text-needs-text`: The `help-text` slot of nldd-form-field takes an nldd-text: the field gives it the look of help text, and it styles a link in it.
 - `form-field-help-text-style-no-effect` (hint): nldd-form-field sets `size`, `color` and `weight` on its help text, so a value of your own does nothing.
+- `form-field-max-one-input`: nldd-form-field holds more than one control, and names and describes only the first. Make it a `group` when the controls answer one question, or give each question a field of its own.
 - `form-field-needs-input`: nldd-form-field holds no form input, so the label cannot name anything or move focus into it.
 - `form-field-no-manual-for-id` (hint): Drop `for`: nldd-form-field finds the input among its children and connects the list itself.
 - `form-field-no-marker-in-label` (hint): Set `optional` on the fields that may stay empty, which shows the badge, and write no marker in the label.
@@ -1247,7 +1249,7 @@ A field around one input: its label, supporting label, optional badge, validatio
 - `form-field-no-optional-and-required`: Drop `required`, or `optional`: the field cannot be both.
 - `form-field-no-own-label-alignment` (hint): Set `label-alignment` on nldd-form, which passes it to every field and to the actions, so the buttons line up with the fields.
 - `form-field-optional-label-no-effect`: `optional-label` is gone. The text of the optional badge is the translation key `components.form-field.optional-label` now. Set it in `translations` or with `setTranslations()`.
-- `form-field-validation-no-multiple-controls`: More than one control, and the validation list has rules that read a value: it reads the first one. Set `for` on the list if it should read another.
+- `form-field-validation-no-multiple-controls`: A validation list without `for` in a group field has rules that read a value: it reads the first control. Set `for` on the list to the control it is about.
 - `label-no-all-caps` (hint): Write this label in sentence case: capitals weaken the word shape and make scanning harder.
 - `text-field-needs-type` (hint): Set the `type` that fits, `email` or `tel`, which brings the right keyboard and validation.
 
@@ -1260,6 +1262,7 @@ A field around one input: its label, supporting label, optional badge, validatio
 | `supporting-label` | `string` | Short supporting text below the label. Same typography as optional badge. Supports **bold** markdown syntax. Read as part of the accessible description of the input. |
 | `help-text` | `string` | Help text below the input, as plain text. Supports **bold** markdown syntax. Read as part of the accessible description of the input, after the validation and the supporting label. Help text with a link goes in the `help-text` slot, which takes its place. |
 | `optional` | `boolean` | Shows an optional badge next to the label, and adds it to the accessible name of the input. Its text is the translation key `components.form-field.optional-label` ("Optioneel"); the name is `components.form-field.optional-accessible-label` ("{label}, optioneel"). |
+| `group` | `boolean` | One question answered with more than one control, such as a postcode and a house number. The field is then a group named by the label, as a fieldset with a legend is, and each control names itself. A radio group or a checkbox group is a group of its own already and needs no `group`. |
 | `translations` | `object` | Override translation keys, such as the text of the optional badge; unset keys fall back to Dutch |
 
 **Slots**
@@ -1420,6 +1423,10 @@ Groups nldd-checkbox-field elements as nldd-radio-button-group groups radio butt
 **Keywords:** selectievakjes, toggle, toggles.
 
 **Related:** `<nldd-radio-button-group>`, `<nldd-token-field>`.
+
+**Rules** (`nldd lint`)
+
+- `form-field-group-no-single-group` (hint): This control is a group of its own already. Without `group`, the field names it; with `group` around it, a screen reader hears a group in a group.
 
 **Attributes**
 
@@ -1971,6 +1978,7 @@ Groups nldd-radio-button-field elements, handles keyboard navigation, and forwar
 
 **Rules** (`nldd lint`)
 
+- `form-field-group-no-single-group` (hint): This control is a group of its own already. Without `group`, the field names it; with `group` around it, a screen reader hears a group in a group.
 - `radio-button-group-needs-name`: nldd-radio-button-group needs `accessible-label`, `accessible-labeled-by` or a labeled nldd-form-field around it, or it has no accessible name.
 
 **Attributes**
@@ -2052,6 +2060,7 @@ A horizontal group of mutually exclusive (radio) or multi-select (checkbox) opti
 
 **Rules** (`nldd lint`)
 
+- `form-field-group-no-single-group` (hint): This control is a group of its own already. Without `group`, the field names it; with `group` around it, a screen reader hears a group in a group.
 - `segmented-control-needs-name`: nldd-segmented-control needs `accessible-label`, `accessible-labeled-by` or a labeled nldd-form-field around it, or it has no accessible name.
 - `segmented-control-required-no-effect`: `required` on a checkbox group is announced but not enforced: HTML has no way to say "at least one of these", so the form still submits with nothing selected. Check it yourself on submit, or use radio mode.
 
@@ -2207,6 +2216,7 @@ A row of swatches to choose one from: a color, or an image of a pattern or a mat
 
 **Rules** (`nldd lint`)
 
+- `form-field-group-no-single-group` (hint): This control is a group of its own already. Without `group`, the field names it; with `group` around it, a screen reader hears a group in a group.
 - `swatch-picker-needs-name`: nldd-swatch-picker needs `accessible-label`, `accessible-labeled-by` or a labeled nldd-form-field around it, or it has no accessible name.
 
 **Attributes**
@@ -2600,6 +2610,7 @@ Groups nldd-toggle-button elements and manages selection, keyboard navigation, a
 
 **Rules** (`nldd lint`)
 
+- `form-field-group-no-single-group` (hint): This control is a group of its own already. Without `group`, the field names it; with `group` around it, a screen reader hears a group in a group.
 - `toggle-button-group-needs-name`: nldd-toggle-button-group needs `accessible-label`, `accessible-labeled-by` or a labeled nldd-form-field around it, or it has no accessible name.
 - `toggle-button-group-required-no-effect`: `required` on a checkbox group is announced but not enforced: HTML has no way to say "at least one of these", so the form still submits with nothing selected. Check it yourself on submit, or use radio mode.
 

@@ -63,6 +63,10 @@ function fieldLabelCheck(isInput, allowMaybe) {
 	return (node) => {
 		for (let parent = node.parent; parent; parent = parent.parent) {
 			if (parent.name === 'nldd-form-field') {
+				// A group names itself and none of its controls.
+				const group = parent.attrs.get('group');
+				if (group === BOUND) return allowMaybe;
+				if (parent.attrs.has('group') && group !== 'false') return false;
 				const label = parent.attrs.get('label');
 				const unknownLabel = label === BOUND || parent.spread;
 				if (!unknownLabel && !label) return false;

@@ -1,0 +1,12 @@
+severity: hint
+context: 'nldd-form-field[group]:has(> :is(nldd-radio-button-group, nldd-checkbox-group, nldd-toggle-button-group, nldd-segmented-control, nldd-swatch-picker))'
+count:
+  of: ':form-input'
+  min: 2
+message: 'This control is a group of its own already. Without `group`, the field names it; with `group` around it, a screen reader hears a group in a group.'
+see: componenten/form-field
+examples:
+  passed:
+    - '<nldd-form-field label="Rol"><nldd-radio-button-group name="rol"><nldd-radio-button-field label="Anders" value="a"></nldd-radio-button-field></nldd-radio-button-group></nldd-form-field>'
+    - '<nldd-form-field label="Rol" group><nldd-radio-button-group name="rol"><nldd-radio-button-field label="Anders" value="a"></nldd-radio-button-field></nldd-radio-button-group><nldd-text-field accessible-label="Andere rol"></nldd-text-field></nldd-form-field>'
+  failed: ['<nldd-form-field label="Rol" group><nldd-radio-button-group name="rol"><nldd-radio-button-field label="Anders" value="a"></nldd-radio-button-field></nldd-radio-button-group></nldd-form-field>']

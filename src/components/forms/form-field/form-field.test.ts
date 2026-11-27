@@ -1,6 +1,7 @@
 import { describe, it, expect, afterEach, onTestFinished } from 'vitest';
 import { fixture, cleanup, waitForUpdate, deepActiveElement } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
+import { internalsOf } from '../../../utilities/element-state.js';
 import './form-field.js';
 import '../../inputs/text-field/text-field.js';
 import '../../inputs/password-field/password-field.js';
@@ -463,6 +464,76 @@ describe('nldd-form-field – name and description in words', () => {
 		el = await fixture('<nldd-form-field label="Naam" help-text="Zoals in je paspoort"><input aria-description="Eigen"></nldd-form-field>');
 		await waitForUpdate(el);
 		expect(el.querySelector('input')!.getAttribute('aria-description')).toBe('Eigen');
+	});
+});
+
+
+/* ============================================================
+   nldd-form-field as a group
+   ============================================================ */
+
+/** The role and name a group gives itself, through its internals. */
+function groupOf(el: HTMLElement): { role: string | null; name: string | null } {
+	const { role, ariaLabel } = internalsOf(el);
+	return { role, name: ariaLabel };
+}
+
+describe('nldd-form-field – group', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const MARKUP = `
+		<nldd-form-field label="Adres" optional group help-text="Zoals op je paspoort">
+			<nldd-text-field accessible-label="Postcode"></nldd-text-field>
+			<nldd-number-field accessible-label="Huisnummer"></nldd-number-field>
+		</nldd-form-field>
+	`;
+
+	it('is a group named by its label, and names none of its controls', async () => {
+		el = await fixture(MARKUP);
+		await waitForUpdate(el);
+		expect(groupOf(el)).toEqual({ role: 'group', name: 'Adres, optioneel' });
+		expect(el.querySelector('nldd-text-field')!.getAttribute('accessible-label')).toBe('Postcode');
+		expect(el.querySelector('nldd-number-field')!.getAttribute('accessible-label')).toBe('Huisnummer');
+		expect(el.shadowRoot!.querySelector('label')).toBeNull();
+	});
+
+	it('describes itself, not its first control', async () => {
+		el = await fixture(MARKUP);
+		await waitForUpdate(el);
+		const control = el.querySelector('nldd-text-field') as HTMLElement & { describedByTexts: readonly string[] };
+		expect(control.describedByTexts).toEqual([]);
+		expect((internalsOf(el) as ElementInternals & { ariaDescription: string | null }).ariaDescription).toBe('Zoals op je paspoort');
+	});
+
+	it('hands the name back to the first control when it stops being a group', async () => {
+		el = await fixture(MARKUP);
+		await waitForUpdate(el);
+		const control = el.querySelector('nldd-text-field')!;
+		control.removeAttribute('accessible-label');
+		(el as HTMLElement & { group: boolean }).group = false;
+		await waitForUpdate(el);
+		expect(groupOf(el)).toEqual({ role: null, name: null });
+		expect(control.getAttribute('accessible-label')).toBe('Adres, optioneel');
+	});
+
+	it('says it holds more than one input, and not when it holds one with inputs inside', async () => {
+		el = await fixture(`
+			<nldd-form-field label="Rol">
+				<nldd-checkbox-group name="rol">
+					<nldd-checkbox-field value="a" label="A"></nldd-checkbox-field>
+					<nldd-checkbox-field value="b" label="B"></nldd-checkbox-field>
+				</nldd-checkbox-group>
+			</nldd-form-field>
+		`);
+		await waitForUpdate(el);
+		expect(el.matches(':state(multiple-inputs)')).toBe(false);
+		el.insertAdjacentHTML('beforeend', '<nldd-text-field accessible-label="Anders"></nldd-text-field>');
+		await waitForUpdate(el);
+		expect(el.matches(':state(multiple-inputs)')).toBe(true);
 	});
 });
 

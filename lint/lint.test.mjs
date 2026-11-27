@@ -384,6 +384,12 @@ describe('found in review', () => {
 		assert.ok((await rulesIn(page, 'a.html')).includes('number-field-needs-name'));
 	});
 
+	it('lets a group field name none of its controls', async () => {
+		const field = (attributes) => `<html><body><nldd-form-field label="a"${attributes}><nldd-number-field></nldd-number-field></nldd-form-field></body></html>`;
+		assert.ok(!(await rulesIn(field(''), 'a.html')).includes('number-field-needs-name'));
+		assert.ok((await rulesIn(field(' group'), 'a.html')).includes('number-field-needs-name'));
+	});
+
 	it('skips help text when looking for the input, as the field does', async () => {
 		const page = '<html><body><nldd-form-field label="a"><nldd-text slot="help-text"><p><input></p></nldd-text><nldd-number-field></nldd-number-field></nldd-form-field></body></html>';
 		assert.deepEqual(await rulesIn(page, 'a.html'), []);

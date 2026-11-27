@@ -23,6 +23,12 @@
  * link, goes in an nldd-text in the `help-text` slot. The field gives that
  * nldd-text its size, color and weight, so every help text looks the same.
  *
+ * A field is about one control. A question that takes more than one, such as
+ * a date in three fields or a radio group with an "Anders" text field, is a
+ * `group`: the field is then the group, named by its label, and describes
+ * itself rather than its first control. More than one question are more
+ * fields.
+ *
  * The accessible name is the label, followed by "optioneel" when the field is
  * `optional`. The accessible description is what is wrong first, then the help
  * text in the slot, then the supporting label and `help-text`. Those last two
@@ -39,6 +45,7 @@
  * @attr {string} supporting-label - Short supporting text below the label. Same typography as optional badge. Supports **bold** markdown syntax. Read as part of the accessible description of the input.
  * @attr {string} help-text - Help text below the input, as plain text. Supports **bold** markdown syntax. Read as part of the accessible description of the input, after the validation and the supporting label. Help text with a link goes in the `help-text` slot, which takes its place.
  * @attr {boolean} optional - Shows an optional badge next to the label, and adds it to the accessible name of the input. Its text is the translation key `components.form-field.optional-label` ("Optioneel"); the name is `components.form-field.optional-accessible-label` ("{label}, optioneel").
+ * @attr {boolean} group - One question answered with more than one control, such as a postcode and a house number. The field is then a group named by the label, as a fieldset with a legend is, and each control names itself. A radio group or a checkbox group is a group of its own already and needs no `group`.
  * @attr {object} translations - Override translation keys, such as the text of the optional badge; unset keys fall back to Dutch
  *
  * @slot - The slotted input (e.g. nldd-text-field) and its nldd-validation-list.
@@ -64,7 +71,7 @@ import { stripBold } from '../../../utilities/render-marked.js';
 import { applyDescribedBy, type DescribedElement } from '../../../utilities/described-by-mixin.js';
 import { formFieldStyles } from './form-field.styles.js';
 import { formFieldTemplate } from './form-field.template.js';
-import { setState, styleValueState } from '../../../utilities/element-state.js';
+import { internalsOf, setState, styleValueState } from '../../../utilities/element-state.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddFormFieldTranslations } from './form-field.i18n.js';
 
@@ -186,6 +193,17 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 	@property({ type: Boolean })
 	optional = false;
 
+	/**
+	 * Makes the field a group around more than one control, named by the label.
+	 *
+	 * Through its own role and not a `<fieldset>`: a legend in a shadow root
+	 * does not name the controls in its slot for NVDA in Firefox, which is why
+	 * nldd-form-section rendered its fieldset in the light DOM. A role and a
+	 * name on the host are the same thing to assistive software, and reach.
+	 */
+	@property({ type: Boolean, reflect: true })
+	group = false;
+
 	private _childObserver: MutationObserver | null = null;
 	/** Watches the validation lists for items that come or go. */
 	private _listObserver: MutationObserver | null = null;
@@ -204,13 +222,15 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 	private _describedOthers = new Set<Element>();
 	/** Tags of children that are not defined yet, waited for once each. */
 	private _pendingTags = new Set<string>();
+	/** Whether this field gave itself the role of a group, to take it back. */
+	private _grouped = false;
 
 	override render() {
 		return formFieldTemplate(this);
 	}
 
 	override updated(changed: Map<PropertyKey, unknown>) {
-		if (changed.has('label') || changed.has('optional') || changed.has('translations')) {
+		if (changed.has('label') || changed.has('optional') || changed.has('translations') || changed.has('group')) {
 			this._onSlotChange();
 		} else if (changed.has('supportingLabel') || changed.has('helpText')) {
 			this._syncDescription();
@@ -306,7 +326,7 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 	 * wrap a control owe consumers that `focus()`.
 	 */
 	public _focusInput(e: Event) {
-		const input = this._findInput();
+		const input = this._findInputs()[0];
 		if (!input) return;
 
 		e.preventDefault();
@@ -319,11 +339,16 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 			if (help.localName !== 'nldd-text') continue;
 			Object.assign(help, HELP_TEXT_PROPERTIES);
 		}
-		const input = this._findInput();
+		const inputs = this._findInputs();
+		const input = inputs[0];
 		// A consumer's own element can be an input too, which no selector can know.
 		setState(this, 'has-input', Boolean(input));
-		if (this._input && this._input !== input) this._release(this._input);
-		this._input = input ?? null;
+		if (import.meta.env?.DEV) setState(this, 'multiple-inputs', inputs.length > 1);
+		this._applyGroup();
+		// A group names and describes itself, and none of its controls.
+		const named = this.group ? undefined : input;
+		if (this._input && this._input !== named) this._release(this._input);
+		this._input = named ?? null;
 		if (!input) {
 			this._syncDescription();
 			return;
@@ -342,9 +367,19 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 			if (!input.id) input.id = generateId();
 		}
 
-		this._applyAccessibleLabel(input);
-		this._adoptValidationLists(input);
+		if (named) this._applyAccessibleLabel(named);
+		this._adoptValidationLists(input, inputs);
 		this._syncDescription();
+	}
+
+	/** Gives this field the role and the name of a group, or takes them back. */
+	private _applyGroup(): void {
+		if (!this.group && !this._grouped) return;
+		const internals = internalsOf(this);
+		internals.role = this.group ? 'group' : null;
+		internals.ariaLabel = this.group ? this._accessibleName() || null : null;
+		if (!this.group) this._describe(this, [], []);
+		this._grouped = this.group;
 	}
 
 	/**
@@ -409,13 +444,12 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 	 * A list with a `for` of its own is left alone: that is how you say it is
 	 * about a different control than the first.
 	 *
-	 * More than one control in a field is allowed and sometimes right, a radio
-	 * group with an "Anders" text field beside it being the case this component
-	 * is built for. But a list that reads a value would then quietly read the
-	 * wrong one, and nothing on screen would show it: the rules simply never
-	 * match.
+	 * In a `group` the list is about the first control too, which the list needs
+	 * to know when the field has been judged. A list that reads a value would
+	 * then quietly read the first one, and nothing on screen would show it: the
+	 * rules simply never match. Such a list needs a `for`.
 	 */
-	private _adoptValidationLists(input: Element): void {
+	private _adoptValidationLists(input: Element, inputs: readonly Element[]): void {
 		const lists = Array.from(this.children)
 			.filter((el): el is HTMLElement & { control: Element | null } =>
 				el.tagName.toLowerCase() === 'nldd-validation-list');
@@ -426,19 +460,16 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 
 		const readsValue = lists.some(list => !list.getAttribute('for') && Array.from(list.children)
 			.some(item => item.hasAttribute('match') || item.hasAttribute('minlength') || item.hasAttribute('maxlength')));
-		const controls = Array.from(this.children)
-			.filter(el => !isHelpText(el) && isFormInput(el));
-		setState(this, 'list-reads-first-control', readsValue && controls.length > 1);
+		setState(this, 'list-reads-first-control', readsValue && inputs.length > 1);
 	}
 
 	/**
-	 * The input this field is about: the first one in the light DOM, wrapped or
-	 * not.
+	 * The inputs in this field, in document order, wrapped or not. An input in
+	 * another one, such as a checkbox field in a checkbox group, is part of that
+	 * one and not counted.
 	 *
-	 * A field may hold more than one. A radio group whose last option is
-	 * "Anders" and the text field that appears with it are one question and
-	 * belong in one field. The first input carries the caption, and the ones
-	 * after it name themselves.
+	 * The first is the one the field is about. A field with more than one is a
+	 * `group`, and then names none of them.
 	 *
 	 * Looking inside matters because a `div` or an `nldd-container` around your
 	 * input is a normal thing to write. Stopping at that wrapper sent the id,
@@ -449,15 +480,20 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 	 * and says so in DEV, rather than picking whatever came first and quietly
 	 * treating a tag or a button as your input.
 	 */
-	private _findInput(): Element | undefined {
+	private _findInputs(): Element[] {
+		const found: Element[] = [];
 		const children = Array.from(this.children)
 			.filter(el => !isHelpText(el) && !isToolbar(el));
 		for (const child of children) {
-			if (isFormInput(child)) return child;
-			const nested = Array.from(child.querySelectorAll('*')).find(el => isFormInput(el) && !inToolbar(el, child));
-			if (nested) return nested;
+			if (isFormInput(child)) {
+				found.push(child);
+				continue;
+			}
+			for (const el of Array.from(child.querySelectorAll('*'))) {
+				if (isFormInput(el) && !inToolbar(el, child) && !found.some(outer => outer.contains(el))) found.push(el);
+			}
 		}
-		return undefined;
+		return found;
 	}
 
 	/**
@@ -495,7 +531,8 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 	 * supporting label and `help-text` after the elements.
 	 */
 	private _syncDescription() {
-		const input = this._input;
+		// What the field describes: itself as a group, or else its input.
+		const input = this.group ? this : this._input;
 
 		const children = Array.from(this.children);
 		const tag = (el: Element) => el.tagName.toLowerCase();
@@ -546,6 +583,13 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 	 * observer on this field again.
 	 */
 	private _describe(control: Element, elements: readonly Element[], texts?: readonly string[]): void {
+		if (control === this) {
+			// The group: its own internals, where no attribute of the app is in the way.
+			const internals = internalsOf(this) as ElementInternals & { ariaDescribedByElements: Element[] | null };
+			internals.ariaDescribedByElements = elements.length ? [...elements] : null;
+			internals.ariaDescription = texts?.length ? texts.join(' ') : null;
+			return;
+		}
 		if ('describedByElements' in control) {
 			const described = control as unknown as DescribedElement;
 			if (!sameItems(described.describedByElements, elements)) described.describedByElements = [...elements];
