@@ -1238,6 +1238,7 @@ A field around one input: its label, supporting label, optional badge, validatio
 
 **Rules** (`nldd lint`)
 
+- `form-field-group-needs-label`: A group field needs a `label`: it is the name of the group, and without one the field takes no role and its controls stand loose.
 - `form-field-group-no-single-group` (hint): This control is a group of its own already. Without `group`, the field names it; with `group` around it, a screen reader hears a group in a group.
 - `form-field-help-text-needs-text`: The `help-text` slot of nldd-form-field takes an nldd-text: the field gives it the look of help text, and it styles a link in it.
 - `form-field-help-text-style-no-effect` (hint): nldd-form-field sets `size`, `color` and `weight` on its help text, so a value of your own does nothing.
@@ -1262,7 +1263,7 @@ A field around one input: its label, supporting label, optional badge, validatio
 | `supporting-label` | `string` | Short supporting text below the label. Same typography as optional badge. Supports **bold** markdown syntax. Read as part of the accessible description of the input. |
 | `help-text` | `string` | Help text below the input, as plain text. Supports **bold** markdown syntax. Read as part of the accessible description of the input, after the validation and the supporting label. Help text with a link goes in the `help-text` slot, which takes its place. |
 | `optional` | `boolean` | Shows an optional badge next to the label, and adds it to the accessible name of the input. Its text is the translation key `components.form-field.optional-label` ("Optioneel"); the name is `components.form-field.optional-accessible-label` ("{label}, optioneel"). |
-| `group` | `boolean` | One question answered with more than one control, such as a postcode and a house number. The field is then a group named by the label, as a fieldset with a legend is, and each control names itself. A radio group or a checkbox group is a group of its own already and needs no `group`. |
+| `group` | `boolean` | One question answered with more than one control, such as a postcode and a house number. The field is then a group named by the label, as a fieldset with a legend is, and each control names itself. Without a `label` it takes no role. A radio group or a checkbox group is a group of its own already and needs no `group`. |
 | `translations` | `object` | Override translation keys, such as the text of the optional badge; unset keys fall back to Dutch |
 
 **Slots**

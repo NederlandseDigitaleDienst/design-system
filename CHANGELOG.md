@@ -29,6 +29,7 @@ here; consult the commit history if you need that level of detail.
 
 - **`group` on `nldd-form-field`.** The field takes the role of a group, named by its label with "optioneel" when it is optional, and describes itself with its validation and help text instead of its first control. Each control names itself with `accessible-label`; the `*-needs-name` lint rules now ask for that inside a group. A radio group or a checkbox group is a group of its own already and needs no `group`: the hint `form-field-group-no-single-group` says so.
 - **`help-text` on `nldd-form-field`, for plain help text below the input.** It supports `**bold**`, as `label` does, and a screen reader reads it as part of the description of the input.
+- **`form-field-group-needs-label` (`warn`)** for a `group` without a `label`: the label is the name of the group, and without one the field takes no role.
 - **`form-title-goes-in-form-section` points at the `header` slot of `nldd-form-section`**, and `title-needs-level` now also asks for the `heading-level` of a title there.
 - **`nldd lint --fix` can move attributes to a new child element, and give a renamed tag attributes of its own.** The rule options are `child` and `attributes`.
 - **`form-field-validation-no-multiple-controls` is about a group field now**: a validation list without `for` that reads a value reads the first control of the group.

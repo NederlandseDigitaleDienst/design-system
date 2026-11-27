@@ -267,6 +267,15 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
+		"id": "form-field-group-needs-label",
+		"message": "A group field needs a `label`: it is the name of the group, and without one the field takes no role and its controls stand loose.",
+		"context": "nldd-form-field[group]",
+		"assert": "[label]:not([label=\"\"])",
+		"properties": [
+			"label"
+		]
+	},
+	{
 		"id": "form-field-help-text-needs-text",
 		"message": "The `help-text` slot of nldd-form-field takes an nldd-text: the field gives it the look of help text, and it styles a link in it.",
 		"context": "nldd-form-field > [slot=\"help-text\"]:not(nldd-text)"

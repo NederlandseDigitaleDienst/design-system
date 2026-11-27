@@ -46,7 +46,7 @@
  * @attr {string} supporting-label - Short supporting text below the label. Same typography as optional badge. Supports **bold** markdown syntax. Read as part of the accessible description of the input.
  * @attr {string} help-text - Help text below the input, as plain text. Supports **bold** markdown syntax. Read as part of the accessible description of the input, after the validation and the supporting label. Help text with a link goes in the `help-text` slot, which takes its place.
  * @attr {boolean} optional - Shows an optional badge next to the label, and adds it to the accessible name of the input. Its text is the translation key `components.form-field.optional-label` ("Optioneel"); the name is `components.form-field.optional-accessible-label` ("{label}, optioneel").
- * @attr {boolean} group - One question answered with more than one control, such as a postcode and a house number. The field is then a group named by the label, as a fieldset with a legend is, and each control names itself. A radio group or a checkbox group is a group of its own already and needs no `group`.
+ * @attr {boolean} group - One question answered with more than one control, such as a postcode and a house number. The field is then a group named by the label, as a fieldset with a legend is, and each control names itself. Without a `label` it takes no role. A radio group or a checkbox group is a group of its own already and needs no `group`.
  * @attr {object} translations - Override translation keys, such as the text of the optional badge; unset keys fall back to Dutch
  *
  * @slot - The slotted input (e.g. nldd-text-field) and its nldd-validation-list.
@@ -406,12 +406,18 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 		this._syncDescription();
 	}
 
-	/** Gives this field the role and the name of a group, or takes them back. */
+	/**
+	 * Gives this field the role and the name of a group, or takes them back.
+	 *
+	 * No role without a label: a group without a name is announced as just
+	 * "group", which tells a screen reader user less than no group at all.
+	 */
 	private _applyGroup(): void {
 		if (!this.group && !this._grouped) return;
 		const internals = internalsOf(this);
-		internals.role = this.group ? 'group' : null;
-		internals.ariaLabel = this.group ? this._accessibleName() || null : null;
+		const name = this.group ? this._accessibleName() : '';
+		internals.role = name ? 'group' : null;
+		internals.ariaLabel = name || null;
 		if (!this.group) this._describe(this, [], []);
 		this._grouped = this.group;
 	}

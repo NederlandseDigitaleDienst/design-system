@@ -565,6 +565,15 @@ describe('nldd-form-field – group', () => {
 		expect(el.getAttribute('aria-description')).toBe('Zoals op je paspoort');
 	});
 
+	it('takes no role without a label, as an unnamed group says nothing', async () => {
+		el = await fixture('<nldd-form-field group><nldd-text-field accessible-label="Postcode"></nldd-text-field><nldd-text-field accessible-label="Huisnummer"></nldd-text-field></nldd-form-field>');
+		await waitForUpdate(el);
+		expect(groupOf(el)).toEqual({ role: null, name: null });
+		(el as HTMLElement & { label: string }).label = 'Adres';
+		await waitForUpdate(el);
+		expect(groupOf(el)).toEqual({ role: 'group', name: 'Adres' });
+	});
+
 	it('hands the name back to the first control when it stops being a group', async () => {
 		el = await fixture(MARKUP);
 		await waitForUpdate(el);

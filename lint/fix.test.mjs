@@ -106,6 +106,13 @@ describe('--fix', () => {
 		assert.equal(text, '<nldd-form>\n\t<nldd-form-section>\n\t\t<nldd-title slot="header" text="Adres" supporting-text="Waar woon je?"></nldd-title>\n\t\t<nldd-form-field label="Straat"></nldd-form-field>\n\t</nldd-form-section>\n</nldd-form>\n');
 	});
 
+	it('asks for the heading level of the title it made', async () => {
+		const { result } = await fixed('<nldd-form><nldd-form-section text="Adres"></nldd-form-section></nldd-form>');
+		const rules = result.results.flatMap(({ findings }) => findings.map(({ rule }) => rule));
+		assert.ok(rules.includes('title-needs-level'));
+		assert.ok(!rules.includes('form-section-text-no-effect'));
+	});
+
 	it('moves a bound title of a form section as it is written, and keeps the other attributes', async () => {
 		const { text } = await fixed('<template><nldd-form-section id="adres" :text="titel"></nldd-form-section></template>', 'a.vue');
 		assert.equal(text, '<template><nldd-form-section id="adres"><nldd-title slot="header" :text="titel"></nldd-title></nldd-form-section></template>');

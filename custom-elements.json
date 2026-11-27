@@ -9232,7 +9232,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "One question answered with more than one control, such as a postcode and a house number. The field is then a group named by the label, as a fieldset with a legend is, and each control names itself. A radio group or a checkbox group is a group of its own already and needs no `group`.",
+              "description": "One question answered with more than one control, such as a postcode and a house number. The field is then a group named by the label, as a fieldset with a legend is, and each control names itself. Without a `label` it takes no role. A radio group or a checkbox group is a group of its own already and needs no `group`.",
               "fieldName": "group"
             },
             {
