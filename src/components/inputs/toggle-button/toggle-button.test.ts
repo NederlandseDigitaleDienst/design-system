@@ -860,3 +860,17 @@ describe('nldd-toggle-button – inline padding', () => {
 		expect(paddingOf(el)).toEqual(['12px', '16px']);
 	});
 });
+
+describe('nldd-toggle-button – stacked on lg', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it('stacks a slotted icon above the text, as it does the icon attribute', async () => {
+		el = await fixture('<nldd-toggle-button size="lg" text="Vet"><nldd-icon slot="icon" icon="plus"></nldd-icon></nldd-toggle-button>');
+		await waitForUpdate(el);
+		expect(getComputedStyle(el.shadowRoot!.querySelector('.toggle-button')!).flexDirection).toBe('column');
+	});
+});

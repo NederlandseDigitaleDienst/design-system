@@ -53,6 +53,8 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-form-field` finds an input that appears later inside a wrapper**, such as a `v-if` in a `div`. It only watched its direct children.
 - **A `nldd-validation-list` with `for` describes the control it names (#415).** It described the first input of the field, so the error of an "Anders" text field beside a radio group was read out on the radio group, and the text field had none.
 - **`nldd-search-field` keeps the `accessible-description` of the app while it shows its keyboard shortcut.** The shortcut replaced it.
+- **A long press on `nldd-button` or `nldd-icon-button` with a popover in its `interest` slot opens that popover, not the link preview of iOS.** The rule that stops the preview used `:host(:has())`, which not every browser supports, and a browser that does not drops the whole rule, `interestfor` included. The control now says it has a popover with a class.
+- **`nldd-toggle-button` on `size="lg"` stacks an icon in the `icon` slot above its text,** as it already did with the `icon` attribute. A slotted icon stood beside the text.
 
 ## [0.29.3](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.29.2...v0.29.3) (2026-11-26)
 

@@ -58,6 +58,7 @@ export function template(this: NLDDButton, helpers: TemplateHelpers) {
 		this.supportingText ? 'has-supporting-text' : '',
 		this._hasStartIcon ? 'has-start-icon' : '',
 		this._hasEndIcon ? 'has-end-icon' : '',
+		this._interest.overlay ? 'has-interest' : '',
 	].filter(Boolean).join(' ');
 
 	// `expandable` (disclosure widget signal) or `popup-type` (popup container

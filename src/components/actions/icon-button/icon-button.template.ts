@@ -77,11 +77,13 @@ export function template(this: NLDDIconButton) {
 		`
 		: nothing;
 
+	const controlClass = this._interest.overlay ? 'icon-button has-interest' : 'icon-button';
+
 	const renderButton = () => {
 		if (this.href) {
 			const resolvedRel = linkRel(this.rel, this.target);
 			return html`
-				<a class="icon-button"
+				<a class=${controlClass}
 					href=${this.href}
 					target=${this.target || nothing}
 					rel=${resolvedRel || nothing}
@@ -106,7 +108,7 @@ export function template(this: NLDDIconButton) {
 		// but those browsers don't support the Popover API at all, so the menu
 		// this button drives is non-functional regardless. No capability check.
 		return html`
-			<button class="icon-button"
+			<button class=${controlClass}
 				type=${this.type}
 				?disabled=${this.disabled}
 				aria-disabled=${this.disabled ? 'true' : nothing}

@@ -1253,3 +1253,33 @@ describe('nldd-button – inline padding', () => {
 		expect(paddingOf(el)).toEqual(['12px', '16px']);
 	});
 });
+
+describe('nldd-button – long press on iOS', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	/** The rule that stops the iOS link preview, as the browser parsed it. Found
+	 *  by its selector: a browser other than Safari drops the declaration. */
+	const calloutRule = (host: HTMLElement) => host.shadowRoot!.adoptedStyleSheets
+		.flatMap(sheet => [...sheet.cssRules])
+		.find(rule => rule instanceof CSSStyleRule && rule.selectorText.includes('.has-interest')) as CSSStyleRule | undefined;
+
+	it('keeps the rule: a selector the browser does not know would drop it whole', async () => {
+		el = await fixture('<nldd-button text="Uitleg"></nldd-button>');
+		expect(calloutRule(el)?.selectorText).toContain('[interestfor]');
+	});
+
+	it('marks the control while a popover is in the interest slot', async () => {
+		el = await fixture('<nldd-button text="Uitleg"><nldd-popover slot="interest"><p>Uitleg</p></nldd-popover></nldd-button>');
+		await waitForUpdate(el);
+		const control = () => el.shadowRoot!.querySelector('.button')!;
+		expect(control().matches(calloutRule(el)!.selectorText)).toBe(true);
+		el.querySelector('nldd-popover')!.remove();
+		await waitForUpdate(el);
+		// Looked up again: without the popover, the tooltip may wrap a new control.
+		expect(control().classList.contains('has-interest')).toBe(false);
+	});
+});
