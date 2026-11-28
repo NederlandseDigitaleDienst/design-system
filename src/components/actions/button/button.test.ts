@@ -1206,3 +1206,50 @@ describe('nldd-button – breaking long words', () => {
 		expect((el as NLDDButton).shadowRoot!.querySelector('a')?.getAttribute('href')).toBeNull();
 	});
 });
+
+describe('nldd-button – inline padding', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const paddingOf = (host: HTMLElement) => {
+		const style = getComputedStyle(host.shadowRoot!.querySelector('.button')!);
+		return [style.paddingInlineStart, style.paddingInlineEnd];
+	};
+
+	it('gives a side with text more room than a side with an icon', async () => {
+		el = await fixture('<nldd-button text="Bewaar"></nldd-button>');
+		expect(paddingOf(el)).toEqual(['16px', '16px']);
+		el.setAttribute('start-icon', 'plus');
+		await waitForUpdate(el);
+		expect(paddingOf(el)).toEqual(['12px', '16px']);
+		el.setAttribute('end-icon', 'arrow-right');
+		await waitForUpdate(el);
+		expect(paddingOf(el)).toEqual(['12px', '12px']);
+	});
+
+	it('adds 2px on the text side for xs and sm, and 4px for md and lg', async () => {
+		const expected = { xs: ['4px', '6px'], sm: ['8px', '10px'], md: ['12px', '16px'], lg: ['16px', '20px'] };
+		for (const [size, padding] of Object.entries(expected)) {
+			el = await fixture(`<nldd-button size="${size}" text="Bewaar" start-icon="plus"></nldd-button>`);
+			expect(paddingOf(el), size).toEqual(padding);
+			cleanup(el);
+		}
+	});
+
+	it('sees a slotted icon, also one that arrives later', async () => {
+		el = await fixture('<nldd-button text="Bewaar"><nldd-icon slot="start-icon" icon="plus"></nldd-icon></nldd-button>');
+		expect(paddingOf(el)).toEqual(['12px', '16px']);
+		const icon = document.createElement('nldd-icon');
+		icon.slot = 'end-icon';
+		icon.setAttribute('icon', 'arrow-right');
+		el.append(icon);
+		await waitForUpdate(el);
+		expect(paddingOf(el)).toEqual(['12px', '12px']);
+		icon.remove();
+		await waitForUpdate(el);
+		expect(paddingOf(el)).toEqual(['12px', '16px']);
+	});
+});

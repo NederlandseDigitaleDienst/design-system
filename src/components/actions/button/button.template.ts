@@ -15,7 +15,7 @@ function renderContent(component: NLDDButton) {
 	// What is in a slot wins; the attribute is its fallback content.
 	return html`
 		<span class="button__content">
-			<slot name="start-icon">${component.startIcon ? html`
+			<slot name="start-icon" @slotchange=${component._onIconSlotChange}>${component.startIcon ? html`
 				<span class="button__start-icon">
 					<nldd-icon icon=${component.startIcon}></nldd-icon>
 				</span>
@@ -37,7 +37,7 @@ function renderContent(component: NLDDButton) {
 					></nldd-keyboard-shortcut>
 				</span>
 			` : nothing}
-			<slot name="end-icon">${component.endIcon ? html`
+			<slot name="end-icon" @slotchange=${component._onIconSlotChange}>${component.endIcon ? html`
 				<span class="button__end-icon">
 					<nldd-icon icon=${component.endIcon}></nldd-icon>
 				</span>
@@ -56,6 +56,8 @@ export function template(this: NLDDButton, helpers: TemplateHelpers) {
 
 	const buttonClass = ['button',
 		this.supportingText ? 'has-supporting-text' : '',
+		this._hasStartIcon ? 'has-start-icon' : '',
+		this._hasEndIcon ? 'has-end-icon' : '',
 	].filter(Boolean).join(' ');
 
 	// `expandable` (disclosure widget signal) or `popup-type` (popup container
