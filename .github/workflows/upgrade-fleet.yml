@@ -1,0 +1,238 @@
+name: Upgrade the fleet
+
+# Brings every repository on the list to the latest release, each with a pull
+# request of its own: at once after a release that may break something, a
+# minor or a major, and on Monday morning for the patches of the week. A patch
+# here can be a new component, so it is not held back for long; it is batched
+# because releases come several a day, and each run adds a commit to every
+# pull request that is open. The work per repository is the action in
+# /upgrade, the same one a team uses.
+#
+# The list is fleet.json, at the root of this repository. A team puts its own
+# repository on it with a pull request, after an owner of its organization has
+# installed the app on that repository; scripts/lib/fleet.js says what an entry
+# may say, and the README shows the list. The rest is a variable of this
+# repository or a secret of its environment `fleet`:
+#
+#   NLDD_FLEET_APP_CLIENT_ID    variable   the GitHub App that opens the pull requests,
+#   NLDD_FLEET_APP_ID           variable   its numeric id, for the job that links issues back,
+#   NLDD_FLEET_APP_KEY          secret     and its private key
+#   NLDD_FLEET_TOKEN            secret     or, without an app, a token of a bot account
+#   NLDD_FLEET_MODEL            variable   the model of the agent. Default: claude-opus-5-5
+#   CLAUDE_CODE_OAUTH_TOKEN     secret     for the agent, or
+#   ANTHROPIC_API_KEY           secret     an API key
+#
+# The secrets are in the environment `fleet`, which only main may use. With
+# the key of the app a run can push to every repository the app is installed
+# on, so a workflow on another branch must not reach it. That is also why this
+# job runs the action itself and does not call upgrade.yml: a job that calls a
+# workflow cannot have an environment.
+#
+# The app is installed once per organization, by an owner who picks the
+# repositories. A repository on the list where it is not installed fails on its
+# own and holds up no other.
+#
+# Run by hand, it takes one repository that need not be on the list, and with
+# from_source the command of main before its release. A change on a branch is
+# tried from a repository of your own, with the action of that branch and a
+# token of your own: the environment keeps the key of the app on main.
+
+on:
+  workflow_run:
+    workflows: ['Publish to npmjs']
+    types: [completed]
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+    inputs:
+      repository:
+        description: 'Only this repository, owner/name. Default: the whole list.'
+        type: string
+        default: ''
+      version:
+        description: 'The version to upgrade to. Default: the latest on npm.'
+        type: string
+        default: latest
+      agent:
+        description: 'Let an agent work the list of what is left.'
+        type: choice
+        options: ['as fleet.json says', 'yes', 'no']
+        default: 'as fleet.json says'
+      from_source:
+        description: 'Take the command from main, not from npm: what is merged and not yet released.'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+# One place for the version of the command both the action and the job that files the findings
+# install, so they cannot drift apart.
+env:
+  NLDD_CLAUDE_CODE_VERSION: 2.1.330
+
+jobs:
+  # The list to run, from fleet.json: every entry, or the one repository asked for by hand.
+  list:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    outputs:
+      targets: ${{ steps.list.outputs.targets }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            fleet.json
+            scripts/lib/fleet.js
+          sparse-checkout-cone-mode: false
+
+      # After a release only a minor or a major goes out at once: under 1.0 a minor is what may break.
+      - id: release
+        if: github.event_name == 'workflow_run'
+        run: |
+          read -r previous latest < <(npm view @nldd/design-system versions --json | jq --raw-output '[.[] | select(test("^[0-9]+\\.[0-9]+\\.[0-9]+$"))] | .[-2:] | join(" ")')
+          if [ "${previous%.*}" = "${latest%.*}" ]; then
+            echo "$latest is a patch of $previous: it goes out on Monday."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - id: list
+        env:
+          ONLY: ${{ inputs.repository }}
+          SKIP: ${{ steps.release.outputs.skip }}
+        run: |
+          node --input-type=module --eval "
+            import { readFileSync } from 'node:fs';
+            import { fleetErrors, fleetMatrix } from './scripts/lib/fleet.js';
+            const fleet = JSON.parse(readFileSync('fleet.json', 'utf8'));
+            const errors = fleetErrors(fleet);
+            if (errors.length) { console.error(errors.join('\n')); process.exit(1); }
+            const only = process.env.ONLY;
+            const all = fleetMatrix(fleet);
+            const named = all.find(({ repository }) => repository.toLowerCase() === only?.toLowerCase());
+            const targets = process.env.SKIP ? [] : only ? [named ?? fleetMatrix({ repositories: [{ repository: only }] })[0]] : all;
+            console.log('targets=' + JSON.stringify(targets));
+          " >> "$GITHUB_OUTPUT"
+
+  upgrade:
+    needs: list
+    if: needs.list.outputs.targets != '[]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    environment: fleet
+    strategy:
+      fail-fast: false
+      # A few at a time: a release that breaks something shows in the first pull requests.
+      max-parallel: 3
+      matrix:
+        target: ${{ fromJSON(needs.list.outputs.targets) }}
+    # One run per repository at a time: two would overwrite each other's branch.
+    concurrency:
+      group: nldd-upgrade-${{ matrix.target.repository }}
+    steps:
+      # The action of the commit this runs on. It clones the project itself, outside this checkout.
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: ./upgrade
+        with:
+          repository: ${{ matrix.target.repository }}
+          version: ${{ inputs.version || 'latest' }}
+          token: ${{ secrets.NLDD_FLEET_TOKEN || github.token }}
+          app-client-id: ${{ vars.NLDD_FLEET_APP_CLIENT_ID }}
+          app-private-key: ${{ secrets.NLDD_FLEET_APP_KEY }}
+          agent: ${{ inputs.agent == 'yes' || (inputs.agent != 'no' && matrix.target.agent) }}
+          claude-code-oauth-token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
+          model: ${{ vars.NLDD_FLEET_MODEL || 'claude-opus-5-5' }}
+          claude-code-version: ${{ env.NLDD_CLAUDE_CODE_VERSION }}
+          sandbox: ${{ matrix.target.sandbox }}
+          build: ${{ matrix.target.build }}
+          site: ${{ matrix.target.site }}
+          from-source: ${{ inputs.from_source }}
+          findings: fleet
+
+  # What the agents found the design system cannot do, filed once for the whole fleet. One run of this
+  # job at a time, across every run of the fleet: it is the only place that posts, and it reads what
+  # is there just before it does, so two runs that find the same thing do not file it twice.
+  issues:
+    needs: [list, upgrade]
+    if: always() && needs.list.outputs.targets != '[]' && needs.list.outputs.targets != ''
+    runs-on: ubuntu-latest
+    environment: fleet
+    concurrency:
+      group: nldd-fleet-issues
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: nldd-findings-*
+          path: ${{ runner.temp }}/findings
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Token of the app for the design system
+        id: app
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.NLDD_FLEET_APP_CLIENT_ID }}
+          private-key: ${{ secrets.NLDD_FLEET_APP_KEY }}
+          owner: NederlandseDigitaleDienst
+          repositories: design-system
+
+      # What a model reads is put on disk here, by the step that holds a token. The model itself
+      # gets none: a run that can post issues needs no one else to hold that key.
+      - name: The issues of the repository and the findings of this run
+        id: gather
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          KEY: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN || secrets.ANTHROPIC_API_KEY }}
+          FINDINGS: ${{ runner.temp }}/findings
+          WORK: ${{ runner.temp }}/dedupe
+        run: |
+          mkdir -p "$WORK"
+          echo '{}' > "$WORK/decisions.json"
+          if [ -z "$KEY" ] || ! find "$FINDINGS" -name '*.json' ! -name source.json | grep -q .; then
+            exit 0
+          fi
+          since="$(date --utc --date '90 days ago' +%Y-%m-%dT%H:%M:%SZ)"
+          gh api --paginate --slurp "repos/NederlandseDigitaleDienst/design-system/issues?state=all&since=$since&per_page=100" |
+            jq '[.[][] | select(.pull_request | not) | {number, title, state, body: ((.body // "") | .[0:1500])}]' > "$WORK/issues.json"
+          find "$FINDINGS" -name '*.json' ! -name source.json -exec cat {} + | jq --slurp 'unique_by(.fingerprint) | map({fingerprint, title, body})' > "$WORK/findings.json"
+          echo 'decide=true' >> "$GITHUB_OUTPUT"
+
+      # A model reads the findings next to the issues and says which say the same in other words.
+      # It only reads, and writes one file; the script after it does the posting.
+      - name: Which findings an issue says already
+        if: steps.gather.outputs.decide == 'true'
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          WORK: ${{ runner.temp }}/dedupe
+          MODEL: ${{ vars.NLDD_FLEET_MODEL || 'claude-opus-5-5' }}
+          CLAUDE_CODE_VERSION: ${{ env.NLDD_CLAUDE_CODE_VERSION }}
+        run: |
+          npm install --global --no-audit --no-fund "@anthropic-ai/claude-code@$CLAUDE_CODE_VERSION"
+          cd "$WORK"
+          claude --print --model "$MODEL" --restricted --strict-mcp-config --tools Read Write --allowedTools Read Write \
+            "findings.json holds problems found in the design system, issues.json the issues of its repository of the last ninety days. For each finding, decide whether an issue says the same problem, in other words too: the same component doing the same wrong thing. Write decisions.json: an object from the fingerprint of a finding to the number of that issue, for those findings only. Leave out a finding no issue covers. When in doubt, leave it out: a new issue is better than one that mixes two problems." ||
+            echo '{}' > decisions.json
+          jq --exit-status 'type == "object"' decisions.json > /dev/null || echo '{}' > decisions.json
+
+      - name: File the findings and tell the pull requests
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          APP_ID: ${{ vars.NLDD_FLEET_APP_ID }}
+          APP_KEY: ${{ secrets.NLDD_FLEET_APP_KEY }}
+          VERSION: ${{ inputs.version || 'latest' }}
+        run: |
+          version="$(npm view "@nldd/design-system@$VERSION" version)"
+          node upgrade/file-issues.mjs "$RUNNER_TEMP/findings" "$version" "$RUNNER_TEMP/dedupe/decisions.json" | tee -a "$GITHUB_STEP_SUMMARY"

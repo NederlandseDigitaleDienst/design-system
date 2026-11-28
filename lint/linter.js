@@ -154,11 +154,51 @@ function checkSlot(node, tags, report) {
 	}
 }
 
+/** What takes its color from `--context-content-color`, unless it names a color of its own. */
+const READS_CONTENT_COLOR = new Set(['nldd-icon', 'nldd-text', 'nldd-title', 'nldd-rich-text', 'nldd-text-cell', 'nldd-title-cell', 'nldd-description-cell', 'nldd-spinner']);
+
+/** The properties the `style` of an element sets, where that can be read: a string in markup, an object in JSX. */
+function styleSets(node) {
+	if (node.styleSets) return node.styleSets;
+	const style = node.attrs.get('style');
+	if (typeof style !== 'string' || /\{\{|\{%|\$\{|<%/.test(style)) return undefined;
+	return new Set(style.split(';').map((declaration) => declaration.split(':')[0].trim().toLowerCase()).filter(Boolean));
+}
+
+/**
+ * The first thing in an element of the app that takes its color from the context.
+ * It looks through the app's own elements and a container, which pass the context
+ * on as it is, and stops at any other component: that may paint a surface of its own.
+ */
+function contentReader(node) {
+	for (const child of node.children) {
+		const color = child.attrs.get('color');
+		if (READS_CONTENT_COLOR.has(child.name) && (color === undefined || color === 'content')) return child;
+		const passesOn = !child.opaque && (!child.name.startsWith('nldd-') || child.name === 'nldd-container');
+		if (passesOn && !styleSets(child)?.has('--context-content-color')) {
+			const found = contentReader(child);
+			if (found) return found;
+		}
+	}
+	return undefined;
+}
+
+/** An element of the app that sets `color` for content that no longer listens to it. */
+function checkContentColor(node, report) {
+	if (node.name.startsWith('nldd-') || node.name.startsWith('#') || node.opaque) return;
+	const sets = styleSets(node);
+	if (!sets?.has('color') || sets.has('--context-content-color')) return;
+	const reader = contentReader(node);
+	if (reader) report('style-color-needs-context', `\`color\` set here does not reach the ${reader.name} inside, which reads \`--context-content-color\`. Set that too, with the same value.`, 'style');
+}
+
 function builtInFindings(root, context) {
 	const { tags } = context;
 	const findings = [];
 	walk(root, (node) => {
-		if (!node.name.startsWith('nldd-')) return;
+		checkContentColor(node, (rule, message, attribute) => findings.push({ rule, severity: BUILT_IN_RULES[rule].severity, message, node, attribute }));
+		// `<nldd-*>` in running text names a family of tags and is none itself.
+		if (!/^nldd-[a-z0-9-]+$/.test(node.name)) return;
 		const report = (rule, message, attribute, severity = BUILT_IN_RULES[rule].severity) =>
 			findings.push({ rule, severity, message, node, attribute });
 		const contract = tags[node.name];
@@ -212,6 +252,7 @@ function createPositions(source) {
 /** Files where `//` is no comment: in markup it starts a url, and a built page is one line. */
 const MARKUP_FILE = /\.(html?|j2|jinja2?|tmpl|gohtml|vue|astro|md)$/;
 
+const SCRIPT_FILE = /\.[cm]?js$/;
 const STYLESHEET_FILE = /\.(css|scss|sass|less|styl|pcss)$/;
 
 /** Inside markup, `//` is a comment again in the script of a component and in Sass, Less and Stylus. */
@@ -274,7 +315,14 @@ function linkedFile(href, filename) {
 	}
 }
 
-export function createLinter(data = loadData(), { wrappers = {}, severities: configured = {}, projectTokens = [] } = {}) {
+/** Elements that hold a line of text and no block: a `<p>` inside one is invalid, or splits the line. */
+/** An attribute that says the app cuts the text off: a name such as `truncate`, a class such as `hug-truncate`, or a style. */
+const CUT_OFF = /(^|[\s_-])(truncat\w*|ellipsis|nowrap|line-clamp)\b|text-overflow|white-space\s*:\s*nowrap/i;
+const cutsOff = (node) => [...node.attrs].some(([name, value]) => /^(truncate|ellipsis)$/i.test(name) || (typeof value === 'string' && CUT_OFF.test(value)));
+
+const LINE_ONLY = new Set(['button', 'p', 'span', 'a', 'label', 'summary', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'nldd-text', 'nldd-title', 'nldd-button', 'nldd-link']);
+
+export function createLinter(data = loadData(), { wrappers = {}, severities: configured = {}, projectTokens = [], undecided = () => false, types, listeners = new Map() } = {}) {
 	const canonical = createCanonical(data);
 	const severities = Object.fromEntries(Object.entries(configured).map(([id, level]) => [canonical(id), level]));
 	const context = {
@@ -322,6 +370,20 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 		}
 	}
 
+	/**
+	 * A script that reads a component's own variable is that component: its styles, in a
+	 * chunk of the design system that a build copied or bundled. An app sets such a
+	 * variable and has nothing to read it with, so what this script sets is no override.
+	 * A build directory is skipped by its path; this holds wherever the chunk ends up.
+	 */
+	function isComponentCode(plain, filename) {
+		if (!SCRIPT_FILE.test(filename)) return false;
+		for (const [, name] of plain.matchAll(/var\(\s*--_([a-z][\w-]*)/g)) {
+			if (components.some((component) => name.startsWith(`${component}-`))) return true;
+		}
+		return false;
+	}
+
 	/** Where the design system's own CSS sits in this file: a bundle or a page can hold it next to the app's. */
 	function designSystemRanges(roots) {
 		const ranges = [];
@@ -350,6 +412,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 	}
 
 	const LINK_CONTEXT = ['--context-link-color', '--context-link-is-hovered-color', '--context-link-is-active-color'];
+	const LINK_TOKENS = ['--semantics-links-color', '--semantics-links-is-hovered-color', '--semantics-links-is-active-color'];
 
 	const removedEvents = data.removedEvents ?? {};
 	const eventPatterns = (() => {
@@ -365,24 +428,37 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 			{ pattern: new RegExp(`(?<![\\w-])(?:@|v-on:|x-on:|(?:data-)?hx-on(?::|::|-|--))${name}(?![\\w-])`, 'dg'), fixable: true },
 			// (tabchange)="…" in Angular: an attribute with a quoted value, so `(tabchange) => …` in a script is not one.
 			{ pattern: new RegExp(`(?<=\\s)\\(${name}\\)\\s*=\\s*['"]`, 'dg'), fixable: true },
+			// A function of the app's own that takes the name, such as a hook: useEvent(ref, 'tabchange', show).
+			// Its name says it is about events. That is not enough for a fix: the function may send the name
+			// on a bus of the app's own, or log it, and renaming one end of that breaks it. So this reports,
+			// and leaves out a function whose name says it sends, logs or builds (see SENDS below). Where the
+			// project defines the function and it only listens with that argument, the fix is certain
+			// (`listeners`, from listeners.js).
+			{ pattern: new RegExp(`(?<![\\w$])(?<!\\bnew\\s+)(?!(?:add|remove)EventListener\\()([\\w$]*(?:[Ee]vent|[Ll]isten)[\\w$]*)\\(\\s*(?:[^()'"\`]*?,\\s*)?(['"\`])${name}\\2`, 'dg'), fixable: false, callee: 1 },
 		];
 	})();
+
+	/** A function of the app that sends, logs or builds an event rather than listening to one: emitEvent, trackEvent, createEvent. */
+	const SENDS = /^(?:emit|dispatch|fire|trigger|raise|send|publish|post|notify|track|log|record|report|create|make|build)/i;
 
 	/** A listener on the name of an event a component no longer fires: it is never called, and nothing says so. */
 	function eventFindings(source, filename) {
 		if (eventPatterns.length === 0) return [];
 		const { plain } = codeRegions(source, filename);
 		const findings = [];
-		for (const { pattern, fixable } of eventPatterns) {
+		for (const { pattern, fixable, callee } of eventPatterns) {
 			for (const match of plain.matchAll(pattern)) {
+				if (callee && SENDS.test(match[callee])) continue;
 				const group = match.length - 1;
 				const name = match[group];
 				const [offset, endOffset] = match.indices[group];
+				// The argument the name is: the commas between the call's parenthesis and the name.
+				const listens = callee && listeners.get(match[callee]) === (match[0].slice(match[callee].length, offset - match.index).match(/,/g) ?? []).length;
 				const { last, use } = removedEvents[name];
 				const message = use
 					? `\`${name}\` was renamed to \`${use}\` after ${last}, so a listener on the old name is never called.`
 					: `\`${name}\` is no longer fired after ${last}, so this listener is never called.`;
-				findings.push({ rule: 'event-renamed', severity: BUILT_IN_RULES['event-renamed'].severity, message, tag: name, offset, endOffset, ...(use && fixable ? { fix: { event: use } } : {}) });
+				findings.push({ rule: 'event-renamed', severity: BUILT_IN_RULES['event-renamed'].severity, message, tag: name, offset, endOffset, ...(use && (fixable || listens) ? { fix: { event: use } } : {}) });
 			}
 		}
 		return findings;
@@ -395,6 +471,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 	 */
 	function cssFindings(source, filename, roots) {
 		const { plain, sheets } = codeRegions(source, filename);
+		if (isComponentCode(plain, filename)) return [];
 		const inDesignSystemCss = designSystemRanges(roots);
 		const allDeclared = declarationsIn(plain);
 		const declared = allDeclared.filter((each) => !inDesignSystemCss(each.offset));
@@ -427,6 +504,20 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 			if (!component) continue;
 			report('local-variable-no-override', `\`${declaration.name}\` is internal to nldd-${component}, so setting it is not supported.`, declaration);
 		}
+		// A link token set on an element: the context took its value on `:root`, so this reaches no link.
+		for (const declaration of declared) {
+			if (!LINK_TOKENS.includes(declaration.name)) continue;
+			const sheet = sheets.find(([from, to]) => declaration.offset >= from && declaration.offset < to);
+			if (sheet) {
+				// In a stylesheet only a selector on a component is certain: a class may be a theme on the root.
+				const { start } = enclosingBlock(plain, declaration.offset, { quotes: false, strings: true, from: sheet[0], to: sheet[1] });
+				// `start` is right behind the brace that opens the block: the selector stands before that brace.
+				const selector = plain.slice(Math.max(plain.lastIndexOf('}', start - 2), plain.lastIndexOf('{', start - 2), plain.lastIndexOf(';', start - 2)) + 1, start - 1);
+				if (!/nldd-[a-z]/.test(selector) || /:root|\bhtml\b/.test(selector)) continue;
+			}
+			const context = declaration.name.replace('--semantics-links-', '--context-link-');
+			report('link-color-no-effect', `\`${declaration.name}\` set here colors no link: a link reads \`${context}\`. Set the three \`--context-link-\` colors instead.`, declaration);
+		}
 		const linkBlocks = new Set();
 		// Also in a block that looks like the design system's: it sets all three, so `:root { --context-link-color: red }` is the app's.
 		for (const declaration of allDeclared) {
@@ -451,13 +542,16 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 	 * script without an `html` template, where `<nldd-` sits in a plain string. What a
 	 * markup parser skips on purpose, such as a comment or an inert template, is not this.
 	 */
-	function unreadMarkup(source, filename, roots) {
+	function unreadMarkup(source, filename, reading) {
+		const rule = 'file-not-read';
+		const finding = (offset) => [{ rule, severity: BUILT_IN_RULES[rule].severity, message: BUILT_IN_RULES[rule].description, tag: '', offset }];
+		// A reader that knows what it left unread says so itself.
+		if (reading.kind === 'strings') return reading.unread === undefined ? [] : finding(reading.unread);
 		const reader = readerOf(filename);
-		if (reader === 'markup' || (reader === 'templates' && roots.length > 0)) return [];
+		if (reader === 'markup' || (reader === 'templates' && reading.roots.length > 0)) return [];
 		const offset = withoutComments(source, !MARKUP_FILE.test(filename)).search(/<nldd-[a-z]/);
 		if (offset < 0) return [];
-		const rule = 'file-not-read';
-		return [{ rule, severity: BUILT_IN_RULES[rule].severity, message: BUILT_IN_RULES[rule].description, tag: '', offset }];
+		return finding(offset);
 	}
 
 	// An opt-in group runs only where a level was given for it, never by default.
@@ -490,6 +584,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 
 	function lintRoots(roots, isPlainHtml) {
 		const findings = [];
+		const open = [];
 		const counts = { failed: 0, passed: 0, cantTell: 0 };
 		for (const root of roots) {
 			findings.push(...builtInFindings(root, { ...context, isPlainHtml }));
@@ -498,7 +593,12 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 					counts[outcome]++;
 					// A name that is gone is wrong whatever the binding holds, but not for a rule about one of its values.
 					const namesRemoved = !testsRemovedValue(rule) && rule.removed?.some((name) => node.attrs.get(name) === BOUND);
-					if (outcome !== 'failed' && !(outcome === 'cantTell' && namesRemoved)) continue;
+					if (outcome !== 'failed' && !(outcome === 'cantTell' && namesRemoved)) {
+						// Content that a variable or a component of the app fills in decides this one: no finding, and
+						// a place to look for whoever asks. A bound or spread attribute is not: that is open everywhere.
+						if (outcome === 'cantTell' && undecided(rule) && !node.spread && node.children.some((child) => child.opaque)) open.push({ rule: rule.id, node });
+						continue;
+					}
 					findings.push({
 						rule: rule.id,
 						severity: rule.severity,
@@ -510,17 +610,28 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 				}
 			}
 		}
-		return { findings: withoutCovered(findings), counts };
+		return { findings: withoutCovered(findings), counts, open };
+	}
+
+	/**
+	 * Whether an element stands where only a line of text may: in a button, a paragraph, a
+	 * heading, or the text of another component. Or where the app cuts its text off at the
+	 * end of a line: an ellipsis reaches the text of an inline element, not that of a `<p>`.
+	 */
+	function standsInLine(node) {
+		for (let at = node.parent; at; at = at.parent) if (LINE_ONLY.has(at.name)) return true;
+		for (let at = node, depth = 0; at?.attrs && depth < 3; at = at.parent, depth++) if (cutsOff(at)) return true;
+		return false;
 	}
 
 	/** @returns {Promise<{ findings: object[], counts: object }>} */
-	async function lintSource(source, filename, { only } = {}) {
+	async function lintSource(source, filename, { only, rendered } = {}) {
 		if (only === 'events') return lintEvents(source, filename);
-		const parsed = applyWrappers(await parseSource(source, filename), wrappers);
+		const parsed = await parseSource(source, filename, { rendered, types });
 		const isPlainHtml = /\.(html?|j2|jinja2?|tmpl|gohtml)$/.test(filename);
-		const roots = readPropertyNames(parsed, data.tags, isPlainHtml);
+		const roots = readPropertyNames(applyWrappers(parsed.roots, wrappers), data.tags, isPlainHtml);
 		readLinkedStylesheets(roots, filename);
-		const { findings, counts } = lintRoots(roots, isPlainHtml);
+		const { findings, counts, open } = lintRoots(roots, isPlainHtml);
 		const { suppressed, missingReason } = readSuppressions(source, canonical);
 		const position = createPositions(source);
 		const aboutSuppression = (rule, line, detail = BUILT_IN_RULES[rule].description) => ({
@@ -531,7 +642,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 			line,
 			column: 1,
 		});
-		const jsx = /\.[jt]sx$/.test(filename) || Boolean(parsed.jsx);
+		const jsx = parsed.kind === 'jsx';
 		const all = findings
 			.map(({ node, severity, covers, attribute, ...finding }) => ({
 				...finding,
@@ -541,6 +652,10 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 				endOffset: node.endOffset,
 				mention: node.mention,
 				startTag: node.startTag,
+				// What a fix may write here: what the reader of this file allows, and nothing where it says so.
+				writes: parsed.writes,
+				inLine: standsInLine(node),
+				readOnly: Boolean(node.readOnly),
 				// What takes the place of a wrapper that is gone: its one child.
 				...(finding.fix?.unwrap && node.children.length === 1 && !node.text && !node.opaque
 					? { inner: { tag: node.children[0].name, offset: node.children[0].offset, endOffset: node.children[0].endOffset, startTag: node.children[0].startTag } }
@@ -559,7 +674,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 		}
 		const fires = (line, id) => all.some((finding) => finding.line === line && finding.rule === id);
 		// A rule that did not run here says nothing, and Markdown shows a suppression as an example.
-		const unneeded = /\.mdx?$/.test(filename) || parsed.length === 0 || parsed.syntaxError
+		const unneeded = /\.mdx?$/.test(filename) || parsed.roots.length === 0 || parsed.syntaxError
 			? []
 			: [...suppressed].flatMap(([line, ids]) =>
 					[...ids]
@@ -574,9 +689,15 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 			.concat(missingReason.map((line) => aboutSuppression('suppression-needs-reason', line)), unneeded)
 			.concat(parsed.syntaxError ? [syntaxError(parsed.syntaxError, position)] : [])
 			.map((finding) => ({ ...finding, severity: severities[finding.rule] ?? finding.severity }))
+			// Strings were not read before, so what stands in them comes as a warning: a release that is no
+			// breaking one may not turn the build of a project red.
+			.map((finding) => (parsed.kind === 'strings' && finding.severity === 'error' ? { ...finding, severity: 'warn' } : finding))
 			.filter((finding) => finding.severity !== 'off');
 		located.sort((a, b) => a.line - b.line || a.column - b.column);
-		return { findings: located, counts };
+		const stillOpen = open
+			.map(({ rule, node }) => ({ rule, tag: node.name, ...position(node.offset) }))
+			.filter(({ rule, line }) => !suppressed.get(line)?.has(rule) && severities[rule] !== 'off');
+		return { findings: located, counts, undecided: stillOpen };
 	}
 
 	/** A script the scan reads only for the events it listens to, such as a `.ts` file. */
@@ -595,10 +716,10 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 	/** Evaluates one rule on a snippet, for the examples of that rule. */
 	async function outcomesOf(rule, snippet) {
 		const isDocument = snippet.startsWith('<html');
-		const parsed = isDocument
+		const { roots } = isDocument
 			? await parseSource(snippet, 'example.html')
 			: await parseSource(`<template>${snippet}</template>`, 'example.vue');
-		return parsed.flatMap((root) => engine.evaluate(rule, root).map(({ outcome }) => outcome));
+		return roots.flatMap((root) => engine.evaluate(rule, root).map(({ outcome }) => outcome));
 	}
 
 	return { lintSource, outcomesOf };

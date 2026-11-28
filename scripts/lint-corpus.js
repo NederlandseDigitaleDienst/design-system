@@ -54,7 +54,7 @@ for (const directory of directories) {
 	const { results, files } = await lintProject(data, { root, paths: [root], config, severities });
 	fileCount += files;
 	for (const { filename, findings, counts } of results) {
-		for (const key of Object.keys(totals)) totals[key] += counts[key];
+		for (const key of Object.keys(totals)) totals[key] += counts[key] ?? 0;
 		for (const finding of findings) {
 			if (!perRule.has(finding.rule)) perRule.set(finding.rule, { count: 0, apps: new Set(), samples: [] });
 			const entry = perRule.get(finding.rule);

@@ -37,7 +37,7 @@ describe('--fix', () => {
 		const source = 'a { color: var(--old); }';
 		const offset = source.indexOf('--old');
 		const finding = { tag: '--old', offset, endOffset: offset + 5, fix: { token: '--new', event: '--other' } };
-		assert.deepEqual(applyFixes(source, [finding]), { source, fixed: 0, renamedTags: new Map() });
+		assert.deepEqual(applyFixes(source, [finding]), { source, fixed: 0, byRule: {}, renamedTags: new Map() });
 	});
 
 	it('wraps text with the line endings of the file', async () => {

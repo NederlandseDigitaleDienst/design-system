@@ -34,6 +34,7 @@ export const GENERATED = [
 			'src/assets/styles/removed-tokens.json',
 			'src/translations/removed-keys.json',
 			'src/components/removed-events.json',
+			'src/rules/introduced.json',
 			'src/utilities/dev-rules.generated.ts',
 			'src/utilities/autoloader.generated.ts',
 		],
@@ -66,6 +67,12 @@ export const GENERATED = [
 		check: 'pr',
 	},
 	{
+		// The list in fleet.json, checked and written into the README. A wrong entry fails the pull request that adds it.
+		script: 'generate:fleet',
+		files: ['README.md'],
+		check: 'pr',
+	},
+	{
 		script: 'generate:plugin-version',
 		files: ['.claude-plugin', '.cursor-plugin'],
 		check: 'pr',
@@ -75,6 +82,13 @@ export const GENERATED = [
 		// from semantic-release: between releases the copy is behind on purpose.
 		script: 'generate:skill-changelog',
 		files: ['skills/nldd-design/changelog.md'],
+		check: 'release',
+	},
+	{
+		// The breaking entries per version, for `nldd upgrade`. As the copy above:
+		// an entry has a version only once the release has written its heading.
+		script: 'generate:lint-breaking',
+		files: ['lint/breaking.generated.json'],
 		check: 'release',
 	},
 	{

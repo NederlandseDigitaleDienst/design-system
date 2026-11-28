@@ -917,7 +917,7 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "slot-needs-element",
-		"message": "A slot for text takes the element that carries it: a `<p>`, or a heading in the default slot of nldd-title and nldd-title-cell. Put inline markup inside that element, and plain text in the attribute.",
+		"message": "A slot for text takes the element that carries it: a `<p>`, or a heading in the default slot of nldd-title and nldd-title-cell. Put inline markup inside that element, and plain text in the attribute. A cell that holds a control or another component and no text is an nldd-cell.",
 		"context": ":is(nldd-title, nldd-title-cell):has(> :not([slot]):not(h1, h2, h3, h4, h5, h6, p)), nldd-text-cell:has(> :not([slot]):not(p)), :is(nldd-title, nldd-title-cell, nldd-text-cell):has(> :is([slot=\"overline\"], [slot=\"supporting-text\"]):not(p)), nldd-identity:has(> :is([slot=\"text\"], [slot=\"supporting-text\"]):not(p))"
 	},
 	{

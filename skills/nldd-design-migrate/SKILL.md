@@ -31,7 +31,7 @@ Kan het designsysteem iets niet wat je nodig hebt, dan is dat een gat in het des
 
 Mist er een heel component, dan mag je het zelf bouwen, met een eigen naam zonder `nldd-`. Dat hoeft geen omweg te zijn: misschien wil je er zelf de controle over houden, zodat het blijft meebewegen met je project. Vertel er wel over in je melding, dan kan er besloten worden of het een officieel NLDD-component wordt. Een eigen component valt buiten de zuiverheidscheck: zet de map met zijn stijlen in `exclude` van `.nldd-lint.json`. Zie [Geen eigen vormgeving](../nldd-design-build/SKILL.md#geen-eigen-vormgeving).
 
-Voor een omweg op of om een `nldd-*`-component geldt: tot het gat is opgelost mag hij er staan, met een onderdrukking van de regel uit `pure` die drie dingen als reden draagt: de issuelink, de versie waarop je het vaststelde, en één zin waarom het component het zelf niet kan. Lukt die zin niet, dan is het smaak en hoort de omweg weg. De rest van deze skill verwijst naar deze regel.
+Voor een omweg op of om een `nldd-*`-component geldt: tot het gat is opgelost mag hij er staan, met een onderdrukking van de regel uit `pure` die drie dingen als reden draagt: de issuelink, de versie waarop je het vaststelde, en één zin waarom het component het zelf niet kan. Een omweg die geen regel raakt, zoals een script dat in een component grijpt, krijgt hetzelfde als commentaar ernaast, met het issue als `NLDD #447` of het adres ervan. `nldd upgrade` vindt die notities en zegt bij een upgrade welke omwegen weg kunnen, omdat hun issue is opgelost. Lukt die zin niet, dan is het smaak en hoort de omweg weg. De rest van deze skill verwijst naar deze regel.
 
 ## Het uitgangspunt: dit designsysteem faalt stil
 
@@ -305,5 +305,6 @@ Doe dit als een bewuste ronde aan het eind. Het is meteen je laatste sweep op re
 12. Je eigen workarounds langslopen: welke zijn overbodig geworden.
 13. De commentronde.
 14. Het laatste stylesheet weghalen, de token- en klassencheck mee. De baseline is leeg, en elke onderdrukking van een regel uit `pure` wijst naar een open issue.
+15. Voorstellen de action `upgrade` in de repository te zetten, of de repository aan te melden in `fleet.json` van het designsysteem, zodat de app na de migratie bij elke release een pull request krijgt in plaats van weer achter te lopen. Het team kiest of er een agent meedoet; zie [Upgraden](https://design.digitaledienst.overheid.nl/handleidingen/upgraden/).
 
 Reken erop dat de verhouding rauwe markup je schatting bepaalt. In dit geval stonden 292 rauwe `<button>` tegenover 61 `<Button>`: het herimplementeren van de primitive converteerde een vijfde, de rest was handwerk op de aanroepplek. Tel allebei voordat je iets belooft.

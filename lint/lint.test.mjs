@@ -7,7 +7,8 @@ import { describe, it } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { cssRules, isDesignSystemCss } from './css.js';
 import { createEngine } from './engine.js';
-import { parseAstro, parseHtml, parseJsx, parseMarkdown, parseStylesheet, parseVue, readerOf } from './frontends.js';
+import { parseAstro, parseHtml, parseMarkdown, parseStylesheet, parseVue, readerOf } from './frontends.js';
+import { parseJsx } from './jsx.js';
 import { createCanonical, createLinter, loadData } from './linter.js';
 import { resolveSeverities } from './rule-data.js';
 import { readBaseline, UNREAD_EXTENSIONS } from './project.js';
@@ -113,7 +114,7 @@ describe('frontends', () => {
 	});
 
 	it('reads JSX with conditions, lists, fragments and spreads', async () => {
-		const roots = await parseJsx(
+		const { roots } = await parseJsx(
 			'const a = <nldd-list {...p}><>{x && <nldd-a />}{y.map((i) => <nldd-b key={i} />)}{children}</></nldd-list>;',
 			'a.tsx',
 		);
@@ -125,7 +126,7 @@ describe('frontends', () => {
 	});
 
 	it('reads an element passed as a prop as a tree of its own', async () => {
-		const roots = await parseJsx('const a = <Foo icon={<nldd-icon icon="plus" />} />;', 'a.tsx');
+		const { roots } = await parseJsx('const a = <Foo icon={<nldd-icon icon="plus" />} />;', 'a.tsx');
 		assert.ok(first(roots, 'nldd-icon'));
 	});
 
@@ -1776,15 +1777,27 @@ describe('nldd command', () => {
 		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
 		mkdirSync(join(root, 'dist/_astro'), { recursive: true });
 		mkdirSync(join(root, 'src'));
-		const chunk = 'var b = r`\n:host {\n\t--_button-gap: 4px;\n}\n`;\nconst t = "<nldd-icon>";\n';
+		const chunk = 'var b = r`\n:host {\n\t--_button-gap: 4px;\n}\n`;\nconst t = \'<nldd-icon name="info" foo="b"></nldd-icon>\';\n';
 		writeFileSync(join(root, 'dist/_astro/button.pAKU2ucd.js'), chunk);
 		writeFileSync(join(root, 'dist/index.html'), '<html><body><nldd-gone></nldd-gone></body></html>\n');
 		writeFileSync(join(root, 'src/own.js'), chunk);
 		const built = run(root, 'lint', 'dist');
 		assert.match(built.stdout, /dist\/index\.html:1:13 {2}error {2}unknown-element/);
 		assert.match(built.stdout, /1 error, 0 warnings in 1 file/);
-		assert.match(run(root, 'lint', 'src').stdout, /local-variable-no-override[^]*file-not-read/);
-		assert.match(run(root, 'lint', 'dist/_astro/button.pAKU2ucd.js').stdout, /local-variable-no-override[^]*file-not-read/);
+		assert.match(run(root, 'lint', 'src').stdout, /local-variable-no-override[^]*unknown-attribute/);
+		assert.match(run(root, 'lint', 'dist/_astro/button.pAKU2ucd.js').stdout, /local-variable-no-override[^]*unknown-attribute/);
+	});
+
+	it('takes a script that reads a component\'s own variable for that component, wherever a build put it', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		mkdirSync(join(root, 'assets/nldd'), { recursive: true });
+		// The styles of a component, as a bundler writes them outside a directory named dist.
+		writeFileSync(join(root, 'assets/nldd/chunk-A1.js'), 'var b = r`\n:host {\n\t--_button-gap: 4px;\n}\n.button {\n\tgap: var(--_button-gap);\n}\n`;\n');
+		// An app that sets the variable reads nothing.
+		writeFileSync(join(root, 'assets/own.js'), 'var b = r`\nnldd-button {\n\t--_button-gap: 4px;\n}\n`;\n');
+		const { stdout } = run(root, 'lint', '.');
+		assert.match(stdout, /assets\/own\.js:3:\d+ {2}warn {2}local-variable-no-override/);
+		assert.doesNotMatch(stdout, /chunk-A1/);
 	});
 
 	it('reports only what is new after accepting a baseline', () => {
@@ -2074,10 +2087,22 @@ describe('markup the linter cannot read', () => {
 	const linter = createLinter(loadData());
 	const rulesIn = async (source, file) => (await linter.lintSource(source, file)).findings.map(({ rule }) => rule);
 
-	it('says so for a file type without a parser, and for a script without an html template', async () => {
+	it('says so for a file type without a parser', async () => {
 		assert.deepEqual(await rulesIn('<script>let a;</script>\n<nldd-button text="a" foo="b"></nldd-button>', 'a.svelte'), ['file-not-read']);
-		assert.deepEqual(await rulesIn('export const t = `<nldd-button text="a" foo="b"></nldd-button>`;', 'b.mjs'), ['file-not-read']);
 		assert.deepEqual(await rulesIn('// <nldd-button>\nexport const a = 1;', 'c.js'), []);
+	});
+
+	it('reads markup in the plain strings of a script, with a hole as a bound value', async () => {
+		assert.deepEqual(await rulesIn('export const t = `<nldd-button text="a" foo="b"></nldd-button>`;', 'b.mjs'), ['unknown-attribute']);
+		assert.deepEqual(await rulesIn("const a = '<nldd-button text=\"a\" foo=\"b\"></nldd-button>';\nconst b = (c: number) => c;", 'b.js'), ['unknown-attribute']);
+		assert.deepEqual(await rulesIn('const t = (size) => `<nldd-title size="${size}" heading-level="2" text="a"></nldd-title>`;', 'c.js'), []);
+		assert.deepEqual(await rulesIn("const open = '<nldd-list>';\nconst close = '</nldd-list>';", 'd.js'), []);
+		assert.deepEqual(await rulesIn("expect(html).toMatch('<nldd-buton[^>]*>');", 'e.js'), []);
+	});
+
+	it('reads a quote behind a backslash in a string as the quote it is', async () => {
+		assert.deepEqual(await rulesIn('const a = "<nldd-button text=\\"a\\" foo=\\"b\\"></nldd-button>";', 'a.js'), ['unknown-attribute']);
+		assert.deepEqual(await rulesIn('const a = "<nldd-button text=\\"a\\" size=\\"md\\"></nldd-button>";', 'a.js'), []);
 	});
 
 	it('has no parser for a type it lists as not read', () => {
@@ -2102,9 +2127,8 @@ describe('markup the linter cannot read', () => {
 		assert.deepEqual(await rulesIn('html`<nldd-button text="a" foo="b"></nldd-button>`;', 'a.js'), ['unknown-attribute']);
 	});
 
-	it('reads JSX in a JavaScript file, and says so where it does not parse', async () => {
+	it('reads JSX in a JavaScript file', async () => {
 		assert.deepEqual(await rulesIn('export const A = () => <nldd-button text="a" foo="b" />;', 'a.js'), ['unknown-attribute']);
-		assert.deepEqual(await rulesIn('const a = "<nldd-button>";\nconst b = (c: number) => c;', 'b.js'), ['file-not-read']);
 	});
 
 	it('does not count what a markup parser skips on purpose', async () => {
@@ -2225,6 +2249,65 @@ describe('renamed events', () => {
 		assert.equal(finding.fix, undefined);
 	});
 
+	it('finds the old name in a function of the app that is about events, such as a hook', async () => {
+		const find = async (source) => (await linter.lintSource(source, 'a.tsx')).findings.filter(({ rule }) => rule === 'event-renamed');
+		const [plain] = await find("useNlddEvent(ref, 'tabchange', show);");
+		assert.equal(plain.message, renamed);
+		assert.equal((await find('useEventListener(board, "nldd-move", onMove);')).length, 1);
+		assert.equal((await find("listen('nldd-close', hide);")).length, 1);
+	});
+
+	it('gives no fix for a name in a function of the app, also not one with nldd-', async () => {
+		// The name of a function does not say which way the name goes: it may be sent
+		// on a bus of the app's own, and a fix on one end would break the other.
+		for (const source of ["useNlddEvent(ref, 'tabchange', show);", 'useEventListener(board, "nldd-move", onMove);', "onEvent('nldd-close', hide);"]) {
+			const [finding] = (await linter.lintSource(source, 'a.ts')).findings.filter(({ rule }) => rule === 'event-renamed');
+			assert.ok(finding, source);
+			assert.equal(finding.fix, undefined, source);
+		}
+	});
+
+	it('renames the name in a hook of the project that only listens with it', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-hook-'));
+		mkdirSync(join(root, 'src'));
+		const hook = [
+			'export function useNlddEvent(ref: RefObject<HTMLElement>, type: string, handler: (event: Event) => void): void {',
+			'  const saved = useRef(handler);',
+			'  useEffect(() => {',
+			'    const el = ref.current;',
+			'    if (!el || saved.type === type) return;',
+			'    el.addEventListener(type, handler);',
+			'    return () => el.removeEventListener(type, handler);',
+			'  }, [ref, type]);',
+			'}',
+			'',
+		].join('\n');
+		// A function that listens and also tracks the name: renaming one end could break the other.
+		const bus = 'export function useBusEvent(name: string, payload: unknown) {\n  window.addEventListener(name, log);\n  track(name, payload);\n}\n';
+		writeFileSync(join(root, 'src/events.ts'), hook);
+		writeFileSync(join(root, 'src/bus.ts'), bus);
+		writeFileSync(join(root, 'src/Tabs.tsx'), "export const Tabs = () => {\n  useNlddEvent(ref, 'tabchange', show);\n  useBusEvent('tabchange', 1);\n  return <nldd-tab-bar ref={ref} />;\n};\n");
+		spawnSync(process.execPath, [fileURLToPath(new URL('./cli.js', import.meta.url)), 'lint', '--fix', 'src'], { cwd: root, encoding: 'utf8' });
+		const fixed = readFileSync(join(root, 'src/Tabs.tsx'), 'utf8');
+		assert.match(fixed, /useNlddEvent\(ref, 'tab-change', show\)/);
+		assert.match(fixed, /useBusEvent\('tabchange', 1\)/, 'a function that also tracks the name keeps it');
+	});
+
+	it('leaves a function that sends, logs or builds the name, and one that is not about events, alone', async () => {
+		const source = [
+			"el.dispatchEvent(new CustomEvent('nldd-move'));",
+			"fireEvent(el, new CustomEvent('tabchange'));",
+			"trackEvent('nldd-move');",
+			"emitEvent('nldd-move', detail);",
+			"logEvent('tabchange');",
+			"sendEvent(channel, 'nldd-close');",
+			"const event = createEvent('nldd-move');",
+			"track('tabchange');",
+			"const label = t('nldd-close');",
+		].join('\n');
+		assert.deepEqual(await messagesIn(source, 'a.ts'), []);
+	});
+
 	it('takes an arrow function with a parameter of that name for no Angular binding', async () => {
 		assert.deepEqual(await messagesIn('const c = (tabchange) => d;\nconst e = x && (tabchange) => f;', 'a.ts'), []);
 	});
@@ -2259,5 +2342,80 @@ describe('renamed events', () => {
 			if (use) assert.ok(real.events.includes(use), `${name} → ${use}`);
 		}
 		assert.equal(real.removedEvents.tabchange?.use, 'tab-change');
+	});
+});
+
+describe('the commands that open a browser, before they open one', () => {
+	const cli = fileURLToPath(new URL('./cli.js', import.meta.url));
+	const run = (...args) => spawnSync(process.execPath, [cli, ...args], { encoding: 'utf8' });
+
+	it('takes no flag with --url that writes a file or accepts a finding', () => {
+		for (const flag of ['--fix', '--update-baseline', '--tighten-baseline', '--stdin']) {
+			const result = run('lint', '--url', 'http://localhost:1', flag);
+			assert.equal(result.status, 2, flag);
+			assert.match(result.stderr, new RegExp(`--url reads a running page, so it takes no ${flag}\\.`), flag);
+		}
+	});
+
+	it('asks for an address with --url, and a whole number with --max', () => {
+		assert.match(run('lint', '--url', 'localhost:5173').stderr, /--url takes an address that starts with http:\/\/ or https:\/\//);
+		assert.match(run('lint', '--url', 'http://localhost:1', '--max', '0').stderr, /--max takes a whole number above 0/);
+	});
+
+	it('asks compare for two versions and a place for the images', () => {
+		assert.match(run('compare', 'dist').stderr, /nldd compare takes two versions/);
+		assert.match(run('compare', 'old', 'new').stderr, /it takes --out <directory>/);
+		assert.equal(run('compare', 'old', 'new').status, 2);
+	});
+});
+
+describe('a color that content of the design system no longer takes', () => {
+	const linter = createLinter(loadData());
+	const rulesIn = async (source, file) => (await linter.lintSource(source, file)).findings.filter(({ severity }) => severity !== 'hint').map(({ rule }) => rule);
+	const view = (inner) => `export const A = ({ rest, color }) => <>${inner}</>;`;
+
+	it('is found where an element of the app sets `color` around an icon or a text', async () => {
+		assert.deepEqual(await rulesIn(view('<div style={{ color: "white", background: "black" }}><nldd-icon icon="info" /></div>'), 'a.tsx'), ['style-color-needs-context']);
+		assert.deepEqual(await rulesIn('<div style="color: white"><span><nldd-container><nldd-text text="Dakisolatie"></nldd-text></nldd-container></span></div>', 'a.html'), ['style-color-needs-context']);
+	});
+
+	it('is none where the context is set too, or nothing inside reads it', async () => {
+		for (const inner of [
+			'<div style={{ color: "white", "--context-content-color": "white" }}><nldd-icon icon="info" /></div>',
+			'<span style={{ color: "red" }}>Dakisolatie</span>',
+			'<div style={{ color: "red" }}><nldd-icon icon="info" color="critical" /></div>',
+			'<div style={{ color: "red" }}><nldd-card><nldd-text text="Dakisolatie" /></nldd-card></div>',
+			'<div style={{ backgroundColor: "red" }}><nldd-icon icon="info" /></div>',
+		]) assert.deepEqual(await rulesIn(view(inner), 'a.tsx'), [], inner);
+	});
+
+	it('says nothing where a spread or a binding hides what the style sets', async () => {
+		assert.deepEqual(await rulesIn(view('<div style={{ color: "red", ...rest }}><nldd-icon icon="info" /></div>'), 'a.tsx'), []);
+		assert.deepEqual(await rulesIn('<template><div :style="{ color }"><nldd-icon icon="info" /></div></template>', 'a.vue'), []);
+	});
+});
+
+describe('a link token set on an element', () => {
+	const linter = createLinter(loadData());
+	const lines = async (source, file) => (await linter.lintSource(source, file)).findings.filter(({ rule }) => rule === 'link-color-no-effect').map(({ line }) => line);
+
+	it('colors no link, in a style and in a rule on a component', async () => {
+		assert.deepEqual(await lines('export const A = ({ color }) => <nldd-link href="/x" text="Dossier D-318" style={{ "--semantics-links-color": color }} />;', 'a.tsx'), [1]);
+		assert.deepEqual(await lines('.matrix nldd-link { --semantics-links-is-hovered-color: green; }\n', 'a.css'), [1]);
+	});
+
+	it('is fine on the root, and is left alone on a class, which may be a theme there', async () => {
+		assert.deepEqual(await lines(':root { --semantics-links-color: #154273; }\n.theme-oranje { --semantics-links-color: #e17000; }\nhtml[data-theme] nldd-link { --semantics-links-color: red; }\n', 'a.css'), []);
+	});
+});
+
+describe('the built-in rules', () => {
+	it('each say what an upgrade brings: a rule about what exists, or the last release without it', async () => {
+		const { BUILT_IN_RULES } = await import('./rule-data.js');
+		const version = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).version;
+		for (const [id, rule] of Object.entries(BUILT_IN_RULES)) {
+			assert.ok(rule.group === 'api' || /^\d+\.\d+\.\d+$/.test(rule.after ?? ''), `${id} has group 'api' or an after`);
+			if (rule.after) assert.ok(rule.after <= version || rule.after.split('.').map(Number) <= version.split('.').map(Number), `${id}: after ${rule.after} is no later than ${version}`);
+		}
 	});
 });

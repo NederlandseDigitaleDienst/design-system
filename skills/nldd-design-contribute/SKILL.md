@@ -38,6 +38,10 @@ Controleer eerst of het in de [changelog](../nldd-design/changelog.md) al langsk
 
 **Kwetsbaarheden gaan een andere route.** Die horen niet in een openbaar issue. Meld ze via het Nationaal Cyber Security Centrum, https://www.ncsc.nl/contact/kwetsbaarheid-melden, met "MinBZK/CIO-office github security response" erbij.
 
+## Wat een upgrade tegenhoudt
+
+Kan een upgrade niet goed doordat het designsysteem iets niet kan, zeg dat dan in het issue: wat er na de upgrade slechter is dan ervoor. De beheerders geven zo'n issue het label `blocking`, en het gaat voor. Issues die de agent van de upgrade zelf meldt, hebben ook `uit-upgrade`.
+
 ## Een patroon voorstellen
 
 Een patroon is iets anders dan een component: het beschrijft hoe je bestaande componenten samenstelt tot iets dat een taak afhandelt. De set staat in [`patterns/`](../nldd-design-build/patterns/) en groeit met wat zich in productie bewijst. Een patroon verdient zijn plek met bewijs, niet met een goed idee: het moet ergens draaien, en het moet een regel bij zich dragen die uitlegt waarom die compositie zo is.

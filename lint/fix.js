@@ -85,8 +85,9 @@ function writtenTranslations(source, found) {
  * bound or already has the key. One per element per pass: the next pass adds the next key.
  */
 function translationEdits(source, finding, translation) {
-	const { startTag, jsx } = finding;
-	if (jsx) return [];
+	const { startTag, writes } = finding;
+	// In a string literal of another language, a quote of ours could end the literal.
+	if (writes && !writes.quotes) return [];
 	return Object.entries(translation).flatMap(([name, key]) => {
 		const found = findAttribute(startTag, name);
 		const text = writtenText(source, found);
@@ -145,16 +146,17 @@ function tagEdits(source, { offset, endOffset, tag: name, startTag }, to) {
 /**
  * What stands between the start tag and the closing tag of an element, when the
  * file says it for certain: no hole a template fills (`{ }`, `${ }`, `{{ }}`)
- * and no comment, which could hold anything.
+ * and no comment, which could hold anything. Where a hole can only be text, as
+ * `{{ }}` in Vue and an expression in JSX that the finding took for text, it stays.
  */
-function contentOf(source, { offset, endOffset, tag: name, startTag }) {
+function contentOf(source, { offset, endOffset, tag: name, startTag, writes }) {
 	if (!startTag || endOffset === undefined || endOffset >= source.length || !source.startsWith(`<${name}`, offset)) return undefined;
 	if (startTag.selfClosing) return undefined;
 	const start = startTag.end + 1;
 	const closing = source.lastIndexOf('</', endOffset);
 	if (closing < start || !new RegExp(`^</${name}\\s*>$`).test(source.slice(closing, endOffset + 1))) return undefined;
 	const text = source.slice(start, closing);
-	if (/[{}]|<!--/.test(text)) return undefined;
+	if ((writes?.aroundHoles ? /<!--/ : /[{}]|<!--/).test(text)) return undefined;
 	return { start, end: closing, text };
 }
 
@@ -163,12 +165,17 @@ const INLINE = new Set(['a', 'abbr', 'b', 'br', 'cite', 'code', 'del', 'em', 'i'
 
 /** Text, with or without inline elements, goes in an element of its own, such as a `<p>`. */
 function wrapEdits(source, finding, wrapper) {
+	// Measured: in a host that is a block, a `<p>` takes the box a `<span>` takes. In one the app
+	// made inline it starts a line of its own, so there the choice is the app's.
+	if (/\sstyle\s*=[^>]*display\s*:\s*(inline|contents)/.test(source.slice(finding.offset, (finding.startTag?.end ?? finding.offset) + 1))) return [];
 	const content = contentOf(source, finding);
 	const inner = content?.text.trim();
 	// A blank line ends raw HTML in Markdown, and indenting it leaves trailing space.
 	if (!inner || /\r?\n[ \t]*\r?\n/.test(inner)) return [];
 	const tags = [...inner.matchAll(/<\/?([a-zA-Z][\w-]*)/g)].map((match) => match[1].toLowerCase());
 	if (tags.some((name) => !INLINE.has(name))) return [];
+	// A block element may not stand in a line of text, so there the text gets a `<span>`.
+	if (wrapper === 'p' && finding.inLine) wrapper = 'span';
 	const leading = /^\s*/.exec(content.text)[0];
 	const trailing = /\s*$/.exec(content.text)[0];
 	const base = leading.includes('\n') ? leading.slice(leading.lastIndexOf('\n') + 1) : undefined;
@@ -226,6 +233,7 @@ function unwrapEdits(source, finding, { drop = [], move = {} }) {
 /** An edit is `{ from, to, text }` in the source. What is not certain makes none. */
 function editsOf(source, finding) {
 	const { fix, offset, tag, mention, startTag } = finding;
+	if (finding.readOnly) return [];
 	return [
 		...Object.entries(fix.rename ?? {}).flatMap(([from, to]) => renameEdits(source, startTag, from, to)),
 		...Object.entries(fix.value ?? {}).flatMap(([name, values]) => valueEdits(source, startTag, name, values)),
@@ -387,6 +395,7 @@ export function applyFixes(source, findings) {
 		// Edits of one finding that overlap each other would corrupt the file, so that fix is not made.
 		const clash = (edit, i) => unique.some((other) => overlaps(edit, other)) || found.slice(i + 1).some((other) => overlaps(edit, other));
 		if (found.length === 0 || found.some(clash)) continue;
+		for (const edit of found) edit.rule = finding.rule;
 		unique.push(...found);
 		if (finding.fix.tag) renamedTags.set(finding.tag, finding.fix.tag);
 		if (finding.fix.translation) translated.add(finding.offset);
@@ -395,5 +404,8 @@ export function applyFixes(source, findings) {
 	for (const { from, to, text } of unique.sort((a, b) => b.from - a.from)) {
 		fixed = fixed.slice(0, from) + text + fixed.slice(to);
 	}
-	return { source: fixed, fixed: unique.filter(({ closing }) => !closing).length, renamedTags };
+	const counted = unique.filter(({ closing }) => !closing);
+	const byRule = {};
+	for (const { rule } of counted) byRule[rule] = (byRule[rule] ?? 0) + 1;
+	return { source: fixed, fixed: counted.length, byRule, renamedTags };
 }

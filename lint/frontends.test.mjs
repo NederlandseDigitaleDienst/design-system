@@ -10,7 +10,7 @@ const rules = async (source, filename) => (await linter.lintSource(source, filen
 
 const nodes = async (source, filename, name) => {
 	const found = [];
-	for (const root of await parseSource(source, filename)) walk(root, (node) => node.name === name && found.push(node));
+	for (const root of (await parseSource(source, filename)).roots) walk(root, (node) => node.name === name && found.push(node));
 	return found;
 };
 

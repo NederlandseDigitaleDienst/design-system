@@ -5,7 +5,7 @@ import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from '
 import { extname, join, relative, resolve, sep } from 'node:path';
 import { declarations, TOKEN_PREFIX } from './css.js';
 
-export const IGNORED_DIRECTORIES = new Set(['node_modules', 'dist', 'build', 'coverage', '.git', '.next', '.nuxt']);
+export const IGNORED_DIRECTORIES = new Set(['node_modules', 'dist', 'build', 'coverage', '.git', '.next', '.nuxt', '.venv', 'venv', '__pycache__']);
 /** Markdown is linted on request: documentation is full of deliberately wrong examples. */
 export const DEFAULT_EXTENSIONS = ['.html', '.htm', '.j2', '.jinja', '.jinja2', '.tmpl', '.gohtml', '.vue', '.astro', '.jsx', '.tsx', '.js'];
 
@@ -15,6 +15,12 @@ export const DEFAULT_EXTENSIONS = ['.html', '.htm', '.j2', '.jinja', '.jinja2', 
  * does not read as checked and clean.
  */
 export const UNREAD_EXTENSIONS = ['.svelte', '.php', '.twig', '.erb', '.ejs', '.hbs', '.handlebars', '.mustache', '.njk', '.liquid', '.cshtml', '.razor'];
+
+/** Languages where markup stands in string literals: read there, and only where a literal holds a component. */
+export const STRING_EXTENSIONS = ['.py'];
+
+/** Markdown and MDX: read when named, and by an upgrade, which has to reach every place a component is written. */
+export const MARKDOWN_EXTENSIONS = ['.md', '.mdx'];
 
 /** An app's own stylesheets: read for the tokens they name, and in full when the group pure is on. */
 export const STYLESHEET_EXTENSIONS = ['.css', '.scss', '.sass', '.less'];
@@ -99,14 +105,25 @@ export function partialExcludes(paths, root, exclude = [], extensions = DEFAULT_
 /** The average line length above which a script counts as minified. */
 const MINIFIED_LINE_LENGTH = 500;
 
-/** A built or minified script: not the app's own source, and no use to lint. */
-export function isBundle(filename, source) {
+/** In a directory a build writes to, such as `dist`: output, not the app's own source. */
+export const isBuilt = (filename, root) => relative(root, filename).split(sep).some((part) => IGNORED_DIRECTORIES.has(part));
+
+/**
+ * A script a build wrote: it stands in a directory builds write to, or it is
+ * minified. Output, not the app's own source, so a scan skips it and a rename
+ * leaves it alone. Its chunks hold markup in strings and the styles of the
+ * components. The pages and stylesheets next to it are what a build has to
+ * show. Whether a script is the design system's own code is another question,
+ * answered from what it reads: `isComponentCode` in linter.js.
+ */
+export function isBuildOutput(filename, source, root) {
 	if (!/\.[cm]?js$/.test(filename)) return false;
-	return /\.min\.[cm]?js$/.test(filename) || source.length / source.split('\n').length > MINIFIED_LINE_LENGTH;
+	return isBuilt(filename, root) || /\.min\.[cm]?js$/.test(filename) || source.length / source.split('\n').length > MINIFIED_LINE_LENGTH;
 }
 
 const isStylesheet = (filename) => STYLESHEET_EXTENSIONS.includes(extname(filename));
-const namesTokens = (source) => /var\(\s*--(primitives|semantics|components|context)-|--_[a-z]/.test(source);
+/** Reads a token, sets a variable of a component, or sets a color the design system reads from its context. */
+const namesTokens = (source) => /var\(\s*--(primitives|semantics|components|context)-|--_[a-z]|--(context|semantics-links)-[\w-]+\s*:/.test(source);
 
 /**
  * Whether a file is worth a parser when the group pure is off: most files in

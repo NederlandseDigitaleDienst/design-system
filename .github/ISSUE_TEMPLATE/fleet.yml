@@ -1,0 +1,37 @@
+name: Aanmelden voor een pull request bij elke release
+description: Zet je repository op fleet.json. Daarna stuurt het designsysteem na elke release een pull request.
+title: 'Aanmelden: '
+labels: [fleet]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Laat eerst een eigenaar van je organisatie de app [NLDD Designsysteem](https://github.com/apps/nldd-designsysteem) op je repository installeren. Zonder de app kan het designsysteem geen pull request openen, en dan wordt dit verzoek geweigerd.
+
+        Na het insturen maakt een workflow er een pull request van op `fleet.json`. De beheerders van het designsysteem kijken die na.
+  - type: input
+    id: repository
+    attributes:
+      label: Repository
+      description: Eigenaar en naam, zoals op GitHub.
+      placeholder: jouw-organisatie/jouw-app
+    validations:
+      required: true
+  - type: checkboxes
+    id: agent
+    attributes:
+      label: Agent
+      options:
+        - label: Laat een agent de lijst afwerken voordat de pull request opengaat
+  - type: input
+    id: build
+    attributes:
+      label: Bouwcommando
+      description: Alleen voor een statische site, voor beelden van voor en na. Eén commando dat de site bouwt vanaf een schone checkout.
+      placeholder: npm ci && npm run build
+  - type: input
+    id: site
+    attributes:
+      label: Map van de site
+      description: De map waar het bouwcommando de site in zet.
+      placeholder: dist
