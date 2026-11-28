@@ -1,8 +1,10 @@
 import assert from 'node:assert/strict';
 import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { describe, it } from 'node:test';
+import { fileURLToPath } from 'node:url';
 import { createLinter } from './linter.js';
 import { loadData, resolveSeverities } from './rule-data.js';
 import { lintProject } from './session.js';
@@ -13,6 +15,20 @@ import { formatReport, formatSummary, splitReport } from './upgrade-report.js';
 
 const DATA = loadData();
 const severities = resolveSeverities(DATA, {});
+
+/**
+ * The TypeScript of this checkout, a development dependency. The linter itself reads the
+ * TypeScript of the project it checks, so a job that installs only what a consumer gets has
+ * none: what is tested through it is skipped there, as `lint/*.test.mjs` also runs on the
+ * lowest supported Node with `--omit=dev`.
+ */
+const typescript = (() => {
+	try {
+		return createRequire(join(dirname(fileURLToPath(import.meta.url)), '..', 'package.json'))('typescript');
+	} catch {
+		return undefined;
+	}
+})();
 
 function project(files) {
 	const root = mkdtempSync(join(tmpdir(), 'nldd-upgrade-'));
@@ -432,14 +448,13 @@ describe('Markdown in a scan', () => {
 	});
 });
 
-describe('an expression in JSX, read by its type', async () => {
-	const { default: compiler } = await import('typescript');
+describe('an expression in JSX, read by its type', { skip: typescript === undefined && 'typescript is a development dependency, and this install has none' }, async () => {
 	const { createTypes } = await import('./types.js');
 	const { applyFixes } = await import('./fix.js');
 	const component = (body) => `type Row = { label: string; count: number; note?: string; cell: unknown };\nexport function View({ row, children }: { row: Row; children: any }) {\n\treturn ${body};\n}\n`;
 	const lintIn = async (body, options = {}) => {
 		const root = project({ 'tsconfig.json': JSON.stringify({ compilerOptions: { jsx: 'preserve', strict: true }, include: ['*.tsx'] }) });
-		const linter = createLinter(DATA, { types: options.untyped ? undefined : createTypes({ compiler }), undecided: options.undecided });
+		const linter = createLinter(DATA, { types: options.untyped ? undefined : createTypes({ compiler: typescript }), undecided: options.undecided });
 		return linter.lintSource(component(body), join(root, 'View.tsx'));
 	};
 	const rulesOf = async (body, options) => (await lintIn(body, options)).findings.filter(({ severity }) => severity !== 'hint').map(({ rule }) => rule);
