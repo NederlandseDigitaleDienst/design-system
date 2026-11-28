@@ -40,6 +40,7 @@ here; consult the commit history if you need that level of detail.
 
 - **Help text in `nldd-form-field` has a line height of 1.5** (`snug`) instead of 1.25, as body text that can run to a paragraph should.
 - **`nldd-button` and `nldd-toggle-button` give a label more room.** A side that ends in text now has 2px more padding on xs and sm, and 4px more on md and lg; a side with an icon keeps the padding it had, as far from the edge as the icon is from the top and bottom. A button without icons is 8px wider on md. The new tokens are `--semantics-buttons-{size}-text-inline-padding` and `--semantics-buttons-{size}-has-supporting-text-text-inline-padding`. `nldd-segmented-control` and `nldd-tab-bar` stay compact and keep their padding.
+- **The documentation of `nldd-sidebar-section` says why its sidebar stands on the left (#432):** the sidebar comes first in the source, and on the left what you see follows the order a keyboard and a screen reader take, on every width and on every site that uses NLDD.
 
 ### Fixed
 
