@@ -52,14 +52,12 @@ const SKIP_SUFFIXES = ['.styles.ts', '.template.ts', '.test.ts', '.stories.ts', 
 
 /**
  * Named slots a consumer never fills by name, keyed by the file's first element.
- * nldd-form-field-help-text assigns itself to `help`, so documenting that slot
- * would invite a `slot="help"` that the component overwrites anyway.
  *
  * The key is the first element because the comparison is per file. An internal
  * slot of a later element in a shared file is therefore listed under the first
  * element of that file, not under its own tag.
  */
-const INTERNAL_SLOTS = new Map([['nldd-form-field', new Set(['help'])]]);
+const INTERNAL_SLOTS = new Map();
 
 /**
  * Per tag, the attributes a mixin or base class brings in, from the component

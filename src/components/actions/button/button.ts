@@ -132,6 +132,22 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	@property({ type: Boolean, reflect: true, attribute: 'expandable' })
 	expandable = false;
 
+	/** Whether there is a start icon, from the attribute or the slot. The side
+	 * with an icon gets less padding than a side with text. */
+	get _hasStartIcon(): boolean {
+		return !!this.startIcon || this.querySelector(':scope > [slot="start-icon"]') !== null;
+	}
+
+	/** Whether there is an end icon, from the attribute or the slot. */
+	get _hasEndIcon(): boolean {
+		return !!this.endIcon || this.querySelector(':scope > [slot="end-icon"]') !== null;
+	}
+
+	/** Renders again when an icon is slotted in or taken out, for its padding. */
+	_onIconSlotChange = (): void => {
+		this.requestUpdate();
+	};
+
 	/**
 	 * Type of popup container this button opens. Sets `aria-haspopup` on the
 	 * inner button and forces `aria-expanded` to always be present (true/false)

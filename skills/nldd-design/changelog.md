@@ -15,6 +15,48 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **`nldd-form-field` names and describes its input with the autoloader too.** A field that was defined before its input never wired that input up: no name, no error on screen. See Fixed.
+- **Help text is part of `nldd-form-field` now: `help-text` for plain text, an `nldd-text` in the `help-text` slot for text with a link.** `nldd-form-field-help-text` is gone; `nldd lint --fix` moves it over. See Breaking.
+- **`group` on `nldd-form-field`, for one question with more than one control**, such as a postcode and a house number. The field is then a group named by its label, as a fieldset with a legend, and each control names itself. A field with more than one control and no `group` is now an error in development. See Added and Breaking.
+- **`nldd-form-section` is a part of a form under a heading, no longer a fieldset.** Put an `nldd-title` with a `heading-level` in its new `header` slot; `text` and `supporting-text` are gone, and `nldd lint --fix` moves them there. See Breaking.
+
+### Breaking
+
+- **`nldd-form-field-help-text` is gone.** Put plain help text in `help-text` on the field, and help text with a link in an `nldd-text` with `slot="help-text"`, which the field gives the size, color and weight of help text. `nldd lint --fix` turns `<nldd-form-field-help-text>` into `<nldd-text slot="help-text">` (rule `form-field-help-text-renamed`), and then wraps its text in a `<p>` as `nldd-text` asks. A stylesheet or script that names the old tag is listed, not renamed: `nldd-text` alone would match every text on the page.
+
+- **A `nldd-form-field` with more than one control has to be a `group`.** It named and described only the first control, and the ones after it went without its label and its help text. Make it a `group` when the controls answer one question, as a radio group with an "Anders" text field does, or give each question a field of its own. The new rule `form-field-max-one-input` reports it in the browser in development, as `error`.
+
+- **`nldd-form-section` renders no `<fieldset>` and `<legend>` any more.** It is a block with a `header` slot and the fields under it, in a shadow root. Its title is a heading now, which a screen reader user can jump to, and no longer a group name read with every field; a question with more than one control is an `nldd-form-field` with `group`. `text` and `supporting-text` are gone: put an `nldd-title` in the `header` slot, with the `heading-level` that fits the page, and anything else beside it. The section keeps the distances: 8 under the header, 16 between the fields and 24 to the sections around it. `nldd lint --fix` turns `text` and `supporting-text` into an `<nldd-title slot="header">` with both (rule `form-section-text-no-effect`, which takes over the id `form-section-needs-name`); add its `heading-level` yourself, as `title-needs-level` asks. The title takes the size of its level, not the font of the old legend.
+- **`dist/css/form-section.css` is gone**, and with it the form section rules in `global.css`. The distance between sections is in `form.css` now. Remove an import of `form-section.css`.
+
+### Added
+
+- **`group` on `nldd-form-field`.** The field takes the role of a group, named by its label with "optioneel" when it is optional, and describes itself with its validation and help text instead of its first control. Each control names itself with `accessible-label`; the `*-needs-name` lint rules now ask for that inside a group. A radio group or a checkbox group is a group of its own already and needs no `group`: the hint `form-field-group-no-single-group` says so.
+- **`help-text` on `nldd-form-field`, for plain help text below the input.** It supports `**bold**`, as `label` does, and a screen reader reads it as part of the description of the input.
+- **`form-field-group-needs-label` (`warn`)** for a `group` without a `label`: the label is the name of the group, and without one the field takes no role.
+- **`form-title-goes-in-form-section` points at the `header` slot of `nldd-form-section`**, and `title-needs-level` now also asks for the `heading-level` of a title there.
+- **`nldd lint --fix` can move attributes to a new child element, and give a renamed tag attributes of its own.** The rule options are `child` and `attributes`.
+- **`form-field-validation-no-multiple-controls` is about a group field now**: a validation list without `for` that reads a value reads the first control of the group.
+- **Two lint rules for help text:** `form-field-help-text-needs-text` (`warn`) for something else than an `nldd-text` in the `help-text` slot, and the hint `form-field-help-text-style-no-effect` for a `size`, `color` or `weight` on it, which the field sets.
+- **A screen reader hears what the field shows around the label.** The "Optioneel" badge is now part of the accessible name of the input ("Tussenvoegsel, optioneel"), and `supporting-label` is now part of its description, after what is wrong and before the help text. Both were on screen only. The name comes from the new translation key `components.form-field.optional-accessible-label` (`{label}, optioneel`).
+
+### Changed
+
+- **Help text in `nldd-form-field` has a line height of 1.5** (`snug`) instead of 1.25, as body text that can run to a paragraph should.
+- **`nldd-button` and `nldd-toggle-button` give a label more room.** A side that ends in text now has 2px more padding on xs and sm, and 4px more on md and lg; a side with an icon keeps the padding it had, as far from the edge as the icon is from the top and bottom. A button without icons is 8px wider on md. The new tokens are `--semantics-buttons-{size}-text-inline-padding` and `--semantics-buttons-{size}-has-supporting-text-text-inline-padding`. `nldd-segmented-control` and `nldd-tab-bar` stay compact and keep their padding.
+- **The documentation of `nldd-sidebar-section` says why its sidebar stands on the left (#432):** the sidebar comes first in the source, and on the left what you see follows the order a keyboard and a screen reader take, on every width and on every site that uses NLDD.
+
+### Fixed
+
+- **`nldd-form-field` finds an input that is defined after the field, as with the autoloader (#512).** It looked once, found an element that was not an input yet, and never looked again. The label did not reach the input as its name, and the `nldd-validation-list` got no control, so an error with `invalid` and `unmet` did not show.
+- **`nldd-form-field` finds an input that appears later inside a wrapper**, such as a `v-if` in a `div`. It only watched its direct children.
+- **A `nldd-validation-list` with `for` describes the control it names (#415).** It described the first input of the field, so the error of an "Anders" text field beside a radio group was read out on the radio group, and the text field had none.
+- **`nldd-search-field` keeps the `accessible-description` of the app while it shows its keyboard shortcut.** The shortcut replaced it.
+- **A long press on `nldd-button` or `nldd-icon-button` with a popover in its `interest` slot opens that popover, not the link preview of iOS.** The rule that stops the preview used `:host(:has())`, which not every browser supports, and a browser that does not drops the whole rule, `interestfor` included. The control now says it has a popover with a class.
+- **`nldd-toggle-button` on `size="lg"` stacks an icon in the `icon` slot above its text,** as it already did with the `icon` attribute. A slotted icon stood beside the text.
+
 ## [0.29.3](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.29.2...v0.29.3) (2026-11-26)
 
 ### Highlights

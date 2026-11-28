@@ -1,0 +1,11 @@
+severity: error
+context: 'nldd-form-field-help-text'
+removed: ['nldd-form-field-help-text']
+fix: { tag: nldd-text, attributes: { slot: help-text } }
+message: '`nldd-form-field-help-text` is gone. Put plain help text in `help-text` on the field, and help text with a link in an `nldd-text` with `slot="help-text"`.'
+see: componenten/form-field
+examples:
+  passed:
+    - '<nldd-form-field label="E-mailadres" help-text="We delen je adres nooit."><nldd-text-field></nldd-text-field></nldd-form-field>'
+    - '<nldd-form-field label="E-mailadres"><nldd-text-field></nldd-text-field><nldd-text slot="help-text"><p>Zie het <a href="/privacy">privacybeleid</a>.</p></nldd-text></nldd-form-field>'
+  failed: ['<nldd-form-field label="E-mailadres"><nldd-text-field></nldd-text-field><nldd-form-field-help-text>Zie het <a href="/privacy">privacybeleid</a>.</nldd-form-field-help-text></nldd-form-field>']

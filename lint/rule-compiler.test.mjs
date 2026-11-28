@@ -144,8 +144,8 @@ describe('the rules in source', () => {
 
 	it('judges a placed tree the same whatever the order of its placements', async () => {
 		const file = (first, second) => `const label = <strong/>;\nexport function A() { return <div>${first}${second}</div>; }`;
-		const inSpan = '<nldd-form-field-help-text><span>{label}</span></nldd-form-field-help-text>';
-		const direct = '<nldd-form-field-help-text>{label}</nldd-form-field-help-text>';
+		const inSpan = '<nldd-text slot="help-text"><span>{label}</span></nldd-text>';
+		const direct = '<nldd-text slot="help-text">{label}</nldd-text>';
 		const textRules = async (source) => (await rulesIn(source, 'a.tsx', pure)).filter((rule) => rule === 'html-no-text');
 		assert.deepEqual(await textRules(file(inSpan, direct)), await textRules(file(direct, inSpan)));
 	});

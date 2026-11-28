@@ -84,6 +84,45 @@ describe('--fix', () => {
 		}
 	});
 
+	it('gives help text its new tag and its slot, and points at what names the old tag elsewhere', async () => {
+		const root = project({
+			'a.html': '<nldd-form-field label="E-mail"><nldd-text-field></nldd-text-field><nldd-form-field-help-text>Zie <a href="/p">privacy</a>.</nldd-form-field-help-text></nldd-form-field>',
+			'app.css': 'nldd-form-field-help-text { color: red; }\n',
+		});
+		const result = await lintProject(DATA, { root, severities, fix: true });
+		assert.equal(readFileSync(join(root, 'a.html'), 'utf8'), '<nldd-form-field label="E-mail"><nldd-text-field></nldd-text-field><nldd-text slot="help-text"><p>Zie <a href="/p">privacy</a>.</p></nldd-text></nldd-form-field>');
+		// Renaming the selector would make it match every nldd-text on the page.
+		assert.equal(readFileSync(join(root, 'app.css'), 'utf8'), 'nldd-form-field-help-text { color: red; }\n');
+		assert.deepEqual(result.references.remaining, ['app.css:1']);
+	});
+
+	it('leaves help text that already has a slot of its own', async () => {
+		const source = '<nldd-form-field label="E-mail"><nldd-text-field></nldd-text-field><nldd-form-field-help-text slot="x">Uitleg.</nldd-form-field-help-text></nldd-form-field>';
+		assert.equal((await fixed(source)).text, source);
+	});
+
+	it('moves the title of a form section into a title in its header slot, on a line of its own', async () => {
+		const { text } = await fixed('<nldd-form>\n\t<nldd-form-section\n\t\ttext="Adres"\n\t\tsupporting-text="Waar woon je?"\n\t>\n\t\t<nldd-form-field label="Straat"></nldd-form-field>\n\t</nldd-form-section>\n</nldd-form>\n');
+		assert.equal(text, '<nldd-form>\n\t<nldd-form-section>\n\t\t<nldd-title slot="header" text="Adres" supporting-text="Waar woon je?"></nldd-title>\n\t\t<nldd-form-field label="Straat"></nldd-form-field>\n\t</nldd-form-section>\n</nldd-form>\n');
+	});
+
+	it('asks for the heading level of the title it made', async () => {
+		const { result } = await fixed('<nldd-form><nldd-form-section text="Adres"></nldd-form-section></nldd-form>');
+		const rules = result.results.flatMap(({ findings }) => findings.map(({ rule }) => rule));
+		assert.ok(rules.includes('title-needs-level'));
+		assert.ok(!rules.includes('form-section-text-no-effect'));
+	});
+
+	it('moves a bound title of a form section as it is written, and keeps the other attributes', async () => {
+		const { text } = await fixed('<template><nldd-form-section id="adres" :text="titel"></nldd-form-section></template>', 'a.vue');
+		assert.equal(text, '<template><nldd-form-section id="adres"><nldd-title slot="header" :text="titel"></nldd-title></nldd-form-section></template>');
+	});
+
+	it('moves no title of a form section when one of its attributes cannot leave the tag', async () => {
+		const source = 'export const A = () => <nldd-form-section id="adres" /* titel */ text="Adres" supporting-text="Waar woon je?"></nldd-form-section>;\n';
+		assert.equal((await fixed(source, 'a.tsx')).text, source);
+	});
+
 	it('leaves a bundle alone when it carries a renamed tag along', async () => {
 		const bundle = `document.querySelector("nldd-app-view");${' '.repeat(1000)}\n`;
 		const root = project({ 'a.html': '<nldd-app-view></nldd-app-view>', 'app.js': bundle });

@@ -268,7 +268,7 @@ function plainTagsAfterHost(selector) {
 		let below = false;
 		const visit = (list) => {
 			list.forEach((token, index) => {
-				// `fieldset.form-section` is an element the component renders itself, not one it is given.
+				// A tag with a class, such as `div.toolbar`, is an element the component renders itself, not one it is given.
 				const own = list[index + 1]?.type === 'attribute' && list[index + 1].name === 'class';
 				if (['descendant', 'child', 'sibling', 'adjacent'].includes(token.type)) below = true;
 				else if (below && token.type === 'tag' && !token.name.includes('-') && !own) found.push([host, token.name]);

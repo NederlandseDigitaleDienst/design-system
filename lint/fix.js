@@ -131,11 +131,15 @@ function flagEdits(source, startTag, from, to) {
 /**
  * The parser says where an element ends: a comment or a string that looks like its
  * closing tag does not count. Without a closing tag of its own it stays as it is.
+ * `attributes` go into the start tag with the new name; one the element already
+ * has, under any value, makes no edit.
  */
-function tagEdits(source, { offset, endOffset, tag: name, startTag }, to) {
+function tagEdits(source, { offset, endOffset, tag: name, startTag }, to, attributes = {}) {
 	// An element the file never closes ends past the last character.
 	if (!startTag || endOffset === undefined || endOffset >= source.length || !source.startsWith(`<${name}`, offset)) return [];
-	const open = { from: offset + 1, to: offset + 1 + name.length, text: to };
+	if (Object.keys(attributes).some((attribute) => findAttribute(startTag, attribute))) return [];
+	const added = Object.entries(attributes).map(([attribute, value]) => ` ${attribute}="${value}"`).join('');
+	const open = { from: offset + 1, to: offset + 1 + name.length, text: to + added };
 	if (startTag.selfClosing && startTag.end === endOffset) return [open];
 	const closing = source.lastIndexOf('</', endOffset);
 	if (closing <= offset || !new RegExp(`^</${name}\\s*>$`).test(source.slice(closing, endOffset + 1))) return [];
@@ -223,6 +227,39 @@ function unwrapEdits(source, finding, { drop = [], move = {} }) {
 	return [{ from: finding.offset, to: finding.endOffset + 1, text }];
 }
 
+/**
+ * Attributes that moved to a child of their own, such as the title of a form
+ * section that became an nldd-title in its header slot. The child goes first,
+ * with the attributes as they were written, binding and all; on a line of its
+ * own when the content of the element starts on one. An attribute a template
+ * language writes into makes no edit.
+ */
+function childEdits(source, finding, { tag, slot, attributes }) {
+	const { startTag, offset, endOffset, tag: name } = finding;
+	if (!startTag || startTag.selfClosing || endOffset === undefined || !source.startsWith(`<${name}`, offset)) return [];
+	const moved = attributes.map((attribute) => findAttribute(startTag, attribute)).filter(Boolean);
+	if (moved.length === 0 || moved.some((attribute) => attribute.templated)) return [];
+	// Nothing left in the start tag: it closes up, also when it spread over lines.
+	const nameEnd = offset + 1 + name.length;
+	const removals = moved.length === startTag.attributes.length && !/\/[*/]/.test(source.slice(nameEnd, startTag.end))
+		? [{ from: nameEnd, to: startTag.end, text: '' }]
+		: attributes.flatMap((attribute) => removeEdits(source, finding, attribute));
+	const collapsed = removals.length === 1 && moved.length === startTag.attributes.length && removals[0].from === nameEnd;
+	// An attribute that cannot go would end up both on the element and on the child.
+	if (!collapsed && removals.length !== moved.length) return [];
+	const written = moved.map((attribute) => source.slice(attribute.start, attribute.end)).join(' ');
+	const child = `<${tag}${slot ? ` slot="${slot}"` : ''} ${written}></${tag}>`;
+	const at = startTag.end + 1;
+	const lineStart = source.lastIndexOf('\n', offset - 1) + 1;
+	const indent = source.slice(lineStart, offset);
+	const next = /^(\r?\n)([ \t]*)(<\/)?/.exec(source.slice(at));
+	if (/\S/.test(indent) || !next) return [...removals, { from: at, to: at, text: child }];
+	// Before the closing tag of an empty element the next line is one level up.
+	const unit = indent.includes(' ') && !indent.includes('\t') ? '  ' : '\t';
+	const childIndent = next[3] ? indent + unit : next[2];
+	return [...removals, { from: at, to: at, text: `${next[1]}${childIndent}${child}` }];
+}
+
 /** An edit is `{ from, to, text }` in the source. What is not certain makes none. */
 function editsOf(source, finding) {
 	const { fix, offset, tag, mention, startTag } = finding;
@@ -231,10 +268,13 @@ function editsOf(source, finding) {
 		...Object.entries(fix.value ?? {}).flatMap(([name, values]) => valueEdits(source, startTag, name, values)),
 		...(fix.remove ?? []).flatMap((name) => removeEdits(source, finding, name)),
 		...Object.entries(fix.flag ?? {}).flatMap(([from, to]) => flagEdits(source, startTag, from, to)),
-		...(fix.tag && mention ? [{ from: offset + 1, to: offset + 1 + tag.length, text: fix.tag }] : []),
-		...(fix.tag && !mention ? tagEdits(source, finding, fix.tag) : []),
+		// A mention, such as `<nldd-x>` in a sentence, takes the new name only: with
+		// attributes it would no longer be a tag that stands for the element.
+		...(fix.tag && mention && !fix.attributes ? [{ from: offset + 1, to: offset + 1 + tag.length, text: fix.tag }] : []),
+		...(fix.tag && !mention ? tagEdits(source, finding, fix.tag, fix.attributes) : []),
 		...(fix.wrap ? wrapEdits(source, finding, fix.wrap) : []),
 		...(fix.unwrap ? unwrapEdits(source, finding, fix.unwrap) : []),
+		...(fix.child ? childEdits(source, finding, fix.child) : []),
 		...(fix.translation ? translationEdits(source, finding, fix.translation) : []),
 		// A token that got another name: the finding spans the old name in a `var()`, and
 		// startsWith checks that the span still holds it.
@@ -345,6 +385,7 @@ export function renameReferences(source, renamedTags, kind) {
 		fixed += count;
 	};
 	for (const [from, to] of renamedTags) {
+		if (to === null) continue;
 		if (new RegExp(`(define|customElement)\\(\\s*["'\`]${from}["'\`]`).test(source)) continue;
 		apply(replaceAll(text, nameIn(entryPoint(from)), entryPoint(to)));
 		apply(replaceAll(text, nameIn(toClass(from)), toClass(to)));
@@ -372,7 +413,7 @@ const overlaps = (a, b) => a.from === b.from || (a.from < b.to && b.from < a.to)
 /**
  * One pass of fixes. An edit that overlaps one already taken is left for the next pass, so a
  * caller applies this until `fixed` is 0, as fixUntilStable does.
- * @returns {{ source: string, fixed: number, renamedTags: Map<string, string> }}
+ * @returns {{ source: string, fixed: number, renamedTags: Map<string, string | null> }}
  */
 export function applyFixes(source, findings) {
 	const renamedTags = new Map();
@@ -388,7 +429,9 @@ export function applyFixes(source, findings) {
 		const clash = (edit, i) => unique.some((other) => overlaps(edit, other)) || found.slice(i + 1).some((other) => overlaps(edit, other));
 		if (found.length === 0 || found.some(clash)) continue;
 		unique.push(...found);
-		if (finding.fix.tag) renamedTags.set(finding.tag, finding.fix.tag);
+		// A tag that took attributes with its new name meant more than that name, so
+		// what names it elsewhere is pointed at, not renamed: `null` says so.
+		if (finding.fix.tag) renamedTags.set(finding.tag, finding.fix.attributes ? null : finding.fix.tag);
 		if (finding.fix.translation) translated.add(finding.offset);
 	}
 	let fixed = source;

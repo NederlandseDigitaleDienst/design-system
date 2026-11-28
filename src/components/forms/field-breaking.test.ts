@@ -34,9 +34,8 @@ function overflowOf(box: Element): number {
 
 const CASES: Record<string, string> = {
 	'nldd-form-field label, supporting label and help text': `
-		<nldd-form-field label="${WORD}" supporting-label="Omgevingsvergunningaanvraag">
+		<nldd-form-field label="${WORD}" supporting-label="Omgevingsvergunningaanvraag" help-text="Zie ${WORD}aanvraag">
 			<nldd-text-field></nldd-text-field>
-			<nldd-form-field-help-text>Zie ${WORD}aanvraag</nldd-form-field-help-text>
 		</nldd-form-field>`,
 	'nldd-form-field with label-alignment="left"': `
 		<nldd-form-field label-alignment="left" label="${WORD}"><nldd-text-field></nldd-text-field></nldd-form-field>`,
@@ -63,8 +62,7 @@ describe('fields – breaking long words', () => {
 		const root = el.shadowRoot!;
 		expect(wrapOf(root.querySelector('.form-field__label-text')!)).toEqual(wrapOfSets(wrapUiText));
 		expect(wrapOf(root.querySelector('.form-field__supporting-label')!)).toEqual(wrapOfSets(wrapUiText));
-		const help = el.querySelector('nldd-form-field-help-text')!;
-		expect(wrapOf(help.shadowRoot!.querySelector('.form-field__help-text')!)).toEqual(wrapOfSets(wrapBodyText));
+		expect(wrapOf(root.querySelector('.form-field__help-text')!)).toEqual(wrapOfSets(wrapBodyText));
 	});
 
 	it.each(['checkbox-field', 'radio-button-field', 'switch-field'])('gives the label of nldd-%s wrapUiText', async (name) => {

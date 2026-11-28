@@ -29,7 +29,6 @@ const ENTRIES = {
 	'styles.css': [
 		'../styles.css',
 		'../../src/components/inputs/dropdown/dropdown.css',
-		'../../src/components/forms/form-section/form-section.css',
 		'../../src/components/forms/form/form.css',
 		'../client/first-paint.css',
 		'../client/site.css',

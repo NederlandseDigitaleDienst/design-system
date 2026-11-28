@@ -1,0 +1,10 @@
+severity: error
+aliases: ['form-section-needs-name']
+context: 'nldd-form-section:is([text], [supporting-text])'
+removed: ['text', 'supporting-text']
+fix: { child: { tag: nldd-title, slot: header, attributes: [text, supporting-text] } }
+message: '`text` and `supporting-text` on nldd-form-section are gone. Put an nldd-title in its header slot, with the `heading-level` that fits the page.'
+see: componenten/form-section
+examples:
+  passed: ['<nldd-form-section><nldd-title slot="header" text="Adres" heading-level="2"></nldd-title></nldd-form-section>']
+  failed: ['<nldd-form-section text="Adres" supporting-text="Waar woon je?"></nldd-form-section>']

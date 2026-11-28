@@ -3,6 +3,17 @@
  *
  * A page section with a left sidebar alongside the main content.
  *
+ * The sidebar stands on the left, and there is no way to put it on the right.
+ * It comes before the main in the source, so a keyboard and a screen reader
+ * reach it first; on the left, what you see follows that order on every width.
+ * On the right, a wide section would show the main first and then go back to
+ * the sidebar. WCAG does not forbid that, but W3C advises a focus order that
+ * follows what you see. On a narrow section the order already matches, with the
+ * button that opens the sheet under the title. It is also the same on every
+ * site that uses NLDD, so a visitor finds a table of contents in one place,
+ * whether they look or listen. Content that goes with the main but is no
+ * navigation, such as related links, goes under the main.
+ *
  * - **Wide (section >= 1008px):** two columns. The sidebar is a sticky, scrollable
  *   box (max-width 320px) beside the main content. It takes the surface of the
  *   section around it and is edged by a divider line, so it reads as a block

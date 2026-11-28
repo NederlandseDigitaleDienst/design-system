@@ -648,6 +648,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -1443,6 +1456,19 @@
               },
               "default": "[]",
               "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -9072,7 +9098,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A field around one input: its label, supporting label, optional badge, validation and help text. It finds the input among its children, hands it the label as its accessible name and gives it an id, so you write no `for` or `id` yourself. The input is the first one it finds, leaving out what sits in an nldd-toolbar inside the field: a toolbar works on the field, such as the formatting bar above an nldd-text-editor, and is never the field itself. A native `for` cannot cross a shadow boundary, so a click on the label focuses the input from script. Mark the optional fields with `optional`, not the required ones; the design guidelines say why. Put the requirements on a value in an nldd-validation-list inside the same field. What only your server knows, such as a password found in a breach, the app names in `unmet` on the input itself: see nldd-validation-list. The field hands the list its input and puts the list in the input's accessible description, before the help text.",
+          "description": "A field around one input: its label, supporting label, optional badge, validation and help text. It finds the input among its children, hands it the label as its accessible name and gives it an id, so you write no `for` or `id` yourself. An input that is defined later, as the autoloader does, or that appears later inside a wrapper, is found when it arrives. The input is the first one it finds, leaving out what sits in an nldd-toolbar inside the field: a toolbar works on the field, such as the formatting bar above an nldd-text-editor, and is never the field itself. A native `for` cannot cross a shadow boundary, so a click on the label focuses the input from script. Mark the optional fields with `optional`, not the required ones; the design guidelines say why. Put the requirements on a value in an nldd-validation-list inside the same field. What only your server knows, such as a password found in a breach, the app names in `unmet` on the input itself: see nldd-validation-list. The field hands the list its input and puts the list in the input's accessible description, before the help text. A list with a `for` of its own describes the control it names instead. Plain help text goes in `help-text`. Help text with more in it, such as a link, goes in an nldd-text in the `help-text` slot. The field gives that nldd-text its size, color and weight, so every help text looks the same. A field is about one control. A question that takes more than one, such as a date in three fields or a radio group with an \"Anders\" text field, is a `group`: the field is then the group, named by its label, and describes itself rather than its first control. More than one question are more fields. The accessible name is the label, followed by \"optioneel\" when the field is `optional`. The accessible description is what is wrong first, then the help text in the slot, then the supporting label and `help-text`. Those last two are text in the field itself. A control that carries its own role, such as a radio group or a native input, and a field that is a `group`, can only take text as `aria-description`, which a browser reads only while no element describes it: not while an error shows, and not beside help text in the slot. Put the supporting label in that help text then.",
           "name": "NLDDFormField",
           "members": [
             {
@@ -9103,8 +9129,18 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Short supporting text shown below the label. Same typography as the\noptional badge. Use nldd-form-field-help-text for longer descriptive text.",
+              "description": "Short supporting text shown below the label. Same typography as the\noptional badge. Use `help-text` for longer descriptive text.",
               "attribute": "supporting-label"
+            },
+            {
+              "kind": "field",
+              "name": "helpText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Plain help text below the input. Help text with a link goes in the `help-text` slot.",
+              "attribute": "help-text"
             },
             {
               "kind": "field",
@@ -9115,6 +9151,17 @@
               "default": "false",
               "description": "When true an \"Optional\" badge is shown next to the label.\nRequired fields are intentionally left unmarked per design spec.\n\nNote: nldd-form-field does not auto-propagate `required` or `aria-required`\nto the slotted input. If the field is required, set `required` directly\non the slotted input element so screen readers announce it correctly.",
               "attribute": "optional"
+            },
+            {
+              "kind": "field",
+              "name": "group",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the field a group around more than one control, named by the label.\n\nThrough its own role and not a `<fieldset>`: a legend in a shadow root\ndoes not name the controls in its slot for NVDA in Firefox, which is why\nnldd-form-section rendered its fieldset in the light DOM. A role and a\nname on the host are the same thing to assistive software, and reach.",
+              "attribute": "group",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -9158,8 +9205,17 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Short supporting text below the label. Same typography as optional badge. Supports **bold** markdown syntax.",
+              "description": "Short supporting text below the label. Same typography as optional badge. Supports **bold** markdown syntax. Read as part of the accessible description of the input.",
               "fieldName": "supportingLabel"
+            },
+            {
+              "name": "help-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Help text below the input, as plain text. Supports **bold** markdown syntax. Read as part of the accessible description of the input, after the validation and the supporting label. Help text with a link goes in the `help-text` slot, which takes its place.",
+              "fieldName": "helpText"
             },
             {
               "name": "optional",
@@ -9167,8 +9223,17 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Shows an optional badge next to the label. Its text is the translation key `components.form-field.optional-label` (\"Optioneel\").",
+              "description": "Shows an optional badge next to the label, and adds it to the accessible name of the input. Its text is the translation key `components.form-field.optional-label` (\"Optioneel\"); the name is `components.form-field.optional-accessible-label` (\"{label}, optioneel\").",
               "fieldName": "optional"
+            },
+            {
+              "name": "group",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "One question answered with more than one control, such as a postcode and a house number. The field is then a group named by the label, as a fieldset with a legend is, and each control names itself. Without a `label` it takes no role. A radio group or a checkbox group is a group of its own already and needs no `group`.",
+              "fieldName": "group"
             },
             {
               "name": "translations",
@@ -9203,34 +9268,11 @@
           "slots": [
             {
               "name": "",
-              "description": "The slotted input (e.g. nldd-text-field), its nldd-validation-list and its nldd-form-field-help-text."
-            }
-          ]
-        },
-        {
-          "kind": "class",
-          "description": "",
-          "name": "NLDDFormFieldHelpText",
-          "members": [],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "nldd-form-field-help-text",
-          "customElement": true,
-          "accepts": [
-            "a",
-            "strong",
-            "b",
-            "em",
-            "i",
-            "code",
-            "mark"
-          ],
-          "slots": [
+              "description": "The slotted input (e.g. nldd-text-field) and its nldd-validation-list."
+            },
             {
-              "name": "",
-              "description": "Help text content. Inline elements in it look as they do in nldd-text: `<strong>` and `<b>` take the bold weight from the scale, `<em>` and `<i>` are italic, `<a>` is an underlined link, `<code>` sits on a tinted surface in the monospace font and `<mark>` is highlighted. Only direct children get that styling: an element inside another (a `<code>` in an `<a>`) is left as it is."
+              "name": "help-text",
+              "description": "Help text with more than plain text in it, such as a link: an nldd-text. The field sets its `size`, `color` and `weight`. Takes the place of `help-text`."
             }
           ]
         }
@@ -9251,22 +9293,6 @@
             "name": "NLDDFormField",
             "module": "src/components/forms/form-field/form-field.ts"
           }
-        },
-        {
-          "kind": "js",
-          "name": "NLDDFormFieldHelpText",
-          "declaration": {
-            "name": "NLDDFormFieldHelpText",
-            "module": "src/components/forms/form-field/form-field.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "nldd-form-field-help-text",
-          "declaration": {
-            "name": "NLDDFormFieldHelpText",
-            "module": "src/components/forms/form-field/form-field.ts"
-          }
         }
       ]
     },
@@ -9276,48 +9302,27 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Nederlandse Digitale Dienst Form Section Component Plain custom element (extends HTMLElement, no Lit). The light-DOM render works around an NVDA + Firefox a11y bug where a shadow-DOM `<fieldset>` + `<legend>` is not reliably announced as the group label for slotted controls. A native fieldset/legend in the light DOM works correctly across all AT/browser combinations. **Differs from shadow components:** - No shadowRoot: all children live in the light DOM (inside the rendered `<fieldset>`). - No Lit: a plain HTMLElement with manual DOM mutation. - **Requires a global stylesheet import**: `dist/css/form-section.css` (or `global.css`). Form-section has no shadow stylesheet. **Accessibility note**: the title renders as a `<legend>`. Semantically that is a **group label**, not a heading. Screen readers announce it when the user enters the fieldset, but users jumping through headings with the H key skip it. Visually it looks like a heading, so use this component for *form grouping*, not as page structure. For real page headings, use a separate heading element above the form. **Supporting-text length**: the supporting text sits as a `<span>` inside the `<legend>` so a screen reader reads it along as the group label. Side effect: on every field entry within the section, the whole legend (title + supporting text) is spoken again. Keep `supporting-text` short (roughly 80 characters or less) and use it to introduce the group (\"Vul je adresgegevens in\"), not for detailed instructions. For a longer explanation on one specific field, use `nldd-form-field-help-text` on that field.",
+          "description": "A part of a form: a header, and the fields under it in the rhythm of a form. The section owns the distances: between the header and the fields, between the fields, and, in an nldd-form, between one section and the next. What stands in the header is yours, such as an nldd-title, with a text under it or a button beside it, and so is the space between those. A section is no group. A question that takes more than one control is an nldd-form-field with `group`; a section holds questions, and its title is a heading, which a screen reader user can jump to. Give that nldd-title the `heading-level` that fits the page. Outside a form, use an nldd-container.",
           "name": "NLDDFormSection",
-          "members": [
-            {
-              "kind": "field",
-              "name": "text",
-              "type": {
-                "text": "string"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "supportingText",
-              "type": {
-                "text": "string"
-              }
-            }
-          ],
-          "attributes": [
-            {
-              "name": "text",
-              "description": "Heading text (rendered in the `<legend>`).",
-              "type": {
-                "text": "string"
-              }
-            },
-            {
-              "name": "supporting-text",
-              "description": "Short description under the heading. Keep it to roughly 80 characters or less (see the a11y note).",
-              "type": {
-                "text": "string"
-              }
-            }
-          ],
+          "members": [],
           "superclass": {
-            "name": "PlainElement",
-            "module": "/src/utilities/custom-element.js"
+            "name": "LitElement",
+            "package": "lit"
           },
           "tagName": "nldd-form-section",
           "customElement": true,
           "keywords": [
             "formuliersectie"
+          ],
+          "slots": [
+            {
+              "name": "header",
+              "description": "What stands above the fields, such as an nldd-title with a `heading-level`."
+            },
+            {
+              "name": "",
+              "description": "The fields of this part of the form."
+            }
           ]
         }
       ],
@@ -11024,6 +11029,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -11861,6 +11879,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -12414,6 +12445,19 @@
               },
               "default": "[]",
               "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -13509,6 +13553,19 @@
               },
               "default": "[]",
               "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -14628,6 +14685,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -15400,6 +15470,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -16053,6 +16136,19 @@
               },
               "default": "[]",
               "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -16959,6 +17055,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -17701,6 +17810,19 @@
               },
               "default": "[]",
               "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -18576,6 +18698,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -19384,6 +19519,19 @@
               },
               "default": "[]",
               "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -20204,6 +20352,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -20935,6 +21096,19 @@
               },
               "default": "[]",
               "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -21775,6 +21949,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -22471,6 +22658,20 @@
             },
             {
               "kind": "method",
+              "name": "ownDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "description": "The shortcut hint, read after the help and error texts of an\nnldd-form-field and after the description the app gives.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "formValue",
               "return": {
                 "type": {
@@ -22517,6 +22718,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -22554,20 +22768,6 @@
                 }
               },
               "description": "The element the description belongs to. Override where it differs.\n\nPublic rather than protected because TypeScript refuses to emit a\ndeclaration for an anonymous class with protected members, and a mixin\nreturns exactly that. Same reason `formValue()` is public in\nFormAssociated.",
-              "inheritedFrom": {
-                "name": "DescribedBy",
-                "module": "src/utilities/described-by-mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "ownDescriptions",
-              "return": {
-                "type": {
-                  "text": "readonly Element[]"
-                }
-              },
-              "description": "Elements the component itself adds to the description, after those of\nnldd-form-field: the popover in the `interest` slot of nldd-button.\nRequest an update when this changes. Public for the same reason as\n`describedTarget()`.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -24243,6 +24443,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -24959,6 +25172,19 @@
               },
               "default": "[]",
               "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -26372,6 +26598,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -26987,6 +27226,19 @@
               },
               "default": "[]",
               "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -31032,6 +31284,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -32311,6 +32576,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -33491,6 +33769,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -34252,6 +34543,19 @@
               },
               "default": "[]",
               "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -35360,6 +35664,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -36201,6 +36518,19 @@
               },
               "default": "[]",
               "description": "Set by nldd-form-field. A consumer never writes this: the app has\n`accessible-described-by` and `accessible-description`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -41404,7 +41734,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A page section with a left sidebar alongside the main content. - **Wide (section >= 1008px):** two columns. The sidebar is a sticky, scrollable box (max-width 320px) beside the main content. It takes the surface of the section around it and is edged by a divider line, so it reads as a block without drawing the eye away from the main. Its sticky top/bottom insets default to 16px; override with `sticky-top` / `sticky-bottom` so it clears other sticky page elements (e.g. a sticky header). - **Narrow (section < 1008px):** the sidebar collapses behind a sheet (a left panel on md+ viewports, a bottom sheet on mobile), and the host reflects a `collapsed` attribute. The consumer owns the trigger: place any chrome (a button, a chosen-filters bar, …) wherever you want, show it only while collapsed with `sidebar-section-only=\"collapsed\"` on it, and call `show()` / `toggle()` to open the sheet. Bind `aria-expanded` via the `open`/`close` events. The sheet gets a sticky title bar by default, with the `sidebar-label` as title and a \"Sluit\" button. Replace it through the `sheet-top-title-bar` slot. A link in the sheet to a place on the page beside it, such as a row of a table of contents, closes the sheet first and then scrolls to that place and moves focus there, with a temporary tab stop as a skip link does. Left to the browser, the page would scroll under a sheet that is still open, and on closing the browser gives focus back to the trigger without scrolling to it, so focus ends up out of sight. A link that opens elsewhere (another page, a new tab, a modifier key, a `download`) or points into the sidebar itself is left alone, as is a click the consumer has already handled with `preventDefault()`. The address gets the fragment through `replaceState`, without a new history entry and without a `hashchange` event or a `:target` match: a router that listens for those does not see the jump. The sidebar content lives in `slot=\"sidebar\"`. Its slot outlet moves between the box (expanded) and the sheet (collapsed) so there is a single, never-duplicated copy: the light DOM (and its state) is preserved across the switch. Like every section it goes in an nldd-page, never in another section, and lays out by the width of that page, not the viewport. A page in a narrow split-view pane collapses the sidebar to the sheet just like a narrow window, and the sidebar never stacks above or crowds the main. Set `no-collapse` to opt out: a narrow section then stacks the sidebar (full-width) above the main instead of using a sheet. A resize across the breakpoint switches a frame after it paints, so the old layout shows for one frame. Inherits block `padding` and `height` from PageSectionMixin.",
+          "description": "A page section with a left sidebar alongside the main content. The sidebar stands on the left, and there is no way to put it on the right. It comes before the main in the source, so a keyboard and a screen reader reach it first; on the left, what you see follows that order on every width. On the right, a wide section would show the main first and then go back to the sidebar. WCAG does not forbid that, but W3C advises a focus order that follows what you see. On a narrow section the order already matches, with the button that opens the sheet under the title. It is also the same on every site that uses NLDD, so a visitor finds a table of contents in one place, whether they look or listen. Content that goes with the main but is no navigation, such as related links, goes under the main. - **Wide (section >= 1008px):** two columns. The sidebar is a sticky, scrollable box (max-width 320px) beside the main content. It takes the surface of the section around it and is edged by a divider line, so it reads as a block without drawing the eye away from the main. Its sticky top/bottom insets default to 16px; override with `sticky-top` / `sticky-bottom` so it clears other sticky page elements (e.g. a sticky header). - **Narrow (section < 1008px):** the sidebar collapses behind a sheet (a left panel on md+ viewports, a bottom sheet on mobile), and the host reflects a `collapsed` attribute. The consumer owns the trigger: place any chrome (a button, a chosen-filters bar, …) wherever you want, show it only while collapsed with `sidebar-section-only=\"collapsed\"` on it, and call `show()` / `toggle()` to open the sheet. Bind `aria-expanded` via the `open`/`close` events. The sheet gets a sticky title bar by default, with the `sidebar-label` as title and a \"Sluit\" button. Replace it through the `sheet-top-title-bar` slot. A link in the sheet to a place on the page beside it, such as a row of a table of contents, closes the sheet first and then scrolls to that place and moves focus there, with a temporary tab stop as a skip link does. Left to the browser, the page would scroll under a sheet that is still open, and on closing the browser gives focus back to the trigger without scrolling to it, so focus ends up out of sight. A link that opens elsewhere (another page, a new tab, a modifier key, a `download`) or points into the sidebar itself is left alone, as is a click the consumer has already handled with `preventDefault()`. The address gets the fragment through `replaceState`, without a new history entry and without a `hashchange` event or a `:target` match: a router that listens for those does not see the jump. The sidebar content lives in `slot=\"sidebar\"`. Its slot outlet moves between the box (expanded) and the sheet (collapsed) so there is a single, never-duplicated copy: the light DOM (and its state) is preserved across the switch. Like every section it goes in an nldd-page, never in another section, and lays out by the width of that page, not the viewport. A page in a narrow split-view pane collapses the sidebar to the sheet just like a narrow window, and the sidebar never stacks above or crowds the main. Set `no-collapse` to opt out: a narrow section then stacks the sidebar (full-width) above the main instead of using a sheet. A resize across the breakpoint switches a frame after it paints, so the old layout shows for one frame. Inherits block `padding` and `height` from PageSectionMixin.",
           "name": "NLDDSidebarSection",
           "members": [
             {
@@ -49698,6 +50028,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -54903,7 +55246,7 @@
           "type": {
             "text": "Record<string, () => Promise<unknown>>"
           },
-          "default": "{ 'nldd-accordion': () => import('../components/content/accordion/accordion.js'), 'nldd-accordion-item': () => import('../components/content/accordion/accordion-item.js'), 'nldd-activity-indicator': () => import('../components/status-and-feedback/activity-indicator/activity-indicator.js'), 'nldd-admonition': () => import('../components/content/admonition/admonition.js'), 'nldd-avatar': () => import('../components/content/avatar/avatar.js'), 'nldd-avatar-group': () => import('../components/content/avatar-group/avatar-group.js'), 'nldd-badge': () => import('../components/status-and-feedback/badge/badge.js'), 'nldd-banner': () => import('../components/status-and-feedback/banner/banner.js'), 'nldd-bar-split-view': () => import('../components/layout/split-views/bar-split-view/bar-split-view.js'), 'nldd-blockquote': () => import('../components/content/blockquote/blockquote.js'), 'nldd-box': () => import('../components/layout/box/box.js'), 'nldd-breadcrumbs': () => import('../components/navigation/breadcrumbs/breadcrumbs.js'), 'nldd-breadcrumbs-item': () => import('../components/navigation/breadcrumbs/breadcrumbs.js'), 'nldd-button': () => import('../components/actions/button/button.js'), 'nldd-button-bar': () => import('../components/actions/button-bar/button-bar.js'), 'nldd-button-bar-divider': () => import('../components/actions/button-bar/button-bar.js'), 'nldd-button-group': () => import('../components/actions/button-group/button-group.js'), 'nldd-card': () => import('../components/layout/card/card.js'), 'nldd-cell': () => import('../components/lists-and-tables/cells/cell/cell.js'), 'nldd-checkbox': () => import('../components/inputs/checkbox/checkbox.js'), 'nldd-checkbox-field': () => import('../components/inputs/checkbox-field/checkbox-field.js'), 'nldd-checkbox-group': () => import('../components/inputs/checkbox-group/checkbox-group.js'), 'nldd-code-editor': () => import('../components/inputs/code-editor/code-editor.js'), 'nldd-code-viewer': () => import('../components/content/code-viewer/code-viewer.js'), 'nldd-collection': () => import('../components/layout/collection/collection.js'), 'nldd-combo-box': () => import('../components/inputs/combo-box/combo-box.js'), 'nldd-container': () => import('../components/layout/container/container.js'), 'nldd-date-field': () => import('../components/inputs/date-field/date-field.js'), 'nldd-date-picker': () => import('../components/inputs/date-picker/date-picker.js'), 'nldd-description-cell': () => import('../components/lists-and-tables/cells/description-cell/description-cell.js'), 'nldd-divider': () => import('../components/layout/divider/divider.js'), 'nldd-document-tab-bar': () => import('../components/navigation/document-tab-bar/document-tab-bar.js'), 'nldd-document-tab-bar-item': () => import('../components/navigation/document-tab-bar/document-tab-bar.js'), 'nldd-dropdown': () => import('../components/inputs/dropdown/dropdown.js'), 'nldd-file-field': () => import('../components/inputs/file-field/file-field.js'), 'nldd-form': () => import('../components/forms/form/form.js'), 'nldd-form-actions': () => import('../components/forms/form-actions/form-actions.js'), 'nldd-form-field': () => import('../components/forms/form-field/form-field.js'), 'nldd-form-field-help-text': () => import('../components/forms/form-field/form-field.js'), 'nldd-form-section': () => import('../components/forms/form-section/form-section.js'), 'nldd-full-bleed-section': () => import('../components/layout/page-sections/full-bleed-section/full-bleed-section.js'), 'nldd-hero': () => import('../components/layout/page-sections/hero/hero.js'), 'nldd-icon': () => import('../components/content/icon/icon.js'), 'nldd-icon-button': () => import('../components/actions/icon-button/icon-button.js'), 'nldd-icon-cell': () => import('../components/lists-and-tables/cells/icon-cell/icon-cell.js'), 'nldd-identity': () => import('../components/content/identity/identity.js'), 'nldd-image': () => import('../components/content/image/image.js'), 'nldd-inline-dialog': () => import('../components/status-and-feedback/inline-dialog/inline-dialog.js'), 'nldd-just-in-time-education': () => import('../components/status-and-feedback/just-in-time-education/just-in-time-education.js'), 'nldd-kanban': () => import('../components/layout/kanban/kanban.js'), 'nldd-kanban-column': () => import('../components/layout/kanban/kanban-column.js'), 'nldd-keyboard-shortcut': () => import('../components/content/keyboard-shortcut/keyboard-shortcut.js'), 'nldd-link': () => import('../components/navigation/link/link.js'), 'nldd-link-group': () => import('../components/navigation/link-group/link-group.js'), 'nldd-list': () => import('../components/lists-and-tables/list/list.js'), 'nldd-list-item': () => import('../components/lists-and-tables/list-item/list-item.js'), 'nldd-list-item-segment': () => import('../components/lists-and-tables/list-item-segment/list-item-segment.js'), 'nldd-menu': () => import('../components/actions/menu/menu.js'), 'nldd-menu-bar': () => import('../components/navigation/menu-bar/menu-bar.js'), 'nldd-menu-bar-item': () => import('../components/navigation/menu-bar-item/menu-bar-item.js'), 'nldd-menu-divider': () => import('../components/actions/menu/menu-divider.js'), 'nldd-menu-group': () => import('../components/actions/menu/menu-group.js'), 'nldd-menu-item': () => import('../components/actions/menu/menu-item.js'), 'nldd-modal-dialog': () => import('../components/status-and-feedback/modal-dialog/modal-dialog.js'), 'nldd-multi-line-text-field': () => import('../components/inputs/multi-line-text-field/multi-line-text-field.js'), 'nldd-navigation-split-view': () => import('../components/layout/split-views/navigation-split-view/navigation-split-view.js'), 'nldd-notification': () => import('../components/status-and-feedback/notification/notification.js'), 'nldd-number-field': () => import('../components/inputs/number-field/number-field.js'), 'nldd-one-half-one-half-section': () => import('../components/layout/page-sections/one-half-one-half-section/one-half-one-half-section.js'), 'nldd-one-third-two-thirds-section': () => import('../components/layout/page-sections/one-third-two-thirds-section/one-third-two-thirds-section.js'), 'nldd-one-time-code-field': () => import('../components/inputs/one-time-code-field/one-time-code-field.js'), 'nldd-page': () => import('../components/layout/page/page.js'), 'nldd-page-footer': () => import('../components/layout/page-footer/page-footer.js'), 'nldd-page-footer-legal-bar': () => import('../components/layout/page-footer/page-footer.js'), 'nldd-page-footer-legal-bar-item': () => import('../components/layout/page-footer/page-footer.js'), 'nldd-pagination': () => import('../components/navigation/pagination/pagination.js'), 'nldd-password-field': () => import('../components/inputs/password-field/password-field.js'), 'nldd-popover': () => import('../components/layout/popover/popover.js'), 'nldd-progress-bar': () => import('../components/status-and-feedback/progress-bar/progress-bar.js'), 'nldd-progress-bar-segment-indicator': () => import('../components/status-and-feedback/progress-bar/progress-bar.js'), 'nldd-progress-circle': () => import('../components/status-and-feedback/progress-circle/progress-circle.js'), 'nldd-progress-circle-segment-indicator': () => import('../components/status-and-feedback/progress-circle/progress-circle.js'), 'nldd-radio-button': () => import('../components/inputs/radio-button/radio-button.js'), 'nldd-radio-button-field': () => import('../components/inputs/radio-button-field/radio-button-field.js'), 'nldd-radio-button-group': () => import('../components/inputs/radio-button-group/radio-button-group.js'), 'nldd-reorder-handle-cell': () => import('../components/lists-and-tables/cells/reorder-handle-cell/reorder-handle-cell.js'), 'nldd-rich-text': () => import('../components/content/rich-text/rich-text.js'), 'nldd-search-field': () => import('../components/inputs/search-field/search-field.js'), 'nldd-segmented-control': () => import('../components/inputs/segmented-control/segmented-control.js'), 'nldd-segmented-control-item': () => import('../components/inputs/segmented-control/segmented-control.js'), 'nldd-sheet': () => import('../components/layout/sheet/sheet.js'), 'nldd-shell': () => import('../components/layout/shell/shell.js'), 'nldd-side-by-side-split-view': () => import('../components/layout/split-views/side-by-side-split-view/side-by-side-split-view.js'), 'nldd-sidebar-section': () => import('../components/layout/page-sections/sidebar-section/sidebar-section.js'), 'nldd-simple-section': () => import('../components/layout/page-sections/simple-section/simple-section.js'), 'nldd-skip-link': () => import('../components/navigation/skip-link/skip-link.js'), 'nldd-slider': () => import('../components/inputs/slider/slider.js'), 'nldd-spacer': () => import('../components/layout/spacer/spacer.js'), 'nldd-spacer-cell': () => import('../components/lists-and-tables/cells/spacer-cell/spacer-cell.js'), 'nldd-split-button': () => import('../components/actions/split-button/split-button.js'), 'nldd-split-view-divider': () => import('../components/layout/split-views/split-view-divider/split-view-divider.js'), 'nldd-stacked-split-view': () => import('../components/layout/split-views/stacked-split-view/stacked-split-view.js'), 'nldd-status-bar': () => import('../components/status-and-feedback/status-bar/status-bar.js'), 'nldd-step-bar': () => import('../components/status-and-feedback/step-bar/step-bar.js'), 'nldd-step-bar-item': () => import('../components/status-and-feedback/step-bar/step-bar.js'), 'nldd-step-cell': () => import('../components/lists-and-tables/cells/step-cell/step-cell.js'), 'nldd-stepper': () => import('../components/inputs/stepper/stepper.js'), 'nldd-swatch-picker': () => import('../components/inputs/swatch-picker/swatch-picker.js'), 'nldd-swatch-picker-item': () => import('../components/inputs/swatch-picker/swatch-picker.js'), 'nldd-switch': () => import('../components/inputs/switch/switch.js'), 'nldd-switch-field': () => import('../components/inputs/switch-field/switch-field.js'), 'nldd-tab-bar': () => import('../components/navigation/tab-bar/tab-bar.js'), 'nldd-tab-bar-item': () => import('../components/navigation/tab-bar/tab-bar.js'), 'nldd-table': () => import('../components/lists-and-tables/table/table.js'), 'nldd-table-row': () => import('../components/lists-and-tables/table/table.js'), 'nldd-tag': () => import('../components/content/tag/tag.js'), 'nldd-term': () => import('../components/content/term/term.js'), 'nldd-text': () => import('../components/content/text/text.js'), 'nldd-text-cell': () => import('../components/lists-and-tables/cells/text-cell/text-cell.js'), 'nldd-text-editor': () => import('../components/inputs/text-editor/text-editor.js'), 'nldd-text-field': () => import('../components/inputs/text-field/text-field.js'), 'nldd-time-field': () => import('../components/inputs/time-field/time-field.js'), 'nldd-time-picker': () => import('../components/inputs/time-picker/time-picker.js'), 'nldd-title': () => import('../components/content/title/title.js'), 'nldd-title-cell': () => import('../components/lists-and-tables/cells/title-cell/title-cell.js'), 'nldd-toggle-button': () => import('../components/inputs/toggle-button/toggle-button.js'), 'nldd-toggle-button-group': () => import('../components/inputs/toggle-button-group/toggle-button-group.js'), 'nldd-token': () => import('../components/content/token/token.js'), 'nldd-token-field': () => import('../components/inputs/token-field/token-field.js'), 'nldd-toolbar': () => import('../components/actions/toolbar/toolbar.js'), 'nldd-toolbar-item': () => import('../components/actions/toolbar/toolbar-item.js'), 'nldd-toolbar-title': () => import('../components/actions/toolbar/toolbar-title.js'), 'nldd-tooltip': () => import('../components/content/tooltip/tooltip.js'), 'nldd-top-navigation-bar': () => import('../components/navigation/top-navigation-bar/top-navigation-bar.js'), 'nldd-top-title-bar': () => import('../components/navigation/top-title-bar/top-title-bar.js'), 'nldd-two-thirds-one-third-section': () => import('../components/layout/page-sections/two-thirds-one-third-section/two-thirds-one-third-section.js'), 'nldd-validation-item': () => import('../components/forms/validation-list/validation-list.js'), 'nldd-validation-list': () => import('../components/forms/validation-list/validation-list.js'), 'nldd-visually-hidden': () => import('../components/content/visually-hidden/visually-hidden.js'), 'nldd-window': () => import('../components/layout/window/window.js'), }",
+          "default": "{ 'nldd-accordion': () => import('../components/content/accordion/accordion.js'), 'nldd-accordion-item': () => import('../components/content/accordion/accordion-item.js'), 'nldd-activity-indicator': () => import('../components/status-and-feedback/activity-indicator/activity-indicator.js'), 'nldd-admonition': () => import('../components/content/admonition/admonition.js'), 'nldd-avatar': () => import('../components/content/avatar/avatar.js'), 'nldd-avatar-group': () => import('../components/content/avatar-group/avatar-group.js'), 'nldd-badge': () => import('../components/status-and-feedback/badge/badge.js'), 'nldd-banner': () => import('../components/status-and-feedback/banner/banner.js'), 'nldd-bar-split-view': () => import('../components/layout/split-views/bar-split-view/bar-split-view.js'), 'nldd-blockquote': () => import('../components/content/blockquote/blockquote.js'), 'nldd-box': () => import('../components/layout/box/box.js'), 'nldd-breadcrumbs': () => import('../components/navigation/breadcrumbs/breadcrumbs.js'), 'nldd-breadcrumbs-item': () => import('../components/navigation/breadcrumbs/breadcrumbs.js'), 'nldd-button': () => import('../components/actions/button/button.js'), 'nldd-button-bar': () => import('../components/actions/button-bar/button-bar.js'), 'nldd-button-bar-divider': () => import('../components/actions/button-bar/button-bar.js'), 'nldd-button-group': () => import('../components/actions/button-group/button-group.js'), 'nldd-card': () => import('../components/layout/card/card.js'), 'nldd-cell': () => import('../components/lists-and-tables/cells/cell/cell.js'), 'nldd-checkbox': () => import('../components/inputs/checkbox/checkbox.js'), 'nldd-checkbox-field': () => import('../components/inputs/checkbox-field/checkbox-field.js'), 'nldd-checkbox-group': () => import('../components/inputs/checkbox-group/checkbox-group.js'), 'nldd-code-editor': () => import('../components/inputs/code-editor/code-editor.js'), 'nldd-code-viewer': () => import('../components/content/code-viewer/code-viewer.js'), 'nldd-collection': () => import('../components/layout/collection/collection.js'), 'nldd-combo-box': () => import('../components/inputs/combo-box/combo-box.js'), 'nldd-container': () => import('../components/layout/container/container.js'), 'nldd-date-field': () => import('../components/inputs/date-field/date-field.js'), 'nldd-date-picker': () => import('../components/inputs/date-picker/date-picker.js'), 'nldd-description-cell': () => import('../components/lists-and-tables/cells/description-cell/description-cell.js'), 'nldd-divider': () => import('../components/layout/divider/divider.js'), 'nldd-document-tab-bar': () => import('../components/navigation/document-tab-bar/document-tab-bar.js'), 'nldd-document-tab-bar-item': () => import('../components/navigation/document-tab-bar/document-tab-bar.js'), 'nldd-dropdown': () => import('../components/inputs/dropdown/dropdown.js'), 'nldd-file-field': () => import('../components/inputs/file-field/file-field.js'), 'nldd-form': () => import('../components/forms/form/form.js'), 'nldd-form-actions': () => import('../components/forms/form-actions/form-actions.js'), 'nldd-form-field': () => import('../components/forms/form-field/form-field.js'), 'nldd-form-section': () => import('../components/forms/form-section/form-section.js'), 'nldd-full-bleed-section': () => import('../components/layout/page-sections/full-bleed-section/full-bleed-section.js'), 'nldd-hero': () => import('../components/layout/page-sections/hero/hero.js'), 'nldd-icon': () => import('../components/content/icon/icon.js'), 'nldd-icon-button': () => import('../components/actions/icon-button/icon-button.js'), 'nldd-icon-cell': () => import('../components/lists-and-tables/cells/icon-cell/icon-cell.js'), 'nldd-identity': () => import('../components/content/identity/identity.js'), 'nldd-image': () => import('../components/content/image/image.js'), 'nldd-inline-dialog': () => import('../components/status-and-feedback/inline-dialog/inline-dialog.js'), 'nldd-just-in-time-education': () => import('../components/status-and-feedback/just-in-time-education/just-in-time-education.js'), 'nldd-kanban': () => import('../components/layout/kanban/kanban.js'), 'nldd-kanban-column': () => import('../components/layout/kanban/kanban-column.js'), 'nldd-keyboard-shortcut': () => import('../components/content/keyboard-shortcut/keyboard-shortcut.js'), 'nldd-link': () => import('../components/navigation/link/link.js'), 'nldd-link-group': () => import('../components/navigation/link-group/link-group.js'), 'nldd-list': () => import('../components/lists-and-tables/list/list.js'), 'nldd-list-item': () => import('../components/lists-and-tables/list-item/list-item.js'), 'nldd-list-item-segment': () => import('../components/lists-and-tables/list-item-segment/list-item-segment.js'), 'nldd-menu': () => import('../components/actions/menu/menu.js'), 'nldd-menu-bar': () => import('../components/navigation/menu-bar/menu-bar.js'), 'nldd-menu-bar-item': () => import('../components/navigation/menu-bar-item/menu-bar-item.js'), 'nldd-menu-divider': () => import('../components/actions/menu/menu-divider.js'), 'nldd-menu-group': () => import('../components/actions/menu/menu-group.js'), 'nldd-menu-item': () => import('../components/actions/menu/menu-item.js'), 'nldd-modal-dialog': () => import('../components/status-and-feedback/modal-dialog/modal-dialog.js'), 'nldd-multi-line-text-field': () => import('../components/inputs/multi-line-text-field/multi-line-text-field.js'), 'nldd-navigation-split-view': () => import('../components/layout/split-views/navigation-split-view/navigation-split-view.js'), 'nldd-notification': () => import('../components/status-and-feedback/notification/notification.js'), 'nldd-number-field': () => import('../components/inputs/number-field/number-field.js'), 'nldd-one-half-one-half-section': () => import('../components/layout/page-sections/one-half-one-half-section/one-half-one-half-section.js'), 'nldd-one-third-two-thirds-section': () => import('../components/layout/page-sections/one-third-two-thirds-section/one-third-two-thirds-section.js'), 'nldd-one-time-code-field': () => import('../components/inputs/one-time-code-field/one-time-code-field.js'), 'nldd-page': () => import('../components/layout/page/page.js'), 'nldd-page-footer': () => import('../components/layout/page-footer/page-footer.js'), 'nldd-page-footer-legal-bar': () => import('../components/layout/page-footer/page-footer.js'), 'nldd-page-footer-legal-bar-item': () => import('../components/layout/page-footer/page-footer.js'), 'nldd-pagination': () => import('../components/navigation/pagination/pagination.js'), 'nldd-password-field': () => import('../components/inputs/password-field/password-field.js'), 'nldd-popover': () => import('../components/layout/popover/popover.js'), 'nldd-progress-bar': () => import('../components/status-and-feedback/progress-bar/progress-bar.js'), 'nldd-progress-bar-segment-indicator': () => import('../components/status-and-feedback/progress-bar/progress-bar.js'), 'nldd-progress-circle': () => import('../components/status-and-feedback/progress-circle/progress-circle.js'), 'nldd-progress-circle-segment-indicator': () => import('../components/status-and-feedback/progress-circle/progress-circle.js'), 'nldd-radio-button': () => import('../components/inputs/radio-button/radio-button.js'), 'nldd-radio-button-field': () => import('../components/inputs/radio-button-field/radio-button-field.js'), 'nldd-radio-button-group': () => import('../components/inputs/radio-button-group/radio-button-group.js'), 'nldd-reorder-handle-cell': () => import('../components/lists-and-tables/cells/reorder-handle-cell/reorder-handle-cell.js'), 'nldd-rich-text': () => import('../components/content/rich-text/rich-text.js'), 'nldd-search-field': () => import('../components/inputs/search-field/search-field.js'), 'nldd-segmented-control': () => import('../components/inputs/segmented-control/segmented-control.js'), 'nldd-segmented-control-item': () => import('../components/inputs/segmented-control/segmented-control.js'), 'nldd-sheet': () => import('../components/layout/sheet/sheet.js'), 'nldd-shell': () => import('../components/layout/shell/shell.js'), 'nldd-side-by-side-split-view': () => import('../components/layout/split-views/side-by-side-split-view/side-by-side-split-view.js'), 'nldd-sidebar-section': () => import('../components/layout/page-sections/sidebar-section/sidebar-section.js'), 'nldd-simple-section': () => import('../components/layout/page-sections/simple-section/simple-section.js'), 'nldd-skip-link': () => import('../components/navigation/skip-link/skip-link.js'), 'nldd-slider': () => import('../components/inputs/slider/slider.js'), 'nldd-spacer': () => import('../components/layout/spacer/spacer.js'), 'nldd-spacer-cell': () => import('../components/lists-and-tables/cells/spacer-cell/spacer-cell.js'), 'nldd-split-button': () => import('../components/actions/split-button/split-button.js'), 'nldd-split-view-divider': () => import('../components/layout/split-views/split-view-divider/split-view-divider.js'), 'nldd-stacked-split-view': () => import('../components/layout/split-views/stacked-split-view/stacked-split-view.js'), 'nldd-status-bar': () => import('../components/status-and-feedback/status-bar/status-bar.js'), 'nldd-step-bar': () => import('../components/status-and-feedback/step-bar/step-bar.js'), 'nldd-step-bar-item': () => import('../components/status-and-feedback/step-bar/step-bar.js'), 'nldd-step-cell': () => import('../components/lists-and-tables/cells/step-cell/step-cell.js'), 'nldd-stepper': () => import('../components/inputs/stepper/stepper.js'), 'nldd-swatch-picker': () => import('../components/inputs/swatch-picker/swatch-picker.js'), 'nldd-swatch-picker-item': () => import('../components/inputs/swatch-picker/swatch-picker.js'), 'nldd-switch': () => import('../components/inputs/switch/switch.js'), 'nldd-switch-field': () => import('../components/inputs/switch-field/switch-field.js'), 'nldd-tab-bar': () => import('../components/navigation/tab-bar/tab-bar.js'), 'nldd-tab-bar-item': () => import('../components/navigation/tab-bar/tab-bar.js'), 'nldd-table': () => import('../components/lists-and-tables/table/table.js'), 'nldd-table-row': () => import('../components/lists-and-tables/table/table.js'), 'nldd-tag': () => import('../components/content/tag/tag.js'), 'nldd-term': () => import('../components/content/term/term.js'), 'nldd-text': () => import('../components/content/text/text.js'), 'nldd-text-cell': () => import('../components/lists-and-tables/cells/text-cell/text-cell.js'), 'nldd-text-editor': () => import('../components/inputs/text-editor/text-editor.js'), 'nldd-text-field': () => import('../components/inputs/text-field/text-field.js'), 'nldd-time-field': () => import('../components/inputs/time-field/time-field.js'), 'nldd-time-picker': () => import('../components/inputs/time-picker/time-picker.js'), 'nldd-title': () => import('../components/content/title/title.js'), 'nldd-title-cell': () => import('../components/lists-and-tables/cells/title-cell/title-cell.js'), 'nldd-toggle-button': () => import('../components/inputs/toggle-button/toggle-button.js'), 'nldd-toggle-button-group': () => import('../components/inputs/toggle-button-group/toggle-button-group.js'), 'nldd-token': () => import('../components/content/token/token.js'), 'nldd-token-field': () => import('../components/inputs/token-field/token-field.js'), 'nldd-toolbar': () => import('../components/actions/toolbar/toolbar.js'), 'nldd-toolbar-item': () => import('../components/actions/toolbar/toolbar-item.js'), 'nldd-toolbar-title': () => import('../components/actions/toolbar/toolbar-title.js'), 'nldd-tooltip': () => import('../components/content/tooltip/tooltip.js'), 'nldd-top-navigation-bar': () => import('../components/navigation/top-navigation-bar/top-navigation-bar.js'), 'nldd-top-title-bar': () => import('../components/navigation/top-title-bar/top-title-bar.js'), 'nldd-two-thirds-one-third-section': () => import('../components/layout/page-sections/two-thirds-one-third-section/two-thirds-one-third-section.js'), 'nldd-validation-item': () => import('../components/forms/validation-list/validation-list.js'), 'nldd-validation-list': () => import('../components/forms/validation-list/validation-list.js'), 'nldd-visually-hidden': () => import('../components/content/visually-hidden/visually-hidden.js'), 'nldd-window': () => import('../components/layout/window/window.js'), }",
           "description": "Per nldd-* tag, a dynamic import of the module that defines it."
         }
       ],
@@ -55718,6 +56061,19 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -55761,12 +56117,47 @@
             },
             {
               "kind": "field",
+              "name": "_fieldTextElements",
+              "type": {
+                "text": "HTMLElement[]"
+              },
+              "default": "[]",
+              "description": "The hidden elements that carry `describedByTexts`. Public for the same\nreason as `describedTarget()`.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_appliedDescription",
               "type": {
                 "text": "string | null"
               },
               "default": "null",
               "description": "The aria-description this element wrote on itself, so it only takes\nback its own.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_fieldDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "onSelf",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "The texts nldd-form-field hands over, as hidden elements in this shadow\nroot for the control to point at. Public for the same reason as\n`describedTarget()`.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -55788,7 +56179,7 @@
                   }
                 }
               ],
-              "description": "What the app gives as the description: the elements that\n`accessible-described-by` names, or else the text of\n`accessible-description`. Public for the same reason as\n`describedTarget()`.",
+              "description": "What the app gives as the description: the elements that\n`accessible-described-by` names, or else the text of\n`accessible-description`. Public for the same reason as\n`describedTarget()`.\n\nA control that is this element cannot point into its own shadow root,\nso it says the texts of nldd-form-field here too, before its own.",
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
@@ -56682,6 +57073,15 @@
             },
             {
               "kind": "field",
+              "name": "describedByTexts",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field: its supporting label and help text, which it\nrenders in its own shadow root where no reference from here can reach\nthem. Each becomes a hidden element in this shadow root, read after\n`describedByElements`. A consumer never writes this."
+            },
+            {
+              "kind": "field",
               "name": "accessibleDescription",
               "type": {
                 "text": "string"
@@ -56713,12 +57113,39 @@
             },
             {
               "kind": "field",
+              "name": "_fieldTextElements",
+              "type": {
+                "text": "HTMLElement[]"
+              },
+              "default": "[]",
+              "description": "The hidden elements that carry `describedByTexts`. Public for the same\nreason as `describedTarget()`."
+            },
+            {
+              "kind": "field",
               "name": "_appliedDescription",
               "type": {
                 "text": "string | null"
               },
               "default": "null",
               "description": "The aria-description this element wrote on itself, so it only takes\nback its own."
+            },
+            {
+              "kind": "method",
+              "name": "_fieldDescriptions",
+              "return": {
+                "type": {
+                  "text": "readonly Element[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "onSelf",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "The texts nldd-form-field hands over, as hidden elements in this shadow\nroot for the control to point at. Public for the same reason as\n`describedTarget()`."
             },
             {
               "kind": "method",
@@ -56736,7 +57163,7 @@
                   }
                 }
               ],
-              "description": "What the app gives as the description: the elements that\n`accessible-described-by` names, or else the text of\n`accessible-description`. Public for the same reason as\n`describedTarget()`."
+              "description": "What the app gives as the description: the elements that\n`accessible-described-by` names, or else the text of\n`accessible-description`. Public for the same reason as\n`describedTarget()`.\n\nA control that is this element cannot point into its own shadow root,\nso it says the texts of nldd-form-field here too, before its own."
             },
             {
               "kind": "method",

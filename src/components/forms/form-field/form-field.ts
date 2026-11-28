@@ -1,41 +1,56 @@
 /**
- * Nederlandse Digitale Dienst Form Field Components (Lit + TypeScript)
+ * Nederlandse Digitale Dienst Form Field Component (Lit + TypeScript)
  *
  * A field around one input: its label, supporting label, optional badge,
  * validation and help text. It finds the input among its children, hands it
  * the label as its accessible name and gives it an id, so you write no `for`
- * or `id` yourself. The input is the first one it finds, leaving out what sits
- * in an nldd-toolbar inside the field: a toolbar works on the field, such as
- * the formatting bar above an nldd-text-editor, and is never the field itself.
- * A native `for` cannot cross a shadow boundary, so a click on the label
- * focuses the input from script.
+ * or `id` yourself. An input that is defined later, as the autoloader does,
+ * or that appears later inside a wrapper, is found when it arrives. The input
+ * is the first one it finds, leaving out what sits in an nldd-toolbar inside
+ * the field: a toolbar works on the field, such as the formatting bar above an
+ * nldd-text-editor, and is never the field itself. A native `for` cannot cross
+ * a shadow boundary, so a click on the label focuses the input from script.
  *
  * Mark the optional fields with `optional`, not the required ones; the design
  * guidelines say why. Put the requirements on a value in an
  * nldd-validation-list inside the same field. What only your server knows,
  * such as a password found in a breach, the app names in `unmet` on the input
  * itself: see nldd-validation-list. The field hands the list its input and puts
- * the list in the input's accessible description, before the help text.
+ * the list in the input's accessible description, before the help text. A list
+ * with a `for` of its own describes the control it names instead.
+ *
+ * Plain help text goes in `help-text`. Help text with more in it, such as a
+ * link, goes in an nldd-text in the `help-text` slot. The field gives that
+ * nldd-text its size, color and weight, so every help text looks the same.
+ *
+ * A field is about one control. A question that takes more than one, such as
+ * a date in three fields or a radio group with an "Anders" text field, is a
+ * `group`: the field is then the group, named by its label, and describes
+ * itself rather than its first control. More than one question are more
+ * fields.
+ *
+ * The accessible name is the label, followed by "optioneel" when the field is
+ * `optional`. The accessible description is what is wrong first, then the help
+ * text in the slot, then the supporting label and `help-text`. Those last two
+ * are text in the field itself. A control that carries its own role, such as
+ * a radio group or a native input, and a field that is a `group`, can only take
+ * text as `aria-description`, which a browser reads only while no element
+ * describes it: not while an error shows, and not beside help text in the
+ * slot. Put the supporting label in that help text then.
  *
  * @element nldd-form-field
  * @keywords veld, label
  *
  * @attr {'top'|'right'|'left'} label-alignment - 'top' (default) | 'right' | 'left'. A value of its own wins over the one of a wrapping nldd-form.
  * @attr {string} label - Field label text. Omit for no-label layout. Supports **bold** markdown syntax, for the word to type in a confirmation; the accessible name of the control takes the text without the markers.
- * @attr {string} supporting-label - Short supporting text below the label. Same typography as optional badge. Supports **bold** markdown syntax.
- * @attr {boolean} optional - Shows an optional badge next to the label. Its text is the translation key `components.form-field.optional-label` ("Optioneel").
+ * @attr {string} supporting-label - Short supporting text below the label. Same typography as optional badge. Supports **bold** markdown syntax. Read as part of the accessible description of the input.
+ * @attr {string} help-text - Help text below the input, as plain text. Supports **bold** markdown syntax. Read as part of the accessible description of the input, after the validation and the supporting label. Help text with a link goes in the `help-text` slot, which takes its place.
+ * @attr {boolean} optional - Shows an optional badge next to the label, and adds it to the accessible name of the input. Its text is the translation key `components.form-field.optional-label` ("Optioneel"); the name is `components.form-field.optional-accessible-label` ("{label}, optioneel").
+ * @attr {boolean} group - One question answered with more than one control, such as a postcode and a house number. The field is then a group named by the label, as a fieldset with a legend is, and each control names itself. Without a `label` it takes no role. A radio group or a checkbox group is a group of its own already and needs no `group`.
  * @attr {object} translations - Override translation keys, such as the text of the optional badge; unset keys fall back to Dutch
  *
- * @slot - The slotted input (e.g. nldd-text-field), its nldd-validation-list and its nldd-form-field-help-text.
- *
- * ─────────────────────────────────────────────────────────────────────────
- *
- * @element nldd-form-field-help-text
- *
- * @slot - Help text content. Inline elements in it look as they do in nldd-text: `<strong>` and `<b>` take the bold weight from the scale, `<em>` and `<i>` are italic, `<a>` is an underlined link, `<code>` sits on a tinted surface in the monospace font and `<mark>` is highlighted. Only direct children get that styling: an element inside another (a `<code>` in an `<a>`) is left as it is.
- * @accepts a, strong, b, em, i, code, mark
- *
- * ─────────────────────────────────────────────────────────────────────────
+ * @slot - The slotted input (e.g. nldd-text-field) and its nldd-validation-list.
+ * @slot help-text - Help text with more than plain text in it, such as a link: an nldd-text. The field sets its `size`, `color` and `weight`. Takes the place of `help-text`.
  *
  * @example
  * <nldd-form-field label="Password">
@@ -44,9 +59,9 @@
  *     <nldd-validation-item id="password-required" required>This field is required.</nldd-validation-item>
  *     <nldd-validation-item id="password-length" minlength="8">Must be at least 8 characters.</nldd-validation-item>
  *   </nldd-validation-list>
- *   <nldd-form-field-help-text>
- *     We only use this to sign you in. <a href="/help">Learn more</a>.
- *   </nldd-form-field-help-text>
+ *   <nldd-text slot="help-text">
+ *     <p>We only use this to sign you in. <a href="/help">Learn more</a>.</p>
+ *   </nldd-text>
  * </nldd-form-field>
  */
 import { LitElement } from 'lit';
@@ -55,22 +70,27 @@ import { customElement } from '../../../utilities/custom-element.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
 import { stripBold } from '../../../utilities/render-marked.js';
 import { applyDescribedBy, type DescribedElement } from '../../../utilities/described-by-mixin.js';
-import {
-	formFieldStyles,
-	formFieldHelpTextStyles,
-} from './form-field.styles.js';
-import {
-	formFieldTemplate,
-	formFieldHelpTextTemplate,
-} from './form-field.template.js';
-import { setState, styleValueState } from '../../../utilities/element-state.js';
+import { formFieldStyles } from './form-field.styles.js';
+import { formFieldTemplate } from './form-field.template.js';
+import { internalsOf, setState, styleValueState } from '../../../utilities/element-state.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddFormFieldTranslations } from './form-field.i18n.js';
 
 export type LabelAlignment = 'top' | 'left' | 'right';
 
-// Exclude helper elements so _findInput() never returns them instead of the actual input
-const HELPER_TAGS = ['nldd-form-field-help-text'];
+/** Help text in the `help-text` slot, which is never the input. */
+const isHelpText = (el: Element): boolean => el.getAttribute('slot') === 'help-text';
+
+/**
+ * What the field sets on an nldd-text in its `help-text` slot. One look for
+ * every help text: the size and weight of body text a step down, in the color
+ * of the text around it.
+ *
+ * Properties and not attributes: nldd-text writes no attribute for a default
+ * value, so an attribute set to one is taken away again. A property set before
+ * the nldd-text is defined is picked up by Lit when it upgrades.
+ */
+const HELP_TEXT_PROPERTIES = { size: 'sm', color: 'content', weight: 'regular' } as const;
 
 /**
  * Whether this element is the input a field is about.
@@ -154,10 +174,14 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 
 	/**
 	 * Short supporting text shown below the label. Same typography as the
-	 * optional badge. Use nldd-form-field-help-text for longer descriptive text.
+	 * optional badge. Use `help-text` for longer descriptive text.
 	 */
 	@property({ type: String, attribute: 'supporting-label' })
 	supportingLabel = '';
+
+	/** Plain help text below the input. Help text with a link goes in the `help-text` slot. */
+	@property({ type: String, attribute: 'help-text' })
+	helpText = '';
 
 	/**
 	 * When true an "Optional" badge is shown next to the label.
@@ -170,9 +194,18 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 	@property({ type: Boolean })
 	optional = false;
 
+	/**
+	 * Makes the field a group around more than one control, named by the label.
+	 *
+	 * Through its own role and not a `<fieldset>`: a legend in a shadow root
+	 * does not name the controls in its slot for NVDA in Firefox, which is why
+	 * nldd-form-section rendered its fieldset in the light DOM. A role and a
+	 * name on the host are the same thing to assistive software, and reach.
+	 */
+	@property({ type: Boolean, reflect: true })
+	group = false;
+
 	private _childObserver: MutationObserver | null = null;
-	/** Watches the validation lists for items that come or go. */
-	private _listObserver: MutationObserver | null = null;
 	/** Handed to each validation list, which calls it when an item shows or hides. */
 	private _onItemVisibilityChange = () => this._syncDescription();
 	/** The lists that hold that callback now, to take it back from. */
@@ -180,14 +213,39 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 
 	/** The last label this field wrote onto the control, so it only takes back its own. */
 	private _appliedLabel: string | null = null;
+	/** The aria-description this field wrote onto a control without the DescribedBy channel. */
+	private _appliedDescription: string | null = null;
+	/** The control this field is about now, to hand back what it wrote when that changes. */
+	private _input: Element | null = null;
+	/** Controls other than the input that a validation list with `for` describes. */
+	private _describedOthers = new Set<Element>();
+	/** Tags of children that are not defined yet, waited for once each. */
+	private _pendingTags = new Set<string>();
+	/** The inputs found last time, whose own content the observer leaves alone. */
+	private _inputs: readonly Element[] = [];
+	/** Whether this field gave itself the role of a group, to take it back. */
+	private _grouped = false;
+	/** The aria-description this field wrote on itself as a group. */
+	private _appliedGroupDescription: string | null = null;
+	/** What this field last handed each control as its description, so it only takes back its own. */
+	private _written = new WeakMap<Element, { elements: readonly Element[]; texts?: readonly string[] }>();
+	/** Whether the first update is behind us: Lit reports every property as changed on that one. */
+	private _settled = false;
 
 	override render() {
 		return formFieldTemplate(this);
 	}
 
 	override updated(changed: Map<PropertyKey, unknown>) {
-		if (changed.has('label')) {
+		// `firstUpdated` has looked already.
+		if (!this._settled) {
+			this._settled = true;
+			return;
+		}
+		if (changed.has('label') || changed.has('optional') || changed.has('translations') || changed.has('group')) {
 			this._onSlotChange();
+		} else if (changed.has('supportingLabel') || changed.has('helpText')) {
+			this._syncDescription();
 		}
 	}
 
@@ -198,10 +256,29 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 
 	override connectedCallback() {
 		super.connectedCallback();
-		this._childObserver = new MutationObserver(() => this._onSlotChange());
-		this._childObserver.observe(this, { childList: true });
-		// Moved in the DOM: `firstUpdated` does not come again, and the observer
-		// on the validation lists only starts from here.
+		// The whole subtree: an input that appears later inside a wrapper (a `v-if`
+		// in a `div`) is as much the field's input as a direct child.
+		// That covers the items of a validation list too. Then help text that is
+		// hidden or shown, since a hidden element that is referenced is still read
+		// out, and a list that names another control with `for`.
+		// Only the attributes of its own children count: a slot or a `for` deeper
+		// down, such as in a toolbar of a text editor, is about something else.
+		// What changes inside an input it found is the input's own business, such
+		// as the options an app slots into a combo box on every keystroke, and
+		// what changes in a validation list only touches the description.
+		this._childObserver = new MutationObserver((mutations) => {
+			const ownChild = (m: MutationRecord) => (m.target as Element).parentElement === this;
+			const inInput = (m: MutationRecord) => this._inputs.some(input => input.contains(m.target));
+			const inList = (m: MutationRecord) => Boolean((m.target as Element).closest?.('nldd-validation-list'));
+			const elementsMoved = (m: MutationRecord) => [...m.addedNodes, ...m.removedNodes].some(n => n.nodeType === Node.ELEMENT_NODE);
+			const moved = mutations.some(m => (m.attributeName === 'slot' && ownChild(m))
+				|| (elementsMoved(m) && !inInput(m) && !inList(m)));
+			if (moved) this._onSlotChange();
+			else if (mutations.some(m => (elementsMoved(m) && inList(m))
+				|| (ownChild(m) && (m.attributeName === 'for' || (m.attributeName === 'hidden' && isHelpText(m.target as Element)))))) this._syncDescription();
+		});
+		this._childObserver.observe(this, { childList: true, subtree: true, attributes: true, attributeFilter: ['slot', 'hidden', 'for'] });
+		// Moved in the DOM: `firstUpdated` does not come again.
 		if (this.hasUpdated) this._onSlotChange();
 	}
 
@@ -212,8 +289,63 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 	override disconnectedCallback() {
 		super.disconnectedCallback();
 		this._childObserver?.disconnect();
-		this._listObserver?.disconnect();
 		this._watchLists([]);
+	}
+
+	/**
+	 * Waits for each child that is not defined yet, and looks again once it is.
+	 *
+	 * Whether an element is an input is asked of its class, and an element whose
+	 * class is not registered yet has none to ask. The autoloader defines tags in
+	 * the order it meets them, so the field is often defined before its input.
+	 * Upgrading an element fires no mutation and no `slotchange`, so without this
+	 * the field never looks again (#512).
+	 */
+	private _awaitUndefined(): void {
+		for (const el of Array.from(this.querySelectorAll(':not(:defined)'))) {
+			const tag = el.localName;
+			if (this._pendingTags.has(tag)) continue;
+			// Once per tag for as long as the field lives: a field that leaves and
+			// comes back while the tag is still undefined keeps the first wait,
+			// which still looks when the tag arrives.
+			this._pendingTags.add(tag);
+			// A tag that is never defined, such as one of a framework, leaves the
+			// promise waiting for good: it holds on to nothing more than a weak
+			// reference, so a field that leaves the page can go.
+			const field = new WeakRef(this);
+			customElements.whenDefined(tag).then(() => {
+				const self = field.deref();
+				if (!self) return;
+				self._pendingTags.delete(tag);
+				if (self.isConnected) self._onSlotChange();
+			});
+		}
+	}
+
+	/** Hands back what this field wrote on a control it is no longer about. */
+	private _release(control: Element): void {
+		const attribute = this._labelAttribute(control);
+		if (attribute) setOwnedAttribute(control, attribute, '', this._appliedLabel);
+		this._appliedLabel = null;
+		const written = this._written.get(control);
+		if (written && this._stillOurs(control, written)) this._describe(control, [], []);
+		this._appliedDescription = null;
+		this._written.delete(control);
+	}
+
+	/**
+	 * Whether a control still carries the description this field gave it. A
+	 * control that moved to another field may have one from there already,
+	 * which is not this field's to take back.
+	 */
+	private _stillOurs(control: Element, written: { elements: readonly Element[]; texts?: readonly string[] }): boolean {
+		if ('describedByElements' in control) {
+			const described = control as unknown as DescribedElement;
+			return sameItems(described.describedByElements, written.elements)
+				&& (!written.texts || !('describedByTexts' in control) || sameItems(described.describedByTexts, written.texts));
+		}
+		const current = (control as Element & { ariaDescribedByElements?: readonly Element[] | null }).ariaDescribedByElements ?? [];
+		return sameItems(current, written.elements);
 	}
 
 	/** Hands the visibility callback to these lists, and takes it back from the others. */
@@ -241,7 +373,7 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 	 * wrap a control owe consumers that `focus()`.
 	 */
 	public _focusInput(e: Event) {
-		const input = this._findInput();
+		const input = this._findInputs()[0];
 		if (!input) return;
 
 		e.preventDefault();
@@ -249,18 +381,34 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 	}
 
 	private _onSlotChange() {
-		const input = this._findInput();
+		this._awaitUndefined();
+		for (const help of this._helpTexts()) {
+			if (help.localName !== 'nldd-text') continue;
+			Object.assign(help, HELP_TEXT_PROPERTIES);
+		}
+		const inputs = this._findInputs();
+		this._inputs = inputs;
+		const input = inputs[0];
 		// A consumer's own element can be an input too, which no selector can know.
 		setState(this, 'has-input', Boolean(input));
+		if (import.meta.env?.DEV) setState(this, 'multiple-inputs', inputs.length > 1);
+		this._applyGroup();
+		// A group names and describes itself, and none of its controls.
+		const named = this.group ? undefined : input;
+		if (this._input && this._input !== named) this._release(this._input);
+		this._input = named ?? null;
 		if (!input) {
+			if (import.meta.env?.DEV) setState(this, 'list-reads-first-control', false);
+			this._syncDescription();
 			return;
 		}
 
-		// Ensure the inner native input has an id so aria-describedby can reference it.
-		// `inputId` is a component that hands out the id of the control it renders, which
-		// is a different question from how it wants to be named, so it is asked separately
-		// (see _applyAccessibleLabel). For plain <input> elements we set the id directly.
-		// We never set the host element's id to avoid duplicate IDs.
+		// An id on the control, for the app to point at, such as a `for` on a
+		// validation list outside the field or a link to the field from an error
+		// summary. `inputId` is a component that hands out the id of the control it
+		// renders, which is a different question from how it wants to be named, so
+		// it is asked separately (see _applyAccessibleLabel). A plain <input> gets
+		// the id directly. The host never gets one, to avoid duplicate ids.
 		if ('inputId' in input) {
 			const existingId = (input as HTMLElement & { inputId: string }).inputId;
 			const generatedId = existingId || generateId();
@@ -269,9 +417,25 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 			if (!input.id) input.id = generateId();
 		}
 
-		this._applyAccessibleLabel(input);
-		this._adoptValidationLists(input);
+		if (named) this._applyAccessibleLabel(named);
+		this._adoptValidationLists(input, inputs);
 		this._syncDescription();
+	}
+
+	/**
+	 * Gives this field the role and the name of a group, or takes them back.
+	 *
+	 * No role without a label: a group without a name is announced as just
+	 * "group", which tells a screen reader user less than no group at all.
+	 */
+	private _applyGroup(): void {
+		if (!this.group && !this._grouped) return;
+		const internals = internalsOf(this);
+		const name = this.group ? this._accessibleName() : '';
+		internals.role = name ? 'group' : null;
+		internals.ariaLabel = name || null;
+		if (!name) this._describe(this, [], []);
+		this._grouped = this.group;
 	}
 
 	/**
@@ -296,16 +460,37 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 	 * takes back what it did not write.
 	 */
 	private _applyAccessibleLabel(input: Element): void {
-		const attribute = 'accessibleLabel' in input
+		const attribute = this._labelAttribute(input);
+		if (!attribute) return;
+
+		this._appliedLabel = setOwnedAttribute(input, attribute, this._accessibleName(), this._appliedLabel);
+	}
+
+	/** The attribute through which this control takes a name, or null for one that names itself. */
+	private _labelAttribute(input: Element): string | null {
+		return 'accessibleLabel' in input
 			? 'accessible-label'
 			: input instanceof HTMLInputElement
 				|| input instanceof HTMLSelectElement
 				|| input instanceof HTMLTextAreaElement
 				? 'aria-label'
 				: null;
-		if (!attribute) return;
+	}
 
-		this._appliedLabel = setOwnedAttribute(input, attribute, stripBold(this.label), this._appliedLabel);
+	/**
+	 * The label as a name: without its markers, and with "optioneel" after it
+	 * when the field is optional.
+	 *
+	 * The badge is on screen beside the label, and a screen reader user needs it
+	 * as much. In the name and not the description: a description is read later
+	 * or not at all, depending on the reader's settings, while the name is read
+	 * every time the field is reached. This field composes the name as a string
+	 * anyway, so where the badge sits in the layout makes no difference.
+	 */
+	private _accessibleName(): string {
+		const label = stripBold(this.label);
+		if (!label || !this.optional) return label;
+		return this._t('components.form-field.optional-accessible-label', { label });
 	}
 
 	/**
@@ -315,13 +500,12 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 	 * A list with a `for` of its own is left alone: that is how you say it is
 	 * about a different control than the first.
 	 *
-	 * More than one control in a field is allowed and sometimes right, a radio
-	 * group with an "Anders" text field beside it being the case this component
-	 * is built for. But a list that reads a value would then quietly read the
-	 * wrong one, and nothing on screen would show it: the rules simply never
-	 * match.
+	 * In a `group` the list is about the first control too, which the list needs
+	 * to know when the field has been judged. A list that reads a value would
+	 * then quietly read the first one, and nothing on screen would show it: the
+	 * rules simply never match. Such a list needs a `for`.
 	 */
-	private _adoptValidationLists(input: Element): void {
+	private _adoptValidationLists(input: Element, inputs: readonly Element[]): void {
 		const lists = Array.from(this.children)
 			.filter((el): el is HTMLElement & { control: Element | null } =>
 				el.tagName.toLowerCase() === 'nldd-validation-list');
@@ -332,19 +516,16 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 
 		const readsValue = lists.some(list => !list.getAttribute('for') && Array.from(list.children)
 			.some(item => item.hasAttribute('match') || item.hasAttribute('minlength') || item.hasAttribute('maxlength')));
-		const controls = Array.from(this.children)
-			.filter(el => !HELPER_TAGS.includes(el.tagName.toLowerCase()) && isFormInput(el));
-		setState(this, 'list-reads-first-control', readsValue && controls.length > 1);
+		setState(this, 'list-reads-first-control', readsValue && inputs.length > 1);
 	}
 
 	/**
-	 * The input this field is about: the first one in the light DOM, wrapped or
-	 * not.
+	 * The inputs in this field, in document order, wrapped or not. An input in
+	 * another one, such as a checkbox field in a checkbox group, is part of that
+	 * one and not counted.
 	 *
-	 * A field may hold more than one. A radio group whose last option is
-	 * "Anders" and the text field that appears with it are one question and
-	 * belong in one field. The first input carries the caption, and the ones
-	 * after it name themselves.
+	 * The first is the one the field is about. A field with more than one is a
+	 * `group`, and then names none of them.
 	 *
 	 * Looking inside matters because a `div` or an `nldd-container` around your
 	 * input is a normal thing to write. Stopping at that wrapper sent the id,
@@ -355,19 +536,24 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 	 * and says so in DEV, rather than picking whatever came first and quietly
 	 * treating a tag or a button as your input.
 	 */
-	private _findInput(): Element | undefined {
+	private _findInputs(): Element[] {
+		const found: Element[] = [];
 		const children = Array.from(this.children)
-			.filter(el => !HELPER_TAGS.includes(el.tagName.toLowerCase()) && !isToolbar(el));
+			.filter(el => !isHelpText(el) && !isToolbar(el));
 		for (const child of children) {
-			if (isFormInput(child)) return child;
-			const nested = Array.from(child.querySelectorAll('*')).find(el => isFormInput(el) && !inToolbar(el, child));
-			if (nested) return nested;
+			if (isFormInput(child)) {
+				found.push(child);
+				continue;
+			}
+			for (const el of Array.from(child.querySelectorAll('*'))) {
+				if (isFormInput(el) && !inToolbar(el, child) && !found.some(outer => outer.contains(el))) found.push(el);
+			}
 		}
-		return undefined;
+		return found;
 	}
 
 	/**
-	 * Hands the control the elements that describe it.
+	 * Hands each control the elements that describe it.
 	 *
 	 * Elements and not ids. An IDREF resolves inside the tree of the element
 	 * that carries it, so an id written here cannot be found from inside a
@@ -385,58 +571,102 @@ export class NLDDFormField extends withTranslations(LitElement, nlddFormFieldTra
 	 * would still be read out. The references change when an item shows or
 	 * hides, which is when the description changes anyway.
 	 *
-	 * The requirements before the plain help text: what is wrong is why you are
-	 * here.
+	 * A list with a `for` describes the control it names, and the input of the
+	 * field only through the lists without one. The "Anders" field beside a
+	 * radio group carries its own error; handing that to the group read it out
+	 * on the wrong control and left the field that was wrong without it (#415).
+	 *
+	 * The supporting label and `help-text` sit in this shadow root, where no
+	 * reference from the control can reach them, so they go over as text. Help
+	 * text in the slot is in the light DOM and goes over as an element, which
+	 * every control can point at: a host that carries its own role, such as a
+	 * radio group, says text only as `aria-description`, and a browser drops
+	 * that as soon as there is an `aria-describedby`.
+	 *
+	 * What is wrong first: it is why you are here. Then the help text, with the
+	 * supporting label and `help-text` after the elements.
 	 */
 	private _syncDescription() {
-		const input = this._findInput();
-		if (!input) return;
+		// What the field describes: itself as a group, or else its input. A group
+		// without a name has no role to carry a description, so nothing.
+		const input = this.group ? (this._accessibleName() ? this : null) : this._input;
 
 		const children = Array.from(this.children);
 		const tag = (el: Element) => el.tagName.toLowerCase();
 		const lists = children.filter(el => tag(el) === 'nldd-validation-list');
-		this._listObserver ??= new MutationObserver(() => this._syncDescription());
-		this._listObserver.disconnect();
-		for (const list of lists) this._listObserver.observe(list, { childList: true, subtree: true });
 		this._watchLists(lists as ValidationListHost[]);
-		const describedBy = [
-			...lists.flatMap(list => Array.from(list.children).filter(el => tag(el) === 'nldd-validation-item' && (el as HTMLElement & { visible?: boolean }).visible)),
-			...children.filter(el => tag(el) === 'nldd-form-field-help-text'),
-		];
 
-		if ('describedByElements' in input) {
-			(input as unknown as DescribedElement).describedByElements = describedBy;
-		} else {
-			applyDescribedBy(input, describedBy);
+		const root = this.getRootNode() as Document | ShadowRoot;
+		const visibleItems = (list: Element) => Array.from(list.children)
+			.filter(el => tag(el) === 'nldd-validation-item' && (el as HTMLElement & { visible?: boolean }).visible);
+		const byControl = new Map<Element, Element[]>();
+		for (const list of lists) {
+			const id = list.getAttribute('for');
+			const control = id ? root.getElementById?.(id) ?? null : input;
+			if (!control) continue;
+			byControl.set(control, [...(byControl.get(control) ?? []), ...visibleItems(list)]);
 		}
+
+		for (const control of this._describedOthers) {
+			if (control !== input && !byControl.has(control)) this._describe(control, []);
+		}
+		this._describedOthers = new Set([...byControl.keys()].filter(control => control !== input));
+		for (const control of this._describedOthers) this._describe(control, byControl.get(control) ?? []);
+
+		if (!input) return;
+		// Help text in the slot takes the place of `help-text`, also while it is hidden.
+		const slotted = this._helpTexts();
+		const help = slotted.filter(el => !(el as HTMLElement).hidden);
+		const texts = [stripBold(this.supportingLabel), slotted.length ? '' : stripBold(this.helpText)].map(text => text.trim()).filter(Boolean);
+		this._describe(input, [...(byControl.get(input) ?? []), ...help], texts);
+	}
+
+	/** The elements in the `help-text` slot. */
+	private _helpTexts(): Element[] {
+		return Array.from(this.children).filter(isHelpText);
+	}
+
+	/**
+	 * Hands one control its description: elements to point at and, for the
+	 * input of the field, texts to say. Texts left out leave what the control
+	 * says alone, so a control that only a list with `for` describes keeps an
+	 * `aria-description` of its own.
+	 *
+	 * Only what changed is written: a control renders on each new array, and
+	 * one that adds a child of its own on render would otherwise set off the
+	 * observer on this field again.
+	 */
+	private _describe(control: Element, elements: readonly Element[], texts?: readonly string[]): void {
+		if (control !== this) this._written.set(control, { elements: [...elements], texts: texts && [...texts] });
+		if (control === this) {
+			// The group points at its own children, which it may: they are in its
+			// tree. The text as an attribute, as below, and one this field wrote.
+			applyDescribedBy(this, elements, true);
+			this._appliedGroupDescription = setOwnedAttribute(this, 'aria-description', texts?.join(' ') ?? '', this._appliedGroupDescription);
+			return;
+		}
+		if ('describedByElements' in control) {
+			const described = control as unknown as DescribedElement;
+			if (!sameItems(described.describedByElements, elements)) described.describedByElements = [...elements];
+			if (texts && 'describedByTexts' in control && !sameItems(described.describedByTexts, texts)) described.describedByTexts = [...texts];
+			return;
+		}
+		applyDescribedBy(control, elements);
+		// Not every browser reflects `ariaDescription`, so the attribute. Support
+		// for it is not complete everywhere; a native input in a field is rare,
+		// and every input of this system takes the texts as elements instead.
+		if (texts) this._appliedDescription = setOwnedAttribute(control, 'aria-description', texts.join(' '), this._appliedDescription);
 	}
 }
 
-
-/* ============================================================
-   nldd-form-field-help-text
-   ============================================================ */
-
-@customElement('nldd-form-field-help-text')
-export class NLDDFormFieldHelpText extends LitElement {
-	static override styles = formFieldHelpTextStyles;
-
-	override connectedCallback() {
-		super.connectedCallback();
-		// Assign to the 'help' slot automatically so consumers don't need to set slot="help" manually.
-		// Note: this will overwrite any explicit slot attribute set by the consumer.
-		this.slot = 'help';
-	}
-
-	override render() {
-		return formFieldHelpTextTemplate(this);
-	}
+/** Whether two lists hold the same items in the same order. */
+function sameItems<T>(a: readonly T[] | undefined, b: readonly T[]): boolean {
+	return Boolean(a) && a!.length === b.length && a!.every((item, i) => item === b[i]);
 }
 
 
 declare global {
 	interface HTMLElementTagNameMap {
 		'nldd-form-field': NLDDFormField;
-		'nldd-form-field-help-text': NLDDFormFieldHelpText;
 	}
 }

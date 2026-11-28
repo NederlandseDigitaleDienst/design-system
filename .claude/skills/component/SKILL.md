@@ -440,7 +440,7 @@ above, below, only, hideAbove, hideBelow, hideOn
 
 [5. Main content]
 text, shortText, supportingText, shortSupportingText, overline, label,
-supportingLabel, optional, placeholder, number, details, hint, headingLevel,
+supportingLabel, helpText, optional, placeholder, number, details, hint, headingLevel,
 icon, startIcon, endIcon, selectedIcon, containerColor,
 initials, src, srcset, sizes, alt, image, imageSrcset, avatarSrc,
 avatarSrcset, avatarAlt, mediaSrc, mediaSrcset, mediaSizes, mediaAlt,
@@ -452,7 +452,7 @@ logoTitle, logoSubtitle, logoSupportingText1, logoSupportingText2, logoHref,
 websiteTitle, websiteHref, sidebarLabel, backText, backHref, dismissText
 
 [6. Key behavior]
-control, button, checkbox, radio, navigation, embedded, expandable,
+control, group, button, checkbox, radio, navigation, embedded, expandable,
 disclosure, popupType, haspopup, popovertarget, interestfor, controls,
 selectable, reorderable, exclusive, collapsible
 

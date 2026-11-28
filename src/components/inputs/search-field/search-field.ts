@@ -42,7 +42,7 @@ import { nlddSearchFieldTranslations } from './search-field.i18n.js';
 import './../../actions/icon-button/icon-button.js';
 import './../../actions/button/button.js';
 import './../../content/icon/icon.js';
-import { DescribedBy, applyDescribedBy } from '../../../utilities/described-by-mixin.js';
+import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { ShortcutAvailabilityController, shortcutsAvailable } from '../../../utilities/shortcut.js';
 import '../../content/keyboard-shortcut/keyboard-shortcut.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
@@ -152,11 +152,14 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(withTranslations
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-	override updated(changed: PropertyValues): void {
-		// Runs after the DescribedBy controller, so the shortcut hint is added to
-		// the help and error texts of an nldd-form-field instead of replacing them.
+	/** The shortcut hint, read after the help and error texts of an
+	 *  nldd-form-field and after the description the app gives. */
+	override ownDescriptions(): readonly Element[] {
 		const hint = shortcutsAvailable() ? this.shadowRoot?.querySelector('.search-field__shortcut') : null;
-		if (hint) applyDescribedBy(this.describedTarget(), [...this.describedByElements, hint], true);
+		return hint ? [hint] : [];
+	}
+
+	override updated(changed: PropertyValues): void {
 		if (changed.has('width')) {
 			const w = this.width;
 			if (w && w !== 'full' && CSS.supports('width', w)) {

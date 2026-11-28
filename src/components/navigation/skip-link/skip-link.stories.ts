@@ -108,7 +108,13 @@ export const MetHref = {
 					novalidate
 					label-alignment="right"
 				>
-					<nldd-form-section text="Contactformulier">
+					<nldd-form-section>
+						<nldd-title
+							slot="header"
+							text="Contactformulier"
+							heading-level="2"
+							size="display-4"
+						></nldd-title>
 						<nldd-form-field label="Naam">
 							<nldd-text-field
 								name="name"

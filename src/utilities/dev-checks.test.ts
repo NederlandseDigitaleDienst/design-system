@@ -90,9 +90,14 @@ describe('rules in the browser', () => {
 		expect(findViolations(root).map(({ rule }) => rule.id)).not.toContain('icon-not-found');
 	});
 
-	it('finds the second control in a labeled field, which the field does not name', async () => {
-		await mount('<nldd-form-field label="Naam"><nldd-text-field></nldd-text-field><nldd-number-field></nldd-number-field></nldd-form-field>');
+	it('finds a control in a group field without a name of its own, which the field does not give', async () => {
+		await mount('<nldd-form-field label="Naam" group><nldd-text-field accessible-label="Voornaam"></nldd-text-field><nldd-number-field></nldd-number-field></nldd-form-field>');
 		expect(findViolations(root).map(({ rule }) => rule.id)).toEqual(['number-field-needs-name']);
+	});
+
+	it('finds a field with more than one control that is no group', async () => {
+		await mount('<nldd-form-field label="Naam"><nldd-text-field></nldd-text-field><nldd-number-field accessible-label="Leeftijd"></nldd-number-field></nldd-form-field>');
+		expect(findViolations(root).map(({ rule }) => rule.id)).toEqual(['form-field-max-one-input']);
 	});
 
 	it('survives an icon in a detached link', async () => {

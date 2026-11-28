@@ -10,6 +10,7 @@ type Constructor<T = Record<string, unknown>> = abstract new (...args: any[]) =>
 /** An element that accepts references to the elements describing it. */
 export interface DescribedElement {
 	describedByElements: readonly Element[];
+	describedByTexts: readonly string[];
 	accessibleDescription: string;
 	accessibleDescribedBy: string;
 	/** The element the description belongs to. Override where it differs. */
@@ -18,6 +19,10 @@ export interface DescribedElement {
 	ownDescriptions(): readonly Element[];
 	/** The hidden element in the shadow root that carries `accessible-description`. */
 	_descriptionTextElement: HTMLElement | null;
+	/** The hidden elements in the shadow root that carry `describedByTexts`. */
+	_fieldTextElements: HTMLElement[];
+	/** What nldd-form-field gives as the description in words. */
+	_fieldDescriptions(onSelf: boolean): readonly Element[];
 	/** What the app gives as the description. */
 	_appDescriptions(onSelf: boolean): readonly Element[];
 }
@@ -96,6 +101,13 @@ export function DescribedBy<T extends Constructor<LitElement>>(
 		@property({ attribute: false })
 		describedByElements: readonly Element[] = [];
 
+		/** Set by nldd-form-field: its supporting label and help text, which it
+		 *  renders in its own shadow root where no reference from here can reach
+		 *  them. Each becomes a hidden element in this shadow root, read after
+		 *  `describedByElements`. A consumer never writes this. */
+		@property({ attribute: false })
+		describedByTexts: readonly string[] = [];
+
 		/**
 		 * A description in words, read after the name, role and state, as
 		 * `aria-description` would. Extra information, never the name: a button
@@ -123,6 +135,10 @@ export function DescribedBy<T extends Constructor<LitElement>>(
 		 *  `describedTarget()`. */
 		_descriptionTextElement: HTMLElement | null = null;
 
+		/** The hidden elements that carry `describedByTexts`. Public for the same
+		 *  reason as `describedTarget()`. */
+		_fieldTextElements: HTMLElement[] = [];
+
 		/** The aria-description this element wrote on itself, so it only takes
 		 *  back its own. */
 		_appliedDescription: string | null = null;
@@ -137,7 +153,7 @@ export function DescribedBy<T extends Constructor<LitElement>>(
 					// element. Handing it on there would hand it to itself, and a
 					// component that does that renders forever.
 					const onSelf = target === this;
-					applyDescribedBy(target, [...this.describedByElements, ...this._appDescriptions(onSelf), ...this.ownDescriptions()], onSelf);
+					applyDescribedBy(target, [...this.describedByElements, ...this._fieldDescriptions(onSelf), ...this._appDescriptions(onSelf), ...this.ownDescriptions()], onSelf);
 					// Optional: nldd-button carries this mixin for its description and
 					// has no validity of its own.
 					const invalid = (this as { invalid?: boolean }).invalid;
@@ -153,10 +169,39 @@ export function DescribedBy<T extends Constructor<LitElement>>(
 		}
 
 		/**
+		 * The texts nldd-form-field hands over, as hidden elements in this shadow
+		 * root for the control to point at. Public for the same reason as
+		 * `describedTarget()`.
+		 */
+		_fieldDescriptions(onSelf: boolean): readonly Element[] {
+			const texts = onSelf ? [] : this.describedByTexts.map((text) => text.trim()).filter(Boolean);
+			const elements = this._fieldTextElements;
+			while (elements.length > texts.length) elements.pop()?.remove();
+			texts.forEach((text, i) => {
+				let el = elements[i];
+				// Made again when it left the shadow root, which a component that
+				// clears its root or renders a new one does.
+				if (!el || el.getRootNode() !== this.shadowRoot) {
+					el = document.createElement('span');
+					el.hidden = true;
+					el.dataset.fieldDescription = '';
+					// Beside Lit's content, as the element of `accessible-description`.
+					this.shadowRoot?.append(el);
+					elements[i] = el;
+				}
+				el.textContent = text;
+			});
+			return [...elements];
+		}
+
+		/**
 		 * What the app gives as the description: the elements that
 		 * `accessible-described-by` names, or else the text of
 		 * `accessible-description`. Public for the same reason as
 		 * `describedTarget()`.
+		 *
+		 * A control that is this element cannot point into its own shadow root,
+		 * so it says the texts of nldd-form-field here too, before its own.
 		 */
 		_appDescriptions(onSelf: boolean): readonly Element[] {
 			const ids = (this.accessibleDescribedBy ?? '').split(/\s+/).filter(Boolean);
@@ -170,7 +215,8 @@ export function DescribedBy<T extends Constructor<LitElement>>(
 			// root, so it says the text itself. As an attribute: not every browser
 			// reflects `ariaDescription`. Only ever takes back what it wrote.
 			if (onSelf) {
-				this._appliedDescription = setOwnedAttribute(this, 'aria-description', text, this._appliedDescription);
+				const said = [...this.describedByTexts.map((t) => t.trim()), text].filter(Boolean).join(' ');
+				this._appliedDescription = setOwnedAttribute(this, 'aria-description', said, this._appliedDescription);
 				return named;
 			}
 			if (text) {

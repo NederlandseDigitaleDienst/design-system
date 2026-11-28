@@ -20,6 +20,7 @@ export const buttonStyles = css`
 		--_button-min-size: var(--semantics-controls-md-min-size);
 		--_button-block-padding: var(--semantics-controls-md-block-padding);
 		--_button-inline-padding: var(--semantics-buttons-md-inline-padding);
+		--_button-text-inline-padding: var(--semantics-buttons-md-text-inline-padding);
 		--_button-gap: var(--semantics-buttons-md-gap);
 		--_button-font: var(--semantics-buttons-md-primary-text-font);
 		--_button-icon-size: var(--semantics-buttons-md-icon-size);
@@ -56,8 +57,10 @@ export const buttonStyles = css`
 		-webkit-tap-highlight-color: transparent;
 	}
 
-	/* iOS opens a link preview on a long press, which is ours here. */
-	:host(:has(> [slot="interest"])) .button,
+	/* iOS opens a link preview on a long press, which is ours here. A class
+	   for the slotted popover, as :host(:has()) is not supported and would
+	   take the whole rule down with it. */
+	.button.has-interest,
 	:host([interestfor]) .button {
 		-webkit-touch-callout: none;
 	}
@@ -67,6 +70,7 @@ export const buttonStyles = css`
 		--_button-min-size: var(--semantics-controls-xs-min-size);
 		--_button-block-padding: var(--semantics-controls-xs-block-padding);
 		--_button-inline-padding: var(--semantics-buttons-xs-inline-padding);
+		--_button-text-inline-padding: var(--semantics-buttons-xs-text-inline-padding);
 		--_button-gap: var(--semantics-buttons-xs-gap);
 		--_button-font: var(--semantics-buttons-xs-primary-text-font);
 		--_button-icon-size: var(--semantics-buttons-xs-icon-size);
@@ -79,6 +83,7 @@ export const buttonStyles = css`
 		--_button-min-size: var(--semantics-controls-sm-min-size);
 		--_button-block-padding: var(--semantics-controls-sm-block-padding);
 		--_button-inline-padding: var(--semantics-buttons-sm-inline-padding);
+		--_button-text-inline-padding: var(--semantics-buttons-sm-text-inline-padding);
 		--_button-gap: var(--semantics-buttons-sm-gap);
 		--_button-font: var(--semantics-buttons-sm-primary-text-font);
 		--_button-icon-size: var(--semantics-buttons-sm-icon-size);
@@ -91,6 +96,7 @@ export const buttonStyles = css`
 		--_button-min-size: var(--semantics-controls-lg-min-size);
 		--_button-block-padding: var(--semantics-controls-lg-block-padding);
 		--_button-inline-padding: var(--semantics-buttons-lg-inline-padding);
+		--_button-text-inline-padding: var(--semantics-buttons-lg-text-inline-padding);
 		--_button-gap: var(--semantics-buttons-lg-gap);
 		--_button-font: var(--semantics-buttons-lg-primary-text-font);
 		--_button-icon-size: var(--semantics-buttons-lg-icon-size);
@@ -399,7 +405,13 @@ export const buttonStyles = css`
 		min-width: var(--_button-min-size);
 		max-width: 100%;
 		min-height: var(--_button-min-size);
-		padding: var(--_button-block-padding) var(--_button-inline-padding);
+		/* A side with an icon is as far from the edge as the icon is from the top
+		   and bottom; a side that ends in text gets a little more, or the label
+		   looks cramped. The icon rules below switch a side back. */
+		--_button-padding-inline-start: var(--_button-text-inline-padding);
+		--_button-padding-inline-end: var(--_button-text-inline-padding);
+		padding-block: var(--_button-block-padding);
+		padding-inline: var(--_button-padding-inline-start) var(--_button-padding-inline-end);
 		gap: var(--_button-gap);
 		align-items: center;
 		justify-content: center;
@@ -564,6 +576,7 @@ export const buttonStyles = css`
 		--_button-font: var(--semantics-buttons-sm-primary-text-font);
 		--_button-icon-size: var(--semantics-buttons-md-has-supporting-text-icon-size);
 		--_button-inline-padding: var(--semantics-buttons-md-has-supporting-text-inline-padding);
+		--_button-text-inline-padding: var(--semantics-buttons-md-has-supporting-text-text-inline-padding);
 		--_button-block-padding: var(--primitives-space-4);
 	}
 
@@ -571,6 +584,7 @@ export const buttonStyles = css`
 		--_button-font: var(--semantics-buttons-md-primary-text-font);
 		--_button-icon-size: var(--semantics-buttons-lg-has-supporting-text-icon-size);
 		--_button-inline-padding: var(--semantics-buttons-lg-has-supporting-text-inline-padding);
+		--_button-text-inline-padding: var(--semantics-buttons-lg-has-supporting-text-text-inline-padding);
 		--_button-block-padding: var(--primitives-space-4);
 	}
 
@@ -618,6 +632,14 @@ export const buttonStyles = css`
 		flex-shrink: 0;
 		width: var(--_button-icon-size);
 		height: var(--_button-icon-size);
+	}
+
+	.button.has-start-icon {
+		--_button-padding-inline-start: var(--_button-inline-padding);
+	}
+
+	.button.has-end-icon {
+		--_button-padding-inline-end: var(--_button-inline-padding);
 	}
 
 	:host([expandable]) .button {

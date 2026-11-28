@@ -16,6 +16,7 @@ export const toggleButtonStyles = css`
 		--_toggle-button-min-size: var(--semantics-controls-md-min-size);
 		--_toggle-button-block-padding: var(--semantics-controls-md-block-padding);
 		--_toggle-button-inline-padding: var(--semantics-buttons-md-inline-padding);
+		--_toggle-button-text-inline-padding: var(--semantics-buttons-md-text-inline-padding);
 		--_toggle-button-gap: var(--semantics-buttons-md-gap);
 		--_toggle-button-font: var(--semantics-buttons-md-primary-text-font);
 		--_toggle-button-icon-size: var(--semantics-buttons-md-icon-size);
@@ -61,6 +62,7 @@ export const toggleButtonStyles = css`
 		--_toggle-button-min-size: var(--semantics-controls-xs-min-size);
 		--_toggle-button-block-padding: var(--semantics-controls-xs-block-padding);
 		--_toggle-button-inline-padding: var(--semantics-buttons-xs-inline-padding);
+		--_toggle-button-text-inline-padding: var(--semantics-buttons-xs-text-inline-padding);
 		--_toggle-button-gap: var(--semantics-buttons-xs-gap);
 		--_toggle-button-font: var(--semantics-buttons-xs-primary-text-font);
 		--_toggle-button-icon-size: var(--semantics-buttons-xs-icon-size);
@@ -72,6 +74,7 @@ export const toggleButtonStyles = css`
 		--_toggle-button-min-size: var(--semantics-controls-sm-min-size);
 		--_toggle-button-block-padding: var(--semantics-controls-sm-block-padding);
 		--_toggle-button-inline-padding: var(--semantics-buttons-sm-inline-padding);
+		--_toggle-button-text-inline-padding: var(--semantics-buttons-sm-text-inline-padding);
 		--_toggle-button-gap: var(--semantics-buttons-sm-gap);
 		--_toggle-button-font: var(--semantics-buttons-sm-primary-text-font);
 		--_toggle-button-icon-size: var(--semantics-buttons-sm-icon-size);
@@ -83,6 +86,7 @@ export const toggleButtonStyles = css`
 		--_toggle-button-min-size: var(--semantics-controls-lg-min-size);
 		--_toggle-button-block-padding: var(--semantics-controls-lg-block-padding);
 		--_toggle-button-inline-padding: var(--semantics-buttons-lg-inline-padding);
+		--_toggle-button-text-inline-padding: var(--semantics-buttons-lg-text-inline-padding);
 		--_toggle-button-gap: var(--semantics-buttons-lg-gap);
 		--_toggle-button-font: var(--semantics-buttons-lg-primary-text-font);
 		--_toggle-button-icon-size: var(--semantics-buttons-lg-icon-size);
@@ -197,9 +201,18 @@ export const toggleButtonStyles = css`
 		appearance: none;
 	}
 
+	/* The icon side is as far from the edge as the icon is from the top and
+	   bottom; the side that ends in text gets a little more, or the label looks
+	   cramped. The icon only ever stands at the start. */
 	.toggle-button:has(.toggle-button__text) {
+		--_toggle-button-padding-inline-start: var(--_toggle-button-text-inline-padding);
 		width: auto;
-		padding: var(--_toggle-button-block-padding) var(--_toggle-button-inline-padding);
+		padding-block: var(--_toggle-button-block-padding);
+		padding-inline: var(--_toggle-button-padding-inline-start) var(--_toggle-button-text-inline-padding);
+	}
+
+	.toggle-button.has-icon {
+		--_toggle-button-padding-inline-start: var(--_toggle-button-inline-padding);
 	}
 
 	@media (hover: hover) {
@@ -279,7 +292,7 @@ export const toggleButtonStyles = css`
 	}
 
 	:host([size="lg"][variant="icon-and-text"]) .toggle-button,
-	:host([size="lg"]:not([variant])) .toggle-button:has(.toggle-button__text):has(.toggle-button__icon) {
+	:host([size="lg"]:not([variant])) .toggle-button.has-icon:has(.toggle-button__text) {
 		width: auto;
 		padding: var(--primitives-space-8);
 		gap: var(--primitives-space-2);
@@ -287,7 +300,7 @@ export const toggleButtonStyles = css`
 	}
 
 	:host([size="lg"][variant="icon-and-text"]) .toggle-button__text,
-	:host([size="lg"]:not([variant])) .toggle-button:has(.toggle-button__icon) .toggle-button__text {
+	:host([size="lg"]:not([variant])) .toggle-button.has-icon .toggle-button__text {
 		font: var(--_toggle-button-stacked-text-font);
 	}
 

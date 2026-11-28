@@ -986,6 +986,7 @@ One run of body text at a size from the type scale. It is what you reach for whe
 
 **Rules** (`nldd lint`)
 
+- `form-field-help-text-style-no-effect` (hint): nldd-form-field sets `size`, `color` and `weight` on its help text, so a value of your own does nothing.
 - `text-color-inherit-no-effect`: `color="inherit"` is gone, so this text no longer takes the CSS `color` around it and may have changed color. Where your own CSS sets `color` here, set `--context-content-color` too, then remove the attribute.
 - `text-custom-size-invalid`: This is not a size the text can use, so it keeps its size from `size` at this breakpoint. Use a length such as "96px" or "6rem", not a keyword.
 - `text-custom-size-no-effect`: This custom size is smaller than `display-1` at this breakpoint and shows as `display-1`. Use `size` for text up to `display-1`.
@@ -1028,7 +1029,7 @@ A title bar with an optional overline, title, and supporting text on the left, a
 
 - `accordion-item-no-heading` (hint): Content with headings of its own is too long to fold in place. Open it in an nldd-sheet from a row.
 - `card-title-needs-level` (hint): Set `heading-level`: the title of a card that is a choice is a heading, directly below the page title or the section heading.
-- `form-title-goes-in-form-section` (hint): Use nldd-form-section with `text`: its legend reaches a screen reader with every field in the group.
+- `form-title-goes-in-form-section` (hint): Put the title in the header slot of an nldd-form-section around the fields it is about: the section puts the distances of a form around it.
 - `page-no-second-h1`: Keep one h1 on a page and make this title an h2.
 - `row-navigation-no-heading` (hint): Use the `text` of an nldd-text-cell: a row is not a heading.
 - `slot-needs-element`: A slot for text takes the element that carries it: a `<p>`, or a heading in the default slot of nldd-title and nldd-title-cell. Put inline markup inside that element, and plain text in the attribute.
@@ -1173,7 +1174,7 @@ Nederlandse Digitale Dienst Form Component Plain custom element (extends HTMLEle
 - `button-submit-needs-form`: Put this button in the form, or give the nldd-form an `id` and point `form` at it. As it stands it submits nothing.
 - `form-action-goes-in-form-actions` (hint): Put the actions in nldd-form-actions, which lines them up with the fields instead of the labels.
 - `form-field-no-own-label-alignment` (hint): Set `label-alignment` on nldd-form, which passes it to every field and to the actions, so the buttons line up with the fields.
-- `form-title-goes-in-form-section` (hint): Use nldd-form-section with `text`: its legend reaches a screen reader with every field in the group.
+- `form-title-goes-in-form-section` (hint): Put the title in the header slot of an nldd-form-section around the fields it is about: the section puts the distances of a form around it.
 - `modal-dialog-no-form` (hint): Do work that needs its context in an nldd-sheet, which keeps the page visible and has room for the fields.
 - `sheet-title-bar-needs-anchor` (hint): Put an nldd-title above the form and point `collapse-anchor` at it: the bar stays quiet until the heading scrolls away.
 
@@ -1231,12 +1232,17 @@ A layout wrapper for the action buttons at the bottom of a form (typically a sub
 
 ### `<nldd-form-field>`
 
-A field around one input: its label, supporting label, optional badge, validation and help text. It finds the input among its children, hands it the label as its accessible name and gives it an id, so you write no `for` or `id` yourself. The input is the first one it finds, leaving out what sits in an nldd-toolbar inside the field: a toolbar works on the field, such as the formatting bar above an nldd-text-editor, and is never the field itself. A native `for` cannot cross a shadow boundary, so a click on the label focuses the input from script. Mark the optional fields with `optional`, not the required ones; the design guidelines say why. Put the requirements on a value in an nldd-validation-list inside the same field. What only your server knows, such as a password found in a breach, the app names in `unmet` on the input itself: see nldd-validation-list. The field hands the list its input and puts the list in the input's accessible description, before the help text.
+A field around one input: its label, supporting label, optional badge, validation and help text. It finds the input among its children, hands it the label as its accessible name and gives it an id, so you write no `for` or `id` yourself. An input that is defined later, as the autoloader does, or that appears later inside a wrapper, is found when it arrives. The input is the first one it finds, leaving out what sits in an nldd-toolbar inside the field: a toolbar works on the field, such as the formatting bar above an nldd-text-editor, and is never the field itself. A native `for` cannot cross a shadow boundary, so a click on the label focuses the input from script. Mark the optional fields with `optional`, not the required ones; the design guidelines say why. Put the requirements on a value in an nldd-validation-list inside the same field. What only your server knows, such as a password found in a breach, the app names in `unmet` on the input itself: see nldd-validation-list. The field hands the list its input and puts the list in the input's accessible description, before the help text. A list with a `for` of its own describes the control it names instead. Plain help text goes in `help-text`. Help text with more in it, such as a link, goes in an nldd-text in the `help-text` slot. The field gives that nldd-text its size, color and weight, so every help text looks the same. A field is about one control. A question that takes more than one, such as a date in three fields or a radio group with an "Anders" text field, is a `group`: the field is then the group, named by its label, and describes itself rather than its first control. More than one question are more fields. The accessible name is the label, followed by "optioneel" when the field is `optional`. The accessible description is what is wrong first, then the help text in the slot, then the supporting label and `help-text`. Those last two are text in the field itself. A control that carries its own role, such as a radio group or a native input, and a field that is a `group`, can only take text as `aria-description`, which a browser reads only while no element describes it: not while an error shows, and not beside help text in the slot. Put the supporting label in that help text then.
 
 **Keywords:** veld, label.
 
 **Rules** (`nldd lint`)
 
+- `form-field-group-needs-label`: A group field needs a `label`: it is the name of the group, and without one the field takes no role and its controls stand loose.
+- `form-field-group-no-single-group` (hint): This control is a group of its own already. Without `group`, the field names it; with `group` around it, a screen reader hears a group in a group.
+- `form-field-help-text-needs-text`: The `help-text` slot of nldd-form-field takes an nldd-text: the field gives it the look of help text, and it styles a link in it.
+- `form-field-help-text-style-no-effect` (hint): nldd-form-field sets `size`, `color` and `weight` on its help text, so a value of your own does nothing.
+- `form-field-max-one-input`: nldd-form-field holds more than one control, and names and describes only the first. Make it a `group` when the controls answer one question, or give each question a field of its own.
 - `form-field-needs-input`: nldd-form-field holds no form input, so the label cannot name anything or move focus into it.
 - `form-field-no-manual-for-id` (hint): Drop `for`: nldd-form-field finds the input among its children and connects the list itself.
 - `form-field-no-marker-in-label` (hint): Set `optional` on the fields that may stay empty, which shows the badge, and write no marker in the label.
@@ -1244,7 +1250,7 @@ A field around one input: its label, supporting label, optional badge, validatio
 - `form-field-no-optional-and-required`: Drop `required`, or `optional`: the field cannot be both.
 - `form-field-no-own-label-alignment` (hint): Set `label-alignment` on nldd-form, which passes it to every field and to the actions, so the buttons line up with the fields.
 - `form-field-optional-label-no-effect`: `optional-label` is gone. The text of the optional badge is the translation key `components.form-field.optional-label` now. Set it in `translations` or with `setTranslations()`.
-- `form-field-validation-no-multiple-controls`: More than one control, and the validation list has rules that read a value: it reads the first one. Set `for` on the list if it should read another.
+- `form-field-validation-no-multiple-controls`: A validation list without `for` in a group field has rules that read a value: it reads the first control. Set `for` on the list to the control it is about.
 - `label-no-all-caps` (hint): Write this label in sentence case: capitals weaken the word shape and make scanning harder.
 - `text-field-needs-type` (hint): Set the `type` that fits, `email` or `tel`, which brings the right keyboard and validation.
 
@@ -1254,42 +1260,36 @@ A field around one input: its label, supporting label, optional badge, validatio
 | --- | --- | --- |
 | `label-alignment` | `'top'\|'right'\|'left'` | 'top' (default) \| 'right' \| 'left'. A value of its own wins over the one of a wrapping nldd-form. |
 | `label` | `string` | Field label text. Omit for no-label layout. Supports **bold** markdown syntax, for the word to type in a confirmation; the accessible name of the control takes the text without the markers. |
-| `supporting-label` | `string` | Short supporting text below the label. Same typography as optional badge. Supports **bold** markdown syntax. |
-| `optional` | `boolean` | Shows an optional badge next to the label. Its text is the translation key `components.form-field.optional-label` ("Optioneel"). |
+| `supporting-label` | `string` | Short supporting text below the label. Same typography as optional badge. Supports **bold** markdown syntax. Read as part of the accessible description of the input. |
+| `help-text` | `string` | Help text below the input, as plain text. Supports **bold** markdown syntax. Read as part of the accessible description of the input, after the validation and the supporting label. Help text with a link goes in the `help-text` slot, which takes its place. |
+| `optional` | `boolean` | Shows an optional badge next to the label, and adds it to the accessible name of the input. Its text is the translation key `components.form-field.optional-label` ("Optioneel"); the name is `components.form-field.optional-accessible-label` ("{label}, optioneel"). |
+| `group` | `boolean` | One question answered with more than one control, such as a postcode and a house number. The field is then a group named by the label, as a fieldset with a legend is, and each control names itself. Without a `label` it takes no role. A radio group or a checkbox group is a group of its own already and needs no `group`. |
 | `translations` | `object` | Override translation keys, such as the text of the optional badge; unset keys fall back to Dutch |
 
 **Slots**
 
 | Slot | Description |
 | --- | --- |
-| _(default)_ | The slotted input (e.g. nldd-text-field), its nldd-validation-list and its nldd-form-field-help-text. |
-
-### `<nldd-form-field-help-text>`
-
-**Slots**
-
-| Slot | Description |
-| --- | --- |
-| _(default)_ | Help text content. Inline elements in it look as they do in nldd-text: `<strong>` and `<b>` take the bold weight from the scale, `<em>` and `<i>` are italic, `<a>` is an underlined link, `<code>` sits on a tinted surface in the monospace font and `<mark>` is highlighted. Only direct children get that styling: an element inside another (a `<code>` in an `<a>`) is left as it is. |
-
-**Plain HTML it styles:** `<a>`, `<strong>`, `<b>`, `<em>`, `<i>`, `<code>`, `<mark>`. `nldd lint --pure` reports plain HTML only where no component styles it.
+| _(default)_ | The slotted input (e.g. nldd-text-field) and its nldd-validation-list. |
+| `help-text` | Help text with more than plain text in it, such as a link: an nldd-text. The field sets its `size`, `color` and `weight`. Takes the place of `help-text`. |
 
 ### `<nldd-form-section>`
 
-Nederlandse Digitale Dienst Form Section Component Plain custom element (extends HTMLElement, no Lit). The light-DOM render works around an NVDA + Firefox a11y bug where a shadow-DOM `<fieldset>` + `<legend>` is not reliably announced as the group label for slotted controls. A native fieldset/legend in the light DOM works correctly across all AT/browser combinations. **Differs from shadow components:** - No shadowRoot: all children live in the light DOM (inside the rendered `<fieldset>`). - No Lit: a plain HTMLElement with manual DOM mutation. - **Requires a global stylesheet import**: `dist/css/form-section.css` (or `global.css`). Form-section has no shadow stylesheet. **Accessibility note**: the title renders as a `<legend>`. Semantically that is a **group label**, not a heading. Screen readers announce it when the user enters the fieldset, but users jumping through headings with the H key skip it. Visually it looks like a heading, so use this component for *form grouping*, not as page structure. For real page headings, use a separate heading element above the form. **Supporting-text length**: the supporting text sits as a `<span>` inside the `<legend>` so a screen reader reads it along as the group label. Side effect: on every field entry within the section, the whole legend (title + supporting text) is spoken again. Keep `supporting-text` short (roughly 80 characters or less) and use it to introduce the group ("Vul je adresgegevens in"), not for detailed instructions. For a longer explanation on one specific field, use `nldd-form-field-help-text` on that field.
+A part of a form: a header, and the fields under it in the rhythm of a form. The section owns the distances: between the header and the fields, between the fields, and, in an nldd-form, between one section and the next. What stands in the header is yours, such as an nldd-title, with a text under it or a button beside it, and so is the space between those. A section is no group. A question that takes more than one control is an nldd-form-field with `group`; a section holds questions, and its title is a heading, which a screen reader user can jump to. Give that nldd-title the `heading-level` that fits the page. Outside a form, use an nldd-container.
 
 **Keywords:** formuliersectie.
 
 **Rules** (`nldd lint`)
 
-- `form-section-needs-name`: nldd-form-section needs `text` or `supporting-text`: without either its fieldset has no accessible name, and a screen reader announces just "group" or nothing.
+- `form-section-text-no-effect`: `text` and `supporting-text` on nldd-form-section are gone. Put an nldd-title in its header slot, with the `heading-level` that fits the page.
+- `title-needs-level` (hint): Set `heading-level`: without it the title renders as a paragraph and is missing from the heading structure.
 
-**Attributes**
+**Slots**
 
-| Attribute | Type | Description |
-| --- | --- | --- |
-| `text` | `string` | Heading text (rendered in the `<legend>`). |
-| `supporting-text` | `string` | Short description under the heading. Keep it to roughly 80 characters or less (see the a11y note). |
+| Slot | Description |
+| --- | --- |
+| `header` | What stands above the fields, such as an nldd-title with a `heading-level`. |
+| _(default)_ | The fields of this part of the form. |
 
 ### `<nldd-validation-item>`
 
@@ -1425,6 +1425,10 @@ Groups nldd-checkbox-field elements as nldd-radio-button-group groups radio butt
 **Keywords:** selectievakjes, toggle, toggles.
 
 **Related:** `<nldd-radio-button-group>`, `<nldd-token-field>`.
+
+**Rules** (`nldd lint`)
+
+- `form-field-group-no-single-group` (hint): This control is a group of its own already. Without `group`, the field names it; with `group` around it, a screen reader hears a group in a group.
 
 **Attributes**
 
@@ -1976,6 +1980,7 @@ Groups nldd-radio-button-field elements, handles keyboard navigation, and forwar
 
 **Rules** (`nldd lint`)
 
+- `form-field-group-no-single-group` (hint): This control is a group of its own already. Without `group`, the field names it; with `group` around it, a screen reader hears a group in a group.
 - `radio-button-group-needs-name`: nldd-radio-button-group needs `accessible-label`, `accessible-labeled-by` or a labeled nldd-form-field around it, or it has no accessible name.
 
 **Attributes**
@@ -2057,6 +2062,7 @@ A horizontal group of mutually exclusive (radio) or multi-select (checkbox) opti
 
 **Rules** (`nldd lint`)
 
+- `form-field-group-no-single-group` (hint): This control is a group of its own already. Without `group`, the field names it; with `group` around it, a screen reader hears a group in a group.
 - `segmented-control-needs-name`: nldd-segmented-control needs `accessible-label`, `accessible-labeled-by` or a labeled nldd-form-field around it, or it has no accessible name.
 - `segmented-control-required-no-effect`: `required` on a checkbox group is announced but not enforced: HTML has no way to say "at least one of these", so the form still submits with nothing selected. Check it yourself on submit, or use radio mode.
 
@@ -2212,6 +2218,7 @@ A row of swatches to choose one from: a color, or an image of a pattern or a mat
 
 **Rules** (`nldd lint`)
 
+- `form-field-group-no-single-group` (hint): This control is a group of its own already. Without `group`, the field names it; with `group` around it, a screen reader hears a group in a group.
 - `swatch-picker-needs-name`: nldd-swatch-picker needs `accessible-label`, `accessible-labeled-by` or a labeled nldd-form-field around it, or it has no accessible name.
 
 **Attributes**
@@ -2605,6 +2612,7 @@ Groups nldd-toggle-button elements and manages selection, keyboard navigation, a
 
 **Rules** (`nldd lint`)
 
+- `form-field-group-no-single-group` (hint): This control is a group of its own already. Without `group`, the field names it; with `group` around it, a screen reader hears a group in a group.
 - `toggle-button-group-needs-name`: nldd-toggle-button-group needs `accessible-label`, `accessible-labeled-by` or a labeled nldd-form-field around it, or it has no accessible name.
 - `toggle-button-group-required-no-effect`: `required` on a checkbox group is announced but not enforced: HTML has no way to say "at least one of these", so the form still submits with nothing selected. Check it yourself on submit, or use radio mode.
 
@@ -3489,7 +3497,7 @@ A horizontal split view with multiple equal panes side by side. The number of pa
 
 ### `<nldd-sidebar-section>`
 
-A page section with a left sidebar alongside the main content. - **Wide (section >= 1008px):** two columns. The sidebar is a sticky, scrollable box (max-width 320px) beside the main content. It takes the surface of the section around it and is edged by a divider line, so it reads as a block without drawing the eye away from the main. Its sticky top/bottom insets default to 16px; override with `sticky-top` / `sticky-bottom` so it clears other sticky page elements (e.g. a sticky header). - **Narrow (section < 1008px):** the sidebar collapses behind a sheet (a left panel on md+ viewports, a bottom sheet on mobile), and the host reflects a `collapsed` attribute. The consumer owns the trigger: place any chrome (a button, a chosen-filters bar, …) wherever you want, show it only while collapsed with `sidebar-section-only="collapsed"` on it, and call `show()` / `toggle()` to open the sheet. Bind `aria-expanded` via the `open`/`close` events. The sheet gets a sticky title bar by default, with the `sidebar-label` as title and a "Sluit" button. Replace it through the `sheet-top-title-bar` slot. A link in the sheet to a place on the page beside it, such as a row of a table of contents, closes the sheet first and then scrolls to that place and moves focus there, with a temporary tab stop as a skip link does. Left to the browser, the page would scroll under a sheet that is still open, and on closing the browser gives focus back to the trigger without scrolling to it, so focus ends up out of sight. A link that opens elsewhere (another page, a new tab, a modifier key, a `download`) or points into the sidebar itself is left alone, as is a click the consumer has already handled with `preventDefault()`. The address gets the fragment through `replaceState`, without a new history entry and without a `hashchange` event or a `:target` match: a router that listens for those does not see the jump. The sidebar content lives in `slot="sidebar"`. Its slot outlet moves between the box (expanded) and the sheet (collapsed) so there is a single, never-duplicated copy: the light DOM (and its state) is preserved across the switch. Like every section it goes in an nldd-page, never in another section, and lays out by the width of that page, not the viewport. A page in a narrow split-view pane collapses the sidebar to the sheet just like a narrow window, and the sidebar never stacks above or crowds the main. Set `no-collapse` to opt out: a narrow section then stacks the sidebar (full-width) above the main instead of using a sheet. A resize across the breakpoint switches a frame after it paints, so the old layout shows for one frame. Inherits block `padding` and `height` from PageSectionMixin.
+A page section with a left sidebar alongside the main content. The sidebar stands on the left, and there is no way to put it on the right. It comes before the main in the source, so a keyboard and a screen reader reach it first; on the left, what you see follows that order on every width. On the right, a wide section would show the main first and then go back to the sidebar. WCAG does not forbid that, but W3C advises a focus order that follows what you see. On a narrow section the order already matches, with the button that opens the sheet under the title. It is also the same on every site that uses NLDD, so a visitor finds a table of contents in one place, whether they look or listen. Content that goes with the main but is no navigation, such as related links, goes under the main. - **Wide (section >= 1008px):** two columns. The sidebar is a sticky, scrollable box (max-width 320px) beside the main content. It takes the surface of the section around it and is edged by a divider line, so it reads as a block without drawing the eye away from the main. Its sticky top/bottom insets default to 16px; override with `sticky-top` / `sticky-bottom` so it clears other sticky page elements (e.g. a sticky header). - **Narrow (section < 1008px):** the sidebar collapses behind a sheet (a left panel on md+ viewports, a bottom sheet on mobile), and the host reflects a `collapsed` attribute. The consumer owns the trigger: place any chrome (a button, a chosen-filters bar, …) wherever you want, show it only while collapsed with `sidebar-section-only="collapsed"` on it, and call `show()` / `toggle()` to open the sheet. Bind `aria-expanded` via the `open`/`close` events. The sheet gets a sticky title bar by default, with the `sidebar-label` as title and a "Sluit" button. Replace it through the `sheet-top-title-bar` slot. A link in the sheet to a place on the page beside it, such as a row of a table of contents, closes the sheet first and then scrolls to that place and moves focus there, with a temporary tab stop as a skip link does. Left to the browser, the page would scroll under a sheet that is still open, and on closing the browser gives focus back to the trigger without scrolling to it, so focus ends up out of sight. A link that opens elsewhere (another page, a new tab, a modifier key, a `download`) or points into the sidebar itself is left alone, as is a click the consumer has already handled with `preventDefault()`. The address gets the fragment through `replaceState`, without a new history entry and without a `hashchange` event or a `:target` match: a router that listens for those does not see the jump. The sidebar content lives in `slot="sidebar"`. Its slot outlet moves between the box (expanded) and the sheet (collapsed) so there is a single, never-duplicated copy: the light DOM (and its state) is preserved across the switch. Like every section it goes in an nldd-page, never in another section, and lays out by the width of that page, not the viewport. A page in a narrow split-view pane collapses the sidebar to the sheet just like a narrow window, and the sidebar never stacks above or crowds the main. Set `no-collapse` to opt out: a narrow section then stacks the sidebar (full-width) above the main instead of using a sheet. A resize across the breakpoint switches a frame after it paints, so the old layout shows for one frame. Inherits block `padding` and `height` from PageSectionMixin.
 
 **Keywords:** zijbalk.
 

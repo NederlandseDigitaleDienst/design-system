@@ -1366,10 +1366,20 @@
 	--semantics-buttons-md-inline-padding: calc((var(--semantics-controls-md-min-size) - var(--semantics-buttons-md-icon-size)) / 2);
 	--semantics-buttons-lg-inline-padding: calc((var(--semantics-controls-lg-min-size) - var(--semantics-buttons-lg-icon-size)) / 2);
 
+	--semantics-buttons-xs-text-inline-padding: calc(var(--semantics-buttons-xs-inline-padding) + var(--primitives-space-2));
+	--semantics-buttons-sm-text-inline-padding: calc(var(--semantics-buttons-sm-inline-padding) + var(--primitives-space-2));
+	--semantics-buttons-md-text-inline-padding: calc(var(--semantics-buttons-md-inline-padding) + var(--primitives-space-4));
+	--semantics-buttons-lg-text-inline-padding: calc(var(--semantics-buttons-lg-inline-padding) + var(--primitives-space-4));
+
 	--semantics-buttons-xs-has-supporting-text-inline-padding: calc((var(--semantics-controls-xs-min-size) - var(--semantics-buttons-xs-has-supporting-text-icon-size)) / 2);
 	--semantics-buttons-sm-has-supporting-text-inline-padding: calc((var(--semantics-controls-sm-min-size) - var(--semantics-buttons-sm-has-supporting-text-icon-size)) / 2);
 	--semantics-buttons-md-has-supporting-text-inline-padding: calc((var(--semantics-controls-md-min-size) - var(--semantics-buttons-md-has-supporting-text-icon-size)) / 2);
 	--semantics-buttons-lg-has-supporting-text-inline-padding: calc((var(--semantics-controls-lg-min-size) - var(--semantics-buttons-lg-has-supporting-text-icon-size)) / 2);
+
+	--semantics-buttons-xs-has-supporting-text-text-inline-padding: calc(var(--semantics-buttons-xs-has-supporting-text-inline-padding) + var(--primitives-space-2));
+	--semantics-buttons-sm-has-supporting-text-text-inline-padding: calc(var(--semantics-buttons-sm-has-supporting-text-inline-padding) + var(--primitives-space-2));
+	--semantics-buttons-md-has-supporting-text-text-inline-padding: calc(var(--semantics-buttons-md-has-supporting-text-inline-padding) + var(--primitives-space-4));
+	--semantics-buttons-lg-has-supporting-text-text-inline-padding: calc(var(--semantics-buttons-lg-has-supporting-text-inline-padding) + var(--primitives-space-4));
 
 	--semantics-buttons-xs-is-icon-only-inline-padding: calc((var(--semantics-controls-xs-min-size) - var(--semantics-buttons-xs-is-icon-only-icon-size)) / 2);
 	--semantics-buttons-sm-is-icon-only-inline-padding: calc((var(--semantics-controls-sm-min-size) - var(--semantics-buttons-sm-is-icon-only-icon-size)) / 2);

@@ -828,3 +828,49 @@ describe('nldd-toggle-button – in a field', () => {
 		expect(radius(own)).not.toBe('5px');
 	});
 });
+
+describe('nldd-toggle-button – inline padding', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const paddingOf = (host: HTMLElement) => {
+		const style = getComputedStyle(host.shadowRoot!.querySelector('.toggle-button')!);
+		return [style.paddingInlineStart, style.paddingInlineEnd];
+	};
+
+	it('gives a side with text more room than the side with the icon', async () => {
+		el = await fixture('<nldd-toggle-button text="Vet"></nldd-toggle-button>');
+		expect(paddingOf(el)).toEqual(['16px', '16px']);
+		el.setAttribute('icon', 'plus');
+		await waitForUpdate(el);
+		expect(paddingOf(el)).toEqual(['12px', '16px']);
+		el.setAttribute('variant', 'text');
+		await waitForUpdate(el);
+		expect(paddingOf(el)).toEqual(['16px', '16px']);
+	});
+
+	it('sees a slotted icon and the placeholder of icon-and-text', async () => {
+		el = await fixture('<nldd-toggle-button text="Vet" size="sm"><nldd-icon slot="icon" icon="plus"></nldd-icon></nldd-toggle-button>');
+		expect(paddingOf(el)).toEqual(['8px', '10px']);
+		cleanup(el);
+		el = await fixture('<nldd-toggle-button text="Vet" variant="icon-and-text"></nldd-toggle-button>');
+		expect(paddingOf(el)).toEqual(['12px', '16px']);
+	});
+});
+
+describe('nldd-toggle-button – stacked on lg', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it('stacks a slotted icon above the text, as it does the icon attribute', async () => {
+		el = await fixture('<nldd-toggle-button size="lg" text="Vet"><nldd-icon slot="icon" icon="plus"></nldd-icon></nldd-toggle-button>');
+		await waitForUpdate(el);
+		expect(getComputedStyle(el.shadowRoot!.querySelector('.toggle-button')!).flexDirection).toBe('column');
+	});
+});

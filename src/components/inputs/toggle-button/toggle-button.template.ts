@@ -52,6 +52,12 @@ export function toggleButtonTemplate(component: NLDDToggleButton): TemplateResul
 				icon=${fallbackIcon}
 			></nldd-icon>` : nothing}</slot>`;
 
+	/* What the stylesheet can't see for itself: a slotted icon lives in the
+	 * light DOM. The side with an icon gets less padding than the side with text. */
+	const blockClass = component.variant !== 'text' && (component._hasIcon || showPlaceholder)
+		? 'toggle-button has-icon'
+		: 'toggle-button';
+
 	const textContent = showText
 		? html`<span class="toggle-button__text">${component.text}</span>`
 		: nothing;
@@ -67,7 +73,7 @@ export function toggleButtonTemplate(component: NLDDToggleButton): TemplateResul
 		// a missing value. It is hidden, since rendered it would be a radio inside the
 		// element that is the radio, and hidden it still reports.
 		result = html`
-			<div class="toggle-button">
+			<div class=${blockClass}>
 				<input class="toggle-button__validation-input"
 					type="radio"
 					name="nldd-validation"
@@ -82,7 +88,7 @@ export function toggleButtonTemplate(component: NLDDToggleButton): TemplateResul
 		`;
 	} else if (component.type === 'checkbox') {
 		result = html`
-			<label class="toggle-button">
+			<label class=${blockClass}>
 				<input class="toggle-button__input"
 					type="checkbox"
 					.checked=${component.selected}
@@ -99,7 +105,7 @@ export function toggleButtonTemplate(component: NLDDToggleButton): TemplateResul
 		`;
 	} else {
 		result = html`
-			<button class="toggle-button"
+			<button class=${blockClass}
 				type="button"
 				aria-pressed=${component.selected}
 				?disabled=${component.disabled}
